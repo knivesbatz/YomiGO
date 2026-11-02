@@ -1,7 +1,7 @@
 # id	pattern	romaji	meaning	explanation	sentence with ＿	answer	wrong answers (comma)	translation
 #g1
-g.desu	AはBです	A wa B desu	A is B	The basic sentence. は marks the topic and is pronounced "wa" here. です ends a polite statement.	私＿学生です。	は	を,に,で	I am a student.
-g.ka	〜か	...ka	question marker	Add か to the end of a polite sentence to make a question. No question-word order change, and no "?" needed.	学生です＿。	か	は,を,の	Are you a student?
+g.desu	AはBです	A wa B desu	A is B	The basic sentence. は marks the topic, and reads "wa" here. です ends it politely.	私＿学生です。	は	を,に,で	I am a student.
+g.ka	〜か	...ka	question marker	Add か to the end of a polite sentence to make a question. The word order stays the same.	学生です＿。	か	は,を,の	Are you a student?
 g.no	AのB	A no B	B of A / A's B	の links two nouns. The owner or description comes first.	私＿本です。	の	は,を,に	It's my book.
 g.mo	Aも	A mo	A too	も replaces は or が and means "also".	私＿学生です。	も	を,で,に	I am a student too.
 #g2

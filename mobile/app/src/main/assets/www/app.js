@@ -95,7 +95,7 @@ function home() {
   else if (P.day >= C.days.length) parts.push(h("div", { cls: "card" }, h("h2", { cls: "good" }, "N5 complete!"), "N4 and beyond arrive in a future update. Keep reviewing and immersing."));
   else {
     const d = C.days[P.day], over = P.today >= P.pace && P.last === t;
-    parts.push(h("div", { cls: "card" }, h("div", { cls: "row dim" }, C.stages[d.stage].name, `Class ${P.day + 1} of ${C.days.length}`), h("div", { cls: "big" }, d.ja), h("div", { cls: "dim" }, d.title), bar(P.step, 7),
+    parts.push(h("div", { cls: "card" }, h("div", { cls: "row dim" }, h("span", null, C.stages[d.stage].name), h("span", null, `Class ${P.day + 1} of ${C.days.length}`)), h("div", { cls: "big" }, d.ja), h("div", { cls: "dim" }, d.title), bar(P.step, 7),
       over ? h("div", { cls: "good" }, "Today's class is done. Rest, review, or immerse.") : btn(P.step ? L("Continue class", "つづける", 2) : L("Start class", "はじめる", 2), runStep, "main")));
     parts.push(h("div", { cls: "card" }, h("div", { cls: "acc" }, L("Today's immersion", "イマージョン", 3)), d.imm));
   }

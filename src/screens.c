@@ -439,11 +439,14 @@ static void scr_teach(void) {
         text2(CX + 10, cy + 6, big, C_ACC);
         cy += 42;
         if (c->type == 'g') {
-            cy += LH * wrap(CX + 10, cy, CW - 20, c->en, C_INK, LH, 0, 2);
-            cy += LH * wrap(CX + 10, cy, CW - 20, c->note, C_DIM, LH, 0, HTPC ? 4 : 0);
+            /* The TV has room for five tight lines, so a long explanation gives up the translation */
+            int lh = HTPC ? 15 : LH, nl = wrap(CX + 10, cy + lh, CW - 20, c->note, C_DIM, lh, 0, HTPC ? 3 : 0);
+            text(CX + 10, cy, c->en, C_INK);
+            if (HTPC && nl > 3) nl = 3;
+            cy += lh * (nl + 1);
             { static char s[128]; int k = 0; const char *p = c->sentence;
               while (*p && k < 120) { if (!ys_ncmp(p, "＿", 3)) { ys_cpy(s + k, c->reading, 120 - k); k += ys_len(s + k); p += 3; } else s[k++] = *p++; }
-              s[k] = 0; wrap(CX + 10, cy + 2, CW - 20, s, C_ACC, LH, 0, 2); wrap(CX + 10, cy + 2 + LH, CW - 20, c->trans, C_DIM, LH, 0, 2); }
+              s[k] = 0; text(CX + 10, cy, s, C_ACC); if (!HTPC || nl < 3) wrap(CX + 10, cy + lh, CW - 20, c->trans, C_DIM, lh, 0, 1); }
         } else {
             if (c->type != 'h' && c->type != 'k') {
                 if (rom) { text(CX + 10, cy, c->reading, C_DIM); }

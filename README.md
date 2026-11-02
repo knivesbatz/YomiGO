@@ -1,51 +1,86 @@
-# YomiGo 読みGo
+<p align="center">
+  <img src="assets/brand/banner.png" alt="YomiGo by SENKOSOFT: Learn Japanese, one class a day." width="100%">
+</p>
 
-A Japanese-learning system for one family, developed by **SENKOSOFT**. Study from your first greeting to N5 through daily classes, flashcards, conversations, and boss exams, on four kinds of device.
+<p align="center">
+  <a href="https://github.com/knivesbatz/YomiGO/releases/latest"><img src="https://img.shields.io/github/v/release/knivesbatz/YomiGO?label=download&color=c2436b" alt="Latest version"></a>
+  <a href="https://github.com/knivesbatz/YomiGO/actions/workflows/ci.yml"><img src="https://github.com/knivesbatz/YomiGO/actions/workflows/ci.yml/badge.svg" alt="Build status"></a>
+</p>
 
-| App | For | Look |
+**YomiGo** (読みGo) teaches Japanese from zero. Open it each day, attend a short class, and earn your way up through exams, like levelling up in an RPG. No Japanese needed to start.
+
+<p align="center">
+  <img src="assets/brand/desktop-home.png" alt="YomiGo on a PC, showing today's class" width="49%">
+  <img src="assets/brand/tv-home.png" alt="YomiGo on a TV, with a controller-friendly menu" width="49%">
+</p>
+
+## Get started
+
+**1. Download the version for your device** from the [latest release](https://github.com/knivesbatz/YomiGO/releases/latest):
+
+| Use it on | Download | Open it with |
 |---|---|---|
-| **YomiGo Desktop** | Windows | Late-90s Japanese CD-ROM software with bitmap Japanese type |
-| **YomiGo HTPC** | TV and controller | Original console-style menus at 320×240, with CRT mode |
-| **YomiGo Mobile** | Android | Modern, sakura-themed, with speech input |
-| **YomiGo Reader** | Chrome and Firefox | Select Japanese on any page to look it up and save it |
+| Windows PC | `YomiGo-Windows.zip` | `YomiGo.exe` |
+| TV, with a controller | `YomiGo-Windows.zip` | `YomiGoHTPC.exe` |
+| Android phone | `YomiGo.apk` | Tap it to install |
+| Chrome or Firefox | `YomiGoReader.zip` | See the [install guide](docs/INSTALL.md#browser-extension) |
 
-## Getting it
+**2. Unzip it and open it.** On Windows, there's nothing to install. Windows may warn you about an unknown publisher the first time.
 
-Download from [Releases](https://github.com/knivesbatz/YomiGO/releases/latest), then follow the [install guide](docs/INSTALL.md).
+**3. Type your name and take the entrance exam,** or choose to start from day one. YomiGo finds your level and takes it from there.
 
-## What works today
+Need more help? The [install guide](docs/INSTALL.md) has every step.
 
-- **The whole beginner path:** 47 classes across 7 stages: sounds, romaji, hiragana, katakana, grammar, 80 kanji, and everyday situations.
-- **A daily class:** warm-up, lesson, drill, conversation, quiz, homework with a check, and an immersion task.
-- **Exams that gate progress:** an entrance exam, then 7 trials ending in the N5 Mastery Exam. Each needs 80%, with unlimited retakes.
-- **Spaced repetition:** every taught item goes into a flashcard deck, and classes keep bringing old material back.
-- **Scripted conversations:** 16 scenarios you must complete to move on.
-- **RPG progress:** XP, ranks, streaks, achievements, and exams fought as boss duels.
-- **Your pace:** 1, 2, or 3 classes a day.
-- **Slow immersion:** labels shift into Japanese as you learn to read them.
-- **Genki practice (optional):** review sorted by Genki lesson, using YomiGo's own cards.
-- **Library:** media picks released before 1999 or after 2020, curated links, and your own Material folder.
+## What a day looks like
 
-Everything N4 and above, AI conversation, OCR, and audio transcription is still to come. See the [roadmap](docs/ROADMAP.md), [checklist](docs/CHECKLIST.md), and [known issues](docs/KNOWN_ISSUES.md).
+Each class takes a few minutes and has seven steps:
 
-YomiGo's exams are its own, and are not official JLPT tests.
+1. **Warm-up:** go over what you learned before.
+2. **Lesson:** meet new sounds, words, or grammar.
+3. **Drill:** practise until it sticks. Anything you miss comes back.
+4. **Conversation:** talk to a character using what you just learned.
+5. **Quiz:** score 80% to pass.
+6. **Homework:** do a small task, then answer a quick check.
+7. **Immersion:** use Japanese in everyday life, with a simple task.
 
-## Building
+Finish every stage's boss exam to move on. Along the way you earn XP, ranks, streaks, and achievements. Choose 1, 2, or 3 classes a day.
 
-Needs Visual Studio with C++ tools, Python 3 with Pillow, and Node 18 or later.
+<p align="center">
+  <img src="assets/brand/desktop-lesson.png" alt="A grammar lesson" width="32%">
+  <img src="assets/brand/desktop-quest.png" alt="Rank and achievements" width="32%">
+  <img src="assets/brand/tv-exams.png" alt="The list of exams on the TV version" width="32%">
+</p>
 
-```bat
-build.bat
-python tests\ui_walk.py
-node --test tests\test_core.mjs
-```
+## What you'll learn
 
-Android builds in CI, or locally from `mobile/` with Gradle and the Android SDK.
+You start with sounds and romaji, then learn to read and speak step by step:
 
-## How it's put together
+**Sounds → Romaji → Hiragana → Katakana → Grammar → Kanji → Real-life Japanese → N5 Mastery Exam**
 
-`content/` holds the course as plain text. `tools/build_content.py` fact-checks it and generates the data every app uses. Windows apps share C code with no runtime dependencies, and Mobile and Reader share JavaScript. Both cores pass the same test vectors. More in the [decision log](docs/DECISIONS.md).
+There's also typing practice, counting, polite speech, gestures, and manners. As you learn to read, YomiGo's own menus slowly switch into Japanese.
 
-## Private material
+Studying with Genki? Turn on **Genki practice** to review by textbook lesson.
 
-Study materials you own stay on your own PC, and are never committed here. YomiGo only opens them from your local folder. See [NOTICE](NOTICE.md).
+## Where it's up to
+
+YomiGo is in its early days. The course currently runs from zero to **N5**, the first level of the Japanese-Language Proficiency Test (JLPT). YomiGo's exams are its own, not official JLPT tests.
+
+| Works now | Coming later |
+|---|---|
+| 47 classes, 7 exams, and flashcards | N4 through N1, and beyond |
+| Scripted conversations | AI conversation partners |
+| Dictionary popup for course words | A full dictionary |
+| Speech input on Android | Picture-to-text (OCR) for manga and games |
+| Updates that ask first | Automatic sync between devices |
+
+Some things haven't been tried on real hardware yet, including controllers, CRT TVs, Windows 95, and Android phones. See [what's been tested](docs/COMPATIBILITY.md) and [known issues](docs/KNOWN_ISSUES.md), or the full [roadmap](docs/ROADMAP.md).
+
+## More
+
+- [Install guide](docs/INSTALL.md)
+- [Everyday immersion tips](docs/IMMERSION_GUIDE.md)
+- [How to build it, and how to help](CONTRIBUTING.md)
+- [Report a problem](https://github.com/knivesbatz/YomiGO/issues/new/choose)
+- [Credits and licences](NOTICE.md)
+
+<p align="center"><img src="assets/brand/logo.png" alt="YomiGo logo" width="72"><br>Made by <strong>SENKOSOFT</strong></p>

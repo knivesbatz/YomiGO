@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """Release from this PC, the only place the signing key lives. Builds, tests, signs, then publishes to GitHub.
 CI attaches the APK when it sees the new tag. usage: python tools/release.py"""
-import io, os, shutil, subprocess, sys, zipfile
+import io, json, os, shutil, subprocess, sys, zipfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIST = os.path.join(ROOT, "dist")
 ver = io.open(os.path.join(ROOT, "VERSION")).read().strip()
+manifest = json.load(io.open(os.path.join(ROOT, "extension", "manifest.json"), encoding="utf-8"))
+assert manifest["version"] == ver, "extension/manifest.json and VERSION disagree"
 
 def run(*a, **k):
     print(">", " ".join(a))
