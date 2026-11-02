@@ -13,7 +13,7 @@ def run(*a, **k):
     print(">", " ".join(a))
     subprocess.run(a, check=True, cwd=ROOT, **k)
 
-run("cmd", "/c", "build.bat")
+run("cmd", "/c", os.path.join(ROOT, "build.bat"))
 run(sys.executable, "tests/ui_walk.py")
 run("node", "--test", "tests/test_core.mjs")
 exes = ["YomiGo.exe", "YomiGoHTPC.exe", "YomiGoUpdate.exe"]

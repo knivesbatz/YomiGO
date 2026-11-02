@@ -30,6 +30,7 @@ cl %CF% /Fobuild\d\ /Fedist\YomiGo.exe src\core.c src\ui.c src\screens.c src\pla
 cl %CF% /DYG_HTPC=1 /Fobuild\h\ /Fedist\YomiGoHTPC.exe src\core.c src\ui.c src\screens.c src\plat_win.c %LF% || exit /b 1
 python tools\check_pe.py dist\YomiGo.exe dist\YomiGoHTPC.exe || exit /b 1
 
-rem The updater needs WinHTTP with TLS 1.2, so Windows 7 or later
-cl /nologo /utf-8 /W3 /O1 /GS- /Gs999999 /GR- /EHs-c- /Ibuild\gen /Isrc\updater /Fobuild\ /Fedist\YomiGoUpdate.exe src\updater\yg_update.c /link /NODEFAULTLIB /ENTRY:yg_entry /SUBSYSTEM:WINDOWS kernel32.lib user32.lib advapi32.lib shell32.lib winhttp.lib || exit /b 1
+rem The updater needs WinHTTP with TLS 1.2, so Windows 7 or later.
+rem The manifest matters: without it, Windows sees "Update" in the name and demands admin rights.
+cl /nologo /utf-8 /W3 /O1 /GS- /Gs999999 /GR- /EHs-c- /Ibuild\gen /Isrc\updater /Fobuild\ /Fedist\YomiGoUpdate.exe src\updater\yg_update.c /link /NODEFAULTLIB /ENTRY:yg_entry /SUBSYSTEM:WINDOWS /MANIFEST:EMBED /MANIFESTUAC:"level='asInvoker' uiAccess='false'" kernel32.lib user32.lib advapi32.lib shell32.lib winhttp.lib || exit /b 1
 echo Build OK: dist\YomiGo.exe dist\YomiGoHTPC.exe dist\YomiGoUpdate.exe
