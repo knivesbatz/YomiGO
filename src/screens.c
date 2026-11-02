@@ -538,11 +538,18 @@ static void answer_given(int ok) {
     /* Missed drill cards come straight back: repetition is the point */
     if (!ok && qm == QM_DRILL && Z.n < YG_MAXQ) { Z.q[Z.n] = Z.q[qi]; Z.n++; }
 }
+static void text_entry(void) {
+    int n = ys_len(input), i;
+    for (i = 0; IN.text[i] && n < 120; i++) input[n++] = IN.text[i];
+    input[n] = 0;
+    while (IN.backspace-- > 0 && n > 0) { n--; while (n > 0 && (input[n] & 0xC0) == 0x80) n--; input[n] = 0; }
+}
 /* On-screen keyboard for the TV. Romaji typed here becomes kana in the answer check. */
 #if HTPC
 static void osk(int y) {
     static const char *const R[] = {"qwertyuiop", "asdfghjkl'", "zxcvbnm-  "};
     int i;
+    text_entry(); /* a real keyboard works here too */
     if (IN.pressed & A_LEFT) kb_x = (kb_x + 9) % 10;
     if (IN.pressed & A_RIGHT) kb_x = (kb_x + 1) % 10;
     if (IN.pressed & A_UP) kb_y = (kb_y + 2) % 3;
@@ -557,12 +564,6 @@ static void osk(int y) {
     if (IN.pressed & A_BACK) { int n = ys_len(input); if (n) input[n - 1] = 0; }
 }
 #endif
-static void text_entry(void) {
-    int n = ys_len(input), i;
-    for (i = 0; IN.text[i] && n < 120; i++) input[n++] = IN.text[i];
-    input[n] = 0;
-    while (IN.backspace-- > 0 && n > 0) { n--; while (n > 0 && (input[n] & 0xC0) == 0x80) n--; input[n] = 0; }
-}
 static void scr_quiz(void) {
     Question *q = &Z.q[qi];
     char b[64];

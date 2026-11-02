@@ -3,7 +3,7 @@
 ## Not tested on real hardware or software
 
 - **Windows 95 and 98:** never run. See [compatibility](COMPATIBILITY.md).
-- **Controllers:** the XInput, DirectInput, rebinding, and disconnect code has only been compiled. No real pad has driven it.
+- **Controllers:** the TV app detects a connected Xbox-style pad and shows its prompts, but no one has played with a pad yet, or tried DirectInput, rebinding, or reconnecting.
 - **CRT and RF:** not viewed on a real tube.
 - **Windows speech:** this PC has no Japanese voice, so speech has never been heard.
 - **Android:** speech input, text-to-speech, and self-update haven't run on a phone.

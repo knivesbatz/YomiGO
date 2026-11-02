@@ -2,7 +2,7 @@
 
 | Platform | Status | What was actually checked |
 |---|---|---|
-| Windows 11 | Tested | Built and run here, without a window, through the whole course. Real window use needs the owner's check |
+| Windows 11 | Tested | Whole course played through the screens with no window. Both programs also opened in real windows at 640×480, took keyboard and Japanese text, and closed cleanly. A real update from GitHub worked. Mouse use and long sessions need a person |
 | Windows 10, 8.1, 8, 7 | Expected to work | Same program. Not run on these versions |
 | Windows Vista, XP | Expected to work, manual updates | Not run. The updater won't run; the app says so |
 | Windows 98, 95 | Unproven | The program header and imports pass an automated Windows 95 check. **It has never been run on real 95 or 98**, as no VM is available here. No updates; no speech |

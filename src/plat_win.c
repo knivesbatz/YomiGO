@@ -377,16 +377,23 @@ static BITMAPINFO bmi;
 static Input pending;
 static int cw = FBW, ch = FBH;
 
+/* Whole-number scaling keeps every font pixel crisp, with bars filling what's left.
+   A TV stretches to fill, as a console would. So does a window too small for the picture, as on a 640x480 screen. */
+static void dest_rect(int *ox, int *oy, int *sx, int *sy) {
+    int scale = cw / FBW;
+    if (ch / FBH < scale) scale = ch / FBH;
+#ifdef YG_HTPC
+    scale = 0;
+#endif
+    if (scale < 1) { *ox = *oy = 0; *sx = cw ? cw : 1; *sy = ch ? ch : 1; return; }
+    *sx = FBW * scale; *sy = FBH * scale;
+    *ox = (cw - *sx) / 2; *oy = (ch - *sy) / 2;
+}
 static void present(HDC dc) {
-    int sx, sy, ox, oy, scale;
-    /* Whole-number scaling keeps every font pixel crisp; bars fill what's left */
-    scale = cw / FBW; if (ch / FBH < scale) scale = ch / FBH; if (scale < 1) scale = 1;
-    sx = FBW * scale; sy = FBH * scale;
-    ox = (cw - sx) / 2; oy = (ch - sy) / 2;
+    int sx, sy, ox, oy;
+    dest_rect(&ox, &oy, &sx, &sy);
 #ifdef YG_HTPC
     if (crt) { int i; for (i = 0; i < FBW * FBH; i++) { unsigned c = FB[i]; unsigned r = c >> 16 & 255, g = c >> 8 & 255, b = c & 255; if (r > 224) r = 224; if (g > 224) g = 224; if (b > 224) b = 224; FB[i] = r << 16 | g << 8 | b; } }
-    /* A TV is stretched to fill, as a console would be */
-    sx = cw; sy = ch; ox = 0; oy = 0;
 #endif
     if (ox > 0 || oy > 0) {
         HBRUSH br = (HBRUSH)GetStockObject(BLACK_BRUSH); RECT r;
@@ -399,13 +406,9 @@ static void present(HDC dc) {
     StretchDIBits(dc, ox, oy, sx, sy, 0, 0, FBW, FBH, FB, &bmi, DIB_RGB_COLORS, SRCCOPY);
 }
 static void map_mouse(LPARAM lp) {
-    int x = (short)LOWORD(lp), y = (short)HIWORD(lp);
-#ifdef YG_HTPC
-    pending.mx = x * FBW / (cw ? cw : 1); pending.my = y * FBH / (ch ? ch : 1);
-#else
-    { int scale = cw / FBW; if (ch / FBH < scale) scale = ch / FBH; if (scale < 1) scale = 1;
-      pending.mx = (x - (cw - FBW * scale) / 2) / scale; pending.my = (y - (ch - FBH * scale) / 2) / scale; }
-#endif
+    int x = (short)LOWORD(lp), y = (short)HIWORD(lp), ox, oy, sx, sy;
+    dest_rect(&ox, &oy, &sx, &sy);
+    pending.mx = (x - ox) * FBW / sx; pending.my = (y - oy) * FBH / sy;
 }
 static void add_text(int cp) {
     int n = ys_len(pending.text);

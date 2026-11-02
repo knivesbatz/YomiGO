@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1
+
+- The picture now fits small windows, so Desktop no longer loses its title and footer on a 640×480 screen
+- A real keyboard can type on the TV app's name and answer screens
+- TV lessons no longer run past their panel
+- Phone home screen: fixed spacing in the class header, and the blossom is pink again
+- Updater no longer asks Windows for admin rights
+
 ## 0.1.0
 
 First base build.
