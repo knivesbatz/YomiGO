@@ -3,7 +3,8 @@ rem Builds YomiGo Desktop, HTPC and the updater, and runs the core tests.
 setlocal
 set ROOT=%~dp0
 set PYTHONUTF8=1
-if exist "%ProgramFiles(x86)%\Microsoft Visual Studio\Installerswhere.exe" for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set VS=%%i
+set "VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
+if exist "%VSWHERE%" for /f "usebackq tokens=*" %%i in (`call "%VSWHERE%" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VS=%%i"
 if "%VS%"=="" if exist "%ProgramFiles%\Microsoft Visual Studio\18\Community\VC" set "VS=%ProgramFiles%\Microsoft Visual Studio\18\Community"
 if "%VS%"=="" ( echo Visual Studio with C++ tools not found & exit /b 1 )
 call "%VS%\VC\Auxiliary\Build\vcvarsall.bat" x86 >nul || exit /b 1
