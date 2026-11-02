@@ -21,4 +21,22 @@ for exe in ("YomiGo.exe", "YomiGoHTPC.exe"):
     print(exe, "exit", r.returncode, "day", vals.get("day"), "cards", cards, "xp", vals.get("xp"), "chats", vals.get("chats"), "hw", vals.get("hw"), "OK" if ok else "FAILED")
     fail += not ok
     shutil.rmtree(root, ignore_errors=True)
+# Copy and paste, using a stand-in clipboard so the real one is left alone: "Ab" pasted after itself makes "AbAb"
+root = tempfile.mkdtemp()
+subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--script", "w2;ow2;ow2;tAb;w1;C;w1;V;w1;ow2;"], timeout=60)
+ok = os.path.exists(os.path.join(root, "AbAb.sav"))
+print("copy and paste", "OK" if ok else "FAILED", os.listdir(root))
+fail += not ok
+shutil.rmtree(root, ignore_errors=True)
+# Text a Japanese keyboard finishes: type every word of day 1 in real kana. Finishing moves the class on and earns 1 XP a word.
+esc = lambda s: "".join("\\u%04x" % ord(c) for c in s)
+kana = ["おはようございます", "こんにちは", "こんばんは", "さようなら", "おやすみなさい"]
+root = tempfile.mkdtemp()
+script = "w2;ow2;ow2;tKana;w1;ow2;dw1;ow2;dw1;ow2;ow2;ow2;" + "ow1;" * 8 + "".join(f"t{esc(k)};w1;ow1;" * 3 for k in kana)
+subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--script", script], timeout=60)
+vals = dict(l.split("=", 1) for l in open(os.path.join(root, "Kana.sav"), encoding="utf-8").read().splitlines() if "=" in l)
+ok = vals.get("step") == "3" and vals.get("xp") == "5"
+print("typing practice in real kana", "OK" if ok else "FAILED", "step", vals.get("step"), "xp", vals.get("xp"))
+fail += not ok
+shutil.rmtree(root, ignore_errors=True)
 sys.exit(fail != 0)

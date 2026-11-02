@@ -5,9 +5,9 @@ import struct, sys
 WIN95 = {
     "KERNEL32.dll": """CloseHandle CopyFileA CreateDirectoryA CreateFileA CreateProcessA DeleteFileA ExitProcess FindClose FindFirstFileA
         FindNextFileA FlushFileBuffers GetCommandLineA GetCurrentProcessId GetLocalTime GetModuleFileNameA GetModuleHandleA GetProcAddress
-        GetTickCount GetVersion LoadLibraryA MoveFileA ReadFile Sleep WriteFile""",
-    "USER32.dll": """AdjustWindowRect BeginPaint CreateWindowExA DefWindowProcA DestroyWindow DispatchMessageA EndPaint FillRect GetDC
-        GetMessageA GetSystemMetrics LoadCursorA PostQuitMessage RegisterClassA ReleaseCapture ReleaseDC SetCapture SetTimer ShowCursor TranslateMessage""",
+        GetTickCount GetVersion GlobalAlloc GlobalLock GlobalUnlock LoadLibraryA MoveFileA ReadFile Sleep WriteFile""",
+    "USER32.dll": """AdjustWindowRect BeginPaint CloseClipboard CreateWindowExA DefWindowProcA DestroyWindow DispatchMessageA EmptyClipboard EndPaint FillRect GetClipboardData GetDC
+        GetMessageA GetSystemMetrics LoadCursorA OpenClipboard PostQuitMessage RegisterClassA ReleaseCapture ReleaseDC SetCapture SetClipboardData SetTimer ShowCursor TranslateMessage""",
     "GDI32.dll": "GetStockObject SetStretchBltMode StretchDIBits",
     "WINMM.dll": "PlaySoundA joyGetDevCapsA joyGetNumDevs joyGetPosEx",
     "SHELL32.dll": "ShellExecuteA",

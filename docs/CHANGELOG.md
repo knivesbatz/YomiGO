@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.2
+
+- New class step: type each new word several times
+- I don't know button on quizzes and conversations
+- Answer boxes are easier to spot, with a bright frame, "Type here", and a blinking cursor
+- Copy and paste with Ctrl+C and Ctrl+V, plus buttons on the PC. On Android, use the phone's own copy and paste
+- The Windows Japanese keyboard: text you're composing now shows in the answer box, underlined, with the candidate list beside it. Finished text goes straight in
+- The name box says why it can't use a Japanese name, instead of ignoring OK
+- TV app: hints no longer cover the on-screen keyboard, and the keyboard's Space and F3 keys now work
+
 ## 0.1.1
 
 - The picture now fits small windows, so Desktop no longer loses its title and footer on a 640×480 screen

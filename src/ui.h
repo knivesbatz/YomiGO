@@ -14,9 +14,10 @@ enum { A_UP = 1, A_DOWN = 2, A_LEFT = 4, A_RIGHT = 8, A_OK = 16, A_BACK = 32, A_
 typedef struct {
     int pressed;              /* actions pressed this frame */
     int mx, my, mdown, mclick;
-    char text[64];            /* typed text, UTF-8 */
+    char text[256];           /* typed text, UTF-8 */
     int backspace;
     int num;                  /* 1-4 pressed, 0 otherwise */
+    int paste, copy;          /* Ctrl+V and Ctrl+C */
 } Input;
 extern Input IN;
 
@@ -49,6 +50,10 @@ int  plat_read(const char *name, char *buf, int cap);
 int  plat_write(const char *name, const char *buf, int len);
 int  plat_list_saves(char names[][32], int max);
 int  plat_open(const char *utf8);
+int  plat_clip_get(char *utf8, int cap);
+void plat_clip_set(const char *utf8);
+const char *plat_ime_comp(void);              /* what the Japanese keyboard is still composing */
+void plat_ime_field(int on, int x, int y);    /* a text box is showing, and where */
 int  plat_has_tts(void);
 void plat_speak(const char *utf8);
 void plat_sound(int kind);

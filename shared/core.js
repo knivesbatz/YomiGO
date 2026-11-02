@@ -92,7 +92,7 @@
       else if (k.startsWith("exam.")) { if (examIds.has(k.slice(5))) p.exams[k.slice(5)] = clamp(+v || 0, 0, 100); }
       else if (NUMS.includes(k)) p[k] = +v || 0;
     }
-    p.day = clamp(p.day, 0, C.days.length); p.step = p.step > 7 || p.step < 0 ? 0 : p.step; p.pace = clamp(p.pace, 1, 3);
+    p.day = clamp(p.day, 0, C.days.length); p.step = p.step > 8 || p.step < 0 ? 0 : p.step; p.pace = clamp(p.pace, 1, 3);
     return p.name ? p : null;
   }
 

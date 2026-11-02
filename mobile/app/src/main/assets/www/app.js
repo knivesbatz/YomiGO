@@ -49,7 +49,7 @@ function profiles() {
   const input = h("input", { placeholder: "Your name", maxlength: 16, "aria-label": "Your name" });
   show(h("h1", null, "YomiGo ✿ 読みGo"), h("p", { cls: "dim" }, "Developed by SENKOSOFT"),
     store.list().map((n) => btn(n, () => { P = store.load(n); if (P) home(); else alert("That save couldn't be read."); })),
-    h("div", { cls: "card" }, h("h2", null, "New learner"), input,
+    h("div", { cls: "card" }, h("h2", null, "New learner"), input, h("div", { cls: "dim" }, "Letters A-Z and numbers for now."),
       btn("Start", () => {
         const name = input.value.replace(/[^A-Za-z0-9_-]/g, "");
         if (!name) { input.focus(); return; }
@@ -95,7 +95,7 @@ function home() {
   else if (P.day >= C.days.length) parts.push(h("div", { cls: "card" }, h("h2", { cls: "good" }, "N5 complete!"), "N4 and beyond arrive in a future update. Keep reviewing and immersing."));
   else {
     const d = C.days[P.day], over = P.today >= P.pace && P.last === t;
-    parts.push(h("div", { cls: "card" }, h("div", { cls: "row dim" }, h("span", null, C.stages[d.stage].name), h("span", null, `Class ${P.day + 1} of ${C.days.length}`)), h("div", { cls: "big" }, d.ja), h("div", { cls: "dim" }, d.title), bar(P.step, 7),
+    parts.push(h("div", { cls: "card" }, h("div", { cls: "row dim" }, h("span", null, C.stages[d.stage].name), h("span", null, `Class ${P.day + 1} of ${C.days.length}`)), h("div", { cls: "big" }, d.ja), h("div", { cls: "dim" }, d.title), bar(P.step, 8),
       over ? h("div", { cls: "good" }, "Today's class is done. Rest, review, or immerse.") : btn(P.step ? L("Continue class", "つづける", 2) : L("Start class", "はじめる", 2), runStep, "main")));
     parts.push(h("div", { cls: "card" }, h("div", { cls: "acc" }, L("Today's immersion", "イマージョン", 3)), d.imm));
   }
@@ -110,19 +110,20 @@ function runStep() {
   switch (P.step) {
     case 0: { const q = Y.quizWarmup(P); if (!q.length) return nextStep(); return runQuiz(q, "Warm-up", nextStep); }
     case 1: return teach(0);
-    case 2: { const q = Y.shuffle(d.new.slice(0, 20).map((id) => Y.makeQ(Y.byId[id], Math.floor(Math.random() * 3), rom))); if (!q.length) return nextStep(); return runQuiz(q, "Practice", (r) => { P.xp += r; nextStep(); }, { requeue: true }); }
-    case 3: return d.chat ? chat(d.chat, 0, 0) : nextStep();
-    case 4: return runQuiz(Y.quizDay(P.day), "Daily quiz", (right, n) => {
+    case 2: { const w = d.new.map((id) => Y.byId[id]).filter((c) => c.t === "w").slice(0, 10); return w.length ? typing(w, 0, 0, false) : nextStep(); }
+    case 3: { const q = Y.shuffle(d.new.slice(0, 20).map((id) => Y.makeQ(Y.byId[id], Math.floor(Math.random() * 3), rom))); if (!q.length) return nextStep(); return runQuiz(q, "Practice", (r) => { P.xp += r; nextStep(); }, { requeue: true }); }
+    case 4: return d.chat ? chat(d.chat, 0, 0) : nextStep();
+    case 5: return runQuiz(Y.quizDay(P.day), "Daily quiz", (right, n) => {
       const pct = Math.trunc(right * 100 / n);
       if (pct >= Y.PASS) { P.xp += right * 2; if (pct === 100) P.perfects++; return nextStep(); }
       P.step = 1; store.save(); result("Not yet!", `You scored ${pct}%. You need 80% to continue. Look at your notes and try again.`, false, runStep);
     });
-    case 5: return task(d.hw, L("Homework", "しゅくだい", 3), L("I did it!", "できた！", 2), () => {
+    case 6: return task(d.hw, L("Homework", "しゅくだい", 3), L("I did it!", "できた！", 2), () => {
       const q = d.new.length ? Y.shuffle([...d.new]).slice(0, 3).map((id) => Y.makeQ(Y.byId[id], 0, rom)) : [];
       const done = () => { P.hw++; P.xp += 30; nextStep(); };
       if (q.length) runQuiz(q, "Homework check", done); else done();
     });
-    case 6: return task(d.imm, L("Immersion", "イマージョン", 3), L("I'll do it today", "やります！", 2), nextStep);
+    case 7: return task(d.imm, L("Immersion", "イマージョン", 3), L("I'll do it today", "やります！", 2), nextStep);
     default:
       Y.learnDay(P, P.day, Y.today()); Y.completeDay(P, Y.today()); store.save();
       result("Class complete!", `+100 XP. Streak: ${P.streak} day(s). Your new cards are in the flashcard deck.`, true, home);
@@ -154,29 +155,61 @@ function teach(page) {
     page > 0 ? btn(L("Back", "もどる", 2), () => teach(page - 1)) : btn("Later", home));
 }
 
+// Typing practice: every new word, three times each
+function typing(words, i, rep, bad) {
+  const c = words[i], rom = Y.romajiMode(P.day), REPS = 3;
+  const inp = h("input", { autocapitalize: "off", autocomplete: "off", lang: "ja", placeholder: "Type here", "aria-label": "Type the word" }), pre = h("div", { cls: "acc", lang: "ja" });
+  inp.addEventListener("input", () => { pre.textContent = Y.normKana(inp.value); });
+  const submit = () => {
+    if (!inp.value) return inp.focus();
+    if (!Y.answerOk(inp.value, c.r, c.ro)) return typing(words, i, rep, true);
+    if (rep + 1 < REPS) return typing(words, i, rep + 1, false);
+    P.xp++;
+    return i + 1 < words.length ? typing(words, i + 1, 0, false) : nextStep();
+  };
+  inp.addEventListener("keydown", (e) => { if (e.key === "Enter") submit(); });
+  setNav(-1);
+  show(h("div", { cls: "row" }, h("h1", null, L("Typing practice", "タイピング", 3)), h("span", { cls: "dim" }, `Word ${i + 1} of ${words.length}`)), bar(rep, REPS),
+    h("div", { cls: "card" }, h("div", { cls: "big acc", lang: "ja" }, rom ? c.ro : c.f), h("div", { cls: "dim", lang: "ja" }, rom ? c.r : c.f !== c.r ? c.r : "", !rom && Y.stageOf(P) < 4 ? "  " + c.ro : ""), h("div", null, c.en), h("div", { cls: "dim" }, `Type it ${REPS} times. This is number ${rep + 1}.`)),
+    bad ? h("div", { cls: "bad" }, "Not quite. Type: " + c.ro) : "", inp, pre, btn("Enter", submit, "main"), btn("Later", home));
+  inp.focus();
+}
+
 function runQuiz(qs, title, done, opt = {}) {
   let i = 0, right = 0; const total0 = qs.length;
   setNav(-1);
   const step = () => {
     if (i >= qs.length) return done(right, total0);
     const q = qs[i], fb = h("div"), area = h("div");
+    let idk = false, dontKnow = null;
     const after = (ok) => {
+      if (dontKnow) dontKnow.remove();
       if (ok) { if (!opt.seenWrong?.has(i)) right++; } else if (opt.requeue && qs.length < 60) qs.push(q);
       if (opt.onAnswer) opt.onAnswer(q, ok);
-      fb.replaceChildren(h("strong", { cls: ok ? "good" : "bad" }, ok ? L("Correct!", "正解！", 5) : L("Not quite.", "ちがいます", 3)), q.kind === "type" && !ok ? h("div", { lang: "ja" }, q.want) : "", !ok && q.card.n ? h("p", { cls: "dim" }, q.card.n) : "", btn(L("Next", "つぎ", 2), () => { i++; step(); }, "main"));
+      fb.replaceChildren(h("strong", { cls: ok ? "good" : idk ? "dim" : "bad" }, ok ? L("Correct!", "正解！", 5) : idk ? "That's okay. Here's the answer." : L("Not quite.", "ちがいます", 3)), q.kind === "type" && !ok ? h("div", { lang: "ja" }, q.want) : "", !ok && q.card.n ? h("p", { cls: "dim" }, q.card.n) : "", btn(L("Next", "つぎ", 2), () => { i++; step(); }, "main"));
     };
     if (q.kind === "choice") {
       const buttons = q.choices.map((c) => { const b = btn(c, () => { buttons.forEach((x) => { x.disabled = true; if (x.textContent === q.answer) x.className = "right"; }); if (c !== q.answer) b.className = "wrong"; after(c === q.answer); }); b.lang = "ja"; return b; });
       area.append(h("div", { cls: "grid" }, buttons));
     } else {
-      const inp = h("input", { autocapitalize: "off", autocomplete: "off", "aria-label": "Your answer", lang: "ja" }), pre = h("div", { cls: "acc", lang: "ja" });
+      const inp = h("input", { autocapitalize: "off", autocomplete: "off", "aria-label": "Your answer", lang: "ja", placeholder: "Type here" }), pre = h("div", { cls: "acc", lang: "ja" });
       inp.addEventListener("input", () => { pre.textContent = Y.normKana(inp.value); });
       const check = btn(L("Check", "チェック", 3), () => { check.disabled = true; inp.disabled = true; after(Y.answerOk(inp.value, q.want, q.want2)); }, "main");
+      inp.addEventListener("keydown", (e) => { if (e.key === "Enter" && !check.disabled) check.click(); });
       area.append(inp, pre, check);
+      q.focus = inp;
     }
+    // Not knowing is a normal answer. It counts as a miss, and shows the right one.
+    dontKnow = btn(L("I don't know", "わかりません", 3), () => {
+      idk = true;
+      for (const b of area.querySelectorAll("button, input")) { b.disabled = true; if (b.textContent === q.answer) b.className = "right"; }
+      after(false);
+    });
+    area.append(dontKnow);
     show(h("div", { cls: "row" }, h("h1", null, title), h("span", { cls: "dim" }, `${i + 1} / ${qs.length}`)), bar(i, qs.length),
       h("div", { cls: "card" }, h("div", { cls: "dim" }, q.tag), h("div", { cls: "big", lang: "ja" }, q.prompt), q.sub ? h("div", { cls: "dim" }, q.sub) : "", q.card.t !== "g" && q.kind === "choice" && /[ぁ-ヿ一-龯]/.test(q.prompt) ? btn("🔊", () => speak(q.card.r)) : ""), area, fb,
       opt.noExit ? "" : btn("Leave", home));
+    if (q.focus) q.focus.focus();
   };
   step();
 }
@@ -185,17 +218,20 @@ function runQuiz(qs, title, done, opt = {}) {
 function chat(id, turn, fails) {
   const c = C.chats[id], rom = Y.romajiMode(P.day), stage = Y.stageOf(P);
   if (turn >= c.turns.length) { P.chats++; P.xp += 30; return nextStep(); }
-  const t = c.turns[turn], inp = h("input", { autocapitalize: "off", autocomplete: "off", lang: "ja", "aria-label": "Your reply" }), pre = h("div", { cls: "acc", lang: "ja" });
+  const t = c.turns[turn], inp = h("input", { autocapitalize: "off", autocomplete: "off", lang: "ja", placeholder: "Type here", "aria-label": "Your reply" }), pre = h("div", { cls: "acc", lang: "ja" });
   inp.addEventListener("input", () => { pre.textContent = Y.normKana(inp.value); });
   const send = (text) => { if (Y.chatOk(text, t)) chat(id, turn + 1, 0); else chat(id, turn, fails + 1); };
+  inp.addEventListener("keydown", (e) => { if (e.key === "Enter") send(inp.value); });
   setNav(-1);
   show(h("h1", { lang: "ja" }, c.ja), h("div", { cls: "dim" }, c.title),
     h("div", { cls: "card" }, h("div", { cls: "acc", lang: "ja" }, c.who),
       t.say ? [h("div", { lang: "ja", style: "font-size:20px" }, rom ? t.ro : t.say), rom || stage < 4 ? h("div", { cls: "dim", lang: "ja" }, rom ? t.say : t.ro) : "", stage < 5 || fails ? h("div", { cls: "dim" }, t.en) : "", btn("🔊", () => speak(t.say))] : h("div", { cls: "dim" }, "(You speak first.)")),
-    fails ? h("div", { cls: "card" }, h("div", { cls: "bad" }, L("Not quite. Hint:", "ヒント:", 3)), t.hint, fails >= 3 ? h("div", { cls: "acc", lang: "ja" }, "Try: " + t.want[0]) : "") : "",
+    fails ? h("div", { cls: "card" }, h("div", { cls: "bad" }, L("Not quite. Hint:", "ヒント:", 3)), t.hint, fails >= 3 ? h("div", { cls: "acc", lang: "ja" }, "Try: " + (rom ? t.wantRo : t.want[0])) : "") : "",
     inp, pre, btn(L("Say it", "言う", 5), () => send(inp.value), "main"),
+    btn(L("I don't know", "わかりません", 3), () => chat(id, turn, 3)),
     canListen() ? btn("🎤 " + L("Speak", "話す", 5), () => listen((heard) => { if (!heard) return alert("Didn't catch that. Try again, or type it."); inp.value = heard; pre.textContent = "Heard: " + heard; send(heard); })) : "",
     btn("Later", home));
+  inp.focus();
 }
 
 function cards() {

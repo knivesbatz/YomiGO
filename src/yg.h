@@ -6,7 +6,7 @@ typedef struct { const char *id; char type; const char *front, *reading, *romaji
 typedef struct { const char *name, *ja, *desc; int first; } YgStage;
 typedef struct { int stage; const char *title, *ja; int nnotes; const char *const *notes; int nnew; const short *cards; int chat; const char *hw, *imm, *mat; int exam; } YgDay;
 typedef struct { const char *id, *name; int stars, day; } YgExam;
-typedef struct { const char *say, *romaji, *en; int nwant; const char *const *want; const char *hint; } YgTurn;
+typedef struct { const char *say, *romaji, *en; int nwant; const char *const *want; const char *hint, *want_ro; } YgTurn;
 typedef struct { const char *title, *ja, *who; int nturns; const YgTurn *turns; } YgChat;
 typedef struct { int stage, is_new; const char *type, *title, *ja; int year; const char *task; } YgMedia;
 typedef struct { const char *cat, *name, *url, *desc; } YgRes;
@@ -23,7 +23,7 @@ void srs_grade(CardState *c, int grade, int today);
 
 /* Profile */
 #define YG_NAME 32
-enum { STEP_WARMUP, STEP_TEACH, STEP_DRILL, STEP_CHAT, STEP_QUIZ, STEP_HOMEWORK, STEP_IMMERSE, STEP_DONE };
+enum { STEP_WARMUP, STEP_TEACH, STEP_TYPING, STEP_DRILL, STEP_CHAT, STEP_QUIZ, STEP_HOMEWORK, STEP_IMMERSE, STEP_DONE };
 typedef struct {
     char name[YG_NAME];
     int xp, streak, best_streak, last_day, done_today, placed;

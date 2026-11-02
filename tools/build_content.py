@@ -126,6 +126,25 @@ def romaji_to_kana(s, table):
                 out += c; i += 1
     return out
 
+def kana_to_romaji(s):
+    """Hepburn spelling of a reply, for the reveal when a beginner can't read kana yet."""
+    rows = {r[1]: r[0] for r in kana_rows()}
+    s, out, i = to_hira(s).replace("。", ""), "", 0
+    while i < len(s):
+        two, one = s[i:i+2], s[i]
+        if two in rows: out += rows[two]; i += 2
+        elif one == "っ": out += "@"; i += 1
+        elif one == "ん":
+            # before a vowel or y it needs the apostrophe, or it reads as a different sound
+            nx = rows.get(s[i+1:i+3]) or rows.get(s[i+1:i+2]) or ""
+            out += "n'" if nx[:1] in tuple("aiueoy") and nx else "n"; i += 1
+        elif one in rows: out += rows[one]; i += 1
+        else: die(f"can't spell {one} in {s} in romaji")
+    while "@" in out:
+        at = out.index("@"); nx = out[at + 1]
+        out = out[:at] + ("t" if nx == "c" else nx) + out[at + 1:]
+    return out
+
 def tsv(name):
     group, rows = None, []
     with io.open(os.path.join(CONTENT, name), encoding="utf-8") as f:
@@ -185,7 +204,7 @@ def load_chats():
             elif line.startswith("want:"):
                 w, hint = [x.strip() for x in line[5:].split("|")]
                 say = pending or ["", "", ""]
-                cur["turns"].append({"say": say[0], "ro": say[1], "en": say[2], "want": w.split(";"), "hint": hint})
+                cur["turns"].append({"say": say[0], "ro": say[1], "en": say[2], "want": w.split(";"), "hint": hint, "wantRo": kana_to_romaji(w.split(";")[0])})
                 pending = None
     return chats
 
@@ -267,6 +286,8 @@ def check_chats(chats, cards):
             for w in t["want"]:
                 bad = [ch for ch in w.rstrip("。") if unicodedata.name(ch, "").startswith("CJK")]
                 if bad: die(f"chat {c['id']}: reply {w} has kanji {bad}")
+            if romaji_to_kana(t["wantRo"], romaji_table()) != to_hira(t["want"][0]).replace("。", ""):
+                die(f"chat {c['id']}: revealed romaji {t['wantRo']} doesn't type {t['want'][0]}")
 
 def load_media():
     out = []
@@ -324,7 +345,7 @@ def write_c(cards, stages, days, exams, chats, media, res, table, subs, genki):
     for i, c in enumerate(ol):
         for j, t in enumerate(c["turns"]):
             w.append("static const char*const CW%d_%d[]={%s};" % (i, j, ",".join(cstr(x) for x in t["want"])))
-        w.append("static const YgTurn CT%d[]={%s};" % (i, ",".join("{%s,%s,%s,%d,CW%d_%d,%s}" % (cstr(t["say"]), cstr(t["ro"]), cstr(t["en"]), len(t["want"]), i, j, cstr(t["hint"])) for j, t in enumerate(c["turns"]))))
+        w.append("static const YgTurn CT%d[]={%s};" % (i, ",".join("{%s,%s,%s,%d,CW%d_%d,%s,%s}" % (cstr(t["say"]), cstr(t["ro"]), cstr(t["en"]), len(t["want"]), i, j, cstr(t["hint"]), cstr(t["wantRo"])) for j, t in enumerate(c["turns"]))))
     w.append("static const YgChat YG_CHATS[]={")
     for i, c in enumerate(ol): w.append("{%s,%s,%s,%d,CT%d}," % (cstr(c["title"]), cstr(c["ja"]), cstr(c["who"]), len(c["turns"]), i))
     w.append("};")

@@ -53,7 +53,7 @@
 #define FBY_BTN (FBH - FOOT - 38)
 #endif
 
-typedef enum { S_SPLASH, S_PROFILES, S_NAME, S_PLACE_INTRO, S_PLACE_RESULT, S_HOME, S_CLASS, S_TEACH, S_QUIZ, S_RESULT, S_CHAT, S_TASK, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS, S_BIND, S_FIRST, S_GENKI } Screen;
+typedef enum { S_SPLASH, S_PROFILES, S_NAME, S_PLACE_INTRO, S_PLACE_RESULT, S_HOME, S_CLASS, S_TEACH, S_QUIZ, S_RESULT, S_CHAT, S_TASK, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS, S_BIND, S_FIRST, S_GENKI, S_TYPING } Screen;
 typedef enum { QM_WARMUP, QM_DRILL, QM_DAILY, QM_HW, QM_REVIEW, QM_EXAM, QM_PLACE, QM_PRACTICE } QuizMode;
 
 static Screen scr = S_SPLASH;
@@ -77,6 +77,17 @@ static int task_kind;
 static char name_buf[YG_NAME];
 static int new_material;
 static int kb_x, kb_y;
+static int q_idk, copied;
+static const char *copy_src;
+static int field_on, field_x, field_y;
+#define TY_MAX 10
+#if HTPC
+#define TY_REPS 2 /* each letter is several button presses on a controller */
+#else
+#define TY_REPS 3
+#endif
+static short ty_cards[TY_MAX];
+static int ty_n, ty_i, ty_rep, ty_bad;
 
 /* ---- immersion: labels move into Japanese as the learner can read them ---- */
 static const char *L(const char *en, const char *ja, int from_stage) {
@@ -127,7 +138,7 @@ static void prompt_btn(int *x, int y, int action, const char *label) {
     /* Button glyphs follow the connected controller */
     static const char *const xb[] = {"A", "B", "X", "Y", "LB", "RB", "Menu"};
     static const char *const ps[] = {"\xC3\x97", "O", "[]", "/\\", "L1", "R1", "Opt"};
-    static const char *const kb[] = {"Ent", "Esc", "X", "S", "Q", "E", "Spc"};
+    static const char *const kb[] = {"Ent", "Esc", "F3", "F1", "PgUp", "PgDn", "Spc"};
     static const unsigned col[] = {0x2FA84F, 0xC8323C, 0x3A6FD8, 0xD8A820, 0x707070, 0x707070, 0x707070};
     int st = pad_style();
     const char *g = (st == 2 ? ps : st == 0 ? kb : xb)[action];
@@ -138,6 +149,11 @@ static void prompt_btn(int *x, int y, int action, const char *label) {
     *x += text(*x, y, label, C_INK) + 8;
 }
 
+/* Double-size when it fits the screen, normal size when it doesn't. Returns the height used. */
+static int big_text(int x, int y, const char *s, unsigned c, int w) {
+    if (2 * text_w(s) <= w) { text2(x, y, s, c); return 33; }
+    return LH * wrap(x, y, w, s, c, LH, 0, 2) + 1;
+}
 static void sakura(int x, int y, int s) {
     static const char *const R[] = {
         "....11...11....", "...1221.1221...", "...12221.2221..", "..1122212221...", ".122222232221..",
@@ -260,14 +276,20 @@ static void scr_result(void) {
 }
 
 /* ---- class flow ---- */
-static const char *const STEP_EN[] = {"Warm-up review", "New lesson", "Practice drill", "Conversation", "Daily quiz", "Homework", "Immersion"};
-static const char *const STEP_JA[] = {"ふくしゅう", "じゅぎょう", "れんしゅう", "かいわ", "テスト", "しゅくだい", "イマージョン"};
+static const char *const STEP_EN[] = {"Warm-up review", "New lesson", "Typing practice", "Practice drill", "Conversation", "Daily quiz", "Homework", "Immersion"};
+static const char *const STEP_JA[] = {"ふくしゅう", "じゅぎょう", "タイピング", "れんしゅう", "かいわ", "テスト", "しゅくだい", "イマージョン"};
 
 static void start_quiz(QuizMode m) {
-    qm = m; qi = 0; qright = 0; qanswered = 0; qchoice = 0; input[0] = 0;
+    qm = m; qi = 0; qright = 0; qanswered = 0; qchoice = 0; q_idk = 0; input[0] = 0;
     go(S_QUIZ);
 }
 static void next_step(void);
+/* Words only: typing a kanji or grammar pattern alone doesn't teach much */
+static int day_word_cards(const YgDay *d, short *out) {
+    int i, n = 0;
+    for (i = 0; i < d->nnew && n < TY_MAX; i++) if (YG_CARDS[d->cards[i]].type == 'w') { if (out) out[n] = d->cards[i]; n++; }
+    return n;
+}
 static void run_step(void) {
     const YgDay *d = &YG_DAYS[P.day];
     switch (P.step) {
@@ -276,6 +298,10 @@ static void run_step(void) {
         if (Z.n == 0) { P.step++; run_step(); return; }
         start_quiz(QM_WARMUP); break;
     case STEP_TEACH: teach_card = -1; page = 0; go(S_TEACH); break;
+    case STEP_TYPING:
+        ty_n = day_word_cards(d, ty_cards); ty_i = 0; ty_rep = 0; ty_bad = 0; input[0] = 0;
+        if (!ty_n) { P.step++; run_step(); return; }
+        go(S_TYPING); break;
     case STEP_DRILL:
         quiz_new(&Z);
         quiz_add_cards(&Z, d->cards, d->nnew > 20 ? 20 : d->nnew, day_romaji_mode(P.day), 1);
@@ -411,9 +437,10 @@ static void scr_class(void) {
         unsigned col = i < P.step ? C_GOOD : i == P.step ? (HTPC ? C_ACC : C_ACC) : C_DIM;
         const char *mark = i < P.step ? "\xE2\x97\x8B" : i == P.step ? "\xE2\x86\x92" : "\xE3\x83\xBB";
         if (i == STEP_CHAT && d->chat < 0) { continue; }
+        if (i == STEP_TYPING && !day_word_cards(d, 0)) { continue; }
         text(CX + 4, y, mark, col);
         text(CX + 24, y, L(STEP_EN[i], STEP_JA[i], 3), col);
-        y += HTPC ? 15 : 24;
+        y += HTPC ? 14 : 24;
     }
     if (button(CX + CW / 2 - 70, FBY_BTN, 140, 28, L("Go", "はじめる", 2))) { run_step(); return; }
     if (!HTPC && button(CX, FBY_BTN, 90, 28, L("Later", "あとで", 2))) { go(S_HOME); return; }
@@ -434,9 +461,10 @@ static void scr_teach(void) {
     } else {
         const YgCard *c = &YG_CARDS[d->cards[page - d->nnotes]];
         const char *big = (rom && c->type == 'w') ? c->romaji : c->front;
+        copy_src = c->front;
         int cy = CY + 20;
         panel(CX, cy, CW, FBY_BTN - cy - 4);
-        text2(CX + 10, cy + 6, big, C_ACC);
+        big_text(CX + 10, cy + 6, big, C_ACC, CW - 20);
         cy += 42;
         if (c->type == 'g') {
             /* The TV has room for five tight lines, so a long explanation gives up the translation */
@@ -527,7 +555,8 @@ static void quiz_finished(void) {
 }
 static void answer_given(int ok) {
     qanswered = 1; qok = ok;
-    if (ok) { qright++; plat_sound(2); } else plat_sound(4);
+    if (!ok) plat_sound(4);
+    if (ok) { qright++; plat_sound(2); }
     if (qm == QM_REVIEW) {
         CardState *c = &P.cards[Z.q[qi].card];
         srs_grade(c, ok ? GRADE_GOOD : GRADE_AGAIN, plat_today());
@@ -538,12 +567,50 @@ static void answer_given(int ok) {
     /* Missed drill cards come straight back: repetition is the point */
     if (!ok && qm == QM_DRILL && Z.n < YG_MAXQ) { Z.q[Z.n] = Z.q[qi]; Z.n++; }
 }
+static void do_paste(void) {
+    static char clip[512]; const char *s = clip; int n = ys_len(input), c;
+    plat_clip_get(clip, sizeof clip);
+    /* whole characters only, and no line breaks or tabs from the source */
+    while ((c = utf8_next(&s)) != 0 && n < 120) if (c >= 32 && c != 0x7F) n += utf8_put(c, input + n);
+    input[n] = 0;
+    plat_sound(0);
+}
 static void text_entry(void) {
     int n = ys_len(input), i;
     for (i = 0; IN.text[i] && n < 120; i++) input[n++] = IN.text[i];
     input[n] = 0;
     while (IN.backspace-- > 0 && n > 0) { n--; while (n > 0 && (input[n] & 0xC0) == 0x80) n--; input[n] = 0; }
+    if (IN.paste) do_paste();
 }
+/* The answer box: bright frame, a label when empty, and a blinking cursor show where typing goes */
+static void input_box(int x, int y, int w, int active) {
+    const char *s = input, *comp = active ? plat_ime_comp() : ""; int tw, cw;
+    unsigned bg = HTPC ? C_LO : 0xFFFFFF;
+    fill(x, y, w, 24, bg);
+    frame(x, y, w, 24, active ? C_ACC : C_DIM);
+    if (active) frame(x + 1, y + 1, w - 2, 22, C_ACC);
+    cw = text_w(comp);
+    /* a long answer scrolls so its end stays visible */
+    while (*s && text_w(s) + cw > w - 18) utf8_next(&s);
+    tw = text(x + 6, y + 4, s, C_INK);
+    if (active) {
+        field_on = 1; field_x = x + 6 + tw; field_y = y;
+        if (*comp) { /* unfinished Japanese, underlined as Windows does */
+            text(x + 6 + tw, y + 4, comp, C_ACC);
+            fill(x + 6 + tw, y + 20, cw, 2, C_ACC);
+            tw += cw;
+        }
+        if (!*s && !*comp) text(x + 12, y + 4, "Type here", C_DIM);
+        if ((anim / 8) & 1 || !anim) fill(x + 6 + tw + 1, y + 4, 2, 16, C_ACC);
+    }
+}
+#if !HTPC
+static void clip_buttons(int x, int y) {
+    text(x, y + 2, "Ctrl+C  Ctrl+V", C_DIM);
+    if (button(x + 122, y, 52, 20, "Copy")) IN.copy = 1;
+    if (button(x + 178, y, 52, 20, "Paste")) do_paste();
+}
+#endif
 /* On-screen keyboard for the TV. Romaji typed here becomes kana in the answer check. */
 #if HTPC
 static void osk(int y) {
@@ -567,6 +634,7 @@ static void osk(int y) {
 static void scr_quiz(void) {
     Question *q = &Z.q[qi];
     char b[64];
+    copy_src = q->prompt;
     static const char *const hdr[] = {"Warm-up", "Practice", "Daily quiz", "Homework check", "Flashcards", "Exam", "Entrance exam", "Genki practice"};
     chrome(hdr[qm], 0);
     ys_fmt(b, sizeof b, "%d / %d", qi + 1, Z.n);
@@ -575,14 +643,15 @@ static void scr_quiz(void) {
         /* The exam is a duel: every right answer hits the boss, who falls at 80% */
         int need = (Z.n * 4 + 4) / 5;
         text(CX, CY, YG_EXAMS[exam_id].name, C_ACC);
-        progress(CX, CY + 18, CW, 10, need - qright, need, C_BAD);
+        progress(CX, CY + (HTPC ? 16 : 18), CW, HTPC ? 8 : 10, need - qright, need, C_BAD);
     } else {
-        progress(CX, CY + 18, CW, 10, qi, Z.n, C_ACC);
+        progress(CX, CY + (HTPC ? 16 : 18), CW, HTPC ? 8 : 10, qi, Z.n, C_ACC);
     }
-    { int y = CY + 32;
-      text(CX, y, q->tag, C_DIM); y += LH;
-      if (ys_len(q->prompt) > 24) { wrap(CX, y, CW, q->prompt, C_INK, LH, 0, 2); y += 2 * LH; }
-      else { text2(CX + (CW - 2 * text_w(q->prompt)) / 2, y, q->prompt, C_INK); y += 34; }
+    /* The TV skips the gap above the question, so its on-screen keyboard fits underneath */
+    { int y = CY + (HTPC ? 28 : 32);
+      text(CX, y, q->tag, C_DIM); y += HTPC ? 15 : LH;
+      if (2 * text_w(q->prompt) > CW) y += LH * wrap(CX, y, CW, q->prompt, C_INK, LH, 0, 2);
+      else { text2(CX + (CW - 2 * text_w(q->prompt)) / 2, y, q->prompt, C_INK); y += HTPC ? 32 : 34; }
       if (*q->sub) { wrap(CX, y, CW, q->sub, C_DIM, LH, 0, 1); y += LH; }
       if (q->kind == Q_CHOICE) {
         int bw = (CW - 8) / 2, bh = HTPC ? 26 : 34, i;
@@ -598,35 +667,45 @@ static void scr_quiz(void) {
         }
       } else {
         char pre[128];
-        panel(CX, y + 2, CW, 24);
-        text(CX + 6, y + 6, input, C_INK);
+        input_box(CX, y + 2, CW, !qanswered);
         norm_kana(input, pre, sizeof pre);
-        text(CX + 6, y + 28, pre, C_ACC);
+        text(CX + 6, y + 27, pre, C_ACC);
         if (qanswered) {
-            text(CX, y + 50, q->want, qok ? C_GOOD : C_BAD);
+            int tw = text(CX, y + 50, q->want, qok ? C_GOOD : C_BAD);
+            if (*q->want2) text(CX + tw + 16, y + 50, q->want2, C_DIM);
         } else {
 #if HTPC
-            osk(y + 46);
+            osk(FBH - SAFE - 75);
             if (IN.pressed & A_START) { answer_given(answer_ok(input, q->want, q->want2)); IN.pressed &= ~A_OK; }
 #else
             text_entry();
             if (button(CX + CW - 90, y + 46, 90, 28, L("Check", "チェック", 3))) { answer_given(answer_ok(input, q->want, q->want2)); IN.pressed &= ~A_OK; }
+            else clip_buttons(CX, y + 50);
 #endif
         }
       }
       if (qanswered) {
         const YgCard *c = &YG_CARDS[q->card];
         if (!qok && *c->note && !HTPC) wrap(CX, FBY_BTN - 40, CW, c->note, C_DIM, 18, 0, 2);
-        text(CX, FBY_BTN + 6, qok ? L("Correct!", "正解！", 5) : L("Not quite.", "ちがいます", 3), qok ? C_GOOD : C_BAD);
+        text(CX, FBY_BTN + 6, qok ? L("Correct!", "正解！", 5) : q_idk ? (HTPC ? "That's okay." : "That's okay. Here's the answer.") : L("Not quite.", "ちがいます", 3), qok ? C_GOOD : q_idk ? C_DIM : C_BAD);
         if (button(CX + CW - 120, FBY_BTN, 120, 28, L("Next", "つぎ", 2))) {
-            qi++; qanswered = 0; input[0] = 0; ui_reset_focus();
+            qi++; qanswered = 0; q_idk = 0; input[0] = 0; ui_reset_focus();
             if (qi >= Z.n) quiz_finished();
+            return;
         }
+      } else {
+        /* Not knowing is a normal answer. It counts as a miss, and shows you the right one. */
+#if HTPC
+        if (IN.pressed & A_X) { qchoice = -1; q_idk = 1; answer_given(0); IN.pressed &= ~A_OK; }
+#else
+        if (button(CX, FBY_BTN, 130, 28, L("I don't know", "わかりません", 3))) { qchoice = -1; q_idk = 1; answer_given(0); IN.pressed &= ~A_OK; }
+#endif
       }
     }
 #if HTPC
-    if (q->kind == Q_TYPE && !qanswered) { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "Check"); }
-    else footer("OK", 0);
+    if (qanswered) footer("OK", 0);
+    else if (q->kind == Q_TYPE) { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "OK"); prompt_btn(&x, FBH - SAFE - 17, 2, "Don't know"); }
+    else { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "OK"); prompt_btn(&x, FBH - SAFE - 17, 2, "Don't know"); }
 #endif
     /* Leaving a lesson quiz is fine: the class resumes at this step */
     if (qm != QM_EXAM && qm != QM_PLACE && ((!HTPC && (IN.pressed & A_BACK)) || (HTPC && (IN.pressed & A_START) && q->kind != Q_TYPE))) go(S_HOME);
@@ -643,6 +722,7 @@ static void scr_chat(void) {
         return;
     }
     t = &c->turns[chat_turn];
+    copy_src = t->say;
     chrome(c->ja, c->title);
     panel(CX, y, CW, HTPC ? 62 : 92);
     text(CX + 6, y + 4, c->who, C_ACC);
@@ -652,30 +732,94 @@ static void scr_chat(void) {
         if (stage < 5 || chat_fail) wrap(CX + 6, y + 22 + 2 * LH, CW - 12, t->en, C_DIM, LH, 0, 1);
     } else text(CX + 6, y + 22, "(You speak first.)", C_DIM);
     y += HTPC ? 66 : 100;
-    panel(CX, y, CW, 24);
-    text(CX + 6, y + 4, input, C_INK);
+    input_box(CX, y, CW, 1);
     { char pre[128]; norm_kana(input, pre, sizeof pre); text(CX + 6, y + 26, pre, C_ACC); }
     y += 44;
-    if (chat_fail) {
-        text(CX, y, L("Not quite. Hint:", "ヒント:", 3), C_BAD);
-        wrap(CX, y + LH, CW, t->hint, C_INK, LH, 0, 2);
-        if (chat_fail >= 3) { char s[96]; ys_cpy(s, "Try: ", sizeof s); ys_cat(s, t->want[0], sizeof s); text(CX, y + 3 * LH, s, C_ACC); }
+    {
+        /* From the third miss, or on "I don't know", show a reply to copy, in letters if kana isn't taught yet */
+        char s[128];
+        ys_cpy(s, "Try: ", sizeof s);
+        ys_cat(s, rom ? t->want_ro : t->want[0], sizeof s);
+#if HTPC
+        if (chat_fail) {
+            fill(CX + 1, CY + 22, CW - 2, 39, C_PANEL);
+            if (chat_fail >= 3) text(CX + 6, CY + 30, s, C_ACC);
+            else wrap(CX + 6, CY + 22, CW - 12, t->hint, C_INK, LH, 0, 2);
+        }
+#else
+        if (chat_fail) {
+            text(CX, y, L("Here's a hint:", "ヒント:", 3), C_DIM);
+            wrap(CX, y + LH, CW, t->hint, C_INK, LH, 0, 2);
+            if (chat_fail >= 3) text(CX, y + 3 * LH, s, C_ACC);
+        }
+#endif
     }
 #if HTPC
     osk(FBH - SAFE - 80);
+    if (IN.pressed & A_X) { chat_fail = 3; input[0] = 0; }
     if (IN.pressed & A_START) {
         if (chat_ok(input, t)) { chat_turn++; chat_fail = 0; input[0] = 0; plat_sound(2); }
         else { chat_fail++; plat_sound(4); }
     }
-    { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "Say it"); }
+    { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "Say"); prompt_btn(&x, FBH - SAFE - 17, 2, "Don't know"); }
 #else
     text_entry();
     if (button(CX + CW - 120, FBY_BTN, 120, 28, L("Say it", "言う", 5))) {
         if (chat_ok(input, t)) { chat_turn++; chat_fail = 0; input[0] = 0; plat_sound(2); }
         else { chat_fail++; plat_sound(4); }
     }
+    if (button(CX + 124, FBY_BTN, 130, 28, L("I don't know", "わかりません", 3))) { chat_fail = 3; input[0] = 0; }
     if (plat_has_tts() && *t->say && button(CX, FBY_BTN, 120, 28, L("Hear it", "聞く", 5))) plat_speak(t->say);
+    clip_buttons(CX + CW - 230, CY + 124);
 #endif
+}
+
+/* ---- typing practice: every new word, several times ---- */
+static void scr_typing(void) {
+    const YgCard *c = &YG_CARDS[ty_cards[ty_i]];
+    int rom = day_romaji_mode(P.day), y = CY, submit;
+    char b[64], pre[128];
+    copy_src = c->front;
+    chrome(L("Typing practice", "タイピング", 3), 0);
+    ys_fmt(b, sizeof b, "Word %d of %d", ty_i + 1, ty_n);
+    text(CX, y, b, C_DIM);
+    { int i; for (i = 0; i < TY_REPS; i++) fill(CX + CW - (TY_REPS - i) * 18, y + 2, 14, 12, i < ty_rep ? C_GOOD : (HTPC ? C_LO : 0xD9C8BC)); }
+    y += LH;
+    big_text(CX, y, rom ? c->romaji : c->front, C_ACC, CW);
+    y += HTPC ? 33 : 36;
+    { /* one line: whatever helps most, in order, while it still fits */
+      int x = CX, right = CX + CW;
+      const char *parts[3]; int i;
+      parts[0] = (rom && HTPC) ? "" : ys_cmp(c->front, c->reading) || rom ? c->reading : "";
+      parts[1] = (!rom && profile_stage(&P) < 4) ? c->romaji : "";
+      parts[2] = c->en;
+      for (i = 0; i < 3; i++) if (*parts[i] && x + text_w(parts[i]) <= right) x += text(x, y, parts[i], i == 2 ? C_INK : C_DIM) + 10; }
+    y += LH;
+    input_box(CX, y, CW, 1);
+    y += 26;
+    norm_kana(input, pre, sizeof pre);
+    if (ty_bad && !input[0]) { ys_cpy(b, "Not quite. Type: ", sizeof b); ys_cat(b, c->romaji, sizeof b); text(CX + 6, y, b, C_BAD); }
+    else text(CX + 6, y, pre, C_ACC);
+#if HTPC
+    osk(FBH - SAFE - 80);
+    submit = (IN.pressed & A_START) != 0;
+    { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "Enter"); }
+    if (!submit && !input[0] && (IN.pressed & A_BACK)) { go(S_CLASS); return; }
+#else
+    text_entry();
+    submit = button(CX + CW - 120, FBY_BTN, 120, 28, "Enter");
+    if (button(CX, FBY_BTN, 90, 28, L("Later", "あとで", 2))) { save_profile(); go(S_CLASS); return; }
+    clip_buttons(CX + CW - 230, FBY_BTN - 26);
+#endif
+    if (submit && input[0]) {
+        if (answer_ok(input, c->reading, c->romaji)) {
+            plat_sound(2); ty_bad = 0; input[0] = 0; ty_rep++;
+            if (ty_rep >= TY_REPS) {
+                ty_rep = 0; ty_i++; P.xp++;
+                if (ty_i >= ty_n) { next_step(); return; }
+            }
+        } else { plat_sound(4); ty_bad = 1; input[0] = 0; }
+    }
 }
 
 /* ---- homework and immersion ---- */
@@ -929,10 +1073,12 @@ static void scr_profiles(void) {
 static void scr_name(void) {
     chrome("Your name", 0);
     text(CX, CY, "Enter a short name for this learner.", C_DIM);
-    panel(CX, CY + 22, CW, 24);
-    text(CX + 6, CY + 26, input, C_INK);
+    input_box(CX, CY + 22, CW, 1);
+    /* Saves are named after the learner, so a Japanese name can't be used yet. Say so instead of ignoring OK. */
+    { const char *p = input; int bad = 0; while (*p) if (*p++ & 0x80) bad = 1;
+      if (bad) wrap(CX, CY + 50, CW, "Names use letters A-Z and numbers for now. Switch your keyboard to English, or type it in romaji.", C_BAD, LH, 0, 2); }
 #if HTPC
-    osk(CY + 56);
+    osk(CY + 96);
     { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "Done"); }
     if ((IN.pressed & A_START) && input[0]) {
 #else
@@ -1009,6 +1155,10 @@ static void scr_place_result(void) {
 void app_test_auto(void) {
     IN.pressed = 0; IN.num = 0; IN.text[0] = 0; IN.mx = IN.my = -1; IN.mclick = 0;
     switch (scr) {
+    case S_TYPING:
+        ys_cpy(input, YG_CARDS[ty_cards[ty_i]].romaji, sizeof input);
+        IN.pressed = HTPC ? A_START : A_OK;
+        break;
     case S_QUIZ: {
         Question *q = &Z.q[qi];
         if (qanswered) { IN.pressed = HTPC ? A_OK : A_OK; break; }
@@ -1041,6 +1191,8 @@ void app_init(void) {
 void app_frame(void) {
     ui_begin();
     anim++;
+    copy_src = 0;
+    field_on = 0;
     switch (scr) {
     case S_SPLASH: scr_splash(); break;
     case S_PROFILES: scr_profiles(); break;
@@ -1065,10 +1217,18 @@ void app_frame(void) {
     case S_BIND: break;
 #endif
     case S_FIRST: scr_first(); break;
+    case S_TYPING: scr_typing(); break;
     case S_GENKI: scr_genki(); break;
     }
 #if !HTPC
     rail();
 #endif
+    /* Copy takes what you typed, or else the Japanese on screen */
+    if (IN.copy) {
+        const char *src = input[0] ? input : copy_src;
+        if (src && *src) { plat_clip_set(src); copied = 40; plat_sound(0); }
+    }
+    plat_ime_field(field_on, field_x, field_y);
+    if (copied > 0) { copied--; fill(FBW - 76, FBH / 2, 72, 20, C_ACC); text(FBW - 72, FBH / 2 + 2, "Copied!", HTPC ? 0x1B1033 : 0xFFFFFF); }
     ui_end();
 }

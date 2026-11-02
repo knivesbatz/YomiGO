@@ -107,6 +107,43 @@ static int from_wide(const WCHAR *w, char *u, int cap) {
     u[n] = 0;
     return n;
 }
+/* Clipboard. 9x has no Unicode clipboard, so it carries plain ASCII there. */
+static char test_clip[512];
+int plat_clip_get(char *out, int cap) {
+    HANDLE h; int n = 0;
+    out[0] = 0;
+    if (headless) { ys_cpy(out, test_clip, cap); return ys_len(out); }
+    if (!OpenClipboard(wnd)) return 0;
+    h = GetClipboardData(is_nt ? CF_UNICODETEXT : CF_TEXT);
+    if (h) {
+        void *m = GlobalLock(h);
+        if (m) {
+            if (is_nt) n = from_wide((const WCHAR *)m, out, cap);
+            else { const char *c = (const char *)m; while (*c && n < cap - 1) { if ((unsigned char)*c < 0x80) out[n++] = *c; c++; } out[n] = 0; }
+            GlobalUnlock(h);
+        }
+    }
+    CloseClipboard();
+    return n;
+}
+void plat_clip_set(const char *u) {
+    static WCHAR w[1024]; int n, i; HGLOBAL g; void *m;
+    if (headless) { ys_cpy(test_clip, u, sizeof test_clip); return; }
+    n = to_wide(u, w, 1024);
+    g = GlobalAlloc(GMEM_MOVEABLE, (DWORD)(n + 1) * 2);
+    if (!g) return;
+    m = GlobalLock(g);
+    if (!m) return;
+    if (is_nt) for (i = 0; i <= n; i++) ((WCHAR *)m)[i] = w[i];
+    else { int k = 0; for (i = 0; i < n; i++) if (w[i] < 0x80) ((char *)m)[k++] = (char)w[i]; ((char *)m)[k] = 0; }
+    GlobalUnlock(g);
+    if (OpenClipboard(wnd)) {
+        EmptyClipboard();
+        /* the clipboard owns the memory once this succeeds */
+        SetClipboardData(is_nt ? CF_UNICODETEXT : CF_TEXT, g);
+        CloseClipboard();
+    }
+}
 int plat_open(const char *u) {
     if (headless) return 1;
     if (is_nt) {
@@ -375,6 +412,11 @@ static int pad_poll(void) {
 /* ---- window ---- */
 static BITMAPINFO bmi;
 static Input pending;
+static void add_text(int cp) {
+    int n = ys_len(pending.text);
+    /* no surrogates: the font has nothing beyond the basic plane */
+    if (n < 248 && cp >= 32 && (cp < 0xD800 || cp > 0xDFFF)) n += utf8_put(cp, pending.text + n), pending.text[n] = 0;
+}
 static int cw = FBW, ch = FBH;
 
 /* Whole-number scaling keeps every font pixel crisp, with bars filling what's left.
@@ -405,14 +447,74 @@ static void present(HDC dc) {
     SetStretchBltMode(dc, COLORONCOLOR);
     StretchDIBits(dc, ox, oy, sx, sy, 0, 0, FBW, FBH, FB, &bmi, DIB_RGB_COLORS, SRCCOPY);
 }
+/* Japanese keyboard. The apps draw everything themselves, so the text being composed goes in the answer box,
+   and the candidate list opens beside it. imm32 is looked up at run time, because 95 may not have it. */
+typedef struct { DWORD style; POINT pt; RECT area; } CompForm_;
+typedef struct { DWORD index, style; POINT pt; RECT area; } CandForm_;
+static void *(WINAPI *imm_get)(HWND);
+static BOOL (WINAPI *imm_rel)(HWND, void *);
+static LONG (WINAPI *imm_str)(void *, DWORD, void *, DWORD);
+static void *(WINAPI *imm_assoc)(HWND, void *);
+static BOOL (WINAPI *imm_cand)(void *, CandForm_ *);
+static BOOL (WINAPI *imm_comp)(void *, CompForm_ *);
+static char ime_comp[256];
+static int ime_x, ime_y, ime_on = 1;
+static void *ime_saved;
+static void ime_load(void) {
+    HMODULE m = is_nt ? LoadLibraryA("imm32.dll") : 0;
+    if (!m) return;
+    *(FARPROC *)&imm_get = GetProcAddress(m, "ImmGetContext");
+    *(FARPROC *)&imm_rel = GetProcAddress(m, "ImmReleaseContext");
+    *(FARPROC *)&imm_str = GetProcAddress(m, "ImmGetCompositionStringW");
+    *(FARPROC *)&imm_assoc = GetProcAddress(m, "ImmAssociateContext");
+    *(FARPROC *)&imm_cand = GetProcAddress(m, "ImmSetCandidateWindow");
+    *(FARPROC *)&imm_comp = GetProcAddress(m, "ImmSetCompositionWindow");
+    if (!imm_get || !imm_rel || !imm_cand || !imm_comp) imm_str = 0;
+}
+static void ime_place(void) {
+    void *c; int ox, oy, sx, sy; CandForm_ cf; CompForm_ co; int i;
+    if (!imm_str || !wnd || !(c = imm_get(wnd))) return;
+    dest_rect(&ox, &oy, &sx, &sy);
+    for (i = 0; i < (int)sizeof cf; i++) ((char *)&cf)[i] = 0;
+    for (i = 0; i < (int)sizeof co; i++) ((char *)&co)[i] = 0;
+    cf.style = 0x40; /* CFS_CANDIDATEPOS */
+    cf.pt.x = ox + ime_x * sx / FBW; cf.pt.y = oy + (ime_y + 26) * sy / FBH;
+    imm_cand(c, &cf);
+    co.style = 2; /* CFS_POINT */
+    co.pt = cf.pt;
+    imm_comp(c, &co);
+    imm_rel(wnd, c);
+}
+static void ime_composition(LPARAM l) {
+    static WCHAR w[256]; void *c; LONG n; int i;
+    if (!(c = imm_get(wnd))) return;
+    if (l & 0x800) { /* GCS_RESULTSTR: finished text */
+        n = imm_str(c, 0x800, w, sizeof w - 2);
+        if (n > 0) { n /= 2; w[n] = 0; for (i = 0; i < n; i++) add_text(w[i]); }
+        ime_comp[0] = 0;
+    }
+    if (l & 0x8) { /* GCS_COMPSTR: still being typed */
+        n = imm_str(c, 0x8, w, sizeof w - 2);
+        if (n < 0) n = 0;
+        n /= 2; w[n] = 0;
+        from_wide(w, ime_comp, sizeof ime_comp);
+    }
+    imm_rel(wnd, c);
+    ime_place();
+}
+const char *plat_ime_comp(void) { return ime_comp; }
+/* With no text box showing, the keyboard is switched off, so menu keys can't vanish into an invisible composition */
+void plat_ime_field(int on, int x, int y) {
+    if (on) { ime_x = x; ime_y = y; }
+    if (on == ime_on || !imm_assoc || !wnd) { ime_on = on; return; }
+    ime_on = on;
+    if (on) { imm_assoc(wnd, ime_saved); ime_place(); }
+    else { ime_saved = imm_assoc(wnd, 0); ime_comp[0] = 0; }
+}
 static void map_mouse(LPARAM lp) {
     int x = (short)LOWORD(lp), y = (short)HIWORD(lp), ox, oy, sx, sy;
     dest_rect(&ox, &oy, &sx, &sy);
     pending.mx = (x - ox) * FBW / sx; pending.my = (y - oy) * FBH / sy;
-}
-static void add_text(int cp) {
-    int n = ys_len(pending.text);
-    if (n < 56 && cp >= 32) n += utf8_put(cp, pending.text + n), pending.text[n] = 0;
 }
 static LRESULT CALLBACK proc(HWND h, UINT m, WPARAM w, LPARAM l) {
     switch (m) {
@@ -420,6 +522,10 @@ static LRESULT CALLBACK proc(HWND h, UINT m, WPARAM w, LPARAM l) {
     case WM_SIZE: cw = LOWORD(l); ch = HIWORD(l); return 0;
     case WM_PAINT: { PAINTSTRUCT ps; HDC dc = BeginPaint(h, &ps); present(dc); EndPaint(h, &ps); return 0; }
     case WM_ERASEBKGND: return 1;
+    case 0x0281: l &= ~(LPARAM)0x80000000; break; /* WM_IME_SETCONTEXT: YomiGo draws the composition itself */
+    case 0x010D: if (imm_str) { ime_place(); return 0; } break; /* WM_IME_STARTCOMPOSITION */
+    case 0x010E: if (imm_str) { ime_comp[0] = 0; return 0; } break; /* WM_IME_ENDCOMPOSITION */
+    case 0x010F: if (imm_str) { ime_composition(l); return 0; } break; /* WM_IME_COMPOSITION */
     case WM_MOUSEMOVE: map_mouse(l); if (pending.mdown != 1) pending.mdown = 2; return 0;
     case WM_LBUTTONDOWN: map_mouse(l); pending.mdown = 1; SetCapture(h); return 0;
     case WM_LBUTTONUP: map_mouse(l); pending.mdown = 0; pending.mclick = 1; ReleaseCapture(); return 0;
@@ -436,17 +542,26 @@ static LRESULT CALLBACK proc(HWND h, UINT m, WPARAM w, LPARAM l) {
         case VK_PRIOR: pending.pressed |= A_L; break;
         case VK_NEXT: pending.pressed |= A_R; break;
         case VK_F2: pending.pressed |= A_START; break;
+        case VK_F3: pending.pressed |= A_X; break;
+#ifdef YG_HTPC
+        case VK_SPACE: pending.pressed |= A_START; break;
+#endif
         }
         return 0;
     case WM_CHAR:
+        if (w == 22) { pending.paste = 1; return 0; } /* Ctrl+V */
+        if (w == 3) { pending.copy = 1; return 0; }   /* Ctrl+C */
         if (w == 8 || w == 13 || w == 27) return 0;
+#ifdef YG_HTPC
+        if (w == ' ') return 0; /* Space is Start here */
+#endif
         if (w >= '1' && w <= '4') pending.num = (int)w - '0';
         add_text((int)w);
         return 0;
     case WM_TIMER:
         pending.pressed |= pad_poll();
         IN = pending;
-        pending.pressed = 0; pending.mclick = 0; pending.text[0] = 0; pending.backspace = 0; pending.num = 0;
+        pending.pressed = 0; pending.mclick = 0; pending.text[0] = 0; pending.backspace = 0; pending.num = 0; pending.paste = 0; pending.copy = 0;
         app_frame();
         { HDC dc = GetDC(h); present(dc); ReleaseDC(h, dc); }
         if (quit_now) DestroyWindow(h);
@@ -470,31 +585,49 @@ static void write_bmp(const char *name) {
     { int y; for (y = FBH - 1; y >= 0; y--) WriteFile(h, FB + y * FBW, FBW * 4, &put, 0); }
     CloseHandle(h);
 }
+static int step_paste, step_copy;
+/* Win95-style command lines are ANSI, so test scripts spell Japanese as \uXXXX */
+static void unescape(char *b) {
+    char *r = b, *w = b;
+    while (*r) {
+        if (r[0] == '\\' && r[1] == 'u') {
+            int i, v = 0;
+            for (i = 2; i < 6; i++) { char c = r[i]; v = v * 16 + (c >= 'a' ? c - 'a' + 10 : c >= 'A' ? c - 'A' + 10 : c - '0'); }
+            w += utf8_put(v, w); r += 6;
+        } else *w++ = *r++;
+    }
+    *w = 0;
+}
 static void step(int actions, const char *txt, int num, int back) {
     int i;
     for (i = 0; i < (int)sizeof IN; i++) ((char *)&IN)[i] = 0;
     IN.mx = IN.my = -1;
     IN.pressed = actions; IN.num = num; IN.backspace = back;
+    IN.paste = step_paste; IN.copy = step_copy; step_paste = step_copy = 0;
     if (txt) ys_cpy(IN.text, txt, sizeof IN.text);
     app_frame();
 }
 static void run_script(const char *s) {
-    /* keys: u d l r o(ok) b(back) s(start) y; 1-4 pick; "t<text>;" type; "w<frames>;" wait; "p<name>;" screenshot */
+    /* keys: u d l r o(ok) b(back) s(start) y x(extra) V(paste) C(copy); 1-4 pick; "t<text>;" type; "k<text>;" composing; "w<frames>;" wait; "p<name>;" screenshot */
     char buf[128];
     step(0, 0, 0, 0);
     while (*s) {
         char c = *s++; int n = 0;
-        if (c == 't' || c == 'w' || c == 'p') { while (*s && *s != ';' && n < 127) buf[n++] = *s++; buf[n] = 0; if (*s) s++; }
+        if (c == 't' || c == 'w' || c == 'p' || c == 'k') { while (*s && *s != ';' && n < 127) buf[n++] = *s++; buf[n] = 0; if (*s) s++; unescape(buf); }
         switch (c) {
         case 'u': step(A_UP, 0, 0, 0); break; case 'd': step(A_DOWN, 0, 0, 0); break;
         case 'l': step(A_LEFT, 0, 0, 0); break; case 'r': step(A_RIGHT, 0, 0, 0); break;
         case 'o': step(A_OK, 0, 0, 0); break; case 'b': step(A_BACK, 0, 0, 0); break;
         case 's': step(A_START, 0, 0, 0); break; case 'y': step(A_Y, 0, 0, 0); break;
+        case 'x': step(A_X, 0, 0, 0); break;
+        case 'V': step_paste = 1; step(0, 0, 0, 0); break;
+        case 'C': step_copy = 1; step(0, 0, 0, 0); break;
         case 'R': step(A_R, 0, 0, 0); break; case 'L': step(A_L, 0, 0, 0); break;
         case '1': case '2': case '3': case '4': step(0, 0, c - '0', 0); break;
         case 't': step(0, buf, 0, 0); break;
         case 'w': { int k = ys_atoi(buf); while (k-- > 0) step(0, 0, 0, 0); break; }
         case 'p': step(0, 0, 0, 0); write_bmp(buf); break;
+        case 'k': ys_cpy(ime_comp, buf, sizeof ime_comp); break; /* as if the keyboard were composing this */
         case 'G': { /* play on until the course is complete, or give up after a very long time */
             int k = 200000;
             while (!app_test_done() && k-- > 0) { step(0, 0, 0, 0); app_test_auto(); app_frame(); }
@@ -540,6 +673,7 @@ void yg_entry(void) {
         ExitProcess(0);
     }
     make_wav(0, 880, 880, 25); make_wav(1, 660, 990, 60); make_wav(2, 784, 1175, 120); make_wav(3, 523, 1046, 300); make_wav(4, 196, 147, 180);
+    ime_load();
     { HMODULE x = LoadLibraryA("xinput1_4.dll"); if (!x) x = LoadLibraryA("xinput1_3.dll"); if (!x) x = LoadLibraryA("xinput9_1_0.dll");
       if (x) xi_get = (XIGS)GetProcAddress(x, "XInputGetState"); }
     pad_find();

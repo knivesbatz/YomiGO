@@ -7,11 +7,11 @@
 
 Saves go in a `saves` folder beside the program. Keep your own study files in a folder called `Material`, either beside the program or one level up, or at `C:\YomiGO\Material`. New files are announced on the home screen.
 
-**Keyboard:** arrows move, Enter selects, Esc goes back. On the TV app, Space means Start and F1 means speak.
+**Keyboard:** arrows move, Enter selects, Esc goes back. Ctrl+C copies and Ctrl+V pastes. On the TV app, Space means Start, and F3 means I don't know.
 
 **Listening:** to hear Japanese on Windows, add a Japanese voice under Settings > Time & language > Speech. Without one, YomiGo hides the speech options.
 
-**Typing Japanese:** answer boxes convert romaji to kana for you. On Windows NT and later you can also use the Windows Japanese keyboard: Settings > Time & language > Language & region > Add a language > Japanese.
+**Typing Japanese:** answer boxes convert romaji to kana for you. On Windows NT and later you can also use the Windows Japanese keyboard: Settings > Time & language > Language & region > Add a language > Japanese. Switch to it with Win+Space and press Alt+` for hiragana. Text you're composing shows underlined in the answer box. Press Enter to finish it, then Enter again to submit. Learner names need English letters for now.
 
 ### Updates
 

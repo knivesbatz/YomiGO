@@ -5,6 +5,7 @@
 - **Windows 95 and 98:** never run. See [compatibility](COMPATIBILITY.md).
 - **Controllers:** the TV app detects a connected Xbox-style pad and shows its prompts, but no one has played with a pad yet, or tried DirectInput, rebinding, or reconnecting.
 - **CRT and RF:** not viewed on a real tube.
+- **Windows Japanese keyboard:** the code is new. It's been tested with simulated keyboard messages only, because the build PC has no Japanese keyboard installed.
 - **Windows speech:** this PC has no Japanese voice, so speech has never been heard.
 - **Android:** speech input, text-to-speech, and self-update haven't run on a phone.
 - **Reader:** not yet loaded as a real extension in Chrome or Firefox.
