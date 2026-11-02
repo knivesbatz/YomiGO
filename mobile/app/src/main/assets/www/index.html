@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>YomiGo</title>
+<style>
+:root { --bg:#fdf6f3; --card:#fff; --ink:#34202a; --dim:#7d6670; --accent:#c2436b; --accent2:#f4b6c8; --good:#2e7d4f; --bad:#b3242c; --line:#f0dfe3; }
+@media (prefers-color-scheme: dark) { :root { --bg:#1e1418; --card:#2b1e24; --ink:#f7ecef; --dim:#b9a2ab; --accent:#f08aa8; --accent2:#5d2c3d; --good:#7cd69a; --bad:#ff8a8a; --line:#402e36; } }
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 system-ui,"Noto Sans JP",sans-serif; padding-bottom:76px; }
+main { max-width:640px; margin:auto; padding:16px; }
+h1 { font-size:24px; margin:4px 0 12px; } h2 { font-size:18px; margin:18px 0 8px; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:12px; }
+.dim { color:var(--dim); font-size:14px; } .acc { color:var(--accent); } .good { color:var(--good); } .bad { color:var(--bad); }
+.big { font-size:36px; font-weight:600; line-height:1.25; overflow-wrap:anywhere; }
+button { font:inherit; min-height:48px; padding:10px 16px; width:100%; border-radius:12px; border:1px solid var(--line); background:var(--card); color:var(--ink); margin-top:8px; }
+button.main { background:var(--accent); color:#fff; border:0; font-weight:600; }
+button.right { background:var(--good); color:#fff; } button.wrong { background:var(--bad); color:#fff; }
+button:focus-visible, input:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; } .grid button { margin:0; }
+@media (max-width:360px) { .grid { grid-template-columns:1fr; } }
+input,textarea { font:inherit; width:100%; min-height:48px; padding:10px; border-radius:12px; border:1px solid var(--line); background:var(--card); color:var(--ink); }
+nav { position:fixed; bottom:0; left:0; right:0; display:flex; background:var(--card); border-top:1px solid var(--line); padding-bottom:env(safe-area-inset-bottom); }
+nav button { flex:1; margin:0; border:0; border-radius:0; min-height:60px; padding:6px 2px; font-size:12px; background:none; }
+nav button.on { color:var(--accent); font-weight:700; }
+.bar { height:10px; border-radius:6px; background:var(--line); overflow:hidden; margin:8px 0; } .bar i { display:block; height:100%; background:var(--accent); transition:width .25s; }
+.row { display:flex; justify-content:space-between; gap:8px; align-items:baseline; }
+.petal { position:fixed; top:-30px; right:-20px; font-size:120px; opacity:.1; pointer-events:none; }
+@media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</head>
+<body>
+<div class="petal" aria-hidden="true">✿</div>
+<main id="app"></main>
+<nav id="nav" aria-label="Main"></nav>
+<script src="content.js"></script>
+<script src="core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

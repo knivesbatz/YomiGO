@@ -1,0 +1,39 @@
+plugins { id 'com.android.application' }
+
+def ver = new File(rootDir.parentFile, 'VERSION').text.trim()
+def parts = ver.split('\\.').collect { it as int }
+
+android {
+    namespace 'com.senkosoft.yomigo'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'com.senkosoft.yomigo'
+        minSdk 26
+        targetSdk 35
+        versionName ver
+        versionCode parts[0] * 10000 + parts[1] * 100 + parts[2]
+    }
+    buildFeatures { buildConfig true }
+    signingConfigs {
+        release {
+            // Secrets arrive only through the environment. Without them the release build is left unsigned.
+            def ks = System.getenv('YOMIGO_KEYSTORE')
+            if (ks) {
+                storeFile file(ks)
+                storePassword System.getenv('YOMIGO_KEYSTORE_PASSWORD')
+                keyAlias 'yomigo'
+                keyPassword System.getenv('YOMIGO_KEYSTORE_PASSWORD')
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

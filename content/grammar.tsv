@@ -1,0 +1,34 @@
+# id	pattern	romaji	meaning	explanation	sentence with ＿	answer	wrong answers (comma)	translation
+#g1
+g.desu	AはBです	A wa B desu	A is B	The basic sentence. は marks the topic and is pronounced "wa" here. です ends a polite statement.	私＿学生です。	は	を,に,で	I am a student.
+g.ka	〜か	...ka	question marker	Add か to the end of a polite sentence to make a question. No question-word order change, and no "?" needed.	学生です＿。	か	は,を,の	Are you a student?
+g.no	AのB	A no B	B of A / A's B	の links two nouns. The owner or description comes first.	私＿本です。	の	は,を,に	It's my book.
+g.mo	Aも	A mo	A too	も replaces は or が and means "also".	私＿学生です。	も	を,で,に	I am a student too.
+#g2
+g.kore	これ／それ／あれ	kore/sore/are	this / that / that over there	これ is near the speaker, それ is near the listener, あれ is far from both.	＿は本です。	これ	ここ,どこ,なに	This is a book.
+g.janai	じゃありません	ja arimasen	is not	The polite negative of です. In casual speech it becomes じゃない.	学生＿。	じゃありません	です,ます,ません	I am not a student.
+#g3
+g.masu	〜ます	...masu	polite verb, present or future	Japanese verbs come at the end of the sentence. ます covers both "do" and "will do".	毎日、水を飲み＿。	ます	です,か,の	I drink water every day.
+g.masen	〜ません	...masen	polite negative verb	Swap ます for ません to say "don't" or "won't".	私はお酒を飲み＿。	ません	です,ます,か	I don't drink alcohol.
+g.wo	〜を	o	marks the direct object	を shows what the verb acts on. It is pronounced "o" and written wo in many typing systems.	パン＿食べます。	を	は,に,の	I eat bread.
+#g4
+g.ni	〜に	ni	to / at (destination, time)	に marks a destination and a specific time.	学校＿行きます。	に	を,の,も	I go to school.
+g.de	〜で	de	at / by (place of action, means)	で marks where an action happens or the tool used to do it.	家＿本を読みます。	で	を,の,も	I read a book at home.
+g.e	〜へ	e	toward	へ marks a direction. It is pronounced "e". It often overlaps with に.	日本＿行きます。	へ	を,の,で	I go to Japan.
+#g5
+g.mashita	〜ました	...mashita	polite past verb	Swap ます for ました for the past.	昨日、映画を見＿。	ました	ます,です,ません	I saw a movie yesterday.
+g.masendeshita	〜ませんでした	...masen deshita	polite past negative	Add でした to ません.	昨日は勉強し＿。	ませんでした	ます,です,ました	I didn't study yesterday.
+g.mashou	〜ましょう	...mashou	let's do	Swap ます for ましょう to suggest doing something together.	一緒に食べ＿。	ましょう	ません,です,か	Let's eat together.
+#g6
+g.iadj	い adjectives	i adjectives	describe nouns, end in い	い adjectives go straight in front of a noun, and can end a sentence with です.	＿車です。	高い	高いな,高くて,高の	It's an expensive car.
+g.naadj	な adjectives	na adjectives	need な before a noun	な adjectives take な before a noun, and です to end a sentence.	きれい＿花です。	な	い,の,を	It's a pretty flower.
+g.kunai	〜くないです	...kunai desu	い adjective negative	Change the final い to くない. Note that いい becomes よくない.	この本は高＿です。	くない	じゃない,ません,い	This book isn't expensive.
+#g7
+g.ga	Aが あります／います	A ga arimasu / imasu	there is A	あります is for objects and います is for living things. が marks the thing that exists.	猫＿います。	が	を,で,の	There is a cat.
+g.nipos	Bに Aが あります	B ni A ga arimasu	there is A at B	Location comes first, marked by に.	駅＿店があります。	に	を,の,で	There is a shop at the station.
+#g8
+g.kudasai	〜をください	...o kudasai	please give me...	Use this to ask for an item.	水＿ください。	を	は,に,の	Water, please.
+g.tekudasai	〜てください	...te kudasai	please do...	Te form plus ください asks someone to do something.	見＿ください。	て	た,に,を	Please look.
+g.kara	〜から	kara	from / because	After a place or time it means "from". After a sentence it gives a reason.	九時＿働きます。	から	を,の,も	I work from nine o'clock.
+g.made	〜まで	made	until / as far as	Marks the end of a range of time or space.	五時＿勉強します。	まで	を,の,は	I study until five.
+g.tai	〜たいです	...tai desu	want to do	Swap ます for たい. Used for your own wishes.	日本へ行き＿です。	たい	ます,ない,ました	I want to go to Japan.

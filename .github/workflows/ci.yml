@@ -1,0 +1,78 @@
+name: CI
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: write  # to attach the APK when a release tag is pushed
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - run: pip install pillow
+      - name: Build, core tests, Windows 95 import check
+        shell: cmd
+        run: build.bat
+      - name: Play the whole course on both Windows builds
+        run: python tests/ui_walk.py
+      - name: JS core tests
+        run: node --test tests/test_core.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-unsigned
+          path: dist/*.exe
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17" }
+      - uses: gradle/actions/setup-gradle@v4
+        with: { gradle-version: "8.10.2" }
+      - run: python tools/build_content.py
+      - name: Load the signing key from repository secrets
+        if: github.event_name != 'pull_request'
+        env:
+          KS: ${{ secrets.YOMIGO_KEYSTORE_B64 }}
+        run: |
+          echo "$KS" | base64 -d > "$RUNNER_TEMP/yomigo.jks"
+          echo "YOMIGO_KEYSTORE=$RUNNER_TEMP/yomigo.jks" >> "$GITHUB_ENV"
+      - name: Build the APK
+        working-directory: mobile
+        env:
+          YOMIGO_KEYSTORE_PASSWORD: ${{ secrets.YOMIGO_KEYSTORE_PASSWORD }}
+        run: gradle --no-daemon assembleRelease
+      - run: cp mobile/app/build/outputs/apk/release/app-release.apk YomiGo.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: YomiGo.apk
+      - name: Attach to the release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" YomiGo.apk --clobber
+
+  extension:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: python tools/build_content.py
+      - run: cd extension && zip -r ../YomiGoReader.zip .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: extension
+          path: YomiGoReader.zip

@@ -1,0 +1,1070 @@
+/* All YomiGo screens. Desktop and HTPC share the flow and differ in chrome, layout and input hints. */
+#include "yg.h"
+#include "ui.h"
+#include "version_gen.h"
+
+#ifdef YG_HTPC
+#define HTPC 1
+#else
+#define HTPC 0
+#endif
+
+/* Sakura palette. HTPC: deep night and gold. Desktop: cream paper and wine. */
+#if HTPC
+#define C_BG    0x1B1033
+#define C_PANEL 0x35205A
+#define C_HI    0x6A4A9A
+#define C_LO    0x120A24
+#define C_INK   0xF4EEDC
+#define C_DIM   0xB6A8C8
+#define C_ACC   0xFFC24A
+#define C_PINK  0xFF8FB0
+#define C_GOOD  0x7CE08A
+#define C_BAD   0xFF6A6A
+#else
+#define C_BG    0xF7EFE0
+#define C_PANEL 0xFBF5E8
+#define C_HI    0xFFF7EE
+#define C_LO    0xA88A84
+#define C_INK   0x2E1B20
+#define C_DIM   0x7A6468
+#define C_ACC   0x9C2A44
+#define C_PINK  0xF2B6C4
+#define C_GOOD  0x2E7D4F
+#define C_BAD   0xB3242C
+#endif
+#define C_WINE  0x7A1F38
+#define C_PLUM  0x4A1A2E
+
+/* layout */
+#if HTPC
+#define LH 17
+#define SAFE (crt_mode() ? 18 : 10)
+#else
+#define LH 20
+#define SAFE 0
+#define RAIL 104
+#define HEAD 40
+#define FOOT 22
+#endif
+#if HTPC
+#define FBY_BTN (FBH - SAFE - 50)
+#else
+#define FBY_BTN (FBH - FOOT - 38)
+#endif
+
+typedef enum { S_SPLASH, S_PROFILES, S_NAME, S_PLACE_INTRO, S_PLACE_RESULT, S_HOME, S_CLASS, S_TEACH, S_QUIZ, S_RESULT, S_CHAT, S_TASK, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS, S_BIND, S_FIRST, S_GENKI } Screen;
+typedef enum { QM_WARMUP, QM_DRILL, QM_DAILY, QM_HW, QM_REVIEW, QM_EXAM, QM_PLACE, QM_PRACTICE } QuizMode;
+
+static Screen scr = S_SPLASH;
+static Profile P;
+static int have_profile;
+static int anim;
+
+static Quiz Z;
+static QuizMode qm;
+static int qi, qright, qanswered, qchoice, qok;
+static char input[128];
+static int exam_id;
+static int place_section, place_passed;
+
+static int page, tab, teach_card;
+static int chat_id, chat_turn, chat_fail, chat_show;
+static char result_title[96], result_body[256];
+static int result_good;
+static Screen result_next;
+static int task_kind;
+static char name_buf[YG_NAME];
+static int new_material;
+static int kb_x, kb_y;
+
+/* ---- immersion: labels move into Japanese as the learner can read them ---- */
+static const char *L(const char *en, const char *ja, int from_stage) {
+    if (have_profile && !P.force_en && profile_stage(&P) >= from_stage) return ja;
+    return en;
+}
+
+static void save_profile(void) {
+    static char b[120000], fn[64];
+    int n;
+    if (!have_profile) return;
+    n = profile_save_text(&P, b, sizeof b);
+    if (n <= 0) return;
+    ys_cpy(fn, P.name, sizeof fn);
+    ys_cat(fn, ".sav", sizeof fn);
+    plat_write(fn, b, n);
+}
+static void go(Screen s) { scr = s; ui_reset_focus(); page = 0; anim = 0; }
+
+/* ---- widgets ---- */
+static int button(int x, int y, int w, int h, const char *label) {
+    int hit = ui_hit(x, y, w, h), f = ui_focused(), tw = text_w(label);
+    if (HTPC) {
+        fill(x, y, w, h, f ? C_ACC : C_PANEL);
+        frame(x, y, w, h, f ? 0xFFFFFF & 0xFFF0C0 : C_HI);
+        text(x + (w - tw) / 2, y + (h - 16) / 2, label, f ? 0x1B1033 : C_INK);
+    } else {
+        int press = f && IN.mdown == 1;
+        bevel(x, y, w, h, press ? C_LO : C_HI, f ? 0xF8D4DC : 0xEFD9D0, press ? C_HI : C_LO);
+        frame(x - 1, y - 1, w + 2, h + 2, C_PLUM);
+        text(x + (w - tw) / 2 + press, y + (h - 16) / 2 + press, label, C_INK);
+        if (f) { int i; for (i = 3; i < w - 3; i += 2) { fill(x + i, y + 3, 1, 1, C_PLUM); fill(x + i, y + h - 4, 1, 1, C_PLUM); } }
+    }
+    if (hit) plat_sound(1);
+    return hit;
+}
+static void panel(int x, int y, int w, int h) {
+    if (HTPC) { fill(x, y, w, h, C_PANEL); frame(x, y, w, h, C_HI); }
+    else { bevel(x, y, w, h, C_LO, C_PANEL, C_HI); }
+}
+static void progress(int x, int y, int w, int h, int v, int max, unsigned c) {
+    int f = max > 0 ? (v > max ? max : v) * (w - 2) / max : 0;
+    fill(x, y, w, h, HTPC ? C_LO : 0xD9C8BC);
+    frame(x, y, w, h, HTPC ? C_HI : C_PLUM);
+    fill(x + 1, y + 1, f, h - 2, c);
+}
+static void prompt_btn(int *x, int y, int action, const char *label) {
+    /* Button glyphs follow the connected controller */
+    static const char *const xb[] = {"A", "B", "X", "Y", "LB", "RB", "Menu"};
+    static const char *const ps[] = {"\xC3\x97", "O", "[]", "/\\", "L1", "R1", "Opt"};
+    static const char *const kb[] = {"Ent", "Esc", "X", "S", "Q", "E", "Spc"};
+    static const unsigned col[] = {0x2FA84F, 0xC8323C, 0x3A6FD8, 0xD8A820, 0x707070, 0x707070, 0x707070};
+    int st = pad_style();
+    const char *g = (st == 2 ? ps : st == 0 ? kb : xb)[action];
+    int w = text_w(g) + 8;
+    fill(*x, y, w, 16, col[action]);
+    text(*x + 4, y, g, 0xF4F4F4);
+    *x += w + 3;
+    *x += text(*x, y, label, C_INK) + 8;
+}
+
+static void sakura(int x, int y, int s) {
+    static const char *const R[] = {
+        "....11...11....", "...1221.1221...", "...12221.2221..", "..1122212221...", ".122222232221..",
+        "12222223222221.", "122222333222221", ".1122333433211.", "..122233322221.", ".12222232222221",
+        "1222221.1222221", ".12221...12221.", "..121.....121..", "...1.......1..."};
+    static const unsigned pal[] = {0, 0xC85A7C, 0xF9C3D2, 0xE8789A, 0x9C2A44};
+    bitmap(x, y, R, 14, pal, s);
+}
+
+/* ---- chrome ---- */
+#if !HTPC
+static const struct { const char *en, *ja; int st; Screen s; } NAV[] = {
+    {"Today", "きょう", 2, S_HOME}, {"Flashcards", "カード", 3, S_CARDS}, {"Exams", "しけん", 2, S_EXAMS},
+    {"Quest", "クエスト", 3, S_QUEST}, {"Library", "本だな", 5, S_LIBRARY}, {"Settings", "せってい", 2, S_SETTINGS}};
+static void chrome(const char *title, const char *sub) {
+    int i;
+    washi(0, 0, FBW, FBH, C_BG, 0xEADFCC);
+    gradient(0, 0, FBW, HEAD, C_PLUM, C_WINE);
+    { int a; for (a = 0; a < FBW; a += 16) fill(a, HEAD - 3, 8, 1, C_PINK); }
+    sakura(8, 12, 1);
+    text2(30, 4, title, 0xFFF4E0);
+    if (sub) text(FBW - 12 - text_w(sub), 12, sub, C_PINK);
+    fill(0, HEAD, FBW, 1, C_PLUM);
+    gradient(0, HEAD + 1, RAIL, FBH - HEAD - FOOT - 1, 0x5A2238, 0x3A1420);
+    fill(RAIL, HEAD, 1, FBH - HEAD - FOOT, C_PLUM);
+    sakura(RAIL / 2 - 15, FBH - FOOT - 40, 2);
+    bevel(0, FBH - FOOT, FBW, FOOT, C_HI, 0xEFD9D0, C_LO);
+    if (have_profile) {
+        char b[64]; int x = 8;
+        x += text(x, FBH - FOOT + 3, P.name, C_INK) + 10;
+        x += text(x, FBH - FOOT + 3, rank_name(profile_rank(&P), profile_stage(&P) >= 3 && !P.force_en), C_ACC) + 10;
+        ys_fmt(b, sizeof b, "XP %d", P.xp, 0); x += text(x, FBH - FOOT + 3, b, C_INK) + 10;
+        ys_fmt(b, sizeof b, "Streak %d", P.streak, 0); text(x, FBH - FOOT + 3, b, C_INK);
+    }
+    text(FBW - 8 - text_w("SENKOSOFT"), FBH - FOOT + 3, "SENKOSOFT", C_DIM);
+}
+/* Drawn last so the main content gets focus first. Only on main pages: a class has no side doors. */
+static void rail(void) {
+    int i, main_page = 0;
+    for (i = 0; i < 6; i++) if (scr == NAV[i].s) main_page = 1;
+    if (!have_profile || !main_page) return;
+    for (i = 0; i < 6; i++) {
+        int y = HEAD + 10 + i * 42, cur = scr == NAV[i].s, hit;
+        hit = ui_hit(4, y, RAIL - 8, 36);
+        if (cur) bevel(4, y, RAIL - 8, 36, 0xFFF7EE, C_BG, C_LO);
+        else bevel(4, y, RAIL - 8, 36, 0x8A4A5E, ui_focused() ? 0x8C3A52 : 0x5E2A3C, 0x2A0E18);
+        text_c(4 + (RAIL - 8) / 2, y + 10, L(NAV[i].en, NAV[i].ja, NAV[i].st), cur ? C_INK : 0xFFF4E0);
+        if (hit) { go(NAV[i].s); plat_sound(1); return; }
+    }
+}
+#define CX (RAIL + 12)
+#define CY (HEAD + 10)
+#define CW (FBW - RAIL - 24)
+#define CH (FBH - HEAD - FOOT - 20)
+#else
+/* Low-poly torii gate, drawn fresh each frame with flat shading */
+static void torii(int cx, int cy, int size, int spin) {
+    static const short B[][6] = { /* boxes: x,y,z half sizes and centres in 1/16 */
+        {-6, 0, 0, 1, 8, 1}, {6, 0, 0, 1, 8, 1}, {0, -8, 0, 11, 1, 1}, {0, -5, 0, 8, 1, 1}};
+    static const unsigned shade[3] = {0xD23A3A, 0x9E2424, 0xE86060};
+    int b;
+    for (b = 0; b < 4; b++) {
+        int s, f;
+        static const signed char faces[3][4][3] = {
+            {{-1,-1,1},{1,-1,1},{1,1,1},{-1,1,1}},
+            {{1,-1,1},{1,-1,-1},{1,1,-1},{1,1,1}},
+            {{-1,-1,-1},{1,-1,-1},{1,-1,1},{-1,-1,1}}};
+        for (s = 0; s < 2; s++) for (f = 0; f < 3; f++) {
+            int X[4], Y[4], i, sx = s ? -1 : 1;
+            if (s && f != 1) continue;
+            for (i = 0; i < 4; i++) {
+                int x = B[b][0] + faces[f][i][0] * sx * B[b][3], y = B[b][1] + faces[f][i][1] * B[b][4], z = B[b][2] + faces[f][i][2] * B[b][5];
+                int rx = (x * icos(spin) - z * isin(spin)) / 256, rz = (x * isin(spin) + z * icos(spin)) / 256;
+                int d = 64 + rz;
+                X[i] = cx + rx * size * 32 / d; Y[i] = cy + y * size * 32 / d;
+            }
+            { int cross = (X[1] - X[0]) * (Y[2] - Y[0]) - (Y[1] - Y[0]) * (X[2] - X[0]);
+              if (cross > 0) { tri3d(X[0], Y[0], X[1], Y[1], X[2], Y[2], shade[f]); tri3d(X[0], Y[0], X[2], Y[2], X[3], Y[3], shade[f]); } }
+        }
+    }
+}
+static void chrome(const char *title, const char *sub) {
+    int s = SAFE;
+    gradient(0, 0, FBW, FBH, 0x24103F, 0x4A1A4A);
+    fill(0, 0, FBW, s + 20, 0x180A2C);
+    text(s + 2, s + 3, title, C_ACC);
+    if (sub) text(FBW - s - 2 - text_w(sub), s + 3, sub, C_PINK);
+    fill(0, s + 20, FBW, 1, C_ACC);
+}
+#define CX (SAFE + 2)
+#define CY (SAFE + 25)
+#define CW (FBW - 2 * SAFE - 4)
+#define CH (FBH - 2 * SAFE - 44)
+static void footer(const char *ok, const char *back) {
+    int x = SAFE + 2, y = FBH - SAFE - 17;
+    if (ok) prompt_btn(&x, y, 0, ok);
+    if (back) prompt_btn(&x, y, 1, back);
+    if (!pad_connected() && pad_style() != 0) text(FBW - SAFE - 70, y, "No pad!", C_BAD);
+}
+#endif
+
+/* ---- result page ---- */
+static void show_result(const char *title, const char *body, int good, Screen next) {
+    ys_cpy(result_title, title, sizeof result_title);
+    ys_cpy(result_body, body, sizeof result_body);
+    result_good = good; result_next = next;
+    go(S_RESULT);
+    plat_sound(good ? 3 : 4);
+}
+static void scr_result(void) {
+    chrome(result_good ? L("Well done", "やった！", 2) : L("Try again", "もう一度", 2), 0);
+    panel(CX, CY, CW, CH - (HTPC ? 0 : 40));
+    if (result_good) sakura(CX + 10, CY + 10, HTPC ? 2 : 3);
+    wrap(CX + 10, CY + (HTPC ? 44 : 60), CW - 20, result_title, result_good ? C_GOOD : C_BAD, LH, 0, 2);
+    wrap(CX + 10, CY + (HTPC ? 44 : 60) + 2 * LH, CW - 20, result_body, C_INK, LH, 0, 0);
+    if (button(CX + CW / 2 - 70, FBY_BTN, 140, 28, L("Continue", "つぎへ", 2))) go(result_next);
+#if HTPC
+    footer("Continue", 0);
+#endif
+}
+
+/* ---- class flow ---- */
+static const char *const STEP_EN[] = {"Warm-up review", "New lesson", "Practice drill", "Conversation", "Daily quiz", "Homework", "Immersion"};
+static const char *const STEP_JA[] = {"ふくしゅう", "じゅぎょう", "れんしゅう", "かいわ", "テスト", "しゅくだい", "イマージョン"};
+
+static void start_quiz(QuizMode m) {
+    qm = m; qi = 0; qright = 0; qanswered = 0; qchoice = 0; input[0] = 0;
+    go(S_QUIZ);
+}
+static void next_step(void);
+static void run_step(void) {
+    const YgDay *d = &YG_DAYS[P.day];
+    switch (P.step) {
+    case STEP_WARMUP:
+        quiz_warmup(&Z, &P);
+        if (Z.n == 0) { P.step++; run_step(); return; }
+        start_quiz(QM_WARMUP); break;
+    case STEP_TEACH: teach_card = -1; page = 0; go(S_TEACH); break;
+    case STEP_DRILL:
+        quiz_new(&Z);
+        quiz_add_cards(&Z, d->cards, d->nnew > 20 ? 20 : d->nnew, day_romaji_mode(P.day), 1);
+        quiz_shuffle(&Z);
+        if (Z.n == 0) { P.step++; run_step(); return; }
+        start_quiz(QM_DRILL); break;
+    case STEP_CHAT:
+        if (d->chat < 0) { P.step++; run_step(); return; }
+        chat_id = d->chat; chat_turn = 0; chat_fail = 0; chat_show = 0; input[0] = 0; go(S_CHAT); break;
+    case STEP_QUIZ: quiz_day(&Z, &P, P.day); start_quiz(QM_DAILY); break;
+    case STEP_HOMEWORK: task_kind = 0; go(S_TASK); break;
+    case STEP_IMMERSE: task_kind = 1; go(S_TASK); break;
+    default: {
+        char b[160];
+        profile_learn_day(&P, P.day, plat_today());
+        profile_complete_day(&P, plat_today());
+        save_profile();
+        ys_fmt(b, sizeof b, "+100 XP. Streak: %d day(s). Your new cards are now in the flashcard deck.", P.streak, 0);
+        show_result("Class complete!", b, 1, S_HOME);
+    }
+    }
+}
+static void next_step(void) { P.step++; save_profile(); run_step(); }
+
+static void scr_home(void) {
+    int today = plat_today(), due = profile_due(&P, today), gate = profile_exam_gate(&P);
+    char b[128];
+    profile_touch_day(&P, today);
+#if HTPC
+    {
+        static const char *const items_en[] = {"Today's Class", "Flashcards", "Exams", "Quest", "Library", "Options"};
+        static const char *const items_ja[] = {"きょうのクラス", "カード", "しけん", "クエスト", "本だな", "せってい"};
+        static const int from[] = {2, 3, 2, 3, 5, 2};
+        static const Screen dest[] = {S_CLASS, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS};
+        static int sel; static int slide;
+        int s = SAFE, i;
+        gradient(0, 0, FBW, FBH, 0x1B0F40, 0x8A2A5A);
+        /* low sun and ground */
+        fill(0, 150, FBW, FBH - 150, 0x2A1036);
+        for (i = 0; i < 8; i++) fill(0, 150 + i * i, FBW, 1, 0x4A2050);
+        torii(FBW / 2, 96, 6, anim * 2);
+        text2(s + 2, s, "YomiGo", C_ACC);
+        ys_fmt(b, sizeof b, "XP %d  Streak %d", P.xp, P.streak);
+        text(FBW - s - 2 - text_w(b), s + 6, b, C_INK);
+        text(s + 2, s + 32, rank_name(profile_rank(&P), profile_stage(&P) >= 3 && !P.force_en), C_PINK);
+        if (IN.pressed & (A_LEFT)) { sel = (sel + 5) % 6; slide = -40; plat_sound(0); }
+        if (IN.pressed & (A_RIGHT)) { sel = (sel + 1) % 6; slide = 40; plat_sound(0); }
+        slide = slide * 3 / 4;
+        for (i = -2; i <= 2; i++) {
+            int k = (sel + i + 6) % 6, x = FBW / 2 + i * 122 + slide - 58, y = 166 + (i < 0 ? -i : i) * 6, w = 116, h = 40 - (i < 0 ? -i : i) * 4;
+            const char *lab = L(items_en[k], items_ja[k], from[k]);
+            fill(x, y, w, h, i == 0 ? C_ACC : C_PANEL);
+            frame(x, y, w, h, i == 0 ? 0xFFF0C0 : C_HI);
+            text_c(x + w / 2, y + (h - 16) / 2, lab, i == 0 ? 0x1B1033 : C_INK);
+        }
+        if (due > 0 && sel == 1) { ys_fmt(b, sizeof b, "%d cards due", due, 0); text_c(FBW / 2, 148, b, C_INK); }
+        if (sel == 0) { text_c(FBW / 2, 148, P.day < YG_NDAYS ? YG_DAYS[P.day].title : "Course complete!", C_INK); }
+        if (IN.pressed & A_OK) { plat_sound(1); go(dest[sel]); }
+        if (IN.pressed & A_BACK) { go(S_PROFILES); have_profile = 0; }
+        footer("Select", "Profiles");
+        return;
+    }
+#else
+    chrome(L("Today's Class", "きょうのクラス", 2), 0);
+    panel(CX, CY, CW, 148);
+    if (P.day < YG_NDAYS) {
+        const YgDay *d = &YG_DAYS[P.day];
+        ys_fmt(b, sizeof b, "Class %d of %d", P.day + 1, YG_NDAYS);
+        text(CX + 10, CY + 8, YG_STAGES[d->stage].name, C_ACC);
+        text(CX + CW - 10 - text_w(b), CY + 8, b, C_DIM);
+        text2(CX + 10, CY + 30, d->ja, C_INK);
+        text(CX + 10, CY + 66, d->title, C_DIM);
+        progress(CX + 10, CY + 90, CW - 20, 12, P.step, STEP_DONE, C_ACC);
+        if (gate >= 0) {
+            ys_fmt(b, sizeof b, "Pass this exam to continue (80%%)", 0, 0);
+            text(CX + 10, CY + 106, YG_EXAMS[gate].name, C_BAD);
+            if (button(CX + CW - 180, CY + 110, 170, 28, L("Take the exam", "しけんを受ける", 5))) { exam_id = gate; quiz_exam(&Z, exam_id); start_quiz(QM_EXAM); }
+        } else if (P.done_today >= P.pace && P.last_day == today) {
+            text(CX + 10, CY + 114, "Today's class is done. Rest, review, or immerse.", C_GOOD);
+        } else if (button(CX + CW - 180, CY + 110, 170, 28, P.step ? L("Continue class", "つづける", 2) : L("Start class", "はじめる", 2))) go(S_CLASS);
+    } else if (gate >= 0) {
+        text2(CX + 10, CY + 30, YG_EXAMS[gate].name, C_INK);
+        if (button(CX + CW - 180, CY + 110, 170, 28, L("Take the exam", "しけんを受ける", 5))) { exam_id = gate; quiz_exam(&Z, exam_id); start_quiz(QM_EXAM); }
+    } else {
+        text2(CX + 10, CY + 30, "N5 complete!", C_GOOD);
+        wrap(CX + 10, CY + 70, CW - 20, "N4 and beyond arrive in a future update. Keep reviewing your cards and immersing.", C_INK, LH, 0, 3);
+    }
+    { int y = CY + 158;
+      panel(CX, y, (CW - 8) / 2, 120);
+      text(CX + 8, y + 6, L("Flashcards due", "カード", 3), C_ACC);
+      ys_fmt(b, sizeof b, "%d", due, 0); text2(CX + 8, y + 28, b, C_INK);
+      if (button(CX + 8, y + 80, (CW - 8) / 2 - 16, 28, L("Review now", "ふくしゅう", 2))) go(S_CARDS);
+      panel(CX + (CW + 8) / 2, y, (CW - 8) / 2, 120);
+      text(CX + (CW + 8) / 2 + 8, y + 6, L("Today's immersion", "イマージョン", 3), C_ACC);
+      if (P.day < YG_NDAYS) wrap(CX + (CW + 8) / 2 + 8, y + 26, (CW - 8) / 2 - 16, YG_DAYS[P.day].imm, C_INK, LH - 2, 0, 4);
+    }
+    if (new_material > 0) {
+        ys_fmt(b, sizeof b, "%d new file(s) in your Material folder. See the Library.", new_material, 0);
+        text(CX, CY + CH - 16, b, C_ACC);
+    }
+#endif
+}
+static void scr_class(void) {
+    const YgDay *d; int i, y, gate = profile_exam_gate(&P), today = plat_today(); char b[64];
+    if (gate >= 0) {
+        chrome(L("Exam required", "しけん", 2), 0);
+        panel(CX, CY, CW, HTPC ? 90 : 150);
+        text(CX + 8, CY + 8, YG_EXAMS[gate].name, C_ACC);
+        wrap(CX + 8, CY + 8 + LH, CW - 16, "Pass this trial with 80% to open the next class. You can retake it as often as you need.", C_INK, LH, 0, 0);
+        if (button(CX + CW / 2 - 80, FBY_BTN, 160, 28, L("Challenge", "ちょうせん", 2))) { exam_id = gate; quiz_exam(&Z, gate); start_quiz(QM_EXAM); return; }
+        if (IN.pressed & A_BACK) go(S_HOME);
+#if HTPC
+        footer("Challenge", "Menu");
+#endif
+        return;
+    }
+    if (P.day >= YG_NDAYS) { go(S_HOME); return; }
+    if (P.done_today >= P.pace && P.last_day == today) {
+        chrome(L("Class is over", "おわり", 2), 0);
+        panel(CX, CY, CW, HTPC ? 90 : 150);
+        wrap(CX + 8, CY + 8, CW - 16, "That's today's class at your chosen pace. Review your flashcards, immerse, and come back tomorrow. You can change your pace in Settings.", C_INK, LH, 0, 0);
+        if (button(CX + CW / 2 - 70, FBY_BTN, 140, 28, L("OK", "OK", 0)) || (IN.pressed & A_BACK)) go(S_HOME);
+#if HTPC
+        footer("OK", 0);
+#endif
+        return;
+    }
+    d = &YG_DAYS[P.day];
+    chrome(d->ja, YG_STAGES[d->stage].ja);
+    if (HTPC) text(CX, CY, d->title, C_INK); else { text(CX, CY, d->title, C_DIM); ys_fmt(b, sizeof b, "Class %d", P.day + 1, 0); text(CX + CW - text_w(b), CY, b, C_DIM); }
+    y = CY + LH + 2;
+    for (i = 0; i < STEP_DONE; i++) {
+        unsigned col = i < P.step ? C_GOOD : i == P.step ? (HTPC ? C_ACC : C_ACC) : C_DIM;
+        const char *mark = i < P.step ? "\xE2\x97\x8B" : i == P.step ? "\xE2\x86\x92" : "\xE3\x83\xBB";
+        if (i == STEP_CHAT && d->chat < 0) { continue; }
+        text(CX + 4, y, mark, col);
+        text(CX + 24, y, L(STEP_EN[i], STEP_JA[i], 3), col);
+        y += HTPC ? 15 : 24;
+    }
+    if (button(CX + CW / 2 - 70, FBY_BTN, 140, 28, L("Go", "はじめる", 2))) { run_step(); return; }
+    if (!HTPC && button(CX, FBY_BTN, 90, 28, L("Later", "あとで", 2))) { go(S_HOME); return; }
+    if (IN.pressed & A_BACK) go(S_HOME);
+#if HTPC
+    footer("Go", "Menu");
+#endif
+}
+static void scr_teach(void) {
+    const YgDay *d = &YG_DAYS[P.day];
+    int total = d->nnotes + d->nnew, rom = day_romaji_mode(P.day);
+    chrome(d->ja, 0);
+    { char b[32]; ys_fmt(b, sizeof b, "%d/%d", page + 1, total); text(CX + CW - text_w(b), CY, b, C_DIM); }
+    if (page < d->nnotes) {
+        text(CX, CY, L("Sensei's notes", "せんせいのノート", 3), C_ACC);
+        panel(CX, CY + 20, CW, FBY_BTN - CY - 24);
+        wrap(CX + 8, CY + 28, CW - 16, d->notes[page], C_INK, LH, 0, 0);
+    } else {
+        const YgCard *c = &YG_CARDS[d->cards[page - d->nnotes]];
+        const char *big = (rom && c->type == 'w') ? c->romaji : c->front;
+        int cy = CY + 20;
+        panel(CX, cy, CW, FBY_BTN - cy - 4);
+        text2(CX + 10, cy + 6, big, C_ACC);
+        cy += 42;
+        if (c->type == 'g') {
+            cy += LH * wrap(CX + 10, cy, CW - 20, c->en, C_INK, LH, 0, 2);
+            cy += LH * wrap(CX + 10, cy, CW - 20, c->note, C_DIM, LH, 0, HTPC ? 4 : 0);
+            { static char s[128]; int k = 0; const char *p = c->sentence;
+              while (*p && k < 120) { if (!ys_ncmp(p, "＿", 3)) { ys_cpy(s + k, c->reading, 120 - k); k += ys_len(s + k); p += 3; } else s[k++] = *p++; }
+              s[k] = 0; wrap(CX + 10, cy + 2, CW - 20, s, C_ACC, LH, 0, 2); wrap(CX + 10, cy + 2 + LH, CW - 20, c->trans, C_DIM, LH, 0, 2); }
+        } else {
+            if (c->type != 'h' && c->type != 'k') {
+                if (rom) { text(CX + 10, cy, c->reading, C_DIM); }
+                else if (ys_cmp(c->front, c->reading)) { text(CX + 10, cy, c->reading, C_INK); }
+                if (!rom && profile_stage(&P) < 4) text(CX + 10 + text_w(c->reading) + 16, cy, c->romaji, C_DIM);
+                cy += LH;
+            }
+            wrap(CX + 10, cy, CW - 20, c->en, C_INK, LH, 0, 2);
+            cy += LH;
+            if (*c->note) wrap(CX + 10, cy + 2, CW - 20, c->note, C_DIM, LH, 0, HTPC ? 4 : 0);
+        }
+        if (plat_has_tts() && (IN.pressed & A_Y)) plat_speak(c->reading);
+    }
+    if (button(CX + CW - 120, FBY_BTN, 120, 28, page + 1 < total ? L("Next", "つぎ", 2) : L("Practice!", "れんしゅう", 3))) {
+        if (page + 1 < total) { page++; }
+        else next_step();
+    } else if (button(CX, FBY_BTN, 90, 28, L("Back", "もどる", 2)) || (IN.pressed & A_BACK)) {
+        if (page > 0) page--;
+    }
+#if HTPC
+    footer("Next", "Back");
+#endif
+}
+
+/* ---- quiz runner ---- */
+static void quiz_finished(void) {
+    int pct = Z.n ? qright * 100 / Z.n : 0;
+    char b[180];
+    switch (qm) {
+    case QM_WARMUP:
+        next_step(); break;
+    case QM_DRILL:
+        P.xp += qright; next_step(); break;
+    case QM_DAILY:
+        if (pct >= 80) {
+            P.xp += qright * 2;
+            if (pct == 100) P.perfects++;
+            ach_check(&P);
+            next_step();
+        } else {
+            ys_fmt(b, sizeof b, "You scored %d%%. You need 80%% to continue. Look at your notes and try again.", pct, 0);
+            P.step = STEP_TEACH; save_profile();
+            show_result("Not yet!", b, 0, S_CLASS);
+        }
+        break;
+    case QM_HW:
+        P.homeworks++; P.xp += 30; ach_check(&P); next_step(); break;
+    case QM_REVIEW:
+        save_profile();
+        ys_fmt(b, sizeof b, "%d of %d correct. Cards you missed will come back soon.", qright, Z.n);
+        show_result("Review done", b, qright * 2 >= Z.n, S_HOME);
+        break;
+    case QM_EXAM: {
+        int pass = profile_exam_pass(&P, exam_id, pct, plat_today());
+        save_profile();
+        ys_fmt(b, sizeof b, pass ? "You scored %d%%. The way forward is open." : "You scored %d%%. You need 80%%. Review your cards and challenge it again.", pct, 0);
+        show_result(YG_EXAMS[exam_id].name, b, pass, S_HOME);
+        break; }
+    case QM_PRACTICE:
+        /* Extra practice is free to repeat, so it earns no XP */
+        ys_fmt(b, sizeof b, "%d of %d correct.", qright, Z.n);
+        show_result("Practice done", b, qright * 2 >= Z.n, S_GENKI);
+        break;
+    case QM_PLACE: {
+        static const signed char map[6] = {0, 3, 4, 4, 5, 6};
+        if (qright >= 4 && place_section < 4) {
+            place_passed = place_section + 1; place_section++;
+            placement_section(&Z, place_section);
+            start_quiz(QM_PLACE);
+        } else {
+            if (qright >= 4) place_passed = 5;
+            profile_place(&P, map[place_passed], plat_today());
+            save_profile();
+            go(S_PLACE_RESULT);
+        }
+        break; }
+    }
+}
+static void answer_given(int ok) {
+    qanswered = 1; qok = ok;
+    if (ok) { qright++; plat_sound(2); } else plat_sound(4);
+    if (qm == QM_REVIEW) {
+        CardState *c = &P.cards[Z.q[qi].card];
+        srs_grade(c, ok ? GRADE_GOOD : GRADE_AGAIN, plat_today());
+        P.reviews++; if (ok) P.xp += 2;
+        ach_check(&P);
+        save_profile();
+    }
+    /* Missed drill cards come straight back: repetition is the point */
+    if (!ok && qm == QM_DRILL && Z.n < YG_MAXQ) { Z.q[Z.n] = Z.q[qi]; Z.n++; }
+}
+/* On-screen keyboard for the TV. Romaji typed here becomes kana in the answer check. */
+#if HTPC
+static void osk(int y) {
+    static const char *const R[] = {"qwertyuiop", "asdfghjkl'", "zxcvbnm-  "};
+    int i;
+    if (IN.pressed & A_LEFT) kb_x = (kb_x + 9) % 10;
+    if (IN.pressed & A_RIGHT) kb_x = (kb_x + 1) % 10;
+    if (IN.pressed & A_UP) kb_y = (kb_y + 2) % 3;
+    if (IN.pressed & A_DOWN) kb_y = (kb_y + 1) % 3;
+    for (i = 0; i < 3; i++) { int j; for (j = 0; j < 10; j++) {
+        char t[2]; int x = CX + 20 + j * 26, yy = y + i * 19, f = (i == kb_y && j == kb_x);
+        t[0] = R[i][j]; t[1] = 0;
+        fill(x, yy, 24, 17, f ? C_ACC : C_PANEL); frame(x, yy, 24, 17, C_HI);
+        if (t[0] != ' ') text_c(x + 12, yy, t, f ? 0x1B1033 : C_INK);
+    } }
+    if (IN.pressed & A_OK) { char c = R[kb_y][kb_x]; int n = ys_len(input); if (c != ' ' && n < 120) { input[n] = c; input[n + 1] = 0; plat_sound(0); } }
+    if (IN.pressed & A_BACK) { int n = ys_len(input); if (n) input[n - 1] = 0; }
+}
+#endif
+static void text_entry(void) {
+    int n = ys_len(input), i;
+    for (i = 0; IN.text[i] && n < 120; i++) input[n++] = IN.text[i];
+    input[n] = 0;
+    while (IN.backspace-- > 0 && n > 0) { n--; while (n > 0 && (input[n] & 0xC0) == 0x80) n--; input[n] = 0; }
+}
+static void scr_quiz(void) {
+    Question *q = &Z.q[qi];
+    char b[64];
+    static const char *const hdr[] = {"Warm-up", "Practice", "Daily quiz", "Homework check", "Flashcards", "Exam", "Entrance exam", "Genki practice"};
+    chrome(hdr[qm], 0);
+    ys_fmt(b, sizeof b, "%d / %d", qi + 1, Z.n);
+    text(CX + CW - text_w(b), CY, b, C_DIM);
+    if (qm == QM_EXAM) {
+        /* The exam is a duel: every right answer hits the boss, who falls at 80% */
+        int need = (Z.n * 4 + 4) / 5;
+        text(CX, CY, YG_EXAMS[exam_id].name, C_ACC);
+        progress(CX, CY + 18, CW, 10, need - qright, need, C_BAD);
+    } else {
+        progress(CX, CY + 18, CW, 10, qi, Z.n, C_ACC);
+    }
+    { int y = CY + 32;
+      text(CX, y, q->tag, C_DIM); y += LH;
+      if (ys_len(q->prompt) > 24) { wrap(CX, y, CW, q->prompt, C_INK, LH, 0, 2); y += 2 * LH; }
+      else { text2(CX + (CW - 2 * text_w(q->prompt)) / 2, y, q->prompt, C_INK); y += 34; }
+      if (*q->sub) { wrap(CX, y, CW, q->sub, C_DIM, LH, 0, 1); y += LH; }
+      if (q->kind == Q_CHOICE) {
+        int bw = (CW - 8) / 2, bh = HTPC ? 26 : 34, i;
+        for (i = 0; i < 4; i++) {
+            int x = CX + (i % 2) * (bw + 8), yy = y + 4 + (i / 2) * (bh + 6);
+            if (qanswered) {
+                unsigned f = i == q->answer ? C_GOOD : (i == qchoice ? C_BAD : (HTPC ? C_PANEL : 0xEFD9D0));
+                fill(x, yy, bw, bh, f); frame(x, yy, bw, bh, C_LO);
+                wrap(x + 4, yy + (bh - 16) / 2, bw - 8, q->choices[i], (i == q->answer || i == qchoice) ? 0xFFFFFF : C_INK, LH, 0, 1);
+            } else if (button(x, yy, bw, bh, q->choices[i]) || IN.num == i + 1) {
+                qchoice = i; answer_given(i == q->answer); IN.pressed &= ~A_OK;
+            }
+        }
+      } else {
+        char pre[128];
+        panel(CX, y + 2, CW, 24);
+        text(CX + 6, y + 6, input, C_INK);
+        norm_kana(input, pre, sizeof pre);
+        text(CX + 6, y + 28, pre, C_ACC);
+        if (qanswered) {
+            text(CX, y + 50, q->want, qok ? C_GOOD : C_BAD);
+        } else {
+#if HTPC
+            osk(y + 46);
+            if (IN.pressed & A_START) { answer_given(answer_ok(input, q->want, q->want2)); IN.pressed &= ~A_OK; }
+#else
+            text_entry();
+            if (button(CX + CW - 90, y + 46, 90, 28, L("Check", "チェック", 3))) { answer_given(answer_ok(input, q->want, q->want2)); IN.pressed &= ~A_OK; }
+#endif
+        }
+      }
+      if (qanswered) {
+        const YgCard *c = &YG_CARDS[q->card];
+        if (!qok && *c->note && !HTPC) wrap(CX, FBY_BTN - 40, CW, c->note, C_DIM, 18, 0, 2);
+        text(CX, FBY_BTN + 6, qok ? L("Correct!", "正解！", 5) : L("Not quite.", "ちがいます", 3), qok ? C_GOOD : C_BAD);
+        if (button(CX + CW - 120, FBY_BTN, 120, 28, L("Next", "つぎ", 2))) {
+            qi++; qanswered = 0; input[0] = 0; ui_reset_focus();
+            if (qi >= Z.n) quiz_finished();
+        }
+      }
+    }
+#if HTPC
+    if (q->kind == Q_TYPE && !qanswered) { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "Check"); }
+    else footer("OK", 0);
+#endif
+    /* Leaving a lesson quiz is fine: the class resumes at this step */
+    if (qm != QM_EXAM && qm != QM_PLACE && ((!HTPC && (IN.pressed & A_BACK)) || (HTPC && (IN.pressed & A_START) && q->kind != Q_TYPE))) go(S_HOME);
+}
+
+/* ---- conversation ---- */
+static void scr_chat(void) {
+    const YgChat *c = &YG_CHATS[chat_id];
+    const YgTurn *t;
+    int y = CY, rom = day_romaji_mode(P.day), stage = profile_stage(&P);
+    if (chat_turn >= c->nturns) {
+        P.chats++; P.xp += 30; ach_check(&P);
+        next_step();
+        return;
+    }
+    t = &c->turns[chat_turn];
+    chrome(c->ja, c->title);
+    panel(CX, y, CW, HTPC ? 62 : 92);
+    text(CX + 6, y + 4, c->who, C_ACC);
+    if (*t->say) {
+        wrap(CX + 6, y + 22, CW - 12, rom ? t->romaji : t->say, C_INK, LH, 0, 2);
+        if (rom || stage < 4) wrap(CX + 6, y + 22 + LH, CW - 12, rom ? t->say : t->romaji, C_DIM, LH, 0, 1);
+        if (stage < 5 || chat_fail) wrap(CX + 6, y + 22 + 2 * LH, CW - 12, t->en, C_DIM, LH, 0, 1);
+    } else text(CX + 6, y + 22, "(You speak first.)", C_DIM);
+    y += HTPC ? 66 : 100;
+    panel(CX, y, CW, 24);
+    text(CX + 6, y + 4, input, C_INK);
+    { char pre[128]; norm_kana(input, pre, sizeof pre); text(CX + 6, y + 26, pre, C_ACC); }
+    y += 44;
+    if (chat_fail) {
+        text(CX, y, L("Not quite. Hint:", "ヒント:", 3), C_BAD);
+        wrap(CX, y + LH, CW, t->hint, C_INK, LH, 0, 2);
+        if (chat_fail >= 3) { char s[96]; ys_cpy(s, "Try: ", sizeof s); ys_cat(s, t->want[0], sizeof s); text(CX, y + 3 * LH, s, C_ACC); }
+    }
+#if HTPC
+    osk(FBH - SAFE - 80);
+    if (IN.pressed & A_START) {
+        if (chat_ok(input, t)) { chat_turn++; chat_fail = 0; input[0] = 0; plat_sound(2); }
+        else { chat_fail++; plat_sound(4); }
+    }
+    { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "Say it"); }
+#else
+    text_entry();
+    if (button(CX + CW - 120, FBY_BTN, 120, 28, L("Say it", "言う", 5))) {
+        if (chat_ok(input, t)) { chat_turn++; chat_fail = 0; input[0] = 0; plat_sound(2); }
+        else { chat_fail++; plat_sound(4); }
+    }
+    if (plat_has_tts() && *t->say && button(CX, FBY_BTN, 120, 28, L("Hear it", "聞く", 5))) plat_speak(t->say);
+#endif
+}
+
+/* ---- homework and immersion ---- */
+static void scr_task(void) {
+    const YgDay *d = &YG_DAYS[P.day];
+    chrome(task_kind ? L("Immersion", "イマージョン", 3) : L("Homework", "しゅくだい", 3), 0);
+    panel(CX, CY, CW, HTPC ? 110 : 180);
+    wrap(CX + 8, CY + 8, CW - 16, task_kind ? d->imm : d->hw, C_INK, LH, 0, 0);
+    if (button(CX + CW - 170, FBY_BTN, 170, 28, task_kind ? L("I'll do it today", "やります！", 2) : L("I did it!", "できた！", 2))) {
+        if (task_kind) next_step();
+        else {
+            /* A short check, so homework is more than a tick box */
+            int i;
+            quiz_new(&Z);
+            for (i = 0; i < 3 && d->nnew; i++) q_make(&Z.q[Z.n++], d->cards[yg_rand() % d->nnew], 0, day_romaji_mode(P.day));
+            if (Z.n) start_quiz(QM_HW);
+            else { P.homeworks++; P.xp += 30; ach_check(&P); next_step(); }
+        }
+        return;
+    }
+    if (task_kind && *d->mat) {
+        int i, n = plat_scan_material();
+        for (i = 0; i < n; i++) if (ys_contains_ci(plat_material(i), d->mat)) {
+            text(CX + 8, CY + (HTPC ? 76 : 100), L("From your Material folder:", "教材:", 5), C_ACC);
+            wrap(CX + 8, CY + (HTPC ? 92 : 120), CW - 16, plat_material(i), C_DIM, LH, 0, 2);
+            if (button(CX, FBY_BTN, 110, 28, L("Open it", "ひらく", 2))) plat_open(plat_material_full(i));
+            break;
+        }
+    }
+#if HTPC
+    footer("Confirm", 0);
+#endif
+}
+
+/* ---- flashcards ---- */
+static void scr_cards(void) {
+    int due = profile_due(&P, plat_today());
+    char b[64];
+    chrome(L("Flashcards", "カード", 3), 0);
+    panel(CX, CY, CW, HTPC ? 100 : 160);
+    ys_fmt(b, sizeof b, due == 1 ? "%d card is due" : "%d cards are due", due, 0);
+    text2(CX + 10, CY + 8, b, due ? C_ACC : C_GOOD);
+    { int seen = 0, weak = 0, i; for (i = 0; i < YG_NCARDS; i++) if (P.cards[i].seen) { seen++; if (P.cards[i].lapses) weak++; }
+      ys_fmt(b, sizeof b, "Deck: %d cards. Struggling with: %d", seen, weak); text(CX + 10, CY + 46, b, C_INK); }
+    wrap(CX + 10, CY + 66, CW - 20, "Right answers come back later, wrong ones tomorrow.", C_DIM, LH, 0, 2);
+    if (due && button(CX + CW / 2 - 80, FBY_BTN, 160, 28, L("Review", "ふくしゅう", 2))) { quiz_review(&Z, &P, plat_today(), 30); start_quiz(QM_REVIEW); return; }
+    if (P.genki && button(CX + CW / 2 - 80, FBY_BTN - 34, 160, 28, "Genki practice")) { go(S_GENKI); return; }
+#if HTPC
+    if (IN.pressed & A_BACK) go(S_HOME);
+    footer(due ? "Review" : 0, "Menu");
+#endif
+}
+
+/* ---- exams ---- */
+static void scr_exams(void) {
+    int i, y = CY, gate = profile_exam_gate(&P);
+    chrome(L("Exams", "しけん", 2), 0);
+    for (i = 0; i < YG_NEXAMS; i++) {
+        const YgExam *e = &YG_EXAMS[i];
+        int open = e->day < P.day, passed = P.exam_score[i] >= 80, h = HTPC ? 22 : 34;
+        char b[32];
+        if (open) {
+            if (button(CX, y, HTPC ? 190 : 270, h, e->name)) { exam_id = i; quiz_exam(&Z, i); start_quiz(QM_EXAM); }
+        } else { fill(CX, y, HTPC ? 190 : 270, h, HTPC ? C_LO : 0xE4D8CC); text(CX + 8, y + (h - 16) / 2, e->name, C_DIM); }
+        if (passed) ys_fmt(b, sizeof b, "Best %d%%", P.exam_score[i], 0);
+        else ys_cpy(b, open ? (i == gate ? "Required" : "Open") : "Locked", sizeof b);
+        text(CX + (HTPC ? 198 : 282), y + (h - 16) / 2, b, passed ? C_GOOD : i == gate ? C_BAD : C_DIM);
+        y += h + (HTPC ? 2 : 6);
+    }
+    if (!HTPC) wrap(CX, y + 4, CW, "These are YomiGo's own exams, not official JLPT tests. N4, N3, N2, N1, and Beyond N1 arrive in updates. There's no official N0, so YomiGo will offer its own Beyond N1 stage.", C_DIM, 18, 0, 4);
+#if HTPC
+    if (IN.pressed & A_BACK) go(S_HOME);
+    footer("Challenge", "Menu");
+#endif
+}
+
+/* ---- quest log ---- */
+static void scr_quest(void) {
+    int r = profile_rank(&P), i, y = CY, ja = profile_stage(&P) >= 3 && !P.force_en;
+    char b[64];
+    chrome(L("Quest", "クエスト", 3), 0);
+    text2(CX, y, rank_name(r, ja), C_ACC); y += 34;
+    ys_fmt(b, sizeof b, "XP %d   Best streak %d", P.xp, P.best_streak); text(CX, y, b, C_INK); y += LH;
+    { int rr; int bw = CW / rank_count(); for (rr = 0; rr < rank_count(); rr++) {
+        fill(CX + rr * bw, y, bw - 2, 10, rr <= r ? C_ACC : (HTPC ? C_LO : 0xD9C8BC)); } y += 16; }
+    if (r + 1 < rank_count()) { ys_cpy(b, "Next: ", sizeof b); ys_cat(b, rank_name(r + 1, ja), sizeof b); text(CX, y, b, C_DIM); y += LH; }
+    y += 4;
+    { int per = HTPC ? 5 : 10, cols = HTPC ? 1 : 1, shown = 0;
+      (void)cols;
+      if (IN.pressed & (A_R | A_RIGHT)) page = (page + 1) % 2;
+      if (IN.pressed & (A_L | A_LEFT)) page = (page + 1) % 2;
+      for (i = HTPC ? page * 5 : 0; i < ACH_COUNT && shown < per; i++, shown++) {
+        int got = (P.ach >> i) & 1;
+        text(CX, y, got ? "\xE2\x98\x85" : "\xE2\x98\x86", got ? C_ACC : C_DIM);
+        text(CX + 20, y, ja ? YG_ACH[i].ja : YG_ACH[i].en, got ? C_INK : C_DIM);
+        if (!HTPC) text(CX + 170, y, YG_ACH[i].desc, C_DIM);
+        y += HTPC ? 15 : 18;
+      } }
+#if HTPC
+    if (IN.pressed & A_BACK) go(S_HOME);
+    footer(0, "Menu");
+#endif
+}
+
+/* ---- library ---- */
+static void scr_library(void) {
+    static const char *const tabs[] = {"Media", "Links", "My Files"};
+    int i, y, per = HTPC ? 6 : 11, n, stage = profile_stage(&P);
+    char b[96];
+    chrome(L("Library", "本だな", 5), 0);
+    for (i = 0; i < 3; i++) {
+        int w = CW / 3;
+        if (button(CX + i * w, CY, w - 4, 22, tabs[i])) { tab = i; page = 0; }
+        if (tab == i) fill(CX + i * w, CY + 22, w - 4, 2, C_ACC);
+    }
+    if (IN.pressed & A_R) { tab = (tab + 1) % 3; page = 0; }
+    if (IN.pressed & A_L) { tab = (tab + 2) % 3; page = 0; }
+    y = CY + 30;
+    if (tab == 0) {
+        static short list[YG_NMEDIA]; int m = 0;
+        for (i = 0; i < YG_NMEDIA; i++) if (YG_MEDIA[i].stage <= stage + 1) list[m++] = (short)i;
+        n = m; per = HTPC ? 3 : 5;
+        for (i = page * per; i < n && i < (page + 1) * per; i++) {
+            const YgMedia *x = &YG_MEDIA[list[i]];
+            ys_fmt(b, sizeof b, "%d", x->year, 0);
+            text(CX, y, x->ja, C_ACC); text(CX + CW - 40, y, b, C_DIM); y += LH;
+            ys_cpy(b, x->type, sizeof b); ys_cat(b, ": ", sizeof b); ys_cat(b, x->title, sizeof b); text(CX, y, b, C_INK); y += LH;
+            y += (HTPC ? 15 : LH - 2) * wrap(CX, y, CW, x->task, C_DIM, HTPC ? 15 : LH - 2, 0, 2) + 2;
+        }
+    } else if (tab == 1) {
+        n = YG_NRES;
+        for (i = page * per; i < n && i < (page + 1) * per; i++) {
+            if (button(CX, y, HTPC ? CW : 180, 22, YG_RES[i].name)) plat_open(YG_RES[i].url);
+            if (!HTPC) wrap(CX + 188, y + 3, CW - 188, YG_RES[i].desc, C_DIM, 16, 0, 1);
+            y += 26;
+        }
+    } else {
+        n = plat_scan_material();
+        if (!n) wrap(CX, y, CW, "No Material folder found. Put one beside this program, or in the folder above it.", C_DIM, LH, 0, 3);
+        for (i = page * per; i < n && i < (page + 1) * per; i++) {
+            if (button(CX, y, CW, 22, plat_material(i))) plat_open(plat_material_full(i));
+            y += 26;
+        }
+    }
+    if (n > per) {
+        ys_fmt(b, sizeof b, "Page %d of %d", page + 1, (n + per - 1) / per);
+        text(CX + CW / 2 - 40, FBY_BTN + 6, b, C_DIM);
+        if (button(CX, FBY_BTN, 70, 28, L("Prev", "前", 5)) && page > 0) page--;
+        if (button(CX + CW - 70, FBY_BTN, 70, 28, L("Next", "つぎ", 2)) && (page + 1) * per < n) page++;
+    }
+#if HTPC
+    if (IN.pressed & A_BACK) { go(S_HOME); return; }
+    footer("Open", "Menu");
+#endif
+}
+
+/* ---- settings ---- */
+static int bind_action;
+static void scr_settings(void) {
+    int y = CY, bh = HTPC ? 22 : 30, step = bh + (HTPC ? 2 : 6), w = HTPC ? CW : 300;
+    char b[64];
+    static const char *const pace[] = {"Pace: Gentle (1 class a day)", "Pace: Steady (2 a day)", "Pace: Sprint (3 a day)"};
+    chrome(L("Settings", "せってい", 2), 0);
+    if (button(CX, y, w, bh, pace[P.pace - 1])) { P.pace = P.pace % 3 + 1; save_profile(); }
+    y += step;
+    if (button(CX, y, w, bh, P.force_en ? "Labels: Always English" : "Labels: Gradually Japanese")) { P.force_en = !P.force_en; save_profile(); }
+    y += step;
+    if (button(HTPC ? CX + w / 2 + 2 : CX, HTPC ? y : y, HTPC ? w / 2 - 2 : w, bh, P.genki ? "Genki: On" : "Genki: Off")) { P.genki = !P.genki; save_profile(); }
+    if (!HTPC) y += step;
+    if (button(CX, y, HTPC ? w / 2 - 2 : w, bh, HTPC ? "Back up" : "Back up my save")) { save_profile(); plat_copy_backup(P.name); show_result("Backed up", "A dated copy of your save is in the backup folder, next to the program.", 1, S_SETTINGS); return; }
+    y += step;
+    if (button(CX, y, w, bh, plat_can_update() ? "Check for updates" : "Updates: manual on this Windows")) {
+        if (plat_can_update()) plat_update_check(0);
+        else { show_result("Manual updates", "This Windows can't make modern secure connections. Download new versions from github.com/knivesbatz/YomiGO/releases on another PC, then copy them over.", 1, S_SETTINGS); return; }
+    }
+    y += step;
+    if (button(CX, y, w, bh, "Switch profile")) { save_profile(); have_profile = 0; go(S_PROFILES); return; }
+    y += step;
+#if HTPC
+    if (button(CX, y, w, bh, crt_mode() ? "Display: CRT / RF TV" : "Display: Flat TV")) crt_set(!crt_mode());
+    y += step;
+    if (button(CX, y, w / 2 - 2, bh, "Rebind pad")) { bind_action = 0; pad_begin_bind(0); go(S_BIND); return; }
+    ys_fmt(b, sizeof b, "Deadzone %d%%", pad_deadzone(), 0);
+    if (button(CX + w / 2 + 2, y, w / 2 - 2, bh, b)) pad_set_deadzone(pad_deadzone() >= 50 ? 10 : pad_deadzone() + 10);
+    if (IN.pressed & A_BACK) go(S_HOME);
+    footer("Change", "Menu");
+#else
+    ys_cpy(b, "YomiGo Desktop ", sizeof b); ys_cat(b, YG_VERSION, sizeof b); text(CX, y + 8, b, C_DIM);
+    text(CX, y + 26, "(C) SENKOSOFT", C_DIM);
+#endif
+}
+#if HTPC
+static void scr_bind(void) {
+    static const char *const names[] = {"OK", "Back", "Extra (X)", "Speak (Y)", "L", "R", "Start"};
+    chrome("Rebind pad", 0);
+    text_c(FBW / 2, 90, "Press the button for:", C_INK);
+    text2(FBW / 2 - text_w(names[bind_action]), 112, names[bind_action], C_ACC);
+    if (!pad_connected()) text_c(FBW / 2, 150, "No pad connected. Press Esc to go back.", C_BAD);
+    if (!pad_binding()) {
+        bind_action++;
+        if (bind_action >= 7) { pad_save(); go(S_SETTINGS); return; }
+        pad_begin_bind(bind_action);
+    }
+    if (IN.pressed & A_BACK) { pad_save(); go(S_SETTINGS); }
+}
+#endif
+
+/* ---- profiles and first run ---- */
+static void load_profile(const char *name) {
+    static char b[120000], fn[64];
+    int n;
+    ys_cpy(fn, name, sizeof fn); ys_cat(fn, ".sav", sizeof fn);
+    n = plat_read(fn, b, sizeof b - 1);
+    have_profile = (n > 0 && profile_load_text(&P, b, n));
+    if (have_profile) { profile_touch_day(&P, plat_today()); go(P.placed || P.day ? S_HOME : S_PLACE_INTRO); }
+}
+static void scr_splash(void) {
+    washi(0, 0, FBW, FBH, HTPC ? C_BG : C_BG, HTPC ? 0x2A1A44 : 0xEADFCC);
+#if HTPC
+    gradient(0, 0, FBW, FBH, 0x180A2C, 0x6A2050);
+    torii(FBW / 2, 86, 6, anim * 3);
+    text2(FBW / 2 - text_w("YomiGo") , 150, "YomiGo", C_ACC);
+    text_c(FBW / 2, 186, "HTPC", C_PINK);
+    if (anim & 16) text_c(FBW / 2, 204, "Press A or Start", C_INK);
+#else
+    gradient(0, 0, FBW, 150, C_PLUM, C_WINE);
+    { int i; for (i = 0; i < 7; i++) sakura(40 + i * 86, 30 + (i * 37) % 80, 2); }
+    fill(0, 150, FBW, 2, C_PINK);
+    text2(FBW / 2 - text_w("読みGo"), 180, "読みGo", C_ACC);
+    text_c(FBW / 2, 220, "YomiGo Japanese Learning System", C_INK);
+    text_c(FBW / 2, 244, "Version " YG_VERSION, C_DIM);
+    text_c(FBW / 2, 420, "(C) SENKOSOFT", C_DIM);
+    if (anim & 16) text_c(FBW / 2, 340, "Click or press Enter", C_PLUM);
+#endif
+    if (IN.pressed || IN.mclick) { plat_sound(3); go(S_PROFILES); }
+}
+static void scr_profiles(void) {
+    static char names[8][32];
+    int n = plat_list_saves(names, 8), i, y;
+    chrome("Who's studying?", 0);
+    y = CY;
+    for (i = 0; i < n; i++) {
+        if (button(CX, y, CW, HTPC ? 24 : 32, names[i])) { load_profile(names[i]); return; }
+        y += HTPC ? 26 : 38;
+    }
+    if (n < 8 && button(CX, y, CW, HTPC ? 24 : 32, "New learner")) { name_buf[0] = 0; input[0] = 0; go(S_NAME); return; }
+#if HTPC
+    footer("Choose", 0);
+#endif
+}
+static void scr_name(void) {
+    chrome("Your name", 0);
+    text(CX, CY, "Enter a short name for this learner.", C_DIM);
+    panel(CX, CY + 22, CW, 24);
+    text(CX + 6, CY + 26, input, C_INK);
+#if HTPC
+    osk(CY + 56);
+    { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "Done"); }
+    if ((IN.pressed & A_START) && input[0]) {
+#else
+    text_entry();
+    if (ys_len(input) > 16) input[16] = 0;
+    if (button(CX + CW - 120, FBY_BTN, 120, 28, "OK") && input[0]) {
+#endif
+        /* Saves are named after the learner, so keep only safe filename characters */
+        int i, k = 0; char clean[YG_NAME];
+        for (i = 0; input[i] && k < 16; i++) {
+            char c = input[i];
+            if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' || c == '_') clean[k++] = c;
+        }
+        clean[k] = 0;
+        if (k) { profile_new(&P, clean); have_profile = 1; save_profile(); input[0] = 0; go(S_FIRST); }
+    }
+}
+static void scr_first(void) {
+    chrome("Do you study with Genki?", 0);
+    panel(CX, CY, CW, HTPC ? 106 : 170);
+    wrap(CX + 8, CY + 4, CW - 16, "YomiGo can add practice sorted by Genki lesson. It uses YomiGo's own cards alongside your copy of the book. You can change this later in Settings.", C_INK, LH, 0, 0);
+    if (button(CX, FBY_BTN - (HTPC ? 30 : 36), CW, 28, "Yes, turn on Genki practice")) { P.genki = 1; save_profile(); go(S_PLACE_INTRO); return; }
+    if (button(CX, FBY_BTN, CW, 28, "No thanks")) { P.genki = 0; save_profile(); go(S_PLACE_INTRO); return; }
+#if HTPC
+    footer("Choose", 0);
+#endif
+}
+static void scr_genki(void) {
+    int i, y = CY + LH + 2, h = HTPC ? 17 : 30, w = HTPC ? 44 : 100, n = plat_scan_material();
+    chrome("Genki practice", 0);
+    text(CX, CY, "By lesson, using YomiGo's own cards.", C_DIM);
+    for (i = 0; i < YG_NGENKI; i++) {
+        char b[16];
+        ys_fmt(b, sizeof b, "L%d", YG_GENKI[i].lesson, 0);
+        if (button(CX, y, w, h, b)) { quiz_genki(&Z, i); start_quiz(QM_PRACTICE); return; }
+        if (!HTPC || ui_focused()) wrap(CX + w + 6, HTPC ? CY + LH + 2 : y + (h - 16) / 2, CW - w - 6, YG_GENKI[i].topics, C_DIM, LH, 0, HTPC ? 5 : 1);
+        y += h + (HTPC ? 1 : 2);
+    }
+    if (!HTPC) wrap(CX, y + 4, CW, "Follows the order of the 3rd edition. Lessons with no YomiGo cards yet arrive with the N4 update.", C_DIM, 18, 0, 2);
+    for (i = 0; i < n; i++) if (ys_contains_ci(plat_material(i), "genki")) {
+        if (button(HTPC ? CX + w + 6 : CX, FBY_BTN, HTPC ? 170 : 170, 28, "Open my Genki file")) plat_open(plat_material_full(i));
+        break;
+    }
+    if (IN.pressed & A_BACK) go(S_CARDS);
+#if HTPC
+    footer("Practice", "Back");
+#endif
+}
+static void scr_place_intro(void) {
+    chrome("Entrance Exam", 0);
+    panel(CX, CY, CW, HTPC ? 106 : 170);
+    wrap(CX + 8, CY + 4, CW - 16, "A short test finds your starting point. It climbs from kana to words, grammar, and kanji, and stops when it gets too hard. Reading only for now.", C_INK, LH, 0, 0);
+    if (button(CX, FBY_BTN - (HTPC ? 30 : 36), CW, 28, "Take the exam")) { place_section = 0; place_passed = 0; placement_section(&Z, 0); start_quiz(QM_PLACE); return; }
+    if (button(CX, FBY_BTN, CW, 28, HTPC ? "Total beginner: day one" : "I'm a total beginner. Start from day one.")) { profile_place(&P, 0, plat_today()); save_profile(); go(S_HOME); return; }
+#if HTPC
+    footer("Choose", 0);
+#endif
+}
+static void scr_place_result(void) {
+    char b[160];
+    chrome("Your starting point", 0);
+    panel(CX, CY, CW, HTPC ? 100 : 170);
+    text2(CX + 10, CY + 8, YG_STAGES[profile_stage(&P)].ja, C_ACC);
+    text(CX + 10, CY + 44, YG_STAGES[profile_stage(&P)].name, C_INK);
+    ys_fmt(b, sizeof b, "You'll begin at class %d. Earlier material goes to your flashcards for review, so fundamentals stay fresh. You can retake this exam by making a new learner.", P.day + 1, 0);
+    wrap(CX + 10, CY + 64, CW - 20, b, C_DIM, LH, 0, 0);
+    if (button(CX + CW / 2 - 70, FBY_BTN, 140, 28, "Begin")) go(S_HOME);
+#if HTPC
+    footer("Begin", 0);
+#endif
+}
+
+/* Test driver: plays the current screen correctly through the real screen code */
+void app_test_auto(void) {
+    IN.pressed = 0; IN.num = 0; IN.text[0] = 0; IN.mx = IN.my = -1; IN.mclick = 0;
+    switch (scr) {
+    case S_QUIZ: {
+        Question *q = &Z.q[qi];
+        if (qanswered) { IN.pressed = HTPC ? A_OK : A_OK; break; }
+        if (q->kind == Q_CHOICE) { IN.num = q->answer + 1; break; }
+        ys_cpy(input, q->want, sizeof input);
+        IN.pressed = HTPC ? A_START : A_OK;
+        break; }
+    case S_CHAT:
+        if (chat_turn < YG_CHATS[chat_id].nturns) ys_cpy(input, YG_CHATS[chat_id].turns[chat_turn].want[0], sizeof input);
+        IN.pressed = HTPC ? A_START : A_OK;
+        break;
+    case S_HOME:
+        if (P.done_today >= P.pace && P.last_day == plat_today() && profile_exam_gate(&P) < 0) plat_test_next_day();
+        else IN.pressed = A_OK;
+        break;
+    default: IN.pressed = A_OK; break;
+    }
+}
+int app_test_done(void) { return have_profile && profile_course_done(&P) && scr == S_HOME; }
+
+void app_init(void) {
+    static char prev[16], b[16]; int n, cur;
+    yg_seed((unsigned)plat_ticks() * 2654435761u + 1);
+    cur = plat_scan_material();
+    /* Daily material check: anything added since last launch gets announced on the home screen */
+    n = plat_read("material.count", prev, sizeof prev - 1);
+    if (n > 0) { prev[n] = 0; if (cur > ys_atoi(prev)) new_material = cur - ys_atoi(prev); }
+    n = ys_itoa(cur, b); plat_write("material.count", b, n);
+}
+void app_frame(void) {
+    ui_begin();
+    anim++;
+    switch (scr) {
+    case S_SPLASH: scr_splash(); break;
+    case S_PROFILES: scr_profiles(); break;
+    case S_NAME: scr_name(); break;
+    case S_PLACE_INTRO: scr_place_intro(); break;
+    case S_PLACE_RESULT: scr_place_result(); break;
+    case S_HOME: scr_home(); break;
+    case S_CLASS: scr_class(); break;
+    case S_TEACH: scr_teach(); break;
+    case S_QUIZ: scr_quiz(); break;
+    case S_RESULT: scr_result(); break;
+    case S_CHAT: scr_chat(); break;
+    case S_TASK: scr_task(); break;
+    case S_CARDS: scr_cards(); break;
+    case S_EXAMS: scr_exams(); break;
+    case S_QUEST: scr_quest(); break;
+    case S_LIBRARY: scr_library(); break;
+    case S_SETTINGS: scr_settings(); break;
+#if HTPC
+    case S_BIND: scr_bind(); break;
+#else
+    case S_BIND: break;
+#endif
+    case S_FIRST: scr_first(); break;
+    case S_GENKI: scr_genki(); break;
+    }
+#if !HTPC
+    rail();
+#endif
+    ui_end();
+}

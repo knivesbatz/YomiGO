@@ -1,0 +1,306 @@
+# YomiGo course. All lesson text is original. Keys: note, new, chat, homework, immerse, material, exam.
+# material: a filename fragment looked up in the family's own local Material folder. Hidden if it isn't there.
+
+@stage 0 | Sound Dojo | 音の道場 | First sounds, first words, first manners.
+@day Five vowels and greetings | 母音とあいさつ
+note: Japanese has five vowels: a (ah), i (ee), u (oo with relaxed lips), e (eh), o (oh). They never change, and each sound gets about the same length of time.
+note: Bowing: a small nod works for everyday greetings. Bow from the waist, back straight, and look down rather than at the other person. Deeper and longer means more respect.
+note: Which greeting? おはようございます until about 10 a.m., こんにちは through the day, こんばんは after dark. With family or close friends, おはよう alone is normal. さようなら sounds rather final, so people often say something else to friends.
+new: @greet1
+chat: greet1
+homework: Say all five greetings out loud, three times each.
+immerse: Greet yourself in the mirror in Japanese tomorrow morning.
+material: 3. Greetings
+@day Thanks and sorry | お礼とおわび
+note: すみません is the all-rounder: it calls a waiter, says excuse me, and softens a thanks. ごめんなさい is a more personal "I'm sorry".
+note: Hands together before a meal for いただきます is common at home. It is a thank you for the food. After eating, say ごちそうさまでした.
+new: @greet2
+chat: thanks1
+homework: Use いただきます and ごちそうさまでした at every meal today.
+immerse: Say すみません to yourself whenever you bump into something.
+material: 4. Manners
+@day Who are you? | 自己紹介
+note: Say your name, then です. People use family names and add さん to others. Never add さん to your own name.
+note: Point at your own nose, not your chest, when you mean "me?". This is one common Japanese gesture.
+new: @intro
+chat: intro1
+homework: Practise your introduction until you can say it without looking.
+immerse: Label one object in your house with a sticky note.
+material: Welcome!
+@day Yes, no, and help | はい、いいえ
+note: はい also means "I'm listening". Hearing it doesn't always mean agreement. Direct いいえ can sound blunt, so people may soften it with a wave of the hand in front of the face.
+note: Listening noises (あいづち) such as はい and ええ show you're following. Silence can feel like you've stopped listening.
+new: @yesno
+chat: yesno1
+homework: Ask someone (or a mirror) to say something and reply 分かりません.
+immerse: Listen to any 30 seconds of Japanese. Don't try to understand. Just notice the rhythm.
+material: Survival phrases
+exam: S0 | Sound Dojo Trial | 2
+
+@stage 1 | Romaji Road | ローマ字の道 | Read and type Japanese sounds with letters.
+@day Numbers one to five | 数字 一から五
+note: Romaji is a bridge. It teaches you sounds and how to type, and you'll leave it behind soon.
+note: Counting on fingers in Japan starts with an open palm, folding the fingers in from the thumb for one, two, three. Six onward opens them out again.
+new: @num1
+homework: Count aloud from one to five, ten times.
+immerse: Count your steps on the stairs in Japanese today.
+material: 5. Numbers
+@day Numbers six to ten | 数字 六から十
+note: Some numbers have two readings. 4 is よん or し, 7 is なな or しち, 9 is きゅう or く. し sounds like the word for death, and く can sound like suffering, so many people avoid them where they can.
+new: @num2
+homework: Count from one to ten and back again.
+immerse: Read any number you see today in Japanese.
+material: Numbers I
+@day Typing Japanese | 日本語を打つ
+note: Typing is half of modern Japanese. Keyboards type romaji and turn it into kana. YomiGo converts for you in answer boxes, and you can also use the Windows or Android Japanese keyboard.
+note: Set it up: Windows Settings > Time & language > Language & region > Add a language > Japanese. Switch with Alt + ` or the language icon. Use n twice (nn) for ん when in doubt.
+new: @first
+homework: Type each new word three times.
+immerse: Turn on a Japanese keyboard on your phone.
+@day People | 人
+note: Family words change depending on whose family. This is a preview: you'll meet the full polite set later.
+note: Teachers are always 先生, used like a title: 田中先生. Don't use it for yourself.
+new: @people
+chat: people1
+homework: Name three people you know in Japanese: friend, teacher, family.
+immerse: Watch a Japanese video with the sound on for five minutes, without pausing.
+material: My family
+exam: S1 | Romaji Road Trial | 2
+
+@stage 2 | Hiragana Hall | ひらがな館 | Japan's main script, every sound.
+@day あいうえお | あ行
+note: Hiragana is the main script. Each character is one beat. We start with the vowels you already know.
+new: %h.a %h.i %h.u %h.e %h.o @hwords1
+homework: Write each character ten times by hand.
+immerse: Find one あ on any Japanese web page.
+material: 1. Hiragana
+@day かきくけこ | か行
+note: Add a k in front of each vowel. The rhythm of the table stays the same for the whole script.
+new: %h.ka %h.ki %h.ku %h.ke %h.ko @hwords2
+homework: Write this row ten times, then the あ row from memory.
+immerse: Find your new characters in a song title.
+@day さしすせそ | さ行
+note: One sound breaks the pattern: し is shi, not si.
+new: %h.sa %h.shi %h.su %h.se %h.so @hwords3
+homework: Write all three rows from memory.
+immerse: Say the row while walking.
+@day たちつてと | た行
+note: Two sounds break the pattern: ち is chi, and つ is tsu.
+new: %h.ta %h.chi %h.tsu %h.te %h.to @hwords4
+homework: Write four rows from memory.
+immerse: Listen for つ in anything you watch today.
+@day なにぬねの | な行
+note: The な row is regular. ぬ and め look alike; watch for the little loop on ぬ.
+new: %h.na %h.ni %h.nu %h.ne %h.no @hwords5
+homework: Write five rows from memory.
+immerse: Read the word ねこ every time you see a cat today.
+@day はひふへほ | は行
+note: ふ sounds softer than English f: blow gently with your lips apart. The particles は and へ are read wa and e. You'll meet those soon.
+new: %h.ha %h.hi %h.fu %h.he %h.ho @hwords6
+homework: Write six rows from memory.
+immerse: Listen for the sound ふ in a song.
+@day まみむめも | ま行
+note: Halfway there. Keep the old rows fresh; this review matters more than the new row.
+new: %h.ma %h.mi %h.mu %h.me %h.mo @hwords7
+homework: Write seven rows from memory.
+immerse: Pick one manga panel and look for kana you know.
+@day やゆよ | や行
+note: Only three characters in this row. ゆ and よ show up again soon in small form.
+new: %h.ya %h.yu %h.yo @hwords8
+homework: Write eight rows from memory.
+immerse: Say good night with おやすみなさい.
+@day らりるれろ | ら行
+note: The Japanese r is one quick tap of the tongue behind the top teeth. It sits between English r, l, and d.
+new: %h.ra %h.ri %h.ru %h.re %h.ro @hwords9
+homework: Say らりるれろ twenty times, tapping lightly.
+immerse: Look up pictures of 桜 and read the word.
+@day わをん | わ行
+note: を is a particle, and in modern speech it sounds like お. ん is the only consonant that stands alone.
+new: %h.wa %h.wo %h.n @hwords10
+homework: Write the whole table from memory.
+immerse: Read 日本語 as にほんご wherever you see it.
+@day Voiced sounds | 濁点
+note: Two small dashes (dakuten) make a sound voiced: か ka becomes が ga. さ becomes ざ, た becomes だ, は becomes ば. じ and ぢ sound the same, as do ず and づ.
+new: %h.ga %h.gi %h.gu %h.ge %h.go %h.za %h.ji %h.zu %h.ze %h.zo %h.da %h.de %h.do %h.ba %h.bi %h.bu %h.be %h.bo @hwords11
+homework: Pair each sound with its unvoiced twin out loud.
+immerse: Find が in any Japanese sentence. It's everywhere.
+@day P sounds and small つ | 半濁点と促音
+note: A small circle (handakuten) turns は row sounds to p: ぱ. A small っ means a tiny stop before the next sound. Type it by doubling the next consonant: kitte for きって.
+new: %h.pa %h.pi %h.pu %h.pe %h.po @hwords12
+homework: Clap one beat for each character in きっぷ: き, っ, ぷ, three beats.
+immerse: Count beats in a Japanese word you hear today.
+@day Combined sounds | 拗音
+note: A small ゃ, ゅ, or ょ blends with the sound before it: き + ゃ = きゃ kya, in one beat. Keep them small on the page.
+new: %h.kya %h.kyu %h.kyo %h.sha %h.shu %h.sho %h.cha %h.chu %h.cho %h.nya %h.nyu %h.nyo %h.hya %h.hyu %h.hyo %h.mya %h.myu %h.myo %h.rya %h.ryu %h.ryo %h.gya %h.gyu %h.gyo %h.ja %h.ju %h.jo %h.bya %h.byu %h.byo %h.pya %h.pyu %h.pyo @hwords13
+homework: Read the table of combined sounds out loud, twice.
+immerse: Read the word きょう on a Japanese calendar or weather page.
+@day Long vowels | 長音
+note: Long vowels count as two beats, and length changes meaning: おばさん is aunt, おばあさん is grandmother. Long お is usually written おう, and long え usually えい.
+new: @hwords14
+chat: family1
+homework: Read every hiragana word you've learned today.
+immerse: Switch your phone's lock-screen text to a hiragana word.
+exam: S2 | Hiragana Hall Trial | 3
+
+@stage 3 | Katakana Castle | カタカナ城 | Loanwords, names, and emphasis.
+@day アカサ rows | ア カ サ行
+note: Katakana writes the same sounds as hiragana, in angular shapes. It's used for foreign words and names, and for emphasis or sound effects. A long sound is a bar: コーヒー.
+new: %k.a %k.i %k.u %k.e %k.o %k.ka %k.ki %k.ku %k.ke %k.ko %k.sa %k.shi %k.su %k.se %k.so @katawords1
+homework: Write your name in katakana.
+immerse: Find katakana on a food package or Japanese web store.
+material: 2. Katakana
+@day タナハ rows | タ ナ ハ行
+note: Watch for the look-alikes シ and ツ, and ソ and ン. シ's strokes sit flatter, while ツ's stand more upright.
+new: %k.ta %k.chi %k.tsu %k.te %k.to %k.na %k.ni %k.nu %k.ne %k.no %k.ha %k.hi %k.fu %k.he %k.ho @katawords2
+homework: Write シ ツ ソ ン five times each, and say each one.
+immerse: Say English words in Japanese style: タクシー, バス.
+@day マヤラワ rows | マ ヤ ラ ワ行
+note: With these rows you've seen every basic katakana. Voiced marks work the same as in hiragana.
+new: %k.ma %k.mi %k.mu %k.me %k.mo %k.ya %k.yu %k.yo %k.ra %k.ri %k.ru %k.re %k.ro %k.wa %k.wo %k.n
+homework: Write the whole katakana table once from memory.
+immerse: Find three katakana words in a Japanese game menu or web page.
+@day Voiced katakana and loanwords | 濁点とカタカナ語
+note: Japanese doesn't always copy English sounds. Words get cut and reshaped: パソコン comes from "personal computer", コンビニ from "convenience store".
+new: %k.ga %k.gi %k.gu %k.ge %k.go %k.za %k.ji %k.zu %k.ze %k.zo %k.da %k.de %k.do %k.ba %k.bi %k.bu %k.be %k.bo %k.pa %k.pi %k.pu %k.pe %k.po %k.sha %k.shu %k.sho %k.cha %k.chu %k.cho %k.ja %k.ju %k.jo @katawords3
+chat: konbini1
+homework: Find five English words you know in katakana.
+immerse: Read one Japanese game's title screen, slowly.
+exam: S3 | Katakana Castle Trial | 3
+
+@stage 4 | Grammar Gate | 文法の門 | Build real sentences.
+@day AはBです | です
+note: A Japanese sentence ends with its most important word. Listen to the end. People usually drop 私 once the topic is clear; repeating it sounds odd.
+new: !g.desu !g.ka @things
+chat: student1
+homework: Write three sentences about yourself with です.
+immerse: Listen for です at the ends of sentences in any show.
+material: 6. Food, This, That
+@day の and も | の、も
+note: The describing word always comes first: 私の本, "my book", is literally "I's book".
+new: !g.no !g.mo !g.kore !g.janai
+homework: Write the names of two things you own using の.
+immerse: Point at things at home and say これ, それ, あれ.
+material: 1. Particles
+@day Verbs | 動詞
+note: Verbs come last. People often leave out the subject when it's clear from context. ます keeps things polite for people you don't know well.
+new: !g.masu !g.masen !g.wo @verbs1
+chat: eat1
+homework: Say five things you will do today using ます.
+immerse: Narrate your breakfast in Japanese: パンを食べます.
+material: 2. Verbs
+@day Places and means | に、で、へ
+note: A trick: に is the point you arrive at; で is the stage where the action happens.
+new: !g.ni !g.de !g.e @verbs2
+homework: Write where you study and where you eat.
+immerse: Say where you are going, whenever you leave the house.
+material: 4. Verbs 2
+@day The past | 過去形
+note: Past and non-past are the only two tenses. Future is the same form as the present.
+new: !g.mashita !g.masendeshita !g.mashou
+chat: plan1
+homework: Write what you did yesterday, in three sentences.
+immerse: Say one thing that you did today before going to bed.
+material: 3. Frequency Adverbs
+@day Adjectives | 形容詞
+note: Two kinds of adjective. Most い adjectives end in い, but きれい and 有名 are な adjectives even though the first ends in い.
+new: !g.iadj !g.naadj !g.kunai @adj1 @adj2
+homework: Describe three things in your room.
+immerse: Say 美味しい! at your next meal, with feeling.
+material: 5. Adjectives
+@day There is... | あります、います
+note: Use います for people and animals, あります for everything else. Plants and robots count as things to most speakers, though robots can go either way.
+new: !g.ga !g.nipos @exist
+homework: Say what's in your room with あります and います.
+immerse: Walk through your home naming what's there.
+material: There is_are
+@day Telling the time | 時間
+note: 4 o'clock is よじ, 7 is しちじ, and 9 is くじ. Minutes change sound: いっぷん, にふん, さんぷん.
+new: @time @days
+chat: time1
+homework: Say the time out loud five times today.
+immerse: Set your phone's clock to Japanese.
+material: 7. Telling the Time
+@day Counting things | 数え方
+note: Japanese counts with counters that depend on shape: 枚 for flat things, 本 for long things, 匹 for small animals, 人 for people. つ is the safe general counter for things up to ten. People use 一人 and 二人, but 三人 and up are regular.
+note: Sounds shift: いっぽん, にほん, さんぼん. Practise saying them as a set.
+new: @counters
+chat: shop1
+homework: Count things on your table with the right counter.
+immerse: Read the prices on a Japanese web store.
+material: Numbers II
+@day Requests, ranges, wishes | お願いと希望
+note: 〜てください is polite but still a request from your side. Softer forms come later.
+new: !g.kudasai !g.tekudasai !g.kara !g.made !g.tai @express
+chat: wish1
+homework: Write one thing you want to do in Japan.
+immerse: Use ええと when you need to think, instead of "um".
+material: 3. Grammar KARA-MADE
+exam: S4 | Grammar Gate Trial | 3
+
+@stage 5 | Kanji Keep | 漢字の砦 | Meanings in shapes.
+@day Nature and weekdays | 曜日の漢字
+note: Most kanji have an on reading (from Chinese) and a kun reading (native Japanese). Learn each kanji inside words, not alone. Today's seven are the seven days of the week, plus 山.
+new: @k1
+homework: Copy each kanji five times, following a stroke-order chart from the Resources page.
+immerse: Read today's day of the week from a Japanese calendar.
+@day Numbers | 数字の漢字
+note: You already know how to read these. Numbers in vertical text use them all the time.
+new: @k2
+homework: Write today's date in kanji numbers.
+immerse: Find one kanji number on a Japanese web page.
+@day People and the body | 人と体
+note: Many kanji began as pictures. Notice 田 and 力 inside 男. Parts like these repeat, so learn them as building blocks.
+new: @k3
+homework: Copy each kanji five times.
+immerse: Find 人 inside a Japanese web headline.
+material: 3. Body Parts
+@day Directions and size | 方向
+note: 上 and 下 are mirror images. Many readings end with extra kana, called okurigana: 大きい, 小さい.
+new: @k4
+homework: Write 上, 下, 右, 左 on sticky notes around the room.
+immerse: Read 右 and 左 on maps of a Japanese train station.
+@day Verbs in kanji | 動詞の漢字
+note: Verb kanji usually carry kana after them: 行きます, 食べます. Many include hints: 言 at the side means words; 食 means food.
+new: @k5
+homework: Rewrite five of your verb sentences with kanji.
+immerse: Read 食 on a restaurant web page.
+@day Time | 時間の漢字
+note: Time words let you read schedules: 今, 時, 分, 半, 毎.
+new: @k6
+homework: Write your daily schedule using these.
+immerse: Read a Japanese train timetable for one minute.
+@day School and country | 学校と国
+note: Kanji combine to make new words: 学 + 校 is school; 日 + 本 + 語 is Japanese.
+new: @k7
+homework: Write 日本語の学生です and read it aloud.
+immerse: Find 語 on a language menu.
+@day Weather and colour | 天気
+note: The rain radical (雨) tops many weather kanji, and even 電, since lightning came first.
+new: @k8
+homework: Say today's weather with a kanji word.
+immerse: Read a Japanese weather forecast page. Just pick out 雨 or 天.
+material: 5. Weather
+exam: S5 | Kanji Keep Trial | 3
+
+@stage 6 | N5 Street | N5の街 | Use it all, out in the world.
+@day Shopping | 買い物
+note: Staff use very polite language you don't need to copy. いらっしゃいませ is a welcome, not a question, so you don't have to reply. A nod is fine.
+note: In many shops, put your money in the small tray rather than in the cashier's hand.
+new: @town
+chat: shop2
+homework: Roleplay buying something, with a family member.
+immerse: Browse a Japanese shop website for ten minutes.
+material: Money and shopping
+@day At a restaurant | レストラン
+note: Say すみません to call staff. Tipping isn't customary. Don't stick chopsticks upright in rice or pass food chopstick to chopstick, because both recall funeral customs.
+chat: restaurant1
+homework: Read aloud a Japanese menu online.
+immerse: Order in Japanese next time you eat at a Japanese restaurant, even just one word.
+material: At the restaurant
+@day Directions | 道案内
+note: People often gesture with the whole open hand rather than one pointing finger. Use さん-level politeness with strangers.
+chat: directions1
+homework: Give directions in Japanese from your home to the nearest shop.
+immerse: Follow one Japanese walking-tour video for 10 minutes.
+material: Asking for directions
+exam: N5 | N5 Mastery Exam | 5

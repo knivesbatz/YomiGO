@@ -1,0 +1,229 @@
+# id	display	kana	romaji	english	[p = contains particle は/を/へ spelled wa/o/e]
+#greet1
+ohayou	おはようございます	おはようございます	ohayou gozaimasu	good morning (polite)
+konnichiwa	こんにちは	こんにちは	konnichiwa	hello / good afternoon	p
+konbanwa	こんばんは	こんばんは	konbanwa	good evening	p
+sayounara	さようなら	さようなら	sayounara	goodbye (for a long parting)
+oyasumi	おやすみなさい	おやすみなさい	oyasumi nasai	good night
+#greet2
+arigatou	ありがとうございます	ありがとうございます	arigatou gozaimasu	thank you (polite)
+douitashimashite	どういたしまして	どういたしまして	dou itashimashite	you're welcome
+sumimasen	すみません	すみません	sumimasen	excuse me / sorry
+gomennasai	ごめんなさい	ごめんなさい	gomen nasai	I'm sorry
+itadakimasu	いただきます	いただきます	itadakimasu	said before eating
+gochisousama	ごちそうさまでした	ごちそうさまでした	gochisousama deshita	said after eating
+#intro
+hajimemashite	はじめまして	はじめまして	hajimemashite	nice to meet you (first meeting)
+yoroshiku	よろしくおねがいします	よろしくおねがいします	yoroshiku onegai shimasu	please treat me well
+watashi	私	わたし	watashi	I / me
+namae	名前	なまえ	namae	name
+desu	です	です	desu	is / am / are (polite)
+san	さん	さん	san	Mr./Ms. (after a name)
+#yesno
+hai	はい	はい	hai	yes
+iie	いいえ	いいえ	iie	no
+wakarimasu	分かります	わかります	wakarimasu	I understand
+wakarimasen	分かりません	わかりません	wakarimasen	I don't understand
+onegaishimasu	おねがいします	おねがいします	onegai shimasu	please
+moichido	もう一度	もういちど	mou ichido	one more time
+#num1
+ichi	一	いち	ichi	one (1)
+ni	二	に	ni	two (2)
+san3	三	さん	san	three (3)
+yon	四	よん	yon	four (4), also read し shi
+go	五	ご	go	five (5)
+#num2
+roku	六	ろく	roku	six (6)
+nana	七	なな	nana	seven (7), also read しち shichi
+hachi	八	はち	hachi	eight (8)
+kyuu	九	きゅう	kyuu	nine (9), also read く ku
+juu	十	じゅう	juu	ten (10)
+#first
+neko	猫	ねこ	neko	cat
+inu	犬	いぬ	inu	dog
+mizu	水	みず	mizu	water
+ocha	お茶	おちゃ	ocha	green tea
+gohan	ご飯	ごはん	gohan	cooked rice / a meal
+sushi	寿司	すし	sushi	sushi
+#people
+hito	人	ひと	hito	person
+tomodachi	友達	ともだち	tomodachi	friend
+sensei	先生	せんせい	sensei	teacher
+gakusei	学生	がくせい	gakusei	student
+kazoku	家族	かぞく	kazoku	family
+kodomo	子供	こども	kodomo	child
+#hwords1
+ai	愛	あい	ai	love
+ie	家	いえ	ie	house
+ue	上	うえ	ue	above
+aoi	青い	あおい	aoi	blue
+#hwords2
+kao	顔	かお	kao	face
+kiku	聞く	きく	kiku	to listen
+ike	池	いけ	ike	pond
+koe	声	こえ	koe	voice
+#hwords3
+asa	朝	あさ	asa	morning
+sake	お酒	さけ	sake	rice wine / alcohol
+isu	椅子	いす	isu	chair
+kasa	傘	かさ	kasa	umbrella
+#hwords4
+te	手	て	te	hand
+tsuki	月	つき	tsuki	moon / month
+kuchi	口	くち	kuchi	mouth
+ashita	明日	あした	ashita	tomorrow
+#hwords5
+natsu	夏	なつ	natsu	summer
+aki	秋	あき	aki	autumn
+nani	何	なに	nani	what
+#hwords6
+hana	花	はな	hana	flower
+fune	船	ふね	fune	boat
+heta	下手	へた	heta	unskilled
+hoshi	星	ほし	hoshi	star
+#hwords7
+yama	山	やま	yama	mountain
+kami	紙	かみ	kami	paper
+mimi	耳	みみ	mimi	ear
+mono	物	もの	mono	thing
+#hwords8
+yuki	雪	ゆき	yuki	snow
+yoru	夜	よる	yoru	night
+yasumi	休み	やすみ	yasumi	rest / day off
+#hwords9
+haru	春	はる	haru	spring
+sora	空	そら	sora	sky
+kuruma	車	くるま	kuruma	car
+sakura	桜	さくら	sakura	cherry blossom
+#hwords10
+kawa	川	かわ	kawa	river
+hon	本	ほん	hon	book
+nihon	日本	にほん	nihon	Japan
+nihongo	日本語	にほんご	nihongo	Japanese language
+#hwords11
+kagi	鍵	かぎ	kagi	key
+kaze	風	かぜ	kaze	wind
+denwa	電話	でんわ	denwa	telephone
+ban	晩	ばん	ban	evening
+#hwords12
+enpitsu	鉛筆	えんぴつ	enpitsu	pencil
+kippu	切符	きっぷ	kippu	ticket
+zasshi	雑誌	ざっし	zasshi	magazine
+gakkou	学校	がっこう	gakkou	school
+#hwords13
+kyou	今日	きょう	kyou	today
+shashin	写真	しゃしん	shashin	photo
+ryokou	旅行	りょこう	ryokou	travel
+chuugoku	中国	ちゅうごく	chuugoku	China
+#hwords14
+okaasan	お母さん	おかあさん	okaasan	mother
+otousan	お父さん	おとうさん	otousan	father
+oneesan	お姉さん	おねえさん	oneesan	older sister
+oniisan	お兄さん	おにいさん	oniisan	older brother
+#katawords1
+koohii	コーヒー	コーヒー	koohii	coffee
+kamera	カメラ	カメラ	kamera	camera
+terebi	テレビ	テレビ	terebi	television
+hoteru	ホテル	ホテル	hoteru	hotel
+#katawords2
+pan	パン	パン	pan	bread
+basu	バス	バス	basu	bus
+takushii	タクシー	タクシー	takushii	taxi
+rajio	ラジオ	ラジオ	rajio	radio
+#katawords3
+geemu	ゲーム	ゲーム	geemu	video game
+anime	アニメ	アニメ	anime	animation
+manga	マンガ	マンガ	manga	comics
+konbini	コンビニ	コンビニ	konbini	convenience store
+pasokon	パソコン	パソコン	pasokon	personal computer
+#things
+kore	これ	これ	kore	this (near me)
+sore	それ	それ	sore	that (near you)
+are	あれ	あれ	are	that (over there)
+koko	ここ	ここ	koko	here
+soko	そこ	そこ	soko	there
+asoko	あそこ	あそこ	asoko	over there
+doko	どこ	どこ	doko	where
+#verbs1
+tabemasu	食べます	たべます	tabemasu	to eat
+nomimasu	飲みます	のみます	nomimasu	to drink
+ikimasu	行きます	いきます	ikimasu	to go
+kimasu	来ます	きます	kimasu	to come
+kaerimasu	帰ります	かえります	kaerimasu	to return home
+mimasu	見ます	みます	mimasu	to watch / see
+#verbs2
+yomimasu	読みます	よみます	yomimasu	to read
+kikimasu	聞きます	ききます	kikimasu	to listen
+kakimasu	書きます	かきます	kakimasu	to write
+hanashimasu	話します	はなします	hanashimasu	to speak
+kaimasu	買います	かいます	kaimasu	to buy
+shimasu	します	します	shimasu	to do
+benkyou	勉強	べんきょう	benkyou	study
+#adj1
+ookii	大きい	おおきい	ookii	big
+chiisai	小さい	ちいさい	chiisai	small
+atarashii	新しい	あたらしい	atarashii	new
+furui	古い	ふるい	furui	old (things)
+takai	高い	たかい	takai	expensive / tall
+yasui	安い	やすい	yasui	cheap
+oishii	美味しい	おいしい	oishii	delicious
+#adj2
+kirei	きれい	きれい	kirei	pretty / clean (な adjective)
+genki	元気	げんき	genki	healthy / lively (な adjective)
+suki	好き	すき	suki	to like (な adjective)
+shizuka	静か	しずか	shizuka	quiet (な adjective)
+yuumei	有名	ゆうめい	yuumei	famous (な adjective)
+#exist
+arimasu	あります	あります	arimasu	there is (things)
+imasu	います	います	imasu	there is (people, animals)
+tsukue	机	つくえ	tsukue	desk
+heya	部屋	へや	heya	room
+eki	駅	えき	eki	train station
+mise	店	みせ	mise	shop
+#time
+ima	今	いま	ima	now
+ji	時	じ	ji	o'clock
+fun	分	ふん	fun	minute
+gozen	午前	ごぜん	gozen	a.m.
+gogo	午後	ごご	gogo	p.m.
+kinou	昨日	きのう	kinou	yesterday
+mainichi	毎日	まいにち	mainichi	every day
+#days
+getsuyoubi	月曜日	げつようび	getsuyoubi	Monday
+kayoubi	火曜日	かようび	kayoubi	Tuesday
+suiyoubi	水曜日	すいようび	suiyoubi	Wednesday
+mokuyoubi	木曜日	もくようび	mokuyoubi	Thursday
+kinyoubi	金曜日	きんようび	kin'youbi	Friday
+doyoubi	土曜日	どようび	doyoubi	Saturday
+nichiyoubi	日曜日	にちようび	nichiyoubi	Sunday
+#counters
+hitotsu	一つ	ひとつ	hitotsu	one (general counter)
+futatsu	二つ	ふたつ	futatsu	two (general counter)
+mittsu	三つ	みっつ	mittsu	three (general counter)
+hitori	一人	ひとり	hitori	one person
+futari	二人	ふたり	futari	two people
+sannin	三人	さんにん	sannin	three people
+ichimai	一枚	いちまい	ichimai	one flat thing (paper, ticket)
+ippon	一本	いっぽん	ippon	one long thing (bottle, pen)
+nihon2	二本	にほん	nihon	two long things
+sanbon	三本	さんぼん	sanbon	three long things
+ippiki	一匹	いっぴき	ippiki	one small animal
+hyaku	百	ひゃく	hyaku	hundred
+sen	千	せん	sen	thousand
+man	万	まん	man	ten thousand
+ikura	いくら	いくら	ikura	how much (price)
+en	円	えん	en	yen
+#town
+tabemono	食べ物	たべもの	tabemono	food
+nomimono	飲み物	のみもの	nomimono	drink
+migi	右	みぎ	migi	right
+hidari	左	ひだり	hidari	left
+massugu	まっすぐ	まっすぐ	massugu	straight ahead
+kudasai	ください	ください	kudasai	please give me
+dore	どれ	どれ	dore	which one
+#express
+ee	ええ	ええ	ee	yes (softer, conversational)
+sou	そうですね	そうですね	sou desu ne	that's right / let me think
+eeto	ええと	ええと	eeto	um... (thinking filler)
+hontou	本当	ほんとう	hontou	really / true
+daijoubu	大丈夫	だいじょうぶ	daijoubu	it's okay

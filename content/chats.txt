@@ -1,0 +1,95 @@
+# Scripted offline conversations. Each `say` is what the character says, each `want` lists accepted replies.
+@chat greet1 | Morning at the station | 朝の駅 | はな
+say: おはようございます！ | ohayou gozaimasu! | Good morning!
+want: おはようございます;おはよう | Reply with the morning greeting.
+say: さようなら！ | sayounara! | Goodbye!
+want: さようなら | Say goodbye back.
+
+@chat thanks1 | Dropped umbrella | 傘 | けん
+say: すみません！ | sumimasen! | Excuse me! (They hand you your umbrella.)
+want: ありがとうございます;ありがとう | Thank them.
+say: どういたしまして。 | dou itashimashite. | You're welcome.
+want: さようなら;すみません;ありがとうございます | Close the exchange: another thanks or a goodbye.
+
+@chat intro1 | Meeting a classmate | はじめまして | ゆき
+say: はじめまして。ゆきです。 | hajimemashite. yuki desu. | Nice to meet you. I'm Yuki.
+want: はじめまして | Say "nice to meet you".
+say: よろしくおねがいします。 | yoroshiku onegai shimasu. | Please treat me well.
+want: よろしくおねがいします;よろしく | Say it back.
+
+@chat yesno1 | Lost on the first day | 分かりますか | せんせい
+say: 分かりますか。 | wakarimasu ka. | Do you understand?
+want: わかりません;いいえ | Tell the teacher you don't understand.
+say: もう一度？ | mou ichido? | One more time?
+want: はい;おねがいします;はいおねがいします | Accept politely.
+
+@chat people1 | Who's that? | だれ | はな
+say: 友達ですか。 | tomodachi desu ka. | Is that your friend?
+want: はい;はいともだちです;いいえ;いいえかぞくです | Yes or no, with or without a full sentence.
+say: 学生ですか。 | gakusei desu ka. | Are you a student?
+want: はい;はいがくせいです;いいえ;はいそうです | Answer: はい or いいえ.
+
+@chat family1 | Family photo | 家族の写真 | ゆき
+say: おかあさんですか。 | okaasan desu ka. | Is that your mother?
+want: はい;はいそうです;はいおかあさんです;いいえ;いいえおねえさんです | Answer about the photo.
+say: きれいなしゃしんですね。 | kirei na shashin desu ne. | What a lovely photo.
+want: ありがとうございます;ありがとう | Thank them for the compliment.
+
+@chat konbini1 | At the convenience store | コンビニ | てんいん
+say: いらっしゃいませ。コーヒーですか。 | irasshaimase. koohii desu ka. | Welcome. Coffee?
+want: はい;はいコーヒーです;はいおねがいします;おねがいします | Say yes, you'd like coffee.
+say: ありがとうございました。 | arigatou gozaimashita. | Thank you.
+want: ありがとうございます;ありがとうございました;どうも | Thanks back, or a short どうも.
+
+@chat student1 | What do you do? | 学生ですか | けん
+say: 学生ですか。 | gakusei desu ka. | Are you a student?
+want: はいがくせいです;はいそうです;いいえがくせいじゃありません;いいえちがいます | Use a full answer with です or じゃありません.
+say: これは本ですか。 | kore wa hon desu ka. | Is this a book?
+want: はいほんです;はいそうです;はいそれはほんです | Answer with a full sentence.
+
+@chat eat1 | Breakfast talk | 朝ごはん | ゆき
+say: 朝ごはんを食べますか。 | asagohan o tabemasu ka. | Do you eat breakfast?
+want: はいたべます;いいえたべません | Answer using the verb: 食べます or 食べません.
+say: コーヒーを飲みますか。 | koohii o nomimasu ka. | Do you drink coffee?
+want: はいのみます;いいえのみません | Use the verb again.
+
+@chat plan1 | Making plans | 明日 | はな
+say: 昨日、勉強しましたか。 | kinou benkyou shimashita ka. | Did you study yesterday?
+want: はいしました;はいべんきょうしました;いいえしませんでした;いいえべんきょうしませんでした | Answer in the past tense.
+say: 明日、映画を見ましょう！ | ashita eiga o mimashou! | Let's see a movie tomorrow!
+want: はい;はいみましょう;いいですね | Agree with the suggestion.
+
+@chat time1 | What time? | 何時 | けん
+say: 今、何時ですか。 | ima nanji desu ka. | What time is it now?
+want: いちじです;にじです;さんじです;よじです;ごじです;ろくじです;しちじです;はちじです;くじです;じゅうじです;じゅういちじです;じゅうにじです | Give any hour with です. Watch out for よじ, しちじ, and くじ.
+say: 今日は何曜日ですか。 | kyou wa nan youbi desu ka. | What day is today?
+want: げつようびです;かようびです;すいようびです;もくようびです;きんようびです;どようびです;にちようびです | Give any day with です.
+
+@chat shop1 | Buying tickets | 切符 | えきいん
+say: 切符は何枚ですか。 | kippu wa nanmai desu ka. | How many tickets?
+want: いちまいです;にまいです;さんまいです;いちまいおねがいします;にまいおねがいします;さんまいおねがいします | Use the 枚 counter.
+say: 大人は何人ですか。 | otona wa nannin desu ka. | How many adults?
+want: ひとりです;ふたりです;さんにんです | Use 一人, 二人, or 三人. Those first two are special.
+
+@chat wish1 | Dreams | 夢 | ゆき
+say: 日本へ行きたいですか。 | nihon e ikitai desu ka. | Do you want to go to Japan?
+want: はいいきたいです;はいいきたいです。;いいえいきたくないです | Use たい.
+say: 何を食べたいですか。 | nani o tabetai desu ka. | What do you want to eat?
+want: すしをたべたいです;おすしをたべたいです;ごはんをたべたいです;パンをたべたいです;すしがたべたいです;ラーメンをたべたいです;ラーメンがたべたいです | Say a food + をたべたいです.
+
+@chat shop2 | At the shop | 店で | てんいん
+say: いらっしゃいませ。 | irasshaimase. | Welcome.
+want: これをください;これください;すみませんこれをください | Ask for this item.
+say: 三百円です。 | sanbyaku en desu. | That's 300 yen.
+want: はい;はいおねがいします;ありがとうございます | Say OK as you pay.
+
+@chat restaurant1 | Dinner out | レストラン | てんいん
+say: ご注文は？ | gochuumon wa? | Your order?
+want: すしをください;すしをおねがいします;おすしをください;おすしをおねがいします;ごはんをください;おちゃをください;みずをください;みずをおねがいします;おちゃをおねがいします | Order with をください or をおねがいします.
+say: お飲み物は？ | onomimono wa? | Any drinks?
+want: みずをください;みずをおねがいします;おちゃをください;おちゃをおねがいします;コーヒーをください;コーヒーをおねがいします;いいえ;けっこうです | Order a drink, or decline.
+
+@chat directions1 | Finding the station | 道 | とおりの人
+want: すみませんえきはどこですか;えきはどこですか | Politely ask where the station is.
+say: まっすぐ行って、右です。 | massugu itte, migi desu. | Go straight, then it's on the right.
+want: ありがとうございます;わかりましたありがとうございます | Thank them.
