@@ -1,11 +1,12 @@
 {
   "manifest_version": 3,
   "name": "YomiGo Reader",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Select Japanese on any page to look it up, save it with its sentence, and export flashcards. Everything stays on your device.",
   "permissions": ["storage"],
   "action": { "default_popup": "popup.html", "default_title": "YomiGo Reader" },
   "icons": { "128": "icon128.png" },
   "content_scripts": [{ "matches": ["http://*/*", "https://*/*"], "js": ["content.js", "core.js", "reader.js"], "run_at": "document_idle" }],
-  "browser_specific_settings": { "gecko": { "id": "yomigo-reader@senkosoft.local", "strict_min_version": "115.0" } }
+  "web_accessible_resources": [{ "resources": ["dict.tsv"], "matches": ["http://*/*", "https://*/*"] }],
+  "browser_specific_settings": { "gecko": { "id": "yomigo-reader@senkosoft.local", "strict_min_version": "115.0", "data_collection_permissions": { "required": ["none"] } } }
 }

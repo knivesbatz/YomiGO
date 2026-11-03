@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.0
+
+- Study Guide in the Library: a setup checklist, a daily routine, immersion, mining, and where guides disagree
+- Study tips through the course, in YomiGo's own words, after reading the guide sites
+- Four new classes: colours, family, weather small talk, and how often, plus ね, よ, and 〜ています
+- Dictionary of about 22,000 common words from JMdict, in every app
+- Reader finds words from the forms you meet on a page, such as 食べました or 高くない
+- Stroke order, drawn one stroke at a time, on kana and kanji cards
+- N64 controller support and prompts on the TV app, following the N64 launcher's layouts
+- The entrance exam now starts with romaji, as the course does, and has an I don't know button
+- Firefox: clearer install steps, and the manifest is ready for Mozilla signing
+- Every course word and kanji checked against JMdict. This found and fixed one wrong card: see [the report](FACTCHECK.md)
+
 ## 0.1.2
 
 - New class step: type each new word several times

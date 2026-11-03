@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Plays the whole course through the real screens of both Windows builds, with no window, then checks the save."""
-import os, shutil, subprocess, sys, tempfile
+import json, os, shutil, subprocess, sys, tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 START = {"YomiGo.exe": "w2;ow2;ow2;tWalker;ow2;odow2;G;", "YomiGoHTPC.exe": None}
@@ -17,7 +17,7 @@ for exe in ("YomiGo.exe", "YomiGoHTPC.exe"):
     text = open(os.path.join(root, saves[0]), encoding="utf-8").read() if saves else ""
     vals = dict(l.split("=", 1) for l in text.splitlines() if "=" in l)
     cards = sum(1 for l in text.splitlines() if l.startswith("card "))
-    ok = r.returncode == 0 and saves and int(vals.get("day", 0)) == 47 and cards > 400 and int(vals.get("xp", 0)) > 5000 and "exam.N5" in vals
+    ok = r.returncode == 0 and saves and int(vals.get("day", 0)) == 51 and cards > 400 and int(vals.get("xp", 0)) > 5000 and "exam.N5" in vals
     print(exe, "exit", r.returncode, "day", vals.get("day"), "cards", cards, "xp", vals.get("xp"), "chats", vals.get("chats"), "hw", vals.get("hw"), "OK" if ok else "FAILED")
     fail += not ok
     shutil.rmtree(root, ignore_errors=True)
@@ -32,7 +32,9 @@ shutil.rmtree(root, ignore_errors=True)
 esc = lambda s: "".join("\\u%04x" % ord(c) for c in s)
 kana = ["おはようございます", "こんにちは", "こんばんは", "さようなら", "おやすみなさい"]
 root = tempfile.mkdtemp()
-script = "w2;ow2;ow2;tKana;w1;ow2;dw1;ow2;dw1;ow2;ow2;ow2;" + "ow1;" * 8 + "".join(f"t{esc(k)};w1;ow1;" * 3 for k in kana)
+C = json.load(open(os.path.join(ROOT, "build", "gen", "content.json"), encoding="utf-8"))
+pages = len(C["days"][0]["notes"]) + len(C["days"][0]["new"])
+script = "w2;ow2;ow2;tKana;w1;ow2;dw1;ow2;dw1;ow2;ow2;ow2;" + "ow1;" * pages + "".join(f"t{esc(k)};w1;ow1;" * 3 for k in kana)
 subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--script", script], timeout=60)
 vals = dict(l.split("=", 1) for l in open(os.path.join(root, "Kana.sav"), encoding="utf-8").read().splitlines() if "=" in l)
 ok = vals.get("step") == "3" and vals.get("xp") == "5"

@@ -28,3 +28,6 @@ mobile/app/src/main/assets/www/content.js
 mobile/app/src/main/assets/www/core.js
 extension/content.js
 extension/core.js
+extension/dict.tsv
+mobile/app/src/main/assets/www/dict.js
+mobile/app/src/main/assets/www/strokes.js

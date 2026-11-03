@@ -4,12 +4,10 @@
 
 Shared course through N5, all four apps, updates, tests, and CI.
 
-## 0.2 Real dictionary and writing
+## 0.2 Real dictionary and writing (done, except these)
 
-- JMdict in Reader, Mobile, and Desktop, plus cross-checking every course word against it
-- KanjiVG stroke order, with writing practice
-- Furigana on web pages
-- Fill in the 5 practice items still missing from the entrance exam: listening, typing, and speaking
+- Handwriting practice on screen, and furigana on web pages
+- Add listening, typing, and speaking to the entrance exam
 
 ## 0.3 OCR and mining
 

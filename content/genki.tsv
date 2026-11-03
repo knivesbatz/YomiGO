@@ -5,5 +5,5 @@
 4	What exists and where, past tense	!g.ga !g.nipos !g.mashita !g.masendeshita @exist @days
 5	Both kinds of adjective, liking things, let's do	!g.iadj !g.naadj !g.kunai !g.mashou @adj1 @adj2
 6	Requests, and giving reasons	!g.tekudasai !g.kudasai !g.kara !g.made
-7	Family and people, counting people	@people !v.hitori !v.futari !v.sannin !v.kazoku
+7	What you are doing now, family and people, counting people	!g.teiru @family @people !v.hitori !v.futari !v.sannin !v.kazoku
 11	Saying what you want to do	!g.tai !v.ryokou !v.nihon

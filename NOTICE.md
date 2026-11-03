@@ -9,6 +9,15 @@ YomiGo's source code and course content are © SENKOSOFT, all rights reserved. T
 
 YomiGo isn't affiliated with or endorsed by Nintendo, The Japan Times (Genki), the JLPT organisers, Duolingo, WaniKani, Anki, Quizlet, or any other product it mentions. Names are used only to describe compatibility or inspiration.
 
+## Dictionary and stroke data
+
+`content/dict/` keeps its own licences, and they differ from the rest of the project:
+
+- **`jmdict_common.tsv`** is cut from [JMdict](https://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project). This publication has included material from the JMdict (EDICT, etc.) dictionary files in accordance with the licence provisions of the Electronic Dictionaries Research Group. See the [EDRDG licence](https://www.edrdg.org/edrdg/licence.html). CC BY-SA 4.0.
+- **`strokes.tsv`** is simplified from [KanjiVG](https://kanjivg.tagaini.net/), by Ulrich Apel and contributors. CC BY-SA 3.0.
+
+The Study Guide and course tips are written in YomiGo's own words after reading the guide sites listed in [the bibliography](docs/BIBLIOGRAPHY.md). They contain no text copied from those sites.
+
 ## Study material
 
 Commercial courses and books never go in this repository, and the course contains no text, audio, or exercises copied from them. The apps open a family's own files from a local folder, and don't unlock, decrypt, or redistribute anything.

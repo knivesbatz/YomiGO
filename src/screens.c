@@ -2,6 +2,7 @@
 #include "yg.h"
 #include "ui.h"
 #include "version_gen.h"
+#include "strokes_gen.h"
 
 #ifdef YG_HTPC
 #define HTPC 1
@@ -74,6 +75,7 @@ static char result_title[96], result_body[256];
 static int result_good;
 static Screen result_next;
 static int task_kind;
+static int note_skip, note_more;
 static char name_buf[YG_NAME];
 static int new_material;
 static int kb_x, kb_y;
@@ -143,8 +145,20 @@ static void prompt_btn(int *x, int y, int action, const char *label) {
     int st = pad_style();
     const char *g = (st == 2 ? ps : st == 0 ? kb : xb)[action];
     int w = text_w(g) + 8;
+    if (st == 4) {
+        /* N64 colours, as in the launcher: A blue, B green, Start red, Z grey, L and R silver, C yellow */
+        static const char *const n[] = {"A", "B", "Z", "", "L", "R", "S"};
+        static const unsigned c64[] = {0x2B5FD9, 0x1FA84A, 0x5A606B, 0xF6C41B, 0xC8CCD4, 0xC8CCD4, 0xE02E3A};
+        static const signed char disc[16] = {5, 3, 2, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 2, 3, 5};
+        int j, square = action == 2 || action == 4 || action == 5;
+        w = 16;
+        for (j = 0; j < 16; j++) { int in = square ? 0 : disc[j]; fill(*x + in, y + j, 16 - 2 * in, 1, c64[action]); }
+        if (action == 3) tri3d(*x + 8, y + 3, *x + 3, y + 12, *x + 13, y + 12, 0x2A2010);
+        else text(*x + 4, y, n[action], action == 4 || action == 5 ? 0x20242C : 0xFFFFFF);
+    } else {
     fill(*x, y, w, 16, col[action]);
     text(*x + 4, y, g, 0xF4F4F4);
+    }
     *x += w + 3;
     *x += text(*x, y, label, C_INK) + 8;
 }
@@ -297,7 +311,7 @@ static void run_step(void) {
         quiz_warmup(&Z, &P);
         if (Z.n == 0) { P.step++; run_step(); return; }
         start_quiz(QM_WARMUP); break;
-    case STEP_TEACH: teach_card = -1; page = 0; go(S_TEACH); break;
+    case STEP_TEACH: teach_card = -1; page = 0; note_skip = 0; note_more = 0; go(S_TEACH); break;
     case STEP_TYPING:
         ty_n = day_word_cards(d, ty_cards); ty_i = 0; ty_rep = 0; ty_bad = 0; input[0] = 0;
         if (!ty_n) { P.step++; run_step(); return; }
@@ -449,6 +463,33 @@ static void scr_class(void) {
     footer("Go", "Menu");
 #endif
 }
+/* Draws strokes one at a time, the current one highlighted and started with a dot. Returns the width taken, or 0. */
+static int stroke_box(int x, int y, const char *s) {
+    const char *p = s; int cp = utf8_next(&p), i, size = HTPC ? 76 : 110;
+    if (*p) return 0;
+    for (i = 0; i < YG_ST_N; i++) if (YG_ST_CP[i] == cp) {
+        int a = YG_ST_OFF[i], b = YG_ST_OFF[i + 1], k, n = 0, cur, stroke = 0, has_last = 0, lx = 0, ly = 0;
+        unsigned paper = HTPC ? 0xF4EEDC : 0xFFFFFF;
+        for (k = a; k < b; k++) if (YG_ST_PTS[k] == 255) n++; else k++;
+        cur = (anim / 16) % (n + 3);
+        x -= size;
+        fill(x, y, size, size, paper);
+        frame(x, y, size, size, C_ACC);
+        fill(x + size / 2, y + 1, 1, size - 2, 0xE0D8D0); fill(x + 1, y + size / 2, size - 2, 1, 0xE0D8D0);
+        for (k = a; k < b; ) {
+            if (YG_ST_PTS[k] == 255) { stroke++; has_last = 0; k++; continue; }
+            { int px = x + 2 + YG_ST_PTS[k] * (size - 4) / 109, py = y + 2 + YG_ST_PTS[k + 1] * (size - 4) / 109;
+              if (stroke <= cur) {
+                  unsigned col = stroke == cur ? 0xD02050 : 0x201018;
+                  if (has_last) line(lx, ly, px, py, col, HTPC ? 2 : 3);
+                  else if (stroke == cur) fill(px - 3, py - 3, 7, 7, 0xD02050);
+              }
+              lx = px; ly = py; has_last = 1; k += 2; }
+        }
+        return size + 8;
+    }
+    return 0;
+}
 static void scr_teach(void) {
     const YgDay *d = &YG_DAYS[P.day];
     int total = d->nnotes + d->nnew, rom = day_romaji_mode(P.day);
@@ -457,7 +498,9 @@ static void scr_teach(void) {
     if (page < d->nnotes) {
         text(CX, CY, L("Sensei's notes", "せんせいのノート", 3), C_ACC);
         panel(CX, CY + 20, CW, FBY_BTN - CY - 24);
-        wrap(CX + 8, CY + 28, CW - 16, d->notes[page], C_INK, LH, 0, 0);
+        /* A long note scrolls in steps, so nothing runs out of its panel */
+        { int per = (FBY_BTN - CY - 40) / LH, lines = wrap(CX + 8, CY + 28, CW - 16, d->notes[page], C_INK, LH, note_skip, per);
+          note_more = note_skip + per < lines; }
     } else {
         const YgCard *c = &YG_CARDS[d->cards[page - d->nnotes]];
         const char *big = (rom && c->type == 'w') ? c->romaji : c->front;
@@ -476,23 +519,26 @@ static void scr_teach(void) {
               while (*p && k < 120) { if (!ys_ncmp(p, "＿", 3)) { ys_cpy(s + k, c->reading, 120 - k); k += ys_len(s + k); p += 3; } else s[k++] = *p++; }
               s[k] = 0; text(CX + 10, cy, s, C_ACC); if (!HTPC || nl < 3) wrap(CX + 10, cy + lh, CW - 20, c->trans, C_DIM, lh, 0, 1); }
         } else {
+            int room = (c->type == 'h' || c->type == 'k' || c->type == 'j') ? stroke_box(CX + CW - 6, cy - 38, c->front) : 0;
             if (c->type != 'h' && c->type != 'k') {
                 if (rom) { text(CX + 10, cy, c->reading, C_DIM); }
                 else if (ys_cmp(c->front, c->reading)) { text(CX + 10, cy, c->reading, C_INK); }
                 if (!rom && profile_stage(&P) < 4) text(CX + 10 + text_w(c->reading) + 16, cy, c->romaji, C_DIM);
                 cy += LH;
             }
-            wrap(CX + 10, cy, CW - 20, c->en, C_INK, LH, 0, 2);
+            wrap(CX + 10, cy, CW - 20 - room, c->en, C_INK, LH, 0, 2);
             cy += LH;
-            if (*c->note) wrap(CX + 10, cy + 2, CW - 20, c->note, C_DIM, LH, 0, HTPC ? 4 : 0);
+            if (*c->note) wrap(CX + 10, cy + 2, CW - 20 - room, c->note, C_DIM, LH, 0, HTPC ? 4 : 0);
         }
         if (plat_has_tts() && (IN.pressed & A_Y)) plat_speak(c->reading);
     }
     if (button(CX + CW - 120, FBY_BTN, 120, 28, page + 1 < total ? L("Next", "つぎ", 2) : L("Practice!", "れんしゅう", 3))) {
-        if (page + 1 < total) { page++; }
+        if (page < d->nnotes && note_more) note_skip += (FBY_BTN - CY - 40) / LH;
+        else if (page + 1 < total) { page++; note_skip = 0; note_more = 0; }
         else next_step();
     } else if (button(CX, FBY_BTN, 90, 28, L("Back", "もどる", 2)) || (IN.pressed & A_BACK)) {
-        if (page > 0) page--;
+        if (note_skip > 0) note_skip = 0;
+        else if (page > 0) { page--; note_more = 0; }
     }
 #if HTPC
     footer("Next", "Back");
@@ -539,13 +585,14 @@ static void quiz_finished(void) {
         show_result("Practice done", b, qright * 2 >= Z.n, S_GENKI);
         break;
     case QM_PLACE: {
-        static const signed char map[6] = {0, 3, 4, 4, 5, 6};
-        if (qright >= 4 && place_section < 4) {
+        /* Sections passed: romaji, hiragana, katakana, words, grammar, kanji. Learning always starts at romaji. */
+        static const signed char map[7] = {0, 2, 3, 4, 4, 5, 6};
+        if (qright >= 4 && place_section < 5) {
             place_passed = place_section + 1; place_section++;
             placement_section(&Z, place_section);
             start_quiz(QM_PLACE);
         } else {
-            if (qright >= 4) place_passed = 5;
+            if (qright >= 4) place_passed = 6;
             profile_place(&P, map[place_passed], plat_today());
             save_profile();
             go(S_PLACE_RESULT);
@@ -926,17 +973,21 @@ static void scr_quest(void) {
 
 /* ---- library ---- */
 static void scr_library(void) {
-    static const char *const tabs[] = {"Media", "Links", "My Files"};
-    int i, y, per = HTPC ? 6 : 11, n, stage = profile_stage(&P);
+    static const char *const tabs[] = {"Media", "Links", "Files", "Dict", "Guide"};
+    static int gsec;
+    int i, y, per = HTPC ? 6 : 11, n, stage = profile_stage(&P), had = input[0];
     char b[96];
     chrome(L("Library", "本だな", 5), 0);
-    for (i = 0; i < 3; i++) {
-        int w = CW / 3;
-        if (button(CX + i * w, CY, w - 4, 22, tabs[i])) { tab = i; page = 0; }
+    for (i = 0; i < 5; i++) {
+        int w = CW / 5;
+        /* On the TV the search box's keyboard needs OK, so its tabs change with L and R only */
+        if (HTPC && tab == 3) { fill(CX + i * w, CY, w - 4, 22, C_PANEL); text_c(CX + i * w + (w - 4) / 2, CY + 3, tabs[i], C_INK); }
+        else if (button(CX + i * w, CY, w - 4, 22, tabs[i])) { tab = i; page = 0; input[0] = 0; IN.pressed &= ~A_OK; }
         if (tab == i) fill(CX + i * w, CY + 22, w - 4, 2, C_ACC);
     }
-    if (IN.pressed & A_R) { tab = (tab + 1) % 3; page = 0; }
-    if (IN.pressed & A_L) { tab = (tab + 2) % 3; page = 0; }
+    /* focus follows, so pressing OK can't jump back to the tab that had it */
+    if (IN.pressed & A_R) { tab = (tab + 1) % 5; page = 0; input[0] = 0; ui_set_focus(tab); }
+    if (IN.pressed & A_L) { tab = (tab + 4) % 5; page = 0; input[0] = 0; ui_set_focus(tab); }
     y = CY + 30;
     if (tab == 0) {
         static short list[YG_NMEDIA]; int m = 0;
@@ -956,6 +1007,43 @@ static void scr_library(void) {
             if (!HTPC) wrap(CX + 188, y + 3, CW - 188, YG_RES[i].desc, C_DIM, 16, 0, 1);
             y += 26;
         }
+    } else if (tab == 3) {
+        static int res[9], nres, searched; int rows = HTPC ? 3 : 8, go_search;
+        n = 0;
+        input_box(CX, y, CW, 1);
+#if HTPC
+        osk(FBH - SAFE - 75);
+        go_search = (IN.pressed & A_START) != 0;
+        { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "Search"); }
+#else
+        text_entry();
+        go_search = (IN.pressed & A_OK) != 0;
+        if (button(CX + CW - 90, FBY_BTN, 90, 28, "Search")) go_search = 1;
+        clip_buttons(CX, FBY_BTN + 4);
+#endif
+        y += 27;
+        if (go_search && input[0]) { nres = dict_search(input, res, rows); searched = 1; }
+        for (i = 0; i < nres && i < rows; i++) {
+            static char w[120], rd[120], g[120]; char row[200];
+            dict_row(res[i], w, rd, g, 120);
+            if (i == 0) copy_src = *w ? w : rd;
+            if (HTPC) { ys_cpy(row, *w ? w : rd, sizeof row); ys_cat(row, " ", sizeof row); if (*w) { ys_cat(row, rd, sizeof row); ys_cat(row, " ", sizeof row); } ys_cat(row, g, sizeof row); wrap(CX, y, CW, row, C_INK, LH, 0, 1); y += LH; }
+            else { int tw = text(CX, y, *w ? w : rd, C_ACC); if (*w) text(CX + tw + 10, y, rd, C_DIM); wrap(CX, y + 16, CW, g, C_INK, LH, 0, 1); y += 34; }
+        }
+        if (!nres) wrap(CX, y, CW, searched ? "Nothing found. Try the plain form of the word." : "Search in Japanese, romaji, or English. Words from JMdict by EDRDG, CC BY-SA 4.0.", C_DIM, LH, 0, 3);
+    } else if (tab == 4) {
+        int lp = (FBY_BTN - y - 22) / LH, lines;
+        n = 0;
+        text(CX, y, YG_GUIDE[gsec].a, C_ACC);
+        lines = wrap(CX, y + LH + 2, CW, YG_GUIDE[gsec].b, C_INK, LH, page * lp, lp);
+        if (button(CX + CW - 90, FBY_BTN, 90, 28, L("Next", "つぎ", 2))) {
+            if ((page + 1) * lp < lines) page++;
+            else { gsec = (gsec + 1) % YG_NGUIDE; page = 0; }
+        }
+        if (button(CX, FBY_BTN, 90, 28, L("Back", "もどる", 2))) {
+            if (page > 0) page--;
+            else { gsec = (gsec + YG_NGUIDE - 1) % YG_NGUIDE; page = 0; }
+        }
     } else {
         n = plat_scan_material();
         if (!n) wrap(CX, y, CW, "No Material folder found. Put one beside this program, or in the folder above it.", C_DIM, LH, 0, 3);
@@ -971,8 +1059,8 @@ static void scr_library(void) {
         if (button(CX + CW - 70, FBY_BTN, 70, 28, L("Next", "つぎ", 2)) && (page + 1) * per < n) page++;
     }
 #if HTPC
-    if (IN.pressed & A_BACK) { go(S_HOME); return; }
-    footer("Open", "Menu");
+    if ((IN.pressed & A_BACK) && !(tab == 3 && had)) { go(S_HOME); return; }
+    if (tab != 3) footer("Open", "Menu");
 #endif
 }
 
@@ -991,14 +1079,17 @@ static void scr_settings(void) {
     if (!HTPC) y += step;
     if (button(CX, y, HTPC ? w / 2 - 2 : w, bh, HTPC ? "Back up" : "Back up my save")) { save_profile(); plat_copy_backup(P.name); show_result("Backed up", "A dated copy of your save is in the backup folder, next to the program.", 1, S_SETTINGS); return; }
     y += step;
-    if (button(CX, y, w, bh, plat_can_update() ? "Check for updates" : "Updates: manual on this Windows")) {
+    if (button(CX, y, HTPC ? w / 2 - 2 : w, bh, plat_can_update() ? "Check for updates" : (HTPC ? "Manual updates" : "Updates: manual on this Windows"))) {
         if (plat_can_update()) plat_update_check(0);
         else { show_result("Manual updates", "This Windows can't make modern secure connections. Download new versions from github.com/knivesbatz/YomiGO/releases on another PC, then copy them over.", 1, S_SETTINGS); return; }
     }
-    y += step;
-    if (button(CX, y, w, bh, "Switch profile")) { save_profile(); have_profile = 0; go(S_PROFILES); return; }
+    if (!HTPC) y += step;
+    if (button(HTPC ? CX + w / 2 + 2 : CX, y, HTPC ? w / 2 - 2 : w, bh, "Switch profile")) { save_profile(); have_profile = 0; go(S_PROFILES); return; }
     y += step;
 #if HTPC
+    { static const char *const modes[] = {"Buttons: Auto", "Buttons: N64", "Buttons: Xbox", "Buttons: PlayStation"};
+      if (button(CX, y, w, bh, modes[pad_mode()])) pad_set_mode((pad_mode() + 1) % 4); }
+    y += step;
     if (button(CX, y, w, bh, crt_mode() ? "Display: CRT / RF TV" : "Display: Flat TV")) crt_set(!crt_mode());
     y += step;
     if (button(CX, y, w / 2 - 2, bh, "Rebind pad")) { bind_action = 0; pad_begin_bind(0); go(S_BIND); return; }
@@ -1130,7 +1221,7 @@ static void scr_genki(void) {
 static void scr_place_intro(void) {
     chrome("Entrance Exam", 0);
     panel(CX, CY, CW, HTPC ? 106 : 170);
-    wrap(CX + 8, CY + 4, CW - 16, "A short test finds your starting point. It climbs from kana to words, grammar, and kanji, and stops when it gets too hard. Reading only for now.", C_INK, LH, 0, 0);
+    wrap(CX + 8, CY + 4, CW - 16, "A short test finds your starting point. It begins with romaji, climbs through kana, words, grammar, and kanji, and stops when it gets too hard. You can press I don't know at any time.", C_INK, LH, 0, 0);
     if (button(CX, FBY_BTN - (HTPC ? 30 : 36), CW, 28, "Take the exam")) { place_section = 0; place_passed = 0; placement_section(&Z, 0); start_quiz(QM_PLACE); return; }
     if (button(CX, FBY_BTN, CW, 28, HTPC ? "Total beginner: day one" : "I'm a total beginner. Start from day one.")) { profile_place(&P, 0, plat_today()); save_profile(); go(S_HOME); return; }
 #if HTPC

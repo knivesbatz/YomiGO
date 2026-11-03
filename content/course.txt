@@ -6,6 +6,7 @@
 note: Japanese has five vowels: a (ah), i (ee), u (oo with relaxed lips), e (eh), o (oh). They never change, and each sound gets about the same length of time.
 note: Bowing: a small nod works for everyday greetings. Bow from the waist, back straight, and look down rather than at the other person. Deeper and longer means more respect.
 note: Which greeting? おはようございます until about 10 a.m., こんにちは through the day, こんばんは after dark. With family or close friends, おはよう alone is normal. さようなら sounds rather final, so people often say something else to friends.
+note: You aren't expected to remember all of this today. Forgetting is part of how memory works, and whatever you forget comes back in your flashcards. Press I don't know whenever you need to.
 new: @greet1
 chat: greet1
 homework: Say all five greetings out loud, three times each.
@@ -14,6 +15,7 @@ material: 3. Greetings
 @day Thanks and sorry | お礼とおわび
 note: すみません is the all-rounder: it calls a waiter, says excuse me, and softens a thanks. ごめんなさい is a more personal "I'm sorry".
 note: Hands together before a meal for いただきます is common at home. It is a thank you for the food. After eating, say ごちそうさまでした.
+note: Little and often beats long and rare. Every study guide says some version of this. Pick an amount you could manage even on a bad day. There's more in the Study Guide, under Library.
 new: @greet2
 chat: thanks1
 homework: Use いただきます and ごちそうさまでした at every meal today.
@@ -30,6 +32,7 @@ material: Welcome!
 @day Yes, no, and help | はい、いいえ
 note: はい also means "I'm listening". Hearing it doesn't always mean agreement. Direct いいえ can sound blunt, so people may soften it with a wave of the hand in front of the face.
 note: Listening noises (あいづち) such as はい and ええ show you're following. Silence can feel like you've stopped listening.
+note: Start listening now, even though you can't understand it yet. You're training your ear for the rhythm, and you don't need to look anything up.
 new: @yesno
 chat: yesno1
 homework: Ask someone (or a mirror) to say something and reply 分かりません.
@@ -41,6 +44,7 @@ exam: S0 | Sound Dojo Trial | 2
 @day Numbers one to five | 数字 一から五
 note: Romaji is a bridge. It teaches you sounds and how to type, and you'll leave it behind soon.
 note: Counting on fingers in Japan starts with an open palm, folding the fingers in from the thumb for one, two, three. Six onward opens them out again.
+note: Do your flashcards every day, even if you skip a class. If they pile up, lower your pace in Settings instead of skipping them. Expect around ten reviews for each new card.
 new: @num1
 homework: Count aloud from one to five, ten times.
 immerse: Count your steps on the stairs in Japanese today.
@@ -70,6 +74,7 @@ exam: S1 | Romaji Road Trial | 2
 @stage 2 | Hiragana Hall | ひらがな館 | Japan's main script, every sound.
 @day あいうえお | あ行
 note: Hiragana is the main script. Each character is one beat. We start with the vowels you already know.
+note: Guides suggest anything from a few days to a few weeks for all the kana. Don't rush it: weak kana slows down everything after. Say each one out loud, and write it by hand while you learn it.
 new: %h.a %h.i %h.u %h.e %h.o @hwords1
 homework: Write each character ten times by hand.
 immerse: Find one あ on any Japanese web page.
@@ -116,6 +121,7 @@ homework: Say らりるれろ twenty times, tapping lightly.
 immerse: Look up pictures of 桜 and read the word.
 @day わをん | わ行
 note: を is a particle, and in modern speech it sounds like お. ん is the only consonant that stands alone.
+note: Start reading now, even if you understand very little. Try a kana-only game, or a free graded reader from the Library. Sounding words out is the practice.
 new: %h.wa %h.wo %h.n @hwords10
 homework: Write the whole table from memory.
 immerse: Read 日本語 as にほんご wherever you see it.
@@ -170,6 +176,7 @@ exam: S3 | Katakana Castle Trial | 3
 @stage 4 | Grammar Gate | 文法の門 | Build real sentences.
 @day AはBです | です
 note: A Japanese sentence ends with its most important word. Listen to the end. People usually drop 私 once the topic is clear; repeating it sounds odd.
+note: Read grammar to understand it, not to memorise it. It's normal for it not to stick the first time, because you'll keep meeting it. If an explanation confuses you, try Sakubi or Tae Kim's Guide from the Library.
 new: !g.desu !g.ka @things
 chat: student1
 homework: Write three sentences about yourself with です.
@@ -183,6 +190,7 @@ immerse: Point at things at home and say これ, それ, あれ.
 material: 1. Particles
 @day Verbs | 動詞
 note: Verbs come last. People often leave out the subject when it's clear from context. ます keeps things polite for people you don't know well.
+note: Don't wait until you feel ready to use real Japanese. Guides warn that it's easy to stay on beginner material too long. Try a little of something real every day, however hard it seems.
 new: !g.masu !g.masen !g.wo @verbs1
 chat: eat1
 homework: Say five things you will do today using ます.
@@ -230,6 +238,7 @@ immerse: Read the prices on a Japanese web store.
 material: Numbers II
 @day Requests, ranges, wishes | お願いと希望
 note: 〜てください is polite but still a request from your side. Softer forms come later.
+note: Guides disagree on when to start speaking. Some say wait, and others warn against waiting. YomiGo has you speak from the start, and the worst that can happen is a small mistake.
 new: !g.kudasai !g.tekudasai !g.kara !g.made !g.tai @express
 chat: wish1
 homework: Write one thing you want to do in Japan.
@@ -240,8 +249,9 @@ exam: S4 | Grammar Gate Trial | 3
 @stage 5 | Kanji Keep | 漢字の砦 | Meanings in shapes.
 @day Nature and weekdays | 曜日の漢字
 note: Most kanji have an on reading (from Chinese) and a kun reading (native Japanese). Learn each kanji inside words, not alone. Today's seven are the seven days of the week, plus 山.
+note: Learn kanji through words you know, a few at a time. Writing kanji by hand is optional for many learners, so do it if you enjoy it. Reading them is the goal.
 new: @k1
-homework: Copy each kanji five times, following a stroke-order chart from the Resources page.
+homework: Copy each kanji five times, following the stroke order shown on each card.
 immerse: Read today's day of the week from a Japanese calendar.
 @day Numbers | 数字の漢字
 note: You already know how to read these. Numbers in vertical text use them all the time.
@@ -283,9 +293,37 @@ material: 5. Weather
 exam: S5 | Kanji Keep Trial | 3
 
 @stage 6 | N5 Street | N5の街 | Use it all, out in the world.
+@day Colours | 色
+note: Some colours are い adjectives, like 赤い. Others are nouns that need の before another noun: 緑の車. Use them as you've seen them, and the pattern will come with practice.
+note: You're ready to start mining. When a word in something you enjoy keeps coming back, save it with its sentence using YomiGo Reader. Words from things you care about stick best.
+new: @colors
+homework: Name the colours of five things around you.
+immerse: Look at a Japanese shop page, and find a colour word.
+material: 9. Colors
+@day Family | 家族
+note: Japanese has two sets of family words. Use 母 and 父 for your own parents when talking to others, and お母さん and お父さん for someone else's, or to speak to your own.
+new: @family
+chat: family2
+homework: Describe your family in three short sentences.
+immerse: Listen for family words in any show you watch.
+material: 2. Family
+@day Weather talk | 天気
+note: Weather is the safest small talk there is. A sentence ending in ね invites the other person to agree, and it keeps a conversation going. よ tells them something new.
+new: !g.ne !g.yo @weather
+chat: weather1
+homework: Say today's weather three different ways.
+immerse: Check a Japanese weather forecast before you go out.
+material: 5. Weather
+@day How often | よく、ときどき
+note: Words like あまり and 全然 go with a negative verb: あまり飲みません. People use them to soften a no, so you'll hear them constantly.
+new: !g.teiru @often
+homework: Say how often you do five things, from いつも to 全然.
+immerse: Say what you are doing right now, using 〜ています, three times today.
+material: 3. Frequency Adverbs
 @day Shopping | 買い物
 note: Staff use very polite language you don't need to copy. いらっしゃいませ is a welcome, not a question, so you don't have to reply. A nod is fine.
 note: In many shops, put your money in the small tray rather than in the cashier's hand.
+note: Tired today? Watch or play something easy instead of doing nothing. Any Japanese counts, and variety helps, so try different genres.
 new: @town
 chat: shop2
 homework: Roleplay buying something, with a family member.
@@ -299,6 +337,7 @@ immerse: Order in Japanese next time you eat at a Japanese restaurant, even just
 material: At the restaurant
 @day Directions | 道案内
 note: People often gesture with the whole open hand rather than one pointing finger. Use さん-level politeness with strangers.
+note: Time to talk to real people. iTalki and HelloTalk, in the Library, connect you with native speakers. Your first chat will feel hard, and it's the fastest way to improve.
 chat: directions1
 homework: Give directions in Japanese from your home to the nearest shop.
 immerse: Follow one Japanese walking-tour video for 10 minutes.

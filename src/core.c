@@ -1,5 +1,7 @@
 #include "yg.h"
 
+#include "dict_gen.h"
+
 /* ---- strings ---- */
 int ys_len(const char *s) { int n = 0; while (s[n]) n++; return n; }
 int ys_cmp(const char *a, const char *b) { while (*a && *a == *b) { a++; b++; } return (unsigned char)*a - (unsigned char)*b; }
@@ -142,6 +144,57 @@ int chat_ok(const char *input, const YgTurn *t) {
         if (ys_cmp(a, b) == 0) return 1;
     }
     return 0;
+}
+
+/* ---- dictionary: one "word, reading, hiragana, meaning" line per entry ---- */
+#define DSTR(i) ((const char *)YG_DICT + (i))
+static int field_end(int i) { while (i < YG_DICT_LEN && YG_DICT[i] != 9 && YG_DICT[i] != 10) i++; return i; }
+static int starts(const char *a, int an, const char *b, int bn) { return an >= bn && ys_ncmp(a, b, bn) == 0; }
+static int ci_at(const char *s, int n, int at, const char *q, int ql) {
+    int i;
+    if (at + ql > n) return 0;
+    for (i = 0; i < ql; i++) if (lc(s[at + i]) != lc(q[i])) return 0;
+    return 1;
+}
+static int is_alpha(char c) { c = lc(c); return c >= 'a' && c <= 'z'; }
+/* tier 2 a meaning that starts with it, 3 as a whole word, 4 anywhere */
+static int gloss_hit(const char *g, int n, const char *q, int ql, int tier) {
+    int i;
+    for (i = 0; i + ql <= n; i++) {
+        int before = i == 0 ? 0 : g[i - 1], seg = i == 0 || (i >= 2 && g[i - 1] == ' ' && g[i - 2] == ';');
+        if (!ci_at(g, n, i, q, ql)) continue;
+        if (tier == 2 && seg && (i + ql == n || !is_alpha(g[i + ql]))) return 1;
+        if (tier == 3 && !is_alpha((char)before) && (i + ql == n || !is_alpha(g[i + ql]))) return 1;
+        if (tier == 4) return 1;
+    }
+    return 0;
+}
+int dict_search(const char *q, int *out, int max) {
+    static char key[128]; int kl, ql = ys_len(q), n = 0, tier, ascii = 1, i;
+    if (!ql) return 0;
+    for (i = 0; i < ql; i++) if (q[i] & 0x80) ascii = 0;
+    norm_kana(q, key, sizeof key);
+    kl = ys_len(key);
+    for (tier = 0; tier < 5 && n < max; tier++) {
+        int at = 0;
+        if (tier >= 2 && (!ascii || ql < 2)) break;
+        while (at < YG_DICT_LEN && n < max) {
+            int w = field_end(at), r = field_end(w + 1), h = field_end(r + 1), g = field_end(h + 1), hit = 0;
+            const char *kp = h > r + 1 ? DSTR(r + 1) : DSTR(w + 1); int kn = h > r + 1 ? h - r - 1 : r - w - 1;
+            if (tier == 0) hit = (w - at == ql && starts(DSTR(at), w - at, q, ql)) || (kl && kn == kl && starts(kp, kn, key, kl));
+            else if (tier == 1) hit = starts(DSTR(at), w - at, q, ql) || (kl && !(key[0] & 0x80) ? 0 : kl && starts(kp, kn, key, kl));
+            else hit = gloss_hit(DSTR(h + 1), g - h - 1, q, ql, tier);
+            if (hit) { int d, dup = 0; for (d = 0; d < n; d++) if (out[d] == at) dup = 1; if (!dup) out[n++] = at; }
+            at = g + 1;
+        }
+    }
+    return n;
+}
+void dict_row(int off, char *word, char *reading, char *gloss, int cap) {
+    int w = field_end(off), r = field_end(w + 1), h = field_end(r + 1), g = field_end(h + 1), n;
+    n = w - off < cap - 1 ? w - off : cap - 1; { int i; for (i = 0; i < n; i++) word[i] = DSTR(off)[i]; word[n] = 0; }
+    n = r - w - 1 < cap - 1 ? r - w - 1 : cap - 1; { int i; for (i = 0; i < n; i++) reading[i] = DSTR(w + 1)[i]; reading[n] = 0; }
+    n = g - h - 1 < cap - 1 ? g - h - 1 : cap - 1; { int i; for (i = 0; i < n; i++) gloss[i] = DSTR(h + 1)[i]; gloss[n] = 0; }
 }
 
 /* ---- spaced repetition ---- */
@@ -468,18 +521,19 @@ void quiz_genki(Quiz *z, int index) {
     quiz_shuffle(z);
     if (z->n > 15) z->n = 15;
 }
-/* Placement walks up the stages. Each section samples what that stage teaches. */
+/* Placement walks up the stages, always starting at romaji. Each section samples what that stage teaches. */
 int placement_section(Quiz *z, int section) {
-    static const char types[] = "hkwgj";
+    static const char types[] = "whkwgj";
     int tries;
-    if (section >= 5) return 0;
+    if (section >= 6) return 0;
     quiz_new(z);
     for (tries = 0; tries < 5000 && z->n < 5; tries++) {
         int c = yg_rand() % YG_NCARDS, j, dup = 0;
         if (YG_CARDS[c].type != types[section] || YG_CARDS[c].day < 0) continue;
+        if (section == 0 && !day_romaji_mode(YG_CARDS[c].day)) continue;
         for (j = 0; j < z->n; j++) if (z->q[j].card == c) dup = 1;
         if (dup) continue;
-        q_make(&z->q[z->n++], c, section < 2 ? 0 : 0, 0);
+        q_make(&z->q[z->n++], c, 0, section == 0);
     }
     return 1;
 }

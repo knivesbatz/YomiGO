@@ -32,3 +32,7 @@ g.tekudasai	〜てください	...te kudasai	please do...	Te form plus くださ
 g.kara	〜から	kara	from / because	After a place or time it means "from". After a sentence it gives a reason.	九時＿働きます。	から	を,の,も	I work from nine o'clock.
 g.made	〜まで	made	until / as far as	Marks the end of a range of time or space.	五時＿勉強します。	まで	を,の,は	I study until five.
 g.tai	〜たいです	...tai desu	want to do	Swap ます for たい. Used for your own wishes.	日本へ行き＿です。	たい	ます,ない,ました	I want to go to Japan.
+#g9
+g.ne	〜ね	...ne	right? / isn't it?	Add ね when you expect the other person to agree. It makes you sound friendly.	いい天気です＿。	ね	を,に,で	Nice weather, isn't it?
+g.yo	〜よ	...yo	I'm telling you	Add よ to tell someone something they may not know. Too much can sound pushy.	駅はあそこです＿。	よ	を,に,で	The station is over there, you know.
+g.teiru	〜ています	...te imasu	doing now	Te form plus います means something is going on right now.	今、本を読んで＿。	います	ます,です,ました	I'm reading a book now.

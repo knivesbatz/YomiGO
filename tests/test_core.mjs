@@ -63,6 +63,19 @@ test("every Genki lesson has practice", () => {
   const p = Y.newProfile("G"); p.genki = 1;
   assert.equal(Y.loadText(Y.saveText(p)).genki, 1);
 });
+test("the dictionary finds words, in any form", () => {
+  const n = Y.dictLoad(fs.readFileSync(new URL("extension/dict.tsv", root), "utf8"));
+  assert.ok(n > 20000, "entries " + n);
+  for (const q of ["ねこ", "neko", "猫", "cat", "NEKO"]) assert.ok(Y.dictSearch(q).some((r) => r.word === "猫"), q);
+  assert.equal(Y.dictSearch("コーヒー")[0].reading, "コーヒー");
+  assert.equal(Y.dictSearch("zzqqxx").length, 0);
+  for (const [text, word] of [["食べました", "食べる"], ["猫がいます", "猫"], ["行って", "行く"], ["行きました", "行く"], ["来ます", "来る"], ["高くない", "高い"], ["飲まない", "飲む"], ["します", "する"], ["読みたい", "読む"], ["見た", "見る"]])
+    assert.ok(Y.dictLookup(text).some((h) => h.card.f === word), text + " -> " + word);
+});
+test("the entrance exam starts with romaji", () => {
+  for (const q of Y.placementSection(0)) assert.ok(/^[\x00-\x7f]+$/.test(q.prompt), q.prompt);
+  for (let i = 0; i < 6; i++) assert.equal(Y.placementSection(i).length, 5, "section " + i);
+});
 test("lookup finds words and undoes polite endings", () => {
   assert.equal(Y.lookup("猫がいます")[0].card.id, "v.neko");
   assert.ok(Y.lookup("食べました").some((h) => h.card.id === "v.tabemasu"));

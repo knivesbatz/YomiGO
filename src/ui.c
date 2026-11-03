@@ -119,6 +119,19 @@ int wrap(int x, int y, int w, const char *s, unsigned col, int lh, int skip, int
     return line;
 }
 
+void line(int x0, int y0, int x1, int y1, unsigned c, int thick) {
+    int dx = x1 > x0 ? x1 - x0 : x0 - x1, dy = y1 > y0 ? y0 - y1 : y1 - y0;
+    int sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1, err = dx + dy;
+    for (;;) {
+        int e2;
+        fill(x0, y0, thick, thick, c);
+        if (x0 == x1 && y0 == y1) break;
+        e2 = 2 * err;
+        if (e2 >= dy) { err += dy; x0 += sx; }
+        if (e2 <= dx) { err += dx; y0 += sy; }
+    }
+}
+
 /* ---- flat-shaded triangles for the HTPC ---- */
 void tri3d(int x0, int y0, int x1, int y1, int x2, int y2, unsigned c) {
     int y, t;
@@ -152,6 +165,7 @@ int icos(int a) { return isin(a + 64); }
 static struct { short x, y, w, h; } hits[MAX_HIT], last[MAX_HIT];
 static int nhit, nlast, focus = 0, this_focus;
 void ui_reset_focus(void) { focus = 0; nlast = 0; }
+void ui_set_focus(int id) { focus = id; }
 void ui_begin(void) { nhit = 0; }
 int ui_hit(int x, int y, int w, int h) {
     int id = nhit;

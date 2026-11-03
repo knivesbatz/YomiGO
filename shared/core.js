@@ -181,10 +181,81 @@
   }
   // Genki practice: YomiGo's own cards, grouped by the lesson of the book that covers them
   const quizGenki = (i) => shuffle(C.genki[i].cards.map((id) => q3(id, false))).slice(0, 15);
+  // Always starts at romaji
   function placementSection(i) {
-    const type = "hkwgj"[i];
-    return shuffle(C.cards.filter((c) => c.t === type && c.day >= 0)).slice(0, 5).map((c) => makeQ(c, 0, false));
+    const type = "whkwgj"[i];
+    return shuffle(C.cards.filter((c) => c.t === type && c.day >= 0 && (i > 0 || romajiMode(c.day)))).slice(0, 5).map((c) => makeQ(c, 0, i === 0));
   }
+
+  // Full dictionary: lines of word, reading, hiragana, meaning. Loaded only when wanted.
+  let dictRows = null, dictIndex = null;
+  function dictLoad(text) {
+    dictRows = text.split("\n").filter(Boolean).map((l) => { const [word, reading, hira, gloss] = l.split("\t"); return { word, reading, key: hira || reading, gloss }; });
+    dictIndex = new Map();
+    const put = (k, row) => { if (!k) return; const a = dictIndex.get(k); if (a) a.push(row); else dictIndex.set(k, [row]); };
+    for (const r of dictRows) { put(r.word, r); put(r.key, r); }
+    return dictRows.length;
+  }
+  const glossTier = (g, q, tier) => {
+    const lower = g.toLowerCase(), isA = (c) => c >= "a" && c <= "z";
+    for (let i = lower.indexOf(q); i >= 0; i = lower.indexOf(q, i + 1)) {
+      const after = lower[i + q.length], wholeEnd = after === undefined || !isA(after);
+      if (tier === 2 && (i === 0 || lower.slice(i - 2, i) === "; ") && wholeEnd) return true;
+      if (tier === 3 && (i === 0 || !isA(lower[i - 1])) && wholeEnd) return true;
+      if (tier === 4) return true;
+    }
+    return false;
+  };
+  function dictSearch(q, max = 9) {
+    if (!dictRows || !q) return [];
+    const key = normKana(q), asciiQ = /^[\x00-\x7f]+$/.test(q), low = q.toLowerCase(), out = [];
+    const add = (test) => { for (const r of dictRows) { if (out.length >= max) break; if (!out.includes(r) && test(r)) out.push(r); } };
+    add((r) => r.word === q || (key && r.key === key));
+    if (key.charCodeAt(0) >= 0x80 || !asciiQ) add((r) => (r.word && r.word.startsWith(q)) || (key && r.key.startsWith(key)));
+    if (asciiQ && q.length >= 2) for (const t of [2, 3, 4]) add((r) => glossTier(r.gloss, low, t));
+    return out;
+  }
+  // Undoes common endings, so a word is found from the form you meet on a page
+  const GODAN_I = { い: "う", き: "く", ぎ: "ぐ", し: "す", ち: "つ", に: "ぬ", び: "ぶ", み: "む", り: "る" };
+  const GODAN_A = { わ: "う", か: "く", が: "ぐ", さ: "す", た: "つ", な: "ぬ", ば: "ぶ", ま: "む", ら: "る" };
+  const POLITE = ["ませんでした", "ましょう", "ました", "ません", "ます", "たいです", "たくない", "たい"];
+  const NEG = ["なかった", "ないです", "ない"];
+  const TE = [["って", ["う", "つ", "る"]], ["った", ["う", "つ", "る"]], ["んで", ["む", "ぶ", "ぬ"]], ["んだ", ["む", "ぶ", "ぬ"]], ["いて", ["く"]], ["いた", ["く"]], ["いで", ["ぐ"]], ["いだ", ["ぐ"]], ["して", ["す"]], ["した", ["す"]]];
+  function deinflect(s) {
+    const out = new Set(), last = (t) => t[t.length - 1];
+    // The irregular ones come first, so they aren't buried under words that merely sound alike
+    for (const e of POLITE) if (s === "し" + e) out.add("する"); else if (s === "き" + e) out.add("くる");
+    if (s === "して" || s === "した") out.add("する");
+    if (s === "きて" || s === "きた") out.add("くる");
+    for (const e of ["って", "った"]) if (s.endsWith(e) && /[行い]$/.test(s.slice(0, -e.length))) out.add(s.slice(0, -e.length) + "く");
+    for (const e of POLITE) if (s.endsWith(e) && s.length > e.length) {
+      const stem = s.slice(0, -e.length);
+      out.add(stem + "る");
+      if (GODAN_I[last(stem)]) out.add(stem.slice(0, -1) + GODAN_I[last(stem)]);
+    }
+    for (const e of NEG) if (s.endsWith(e) && s.length > e.length) {
+      const stem = s.slice(0, -e.length);
+      out.add(stem + "る");
+      if (GODAN_A[last(stem)]) out.add(stem.slice(0, -1) + GODAN_A[last(stem)]);
+    }
+    for (const [e, rep] of TE) if (s.endsWith(e) && s.length > e.length) for (const r of rep) out.add(s.slice(0, -e.length) + r);
+    for (const e of ["て", "た"]) if (s.endsWith(e) && s.length > e.length) out.add(s.slice(0, -e.length) + "る");
+    for (const e of ["くない", "かった", "くて", "く"]) if (s.endsWith(e) && s.length > e.length) out.add(s.slice(0, -e.length) + "い");
+    return [...out];
+  }
+  function dictLookup(text) {
+    if (!dictIndex) return [];
+    const hits = [], seen = new Set();
+    for (let len = Math.min(text.length, 12); len > 0 && hits.length < 6; len--) {
+      const s = text.slice(0, len);
+      for (const form of [s, ...deinflect(s)]) for (const r of dictIndex.get(form) || dictIndex.get(hiraOf(form)) || []) {
+        const id = r.word + "|" + r.reading;
+        if (!seen.has(id) && hits.length < 6) { seen.add(id); hits.push({ card: { id: "d." + id, f: r.word || r.reading, r: r.reading, ro: "", en: r.gloss }, form: s }); }
+      }
+    }
+    return hits;
+  }
+  const hiraOf = (s) => [...s].map((c) => { const n = c.codePointAt(0); return n >= 0x30a1 && n <= 0x30f6 ? String.fromCodePoint(n - 0x60) : c; }).join("");
 
   // Dictionary lookup for the extension: longest word first, with polite-verb endings undone
   const ENDINGS = ["ませんでした", "ましょう", "ました", "ません", "たいです", "たい", "ます", "ない", "て", "た"];
@@ -205,5 +276,5 @@
     return hits.slice(0, 6);
   }
 
-  root.YG = { normKana, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, lookup, byId, PASS };
+  root.YG = { normKana, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, lookup, byId, PASS };
 })(globalThis);

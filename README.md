@@ -58,7 +58,7 @@ You start with sounds and romaji, then learn to read and speak step by step:
 
 **Sounds → Romaji → Hiragana → Katakana → Grammar → Kanji → Real-life Japanese → N5 Mastery Exam**
 
-There's also typing practice, counting, polite speech, gestures, and manners. As you learn to read, YomiGo's own menus slowly switch into Japanese.
+There's also typing practice, stroke order, counting, polite speech, gestures, and manners. The built-in Study Guide shows you how to set up, and how to study each day. As you learn to read, YomiGo's own menus slowly switch into Japanese.
 
 Studying with Genki? Turn on **Genki practice** to review by textbook lesson.
 
@@ -68,9 +68,9 @@ YomiGo is in its early days. The course currently runs from zero to **N5**, the 
 
 | Works now | Coming later |
 |---|---|
-| 47 classes, 7 exams, and flashcards | N4 through N1, and beyond |
+| 51 classes, 7 exams, and flashcards | N4 through N1, and beyond |
 | Scripted conversations | AI conversation partners |
-| Dictionary popup for course words | A full dictionary |
+| A dictionary of about 22,000 common words | Larger dictionaries |
 | Speech input on Android | Picture-to-text (OCR) for manga and games |
 | Updates that ask first | Automatic sync between devices |
 

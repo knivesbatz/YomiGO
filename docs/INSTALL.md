@@ -27,7 +27,9 @@ Software can't produce an RF signal. To reach an RF or composite TV you need har
 
 ### Controllers
 
-Xbox pads use XInput. DualShock 4 and other DirectInput pads work through the Windows joystick API, and need to appear in Windows' Game Controllers panel. Rebind under Settings on the TV app. Prompts change to match the pad YomiGo detects.
+Xbox pads use XInput. DualShock 4, USB N64 pads, and other DirectInput pads work through the Windows joystick API, and need to appear in Windows' Game Controllers panel. The USB N64 pad `0E6D:111D` is detected and set up for you. For another N64 replica, choose **Settings > Buttons: N64**, then use Rebind pad if any button is wrong.
+
+On an N64 layout: A selects, B goes back, Start confirms, Z means I don't know, C-Up speaks, and L, R, C-Left, and C-Right change tabs. **Settings > Buttons** also shows N64, Xbox, or PlayStation prompts on any pad.
 
 ## Android
 
@@ -40,7 +42,13 @@ Under **More > Check for updates**, YomiGo fetches a new APK and Android asks yo
 
 **Chrome or Edge:** unzip `YomiGoReader.zip`, open `chrome://extensions`, turn on Developer mode, choose Load unpacked, and pick the folder.
 
-**Firefox:** open `about:debugging#/runtime/this-firefox`, choose Load Temporary Add-on, and pick `manifest.json`. Firefox removes it on restart until it's signed through Mozilla, so that needs a Mozilla account. It's a limit of Firefox, listed in [known issues](KNOWN_ISSUES.md).
+**Firefox:**
+
+1. Download `YomiGoReader.zip` from the release, not the source code from the repo's main page, and unzip it.
+2. Open `about:debugging#/runtime/this-firefox`.
+3. Choose **Load Temporary Add-on**, and pick `manifest.json` in that folder.
+
+Don't use **Install Add-on From File** on the Add-ons page. Firefox only accepts extensions signed by Mozilla there, and it reports an unsigned one as corrupt or unverified. A temporary add-on is removed when Firefox restarts, so you'd repeat these steps until Reader is signed. Signing is free, and needs a Mozilla account.
 
 Select Japanese on any page to look it up. Export saved words from the toolbar icon as a `.tsv` file, which Anki can import.
 

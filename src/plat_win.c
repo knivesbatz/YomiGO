@@ -310,13 +310,36 @@ static int pad_id = -1, xi_id = -1, style;
 static int pad_rescan;
 static int binding = -1;
 static int deadzone = 25;
-static int binds[7] = {1, 2, 0, 3, 4, 5, 9}; /* DirectInput button numbers: A/Cross, B/Circle, X/Square, Y/Triangle, L, R, Start */
+/* Button numbers for: OK, Back, Extra, Speak, L, R, Start. Alternates let the C buttons work too, as in the N64 launcher. */
+static int binds[7] = {1, 2, 0, 3, 4, 5, 9}; /* A/Cross, B/Circle, X/Square, Y/Triangle, L, R, Start */
+static int alts[7] = {-1, -1, -1, -1, -1, -1, -1};
+static int prompt_mode, custom, n64_known;
+static void set_layout(const int *b, const int *a) { int i; for (i = 0; i < 7; i++) { if (!custom) binds[i] = b[i]; alts[i] = a[i]; } }
+static void pad_layout(void) {
+    static const int none[7] = {-1, -1, -1, -1, -1, -1, -1};
+    static const int std_[7] = {1, 2, 0, 3, 4, 5, 9};
+    /* From the launcher: USB N64 pad 0E6D:111D, then other replicas. A, B, Z, C-Up, L, R, Start; C-Down, C-Left, C-Right as alternates. */
+    static const int known[7] = {2, 1, 6, 9, 4, 5, 12}, known_alt[7] = {-1, -1, 3, -1, 0, 8, -1};
+    static const int raw[7] = {0, 1, 6, 3, 4, 5, 9}, raw_alt[7] = {-1, -1, 2, -1, 7, 8, -1};
+    /* An Xbox pad showing N64 prompts: triggers are Z, right stick is the C buttons */
+    static const int xi[7] = {1, 2, 6, 3, 4, 5, 9}, xi_alt[7] = {-1, -1, 18, -1, 16, 17, -1};
+    if (n64_known) set_layout(known, known_alt);
+    else if (prompt_mode == 1) { if (xi_id >= 0) set_layout(xi, xi_alt); else set_layout(raw, raw_alt); }
+    else set_layout(std_, none);
+}
 static unsigned prev_raw;
 static int prev_dirs;
 
 int pad_connected(void) { return pad_id >= 0 || xi_id >= 0; }
-int pad_style(void) { return pad_connected() ? style : 0; }
-void pad_begin_bind(int a) { binding = a; }
+int pad_style(void) {
+    if (prompt_mode == 1) return 4;
+    if (prompt_mode == 2) return 1;
+    if (prompt_mode == 3) return 2;
+    return pad_connected() ? (n64_known ? 4 : style) : 0;
+}
+int pad_mode(void) { return prompt_mode; }
+void pad_set_mode(int m) { prompt_mode = m; pad_layout(); pad_save(); }
+void pad_begin_bind(int a) { binding = a; custom = 1; }
 int pad_binding(void) { return binding >= 0; }
 int pad_bound(int a) { return binds[a]; }
 void pad_set_deadzone(int d) { deadzone = d; }
@@ -327,26 +350,30 @@ void pad_save(void) {
     char b[128]; int n = 0, i;
     for (i = 0; i < 7; i++) { n += ys_itoa(binds[i], b + n); b[n++] = ' '; }
     n += ys_itoa(deadzone, b + n); b[n++] = ' ';
-    n += ys_itoa(crt, b + n); b[n++] = '\n'; b[n] = 0;
+    n += ys_itoa(crt, b + n); b[n++] = ' ';
+    n += ys_itoa(prompt_mode, b + n); b[n++] = ' ';
+    n += ys_itoa(custom, b + n); b[n++] = '\n'; b[n] = 0;
     plat_write("input.cfg", b, n);
 }
 static void pad_load(void) {
     char b[128]; int n = plat_read("input.cfg", b, 127), i; const char *p = b;
     if (n <= 0) return;
     b[n] = 0;
-    for (i = 0; i < 9; i++) {
+    for (i = 0; i < 11; i++) {
         int v = ys_atoi(p);
         if (i < 7) { if (v >= 0 && v < 32) binds[i] = v; }
         else if (i == 7) deadzone = (v >= 0 && v <= 80) ? v : 25;
-        else crt = v != 0;
+        else if (i == 8) crt = v != 0;
+        else if (i == 9) prompt_mode = (v >= 0 && v <= 3) ? v : 0;
+        else custom = v != 0;
         while (*p && *p != ' ') p++;
         if (*p) p++;
     }
 }
 static void pad_find(void) {
     int i, n;
-    pad_id = -1; xi_id = -1;
-    if (xi_get) for (i = 0; i < 4; i++) { XIS s; if (xi_get((DWORD)i, &s) == 0) { xi_id = i; style = 1; return; } }
+    pad_id = -1; xi_id = -1; n64_known = 0;
+    if (xi_get) for (i = 0; i < 4; i++) { XIS s; if (xi_get((DWORD)i, &s) == 0) { xi_id = i; style = 1; pad_layout(); return; } }
     n = (int)joyGetNumDevs();
     for (i = 0; i < n && i < 16; i++) {
         JOYINFOEX j; JOYCAPSA c;
@@ -354,6 +381,8 @@ static void pad_find(void) {
         if (joyGetPosEx((UINT)i, &j) == JOYERR_NOERROR && joyGetDevCapsA((UINT)i, &c, sizeof c) == JOYERR_NOERROR) {
             pad_id = i;
             style = c.wMid == 0x054C ? 2 : 3; /* Sony's vendor ID means PlayStation prompts */
+            n64_known = c.wMid == 0x0E6D && c.wPid == 0x111D;
+            pad_layout();
             return;
         }
     }
@@ -376,6 +405,10 @@ static int pad_poll(void) {
         if (b & 0x0200) raw |= 1u << 5;   /* RB */
         if (b & 0x0010) raw |= 1u << 9;   /* Start */
         if (b & 0x0020) raw |= 1u << 8;   /* Back */
+        if (s.lt > 100 || s.rt > 100) raw |= 1u << 6;
+        if (s.rx < -16000) raw |= 1u << 16;
+        if (s.rx > 16000) raw |= 1u << 17;
+        if (s.ry < -16000) raw |= 1u << 18;
         if ((b & 1) || s.ly > dz) dirs |= A_UP;
         if ((b & 2) || s.ly < -dz) dirs |= A_DOWN;
         if ((b & 4) || s.lx < -dz) dirs |= A_LEFT;
@@ -403,7 +436,10 @@ static int pad_poll(void) {
         return 0;
     }
     { static const int m[7] = {A_OK, A_BACK, A_X, A_Y, A_L, A_R, A_START};
-      for (i = 0; i < 7; i++) if ((raw & (1u << binds[i])) && !(prev_raw & (1u << binds[i]))) act |= m[i]; }
+      for (i = 0; i < 7; i++) {
+          if ((raw & (1u << binds[i])) && !(prev_raw & (1u << binds[i]))) act |= m[i];
+          if (alts[i] >= 0 && (raw & (1u << alts[i])) && !(prev_raw & (1u << alts[i]))) act |= m[i];
+      } }
     act |= dirs & ~prev_dirs;
     prev_raw = raw; prev_dirs = dirs;
     return act;

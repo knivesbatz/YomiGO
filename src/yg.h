@@ -99,5 +99,7 @@ int  utf8_put(int cp, char *d);
 void norm_kana(const char *in, char *out, int cap);     /* kana, katakana, kanji, or romaji becomes hiragana */
 int  answer_ok(const char *input, const char *want, const char *romaji);
 int  chat_ok(const char *input, const YgTurn *t);
+int  dict_search(const char *q, int *out, int max);
+void dict_row(int off, char *word, char *reading, char *gloss, int cap);
 
 #endif

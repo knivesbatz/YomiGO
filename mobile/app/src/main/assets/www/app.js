@@ -16,7 +16,29 @@ function h(tag, props, ...kids) {
 }
 const btn = (label, on, cls) => h("button", { on, cls: cls || "" }, label);
 const bar = (v, max) => { const b = h("div", { cls: "bar", role: "progressbar", "aria-valuenow": v, "aria-valuemax": max }, h("i")); b.firstChild.style.width = (max ? Math.min(100, v * 100 / max) : 0) + "%"; return b; };
-function show(...kids) { app.replaceChildren(...kids.flat()); window.scrollTo(0, 0); }
+let strokeTimer = null;
+function show(...kids) { if (strokeTimer) { clearInterval(strokeTimer); strokeTimer = null; } app.replaceChildren(...kids.flat()); window.scrollTo(0, 0); }
+// Stroke order: draws one stroke at a time, on a loop
+function strokeBox(ch) {
+  const S = globalThis.YG_STROKES && YG_STROKES[ch];
+  if (!S) return null;
+  const c = h("canvas", { width: 218, height: 218, role: "img", "aria-label": "Stroke order" }), g = c.getContext("2d");
+  c.style.cssText = "background:#fff;border:2px solid var(--accent);border-radius:8px;display:block;margin:8px 0;width:109px;height:109px";
+  let t = 0;
+  const draw = () => {
+    const cur = t % (S.length + 2); t++;
+    g.clearRect(0, 0, 218, 218); g.lineWidth = 6; g.lineCap = "round"; g.lineJoin = "round";
+    S.forEach((pts, i) => {
+      if (i > cur) return;
+      g.strokeStyle = i === cur ? "#d02050" : "#201018";
+      g.beginPath(); pts.forEach(([x, y], k) => (k ? g.lineTo(x * 2, y * 2) : g.moveTo(x * 2, y * 2))); g.stroke();
+      if (i === cur) { g.fillStyle = "#d02050"; g.beginPath(); g.arc(pts[0][0] * 2, pts[0][1] * 2, 7, 0, 7); g.fill(); }
+    });
+  };
+  draw();
+  setTimeout(() => { strokeTimer = setInterval(draw, 700); }, 0);
+  return c;
+}
 
 // Storage: one text save per learner
 let P = null;
@@ -71,15 +93,16 @@ function genki() {
 }
 function placeIntro() {
   setNav(-1);
-  show(h("h1", null, "Entrance Exam"), h("div", { cls: "card" }, "A short test finds your starting point. It climbs from kana to words, grammar, and kanji, and stops when it gets too hard. Reading only for now."),
+  show(h("h1", null, "Entrance Exam"), h("div", { cls: "card" }, "A short test finds your starting point. It begins with romaji, climbs through kana, words, grammar, and kanji, and stops when it gets too hard. You can press I don't know at any time."),
     btn("Take the exam", () => placement(0, 0), "main"),
     btn("I'm a total beginner. Start from day one.", () => { Y.place(P, 0, Y.today()); store.save(); home(); }));
 }
 function placement(section, passed) {
   runQuiz(Y.placementSection(section), "Entrance exam", (right) => {
-    const map = [0, 3, 4, 4, 5, 6];
-    if (right >= 4 && section < 4) return placement(section + 1, section + 1);
-    Y.place(P, map[right >= 4 ? 5 : passed], Y.today()); store.save();
+    // Sections passed: romaji, hiragana, katakana, words, grammar, kanji
+    const map = [0, 2, 3, 4, 4, 5, 6];
+    if (right >= 4 && section < 5) return placement(section + 1, section + 1);
+    Y.place(P, map[right >= 4 ? 6 : passed], Y.today()); store.save();
     const st = C.stages[Y.stageOf(P)];
     setNav(-1);
     show(h("h1", null, "Your starting point"), h("div", { cls: "card" }, h("div", { cls: "big acc" }, st.ja), st.name, h("p", { cls: "dim" }, `You'll begin at class ${P.day + 1}. Earlier material goes to your flashcards.`)), btn("Begin", home, "main"));
@@ -141,6 +164,7 @@ function teach(page) {
   else {
     const c = Y.byId[d.new[page - d.notes.length]];
     body = [h("div", { cls: "big acc", lang: "ja" }, rom && c.t === "w" ? c.ro : c.f)];
+    if ("hkj".includes(c.t)) body.push(strokeBox(c.f));
     if (c.t === "g") {
       body.push(h("p", null, c.en), h("p", { cls: "dim" }, c.n), h("p", { lang: "ja" }, c.s.replace("＿", c.r)), h("p", { cls: "dim" }, c.tr));
     } else {
@@ -268,7 +292,15 @@ function library() {
   setNav(4);
   const stage = Y.stageOf(P), open = (u) => { if (Bridge) Bridge.openUrl(u); else window.open(u, "_blank", "noopener"); };
   const era = (isNew) => C.media.filter((m) => m.stage <= stage + 1 && (m.era === "new") === isNew).map((m) => h("div", { cls: "card" }, h("div", { cls: "row" }, h("strong", { lang: "ja" }, m.ja), h("span", { cls: "dim" }, m.year)), h("div", { cls: "dim" }, `${m.type}: ${m.title}`), m.task));
-  show(h("h1", null, L("Library", "本だな", 5)), h("h2", null, "Released after 2020"), era(true), h("h2", null, "Released before 1999"), era(false), h("p", { cls: "dim" }, "Difficulty is YomiGo's own judgement. Check your local services for availability."),
+  // The dictionary is big, so it loads the first time you search
+  const q = h("input", { placeholder: "Japanese, romaji, or English", "aria-label": "Search the dictionary", lang: "ja", autocapitalize: "off" }), out = h("div");
+  const ensure = (then) => { if (globalThis.YG_DICT_TEXT) return then(); const s = document.createElement("script"); s.src = "dict.js"; s.onload = () => { Y.dictLoad(YG_DICT_TEXT); then(); }; document.head.append(s); };
+  const search = () => { if (q.value) ensure(() => { const rows = Y.dictSearch(q.value, 20); out.replaceChildren(...(rows.length ? rows.map((r) => h("div", { cls: "card" }, h("strong", { lang: "ja" }, r.word || r.reading), r.word ? h("span", { cls: "dim", lang: "ja" }, "  " + r.reading) : "", h("div", null, r.gloss))) : [h("p", { cls: "dim" }, "Nothing found. Try the plain form of the word.")])); }); };
+  q.addEventListener("keydown", (e) => { if (e.key === "Enter") search(); });
+  show(h("h1", null, L("Library", "本だな", 5)),
+    h("h2", null, "Dictionary"), q, btn("Search", search, "main"), out, h("p", { cls: "dim" }, "About 22,000 common words from JMdict by EDRDG, CC BY-SA 4.0."),
+    h("h2", null, "Study Guide"), C.guide.map((g) => { const d = h("details", { cls: "card" }, h("summary", null, h("strong", null, g.title))); g.body.split("\n").forEach((p) => d.append(h("p", null, p))); return d; }),
+    h("h2", null, "Released after 2020"), era(true), h("h2", null, "Released before 1999"), era(false), h("p", { cls: "dim" }, "Difficulty is YomiGo's own judgement. Check your local services for availability."),
     h("h2", null, "Links"), C.res.map((r) => btn(`${r.name}: ${r.desc}`, () => open(r.url))));
 }
 function settings() {

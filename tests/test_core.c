@@ -64,6 +64,15 @@ int main(void) {
         }
     }
     for (i = 0; i < YG_NGENKI; i++) { quiz_genki(&z, i); CHECK(z.n >= 3 && z.n <= 15, "genki %d has %d", i, z.n); }
+    /* Dictionary: reading, romaji, spelling, English, and nonsense */
+    { int r[9], k, got; char w[128], rd[128], g[128];
+      static const char *const qs[] = {"ねこ", "neko", "猫", "cat", "NEKO"};
+      for (k = 0; k < 5; k++) { int hit = 0, m;
+        got = dict_search(qs[k], r, 9); CHECK(got > 0, "dict %s empty", qs[k]);
+        for (m = 0; m < got; m++) { dict_row(r[m], w, rd, g, 128); if (!strcmp(w, "猫")) hit = 1; }
+        CHECK(hit, "dict %s doesn't find the cat", qs[k]); }
+      got = dict_search("コーヒー", r, 9); CHECK(got > 0, "dict katakana"); dict_row(r[0], w, rd, g, 128); CHECK(!strcmp(rd, "コーヒー"), "katakana first hit %s", rd);
+      CHECK(dict_search("zzqqxx", r, 9) == 0, "nonsense finds nothing"); CHECK(dict_search("", r, 9) == 0, "empty finds nothing"); }
     /* Course flow: walk the whole thing as a learner would */
     profile_new(&a, "Walker");
     { int today = 1000, guard = 0;
@@ -100,8 +109,11 @@ int main(void) {
     profile_place(&a, 3, 100);
     CHECK(a.day == YG_STAGES[3].first && profile_exam_gate(&a) < 0, "placement");
     CHECK(a.cards[YG_DAYS[0].cards[0]].seen, "placed cards known");
-    for (i = 0; i < 5; i++) { CHECK(placement_section(&z, i) && z.n == 5, "placement %d has %d", i, z.n); }
-    CHECK(!placement_section(&z, 5), "placement ends");
+    for (i = 0; i < 6; i++) { CHECK(placement_section(&z, i) && z.n == 5, "placement %d has %d", i, z.n); }
+    CHECK(!placement_section(&z, 6), "placement ends");
+    /* Romaji always comes first: the first section shows no Japanese script */
+    placement_section(&z, 0);
+    for (i = 0; i < z.n; i++) { const unsigned char *p = (const unsigned char *)z.q[i].prompt; for (; *p; p++) CHECK(*p < 0x80, "romaji section has non-romaji prompt %s", z.q[i].prompt); }
     printf(fails ? "%d FAILED\n" : "core tests passed (%d failures)\n", fails);
     return fails != 0;
 }

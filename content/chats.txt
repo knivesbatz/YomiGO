@@ -93,3 +93,15 @@ want: みずをください;みずをおねがいします;おちゃをくださ
 want: すみませんえきはどこですか;えきはどこですか | Politely ask where the station is.
 say: まっすぐ行って、右です。 | massugu itte, migi desu. | Go straight, then it's on the right.
 want: ありがとうございます;わかりましたありがとうございます | Thank them.
+
+@chat family2 | Talking about family | 家族の話 | ゆき
+say: ご家族は何人ですか。 | gokazoku wa nannin desu ka. | How many people are in your family?
+want: ふたりです;さんにんです;よにんです;ごにんです;ろくにんです;ひとりです | Give a number with 人: ふたり, さんにん, よにん.
+say: お兄さんはいますか。 | oniisan wa imasu ka. | Do you have an older brother?
+want: はいあにがいます;はいいます;いいえいません | Say yes or no. For your own brother, use あに.
+
+@chat weather1 | Small talk | 天気の話 | けん
+say: いい天気ですね。 | ii tenki desu ne. | Nice weather, isn't it?
+want: そうですね;はいそうですね;いいてんきですね | Agree with そうですね.
+say: 明日は雨ですよ。 | ashita wa ame desu yo. | It's going to rain tomorrow, you know.
+want: そうですか;ほんとうですか;わかりました | React: そうですか means "is that so?"

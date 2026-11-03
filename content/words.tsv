@@ -64,7 +64,7 @@ ike	池	いけ	ike	pond
 koe	声	こえ	koe	voice
 #hwords3
 asa	朝	あさ	asa	morning
-sake	お酒	さけ	sake	rice wine / alcohol
+sake	酒	さけ	sake	rice wine / alcohol
 isu	椅子	いす	isu	chair
 kasa	傘	かさ	kasa	umbrella
 #hwords4
@@ -227,3 +227,32 @@ sou	そうですね	そうですね	sou desu ne	that's right / let me think
 eeto	ええと	ええと	eeto	um... (thinking filler)
 hontou	本当	ほんとう	hontou	really / true
 daijoubu	大丈夫	だいじょうぶ	daijoubu	it's okay
+#colors
+akai	赤い	あかい	akai	red
+shiroi	白い	しろい	shiroi	white
+kuroi	黒い	くろい	kuroi	black
+midori	緑	みどり	midori	green
+kiiro	黄色	きいろ	kiiro	yellow
+iro	色	いろ	iro	colour
+#family
+haha	母	はは	haha	my mother
+chichi	父	ちち	chichi	my father
+ani	兄	あに	ani	my older brother
+ane	姉	あね	ane	my older sister
+otouto	弟	おとうと	otouto	younger brother
+imouto	妹	いもうと	imouto	younger sister
+#weather
+tenki	天気	てんき	tenki	weather
+ame	雨	あめ	ame	rain
+hare	晴れ	はれ	hare	clear weather
+atsui	暑い	あつい	atsui	hot (weather)
+samui	寒い	さむい	samui	cold (weather)
+fuyu	冬	ふゆ	fuyu	winter
+#often
+itsumo	いつも	いつも	itsumo	always
+yoku	よく	よく	yoku	often
+tokidoki	時々	ときどき	tokidoki	sometimes
+amari	あまり	あまり	amari	not much (with a negative)
+zenzen	全然	ぜんぜん	zenzen	not at all (with a negative)
+sukoshi	少し	すこし	sukoshi	a little
+totemo	とても	とても	totemo	very

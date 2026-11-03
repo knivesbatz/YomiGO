@@ -32,6 +32,7 @@ int  text2(int x, int y, const char *s, unsigned c);
 int  text_w(const char *s);
 void text_c(int cx, int y, const char *s, unsigned c);
 int  wrap(int x, int y, int w, const char *s, unsigned c, int lh, int skip, int maxlines);
+void line(int x0, int y0, int x1, int y1, unsigned c, int thick);
 void tri3d(int x0, int y0, int x1, int y1, int x2, int y2, unsigned c);
 int  isin(int a);  /* a in 0..255 per turn, returns -256..256 */
 int  icos(int a);
@@ -39,6 +40,7 @@ int  icos(int a);
 void ui_begin(void);
 void ui_end(void);
 void ui_reset_focus(void);
+void ui_set_focus(int id);
 int  ui_hit(int x, int y, int w, int h);   /* registers a focusable area; 1 when activated */
 int  ui_focused(void);                     /* the area just registered has focus */
 int  ui_hover_any(void);
@@ -67,7 +69,9 @@ void plat_copy_backup(const char *name);
 const char *plat_exe_dir(void);
 /* Controllers */
 int  pad_connected(void);
-int  pad_style(void);        /* 0 keyboard, 1 Xbox, 2 PlayStation, 3 generic */
+int  pad_style(void);        /* 0 keyboard, 1 Xbox, 2 PlayStation, 3 generic, 4 N64 */
+int  pad_mode(void);         /* prompts and layout: 0 auto, 1 N64, 2 Xbox, 3 PlayStation */
+void pad_set_mode(int m);
 void pad_begin_bind(int action);
 int  pad_binding(void);
 int  pad_bound(int action);

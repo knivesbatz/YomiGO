@@ -1,0 +1,49 @@
+# YomiGo's Study Guide. Written in YomiGo's own words, drawing on the guide sites listed in docs/BIBLIOGRAPHY.md.
+@ Your setup checklist
+Do these once, a little at a time. You don't need them all on day one.
+1. Add the Japanese keyboard to your PC or phone.
+2. Install YomiGo Reader in your browser, to look up words on any page.
+3. Pick a regular study time, and a daily amount you can keep up on a bad day.
+4. Find one easy show, game, or channel you enjoy.
+5. After hiragana, consider Anki for your own flashcards, and Yomitan for a bigger dictionary.
+6. Once you know some grammar, try a conversation partner on iTalki or HelloTalk.
+@ What a good day looks like
+Reviews first, every day, even if you skip the class.
+Then one class at your chosen pace.
+Then Japanese you enjoy: as little as 15 minutes at first, growing toward 1 to 2 hours a day as you can.
+A common target once you're past the basics is about 10 new words and 2 grammar points a day. Expect around ten reviews for each new card.
+@ If you fall behind
+Lower your pace in Settings. Keep doing your reviews.
+Nearly every guide agrees that new cards are the thing to cut. Skipped reviews are what make people give up.
+Tired today? Watch or play something easy instead of doing nothing. It still counts.
+@ Listening
+Start listening early, before you understand it. You're learning the rhythm and sounds.
+Active listening means you watch and pay attention. It teaches the most.
+Passive listening means audio plays while you do chores. It fills gaps in your day.
+When listening, go with the flow. Look up only words that stand out or keep coming back.
+Beginners often do more listening than reading, roughly 7 parts to 3, moving toward an even split.
+@ Reading
+Start as soon as you can read kana, even if you understand little. Graded readers and kana-only games work well.
+Reading is slower: read, look it up, read it again.
+Most guides put reading at the centre of long-term progress. Vary what you read, or stick to everyday-life stories, which use the most useful words.
+@ Sentence mining
+Once you've finished the beginner stage, make your own flashcards from real Japanese. Save each word with the sentence you met it in.
+YomiGo Reader does this in your browser, and exports to Anki.
+Words you've met in something you care about stick far better than words from a list.
+@ Grammar and kanji
+Read grammar to understand it, not to memorise it. It won't stick the first time, and that's normal. If an explanation confuses you, try another guide.
+Learn kanji through words. Guides warn against studying kanji only on their own for long. Mnemonics help when kanji look alike.
+@ Mistakes to avoid
+Rushing: too many new cards a day leads to burnout.
+Skipping reviews.
+Staying on beginner material too long, or waiting until you feel ready for real Japanese.
+Polishing small details instead of moving on.
+Relying on any one app alone, including this one. Real Japanese and real people are the goal.
+@ Where the guides disagree
+Handwriting: some say to practise kana by hand, and many say handwriting kanji is optional unless you want it. YomiGo has you write kana, and leaves kanji up to you.
+Speaking: some leave it for later, and others warn against waiting. YomiGo has you speak from the start, because confidence grows with use.
+Kanji courses: some like dedicated courses, others prefer words only. YomiGo uses small sets tied to words.
+Language apps: several guides warn against relying on them. That's why YomiGo keeps sending you to real Japanese.
+@ After N5
+YomiGo's later levels are still being written. Meanwhile, keep reviewing, and read and listen daily.
+Tae Kim's Guide and Imabi are free next steps for grammar, and jpdb has vocabulary lists for real shows and novels. Find them under Links.
