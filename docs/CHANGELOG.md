@@ -14,6 +14,8 @@
 - Updates install on their own: the PC and TV check each time YomiGo opens, and a newer version downloads, is checked against its signature, and restarts YomiGo. The phone checks at start and opens Android's install screen, which always needs your tap
 - The SENKOSOFT name is gone from the apps and the README
 - Finishing the whole course now says Course complete, not N4 complete
+- こんにちは and こんばんは: the first class says they're written with は but said wa, typing konnichiwa is accepted everywhere, including your own words, and conversation hints spell particles as they're said (konnichiwa, not konnichiha)
+- The Library's Files tab is gone. Classes and Genki still open your Material files
 
 ## 0.12.0
 

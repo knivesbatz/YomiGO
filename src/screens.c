@@ -1384,21 +1384,21 @@ static void scr_quest(void) {
 
 /* ---- library ---- */
 static void scr_library(void) {
-    static const char *const tabs[] = {"Media", "Links", "Files", "Dict", "Guide"};
+    static const char *const tabs[] = {"Media", "Links", "Dict", "Guide"};
     static int gsec;
     int i, y, per = HTPC ? 6 : 11, n, stage = profile_stage(&P), had = input[0];
     char b[96];
     chrome(L("Library", "本だな", 5), 0);
-    for (i = 0; i < 5; i++) {
-        int w = CW / 5;
+    for (i = 0; i < 4; i++) {
+        int w = CW / 4;
         /* On the TV the search box's keyboard needs OK, so its tabs change with L and R only */
-        if (HTPC && tab == 3) { fill(CX + i * w, CY, w - 4, 22, C_PANEL); text_c(CX + i * w + (w - 4) / 2, CY + 3, tabs[i], C_INK); }
+        if (HTPC && tab == 2) { fill(CX + i * w, CY, w - 4, 22, C_PANEL); text_c(CX + i * w + (w - 4) / 2, CY + 3, tabs[i], C_INK); }
         else if (button(CX + i * w, CY, w - 4, 22, tabs[i])) { tab = i; page = 0; input[0] = 0; IN.pressed &= ~A_OK; }
         if (tab == i) fill(CX + i * w, CY + 22, w - 4, 2, C_ACC);
     }
     /* focus follows, so pressing OK can't jump back to the tab that had it */
-    if (IN.pressed & A_R) { tab = (tab + 1) % 5; page = 0; input[0] = 0; ui_set_focus(tab); }
-    if (IN.pressed & A_L) { tab = (tab + 4) % 5; page = 0; input[0] = 0; ui_set_focus(tab); }
+    if (IN.pressed & A_R) { tab = (tab + 1) % 4; page = 0; input[0] = 0; ui_set_focus(tab); }
+    if (IN.pressed & A_L) { tab = (tab + 3) % 4; page = 0; input[0] = 0; ui_set_focus(tab); }
     y = CY + 30;
     if (tab == 0) {
         static short list[YG_NMEDIA]; int m = 0;
@@ -1418,7 +1418,7 @@ static void scr_library(void) {
             if (!HTPC) wrap(CX + 188, y + 3, CW - 188, YG_RES[i].desc, C_DIM, 16, 0, 1);
             y += 26;
         }
-    } else if (tab == 3) {
+    } else if (tab == 2) {
         static int res[9], nres, searched; int rows = HTPC ? 3 : 8, go_search;
         n = 0;
         input_box(CX, y, CW, 1);
@@ -1451,7 +1451,7 @@ static void scr_library(void) {
             }
         }
         if (!nres) wrap(CX, y, CW, searched ? "Nothing found. Try the plain form of the word." : "Search in Japanese, romaji, or English. Words from JMdict by EDRDG, CC BY-SA 4.0.", C_DIM, LH, 0, 3);
-    } else if (tab == 4) {
+    } else {
         int lp = (FBY_BTN - y - 22) / LH, lines;
         n = 0;
         text(CX, y, YG_GUIDE[gsec].a, C_ACC);
@@ -1464,13 +1464,6 @@ static void scr_library(void) {
             if (page > 0) page--;
             else { gsec = (gsec + YG_NGUIDE - 1) % YG_NGUIDE; page = 0; }
         }
-    } else {
-        n = plat_scan_material();
-        if (!n) wrap(CX, y, CW, "No Material folder found. Put one beside this program, or in the folder above it.", C_DIM, LH, 0, 3);
-        for (i = page * per; i < n && i < (page + 1) * per; i++) {
-            if (button(CX, y, CW, 22, plat_material(i))) plat_open(plat_material_full(i));
-            y += 26;
-        }
     }
     if (n > per) {
         ys_fmt(b, sizeof b, "Page %d of %d", page + 1, (n + per - 1) / per);
@@ -1479,8 +1472,8 @@ static void scr_library(void) {
         if (button(CX + CW - 70, FBY_BTN, 70, 28, L("Next", "つぎ", 2)) && (page + 1) * per < n) page++;
     }
 #if HTPC
-    if ((IN.pressed & A_BACK) && !(tab == 3 && had)) { go(S_HOME); return; }
-    if (tab != 3) footer("Open", "Menu");
+    if ((IN.pressed & A_BACK) && !(tab == 2 && had)) { go(S_HOME); return; }
+    if (tab != 2) footer("Open", "Menu");
 #endif
 }
 

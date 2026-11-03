@@ -130,3 +130,9 @@ test("cards an update adds to classes already taken join the reviews, ten a day"
   assert.equal(Math.max(...dues), 100 + Math.floor((n - 1) / 10));
   assert.equal(Y.catchUp(p, 100), 0); // only once
 });
+
+test("a word's final は can be typed as it's said, but a lone は can't", () => {
+  assert.ok(Y.answerOk("konnichiwa", "こんにちは", ""));
+  assert.ok(Y.answerOk("こんばんわ", "こんばんは", ""));
+  assert.ok(!Y.answerOk("wa", "は", ""));
+});

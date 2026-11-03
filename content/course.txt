@@ -5,7 +5,7 @@
 @day Five vowels and greetings | 母音とあいさつ
 note: Japanese has five vowels: a (ah), i (ee), u (oo with relaxed lips), e (eh), o (oh). They never change, and each sound gets about the same length of time.
 note: Bowing: a small nod works for everyday greetings. Bow from the waist, back straight, and look down rather than at the other person. Deeper and longer means more respect.
-note: Which greeting? おはようございます until about 10 a.m., こんにちは through the day, こんばんは after dark. With family or close friends, おはよう alone is normal. さようなら sounds rather final, so people often say something else to friends.
+note: Which greeting? おはようございます until about 10 a.m., こんにちは through the day, こんばんは after dark. Both end in は but are said wa, so type konnichiwa and konbanwa. (A Japanese keyboard spells them konnichiha.) With family or close friends, おはよう alone is normal. さようなら sounds rather final, so people often say something else to friends.
 note: You aren't expected to remember all of this today. Forgetting is part of how memory works, and whatever you forget comes back in your flashcards. Press I don't know whenever you need to.
 new: @greet1
 chat: greet1

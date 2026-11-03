@@ -128,16 +128,6 @@ void norm_kana(const char *input, char *out, int cap) {
     }
     out[o] = 0;
 }
-int answer_ok(const char *input, const char *want, const char *romaji) {
-    static char a[256], b[256];
-    if (!*input) return 0;
-    norm_kana(input, a, sizeof a);
-    if (!a[0]) return 0;
-    norm_kana(want, b, sizeof b);
-    if (ys_cmp(a, b) == 0) return 1;
-    if (romaji && *romaji) { norm_kana(romaji, b, sizeof b); if (ys_cmp(a, b) == 0) return 1; }
-    return 0;
-}
 /* Particles are spelled as they sound when people type quickly, so は/を/へ are compared by sound in chat. */
 static void particle_sound(char *s) {
     char *p = s;
@@ -147,6 +137,19 @@ static void particle_sound(char *s) {
         else if (!ys_ncmp(p, "へ", 3)) { p[0] = (char)0xE3; p[1] = (char)0x81; p[2] = (char)0x88; } /* え */
         p++;
     }
+}
+int answer_ok(const char *input, const char *want, const char *romaji) {
+    static char a[256], b[256]; int na, nb;
+    if (!*input) return 0;
+    norm_kana(input, a, sizeof a);
+    if (!a[0]) return 0;
+    norm_kana(want, b, sizeof b);
+    if (ys_cmp(a, b) == 0) return 1;
+    if (romaji && *romaji) { norm_kana(romaji, b, sizeof b); if (ys_cmp(a, b) == 0) return 1; }
+    /* A word's final は or へ, as in こんにちは, is said wa or e, so it may be typed that way. A lone kana is still read as written. */
+    norm_kana(want, b, sizeof b); na = ys_len(a); nb = ys_len(b);
+    if (na > 3 && nb > 3) { particle_sound(a + na - 3); particle_sound(b + nb - 3); if (ys_cmp(a, b) == 0) return 1; }
+    return 0;
 }
 int chat_ok(const char *input, const YgTurn *t) {
     static char a[256], b[256]; int i;

@@ -132,11 +132,13 @@ def kana_to_romaji(s):
     s, out, i = to_hira(s).replace("。", ""), "", 0
     while i < len(s):
         two, one = s[i:i+2], s[i]
-        if two in rows: out += rows[two]; i += 2
+        if one == "を": out += "o"; i += 1  # only ever a particle, said o
+        elif one in "はへ" and i == len(s) - 1: out += "wa" if one == "は" else "e"; i += 1  # said wa and e at the end, as in こんにちは
+        elif two in rows: out += rows[two]; i += 2
         elif one == "っ": out += "@"; i += 1
         elif one == "ん":
             # before a vowel or y it needs the apostrophe, or it reads as a different sound
-            nx = rows.get(s[i+1:i+3]) or rows.get(s[i+1:i+2]) or ""
+            nx = "o" if s[i+1:i+2] == "を" else "e" if s[i+1:] == "へ" else rows.get(s[i+1:i+3]) or rows.get(s[i+1:i+2]) or ""
             out += "n'" if nx[:1] in tuple("aiueoy") and nx else "n"; i += 1
         elif one in rows: out += rows[one]; i += 1
         else: die(f"can't spell {one} in {s} in romaji")
@@ -329,7 +331,8 @@ def check_chats(chats, cards):
             for w in t["want"]:
                 bad = [ch for ch in w.rstrip("。") if unicodedata.name(ch, "").startswith("CJK")]
                 if bad: die(f"chat {c['id']}: reply {w} has kanji {bad}")
-            if romaji_to_kana(t["wantRo"], romaji_table()) != to_hira(t["want"][0]).replace("。", ""):
+            by_sound = lambda k: k.replace("は", "わ").replace("を", "お").replace("へ", "え")
+            if by_sound(romaji_to_kana(t["wantRo"], romaji_table())) != by_sound(to_hira(t["want"][0]).replace("。", "")):
                 die(f"chat {c['id']}: revealed romaji {t['wantRo']} doesn't type {t['want'][0]}")
 
 def load_media():

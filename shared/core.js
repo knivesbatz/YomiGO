@@ -40,7 +40,9 @@
   function answerOk(input, want, romaji) {
     const a = normKana(input);
     if (!a) return false;
-    return a === normKana(want) || (!!romaji && a === normKana(romaji));
+    // A word's final は or へ, as in こんにちは, is said wa or e, so it may be typed that way. A lone kana is still read as written.
+    const tail = (s) => s.slice(0, -1) + sound(s.slice(-1)), w = normKana(want);
+    return a === w || (!!romaji && a === normKana(romaji)) || (a.length > 1 && w.length > 1 && tail(a) === tail(w));
   }
   const sound = (s) => s.replace(/は/g, "わ").replace(/を/g, "お").replace(/へ/g, "え");
   function chatOk(input, turn) {

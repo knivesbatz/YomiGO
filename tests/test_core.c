@@ -30,6 +30,8 @@ int main(void) {
     CHECK(!answer_ok("", "あ", "a"), "empty rejected");
     CHECK(!answer_ok("ka", "あ", "a"), "wrong rejected");
     CHECK(answer_ok("kin'youbi", "きんようび", "kin'youbi"), "apostrophe");
+    CHECK(answer_ok("konnichiwa", "こんにちは", ""), "a final は typed as said, with no romaji to compare");
+    CHECK(!answer_ok("wa", "は", ""), "a lone は is still ha");
 
     /* Every chat reply must be reachable, typed in romaji and in kana with kanji */
     for (i = 0; i < YG_NCHATS; i++) { int t, w; for (t = 0; t < YG_CHATS[i].nturns; t++) for (w = 0; w < YG_CHATS[i].turns[t].nwant; w++)
