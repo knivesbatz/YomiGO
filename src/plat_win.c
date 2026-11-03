@@ -199,6 +199,19 @@ int plat_ocr_poll(void) {
     CloseHandle(ocr_proc); ocr_proc = 0;
     return (int)code;
 }
+int plat_ocr_present(void) {
+    char p[MAX_PATH];
+    ys_cpy(p, dir, MAX_PATH); ys_cat(p, "\\YomiGoOCR.exe", MAX_PATH);
+    return GetFileAttributesA(p) != 0xFFFFFFFF;
+}
+void plat_fetch_helpers(void) {
+    char cmd[MAX_PATH * 2]; STARTUPINFOA si; PROCESS_INFORMATION pi; int i;
+    if (headless || !plat_can_update()) return;
+    for (i = 0; i < (int)sizeof si; i++) ((char *)&si)[i] = 0;
+    si.cb = sizeof si;
+    ys_cpy(cmd, "\"", sizeof cmd); ys_cat(cmd, dir, sizeof cmd); ys_cat(cmd, "\\YomiGoUpdate.exe\" --helpers", sizeof cmd);
+    if (CreateProcessA(0, cmd, 0, 0, FALSE, 0x08000000, 0, dir, &si, &pi)) { CloseHandle(pi.hProcess); CloseHandle(pi.hThread); }
+}
 void plat_topmost(int on) { if (wnd && !headless) SetWindowPos(wnd, on ? HWND_TOPMOST : HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE); }
 int plat_open(const char *u) {
     if (headless) return 1;

@@ -1096,7 +1096,8 @@ static void scr_text(void) {
     if (button(CX + bw + 4, y, bw, 22, tx_watch ? "Watch: On" : "Watch: Off")) { tx_watch = !tx_watch; tx_seq = plat_clip_seq(); tx_msg = tx_watch ? "Japanese copied by any program now appears here." : ""; }
 #if !HTPC
     if (button(CX + 2 * (bw + 4), y, bw, 22, tx_ocr ? "Reading..." : "Screenshot") && !tx_ocr) {
-        if (!plat_clip_image("ocr_in.bmp")) tx_msg = "First take a screenshot with Win+Shift+S, then press this.";
+        if (!plat_ocr_present() && plat_can_update()) { plat_fetch_helpers(); tx_msg = "Downloading the screenshot reader. Try again in a minute."; }
+        else if (!plat_clip_image("ocr_in.bmp")) tx_msg = "First take a screenshot with Win+Shift+S, then press this.";
         else if (!plat_ocr_start("ocr_in.bmp", "ocr_out.txt")) tx_msg = "Couldn't start the text reader. It needs YomiGoOCR.exe, beside YomiGo, and Windows 10 or later.";
         else { tx_ocr = 1; tx_msg = "Reading the screenshot..."; }
     }

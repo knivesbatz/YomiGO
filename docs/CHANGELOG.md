@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1
+
+- Updating from 0.5.0 inside the app now also fetches the screenshot reader, signed like everything else
+- The Android app builds again, with photo reading
+- The phone's Text Reader keeps only Japanese lines when you paste
+
 ## 0.6.0
 
 - Text Reader: paste Japanese, watch the clipboard for game text, or read a screenshot. Then pick any character to look up the word starting there, and add it to My words with its sentence

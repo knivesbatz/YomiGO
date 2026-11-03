@@ -163,6 +163,18 @@ void yg_entry(void) {
         d = read_all(f, &a); g = read_all(s, &b);
         ExitProcess(d && g && verify((BYTE *)d, a, (BYTE *)g, b) ? 0 : 1);
     }
+    /* Fetches helpers an older updater didn't know about, such as the screenshot reader */
+    if (!lstrcmpA(target, "--helpers")) {
+        static char ocr[MAX_PATH], ocrnew[MAX_PATH], path2[128];
+        quiet = 1;
+        wsprintfA(path2, "/repos/" YG_REPO "/releases/latest");
+        json = http_get("api.github.com", path2, &len);
+        if (!json || !find_tag(json, tag, 32)) ExitProcess(3);
+        wsprintfA(ocr, "%s\\YomiGoOCR.exe", dir); wsprintfA(ocrnew, "%s\\YomiGoOCR.exe.new", dir);
+        if (GetFileAttributesA(ocr) != INVALID_FILE_ATTRIBUTES) ExitProcess(0);
+        if (!fetch_verified(tag, "YomiGoOCR.exe", ocrnew)) { DeleteFileA(ocrnew); ExitProcess(4); }
+        ExitProcess(MoveFileA(ocrnew, ocr) ? 0 : 5);
+    }
     if (!lstrcmpA(target, "--swap")) {
         static char t[MAX_PATH], n[MAX_PATH];
         next_arg(&cl, t, MAX_PATH); next_arg(&cl, n, MAX_PATH);

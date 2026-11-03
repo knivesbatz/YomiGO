@@ -57,7 +57,9 @@ void plat_clip_set(const char *utf8);
 int  plat_clip_seq(void);                      /* changes whenever the clipboard does */
 int  plat_clip_image(const char *name);        /* saves a copied picture as a BMP; 0 if there isn't one */
 int  plat_ocr_start(const char *in, const char *out);
-int  plat_ocr_poll(void);                      /* -1 nothing running, -2 still reading, else the reader's exit code */
+int  plat_ocr_poll(void);
+int  plat_ocr_present(void);                   /* YomiGoOCR.exe is beside the program */
+void plat_fetch_helpers(void);                 /* asks the signed updater to fetch it */                      /* -1 nothing running, -2 still reading, else the reader's exit code */
 void plat_topmost(int on);
 const char *plat_ime_comp(void);              /* what the Japanese keyboard is still composing */
 void plat_ime_field(int on, int x, int y);    /* a text box is showing, and where */

@@ -113,7 +113,7 @@ function textReader(msg) {
   });
   const lines = readerLines.map((line) => h("div", { cls: "card", lang: "ja", style: "font-size:22px;line-height:1.7" }, [...line].map((ch, i) => { const s = h("span", { role: "button", tabindex: "0" }, ch); s.addEventListener("click", () => pick(line, line.indexOf(ch) === i ? i : [...line].slice(0, i).join("").length)); return s; })));
   show(h("h1", null, L("Text Reader", "テキスト", 3)), h("p", { cls: "dim" }, "Paste Japanese, or read it from a photo of a page or screen. Then tap a character to look up the word that starts there."),
-    area, btn("Add this text", () => { readerLines = [...area.value.split(/\r?\n/).filter((l) => l.trim()), ...readerLines].slice(0, 30); textReader(); }, "main"),
+    area, btn("Add this text", () => { readerLines = [...area.value.split(/\r?\n/).map((l) => l.trim()).filter((l) => /[぀-ヿ㐀-鿿]/.test(l)), ...readerLines].slice(0, 30); textReader(); }, "main"),
     Bridge && Bridge.ocrPick ? btn("📷 Read from a photo", () => { note.textContent = "Reading..."; Bridge.ocrPick(); }) : "",
     note, out, lines, readerLines.length ? btn("Clear", () => { readerLines = []; textReader(); }) : "");
 }
