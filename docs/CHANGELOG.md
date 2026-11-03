@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0
+
+- New class step: hear a word or sentence and pick its meaning, type what you hear, then repeat lines out loud
+- Settings shows whether a Japanese voice is installed, and how to add one. Without one, classes skip listening
+- Windows now detects more kinds of Japanese voice
+- On Android, a Try it button reports what the phone heard. It checks words, not your accent
+
 ## 0.4.0
 
 - My words: your own flashcards, up to 2,000, reviewed alongside the course

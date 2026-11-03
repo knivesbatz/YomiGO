@@ -11,7 +11,7 @@ WIN95 = {
     "GDI32.dll": "GetStockObject SetStretchBltMode StretchDIBits",
     "WINMM.dll": "PlaySoundA joyGetDevCapsA joyGetNumDevs joyGetPosEx",
     "SHELL32.dll": "ShellExecuteA",
-    "ADVAPI32.dll": "RegCloseKey RegOpenKeyExA",
+    "ADVAPI32.dll": "RegCloseKey RegEnumKeyExA RegOpenKeyExA",
 }
 ALLOWED = {k.upper(): set(v.split()) for k, v in WIN95.items()}
 

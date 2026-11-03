@@ -49,6 +49,7 @@ const store = {
 };
 const L = (en, ja, from) => (P && !P.en && Y.stageOf(P) >= from ? ja : en);
 const speak = (t) => { if (Bridge) Bridge.speak(t); else if (globalThis.speechSynthesis) { const u = new SpeechSynthesisUtterance(t); u.lang = "ja-JP"; speechSynthesis.speak(u); } };
+const canSpeak = () => globalThis.YG_TEST_VOICE || (Bridge ? Bridge.hasVoice() : !!globalThis.speechSynthesis && speechSynthesis.getVoices().some((v) => v.lang.startsWith("ja")));
 const canListen = () => !!Bridge || !!(globalThis.SpeechRecognition || globalThis.webkitSpeechRecognition);
 let onHeard = null;
 globalThis.ygHeard = (text) => { if (onHeard) onHeard(text); };
@@ -132,7 +133,7 @@ function home() {
   else if (P.day >= C.days.length) parts.push(h("div", { cls: "card" }, h("h2", { cls: "good" }, "N4 complete!"), "N3 and beyond arrive in a future update. Keep reviewing, and read and listen to real Japanese every day."));
   else {
     const d = C.days[P.day], over = P.today >= P.pace && P.last === t;
-    parts.push(h("div", { cls: "card" }, h("div", { cls: "row dim" }, h("span", null, C.stages[d.stage].name), h("span", null, `Class ${P.day + 1} of ${C.days.length}`)), h("div", { cls: "big" }, d.ja), h("div", { cls: "dim" }, d.title), bar(P.step, 9),
+    parts.push(h("div", { cls: "card" }, h("div", { cls: "row dim" }, h("span", null, C.stages[d.stage].name), h("span", null, `Class ${P.day + 1} of ${C.days.length}`)), h("div", { cls: "big" }, d.ja), h("div", { cls: "dim" }, d.title), bar(P.step, 10),
       over ? h("div", { cls: "good" }, "Today's class is done. Rest, review, or immerse.") : btn(P.step ? L("Continue class", "つづける", 2) : L("Start class", "はじめる", 2), runStep, "main")));
     parts.push(h("div", { cls: "card" }, h("div", { cls: "acc" }, L("Today's immersion", "イマージョン", 3)), d.imm));
   }
@@ -151,23 +152,42 @@ function runStep() {
     case 3: { const q = Y.shuffle(d.new.slice(0, 20).map((id) => Y.makeQ(Y.byId[id], Math.floor(Math.random() * 3), rom))); if (!q.length) return nextStep(); return runQuiz(q, "Practice", (r) => { P.xp += r; nextStep(); }, { requeue: true }); }
     case 4: return d.chat ? chat(d.chat, 0, 0) : nextStep();
     case 5: return d.read ? reading(C.reading[d.read], -1, 0, false) : nextStep();
-    case 6: return runQuiz(Y.quizDay(P.day), "Daily quiz", (right, n) => {
+    case 6: {
+      // Hearing needs a voice. Without one the class carries on, and Settings shows how to add it.
+      const q = canSpeak() ? Y.quizListen(P.day) : [];
+      if (!q.length) return nextStep();
+      return runQuiz(q, L("Listening", "ききとり", 3), (r) => { P.xp += r; P.listens++; shadow(Y.shadowLines(P.day), 0); });
+    }
+    case 7: return runQuiz(Y.quizDay(P.day), "Daily quiz", (right, n) => {
       const pct = Math.trunc(right * 100 / n);
       if (pct >= Y.PASS) { P.xp += right * 2; if (pct === 100) P.perfects++; return nextStep(); }
       P.step = 1; store.save(); result("Not yet!", `You scored ${pct}%. You need 80% to continue. Look at your notes and try again.`, false, runStep);
     });
-    case 7: return task(d.hw, L("Homework", "しゅくだい", 3), L("I did it!", "できた！", 2), () => {
+    case 8: return task(d.hw, L("Homework", "しゅくだい", 3), L("I did it!", "できた！", 2), () => {
       const q = d.new.length ? Y.shuffle([...d.new]).slice(0, 3).map((id) => Y.makeQ(Y.byId[id], 0, rom)) : [];
       const done = () => { P.hw++; P.xp += 30; nextStep(); };
       if (q.length) runQuiz(q, "Homework check", done); else done();
     });
-    case 8: return task(d.imm, L("Immersion", "イマージョン", 3), L("I'll do it today", "やります！", 2), nextStep);
+    case 9: return task(d.imm, L("Immersion", "イマージョン", 3), L("I'll do it today", "やります！", 2), nextStep);
     default:
       Y.learnDay(P, P.day, Y.today()); Y.completeDay(P, Y.today()); store.save();
       result("Class complete!", `+100 XP. Streak: ${P.streak} day(s). Your new cards are in the flashcard deck.`, true, home);
   }
 }
 function nextStep() { P.step++; store.save(); runStep(); }
+// Shadowing: hear a line, then say it. Speech checks what the recogniser heard; it isn't a pronunciation score.
+function shadow(lines, i) {
+  if (i >= lines.length) return nextStep();
+  const l = lines[i], fb = h("div", { cls: "dim", role: "status" });
+  setNav(-1);
+  show(h("div", { cls: "row" }, h("h1", null, L("Shadowing", "シャドーイング", 3)), h("span", { cls: "dim" }, `${i + 1} / ${lines.length}`)),
+    h("p", { cls: "dim" }, "Listen, then say it out loud, copying the rhythm and tone. Do it as many times as you like."),
+    h("div", { cls: "card" }, h("div", { lang: "ja", style: "font-size:22px" }, l.jp), l.ro && Y.stageOf(P) < 4 ? h("div", { cls: "dim" }, l.ro) : "", h("div", null, l.en)),
+    btn("🔊 " + L("Hear it", "聞く", 5), () => speak(l.jp)),
+    canListen() ? btn("🎤 " + L("Try it", "話す", 5), () => listen((heard) => { fb.textContent = !heard ? "Didn't catch that. Try again." : (Y.answerOk(heard, l.jp, l.ro) ? "It heard what you were aiming for: " : "It heard: ") + heard + ". This only checks the words, not your accent."; })) : "", fb,
+    btn("I said it", () => shadow(lines, i + 1), "main"));
+  speak(l.jp);
+}
 // Reading: a short passage, then questions about it
 function reading(r, qi, right, en) {
   setNav(-1);
@@ -236,12 +256,13 @@ function runQuiz(qs, title, done, opt = {}) {
   setNav(-1);
   const step = () => {
     if (i >= qs.length) return done(right, total0);
-    const q = qs[i], fb = h("div"), area = h("div");
+    const q = qs[i], fb = h("div"), area = h("div"), big = h("div", { cls: "big", lang: "ja" }, q.say ? "🔊 Listen..." : q.prompt);
     let idk = false, dontKnow = null;
     const after = (ok) => {
       if (dontKnow) dontKnow.remove();
       if (ok) { if (!opt.seenWrong?.has(i)) right++; } else if (opt.requeue && qs.length < 60) qs.push(q);
       if (opt.onAnswer) opt.onAnswer(q, ok);
+      if (q.say) big.textContent = q.prompt;
       fb.replaceChildren(h("strong", { cls: ok ? "good" : idk ? "dim" : "bad" }, ok ? L("Correct!", "正解！", 5) : idk ? "That's okay. Here's the answer." : L("Not quite.", "ちがいます", 3)), q.kind === "type" && !ok ? h("div", { lang: "ja" }, q.want) : "", !ok && q.card.n ? h("p", { cls: "dim" }, q.card.n) : "", btn(L("Next", "つぎ", 2), () => { i++; step(); }, "main"));
     };
     if (q.kind === "choice") {
@@ -263,9 +284,10 @@ function runQuiz(qs, title, done, opt = {}) {
     });
     area.append(dontKnow);
     show(h("div", { cls: "row" }, h("h1", null, title), h("span", { cls: "dim" }, `${i + 1} / ${qs.length}`)), bar(i, qs.length),
-      h("div", { cls: "card" }, h("div", { cls: "dim" }, q.tag), h("div", { cls: "big", lang: "ja" }, q.prompt), q.sub ? h("div", { cls: "dim" }, q.sub) : "", q.card.t !== "g" && q.kind === "choice" && /[ぁ-ヿ一-龯]/.test(q.prompt) ? btn("🔊", () => speak(q.card.r)) : ""), area, fb,
+      h("div", { cls: "card" }, h("div", { cls: "dim" }, q.tag), big, q.sub ? h("div", { cls: "dim" }, q.sub) : "", q.say ? btn("🔊 " + L("Hear again", "もう一度", 5), () => speak(q.say)) : q.card.t !== "g" && q.kind === "choice" && /[ぁ-ヿ一-龯]/.test(q.prompt) ? btn("🔊", () => speak(q.card.r)) : ""), area, fb,
       opt.noExit ? "" : btn("Leave", home));
     if (q.focus) q.focus.focus();
+    if (q.say) speak(q.say);
   };
   step();
 }
@@ -344,6 +366,7 @@ function settings() {
     btn("Pace: " + paces[P.pace - 1], () => { P.pace = P.pace % 3 + 1; store.save(); settings(); }),
     btn(P.en ? "Labels: Always English" : "Labels: Gradually Japanese", () => { P.en = P.en ? 0 : 1; store.save(); settings(); }),
     btn(P.genki ? "Genki practice: On" : "Genki practice: Off", () => { P.genki = P.genki ? 0 : 1; store.save(); settings(); }),
+    btn(canSpeak() ? "Japanese voice: found" : "Japanese voice: none. Tap to add it", () => { if (Bridge) Bridge.installVoice(); else alert("Listening needs a Japanese voice on this device."); }),
     btn("Check for updates", () => { if (Bridge) Bridge.checkUpdate(); else alert("Updates apply to the Android app."); }),
     btn("Switch learner", profiles),
     h("h2", null, "Move a save between devices"), area,

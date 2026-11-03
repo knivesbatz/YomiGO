@@ -22,6 +22,20 @@ for exe in ("YomiGo.exe", "YomiGoHTPC.exe"):
     print(exe, "exit", r.returncode, "day", vals.get("day"), "cards", cards, "xp", vals.get("xp"), "chats", vals.get("chats"), "hw", vals.get("hw"), "reads", vals.get("reads"), "OK" if ok else "FAILED")
     fail += not ok
     shutil.rmtree(root, ignore_errors=True)
+# Listening, on a pretend voice since a test PC may have none: the whole course again, through those screens
+for exe in ("YomiGo.exe", "YomiGoHTPC.exe"):
+    root = tempfile.mkdtemp()
+    script = "w2;ow2;ow2;tEars;w1;ow2;dw1;ow2;dw1;ow2;G;" if exe == "YomiGo.exe" else "w2;ow2;ow2;ow1;sw2;dw1;ow2;dw1;ow2;G;"
+    r = subprocess.run([os.path.join(ROOT, "dist", exe), "--root", root, "--fake-voice", "1", "--script", script], timeout=600)
+    saves = [f for f in os.listdir(root) if f.endswith(".sav")]
+    vals = dict(l.split("=", 1) for l in open(os.path.join(root, saves[0]), encoding="utf-8").read().splitlines() if "=" in l) if saves else {}
+    ok = r.returncode == 0 and int(vals.get("day", 0)) == DAYS and int(vals.get("listens", 0)) >= DAYS - 1
+    print("listening walk", exe, "listens", vals.get("listens"), "OK" if ok else "FAILED")
+    fail += not ok
+    shutil.rmtree(root, ignore_errors=True)
+# The real Windows speech call, in silence. It needs some voice installed, and CI may not have one.
+r = subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--speak-test", "1"], timeout=60)
+print("speech call, silent", "OK" if r.returncode == 0 else "no voice or failed: not counted", r.returncode)
 # Your own words on the TV: find 猫 in the dictionary, add it, and it must be saved
 root = tempfile.mkdtemp()
 subprocess.run([os.path.join(ROOT, "dist", "YomiGoHTPC.exe"), "--root", root, "--script", "w2;ow2;ow2;tMine;w1;sw2;dw1;ow2;dw1;ow2;rrrrw8;ow2;RRRw2;tneko;w1;sw2;xw2;"], timeout=60)

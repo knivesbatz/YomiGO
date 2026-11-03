@@ -236,7 +236,7 @@ int profile_save_text(const Profile *p, char *o, int cap) {
     n = put(o, cap, n, "last", p->last_day); n = put(o, cap, n, "today", p->done_today); n = put(o, cap, n, "placed", p->placed);
     n = put(o, cap, n, "day", p->day); n = put(o, cap, n, "step", p->step); n = put(o, cap, n, "pace", p->pace);
     n = put(o, cap, n, "en", p->force_en); n = put(o, cap, n, "genki", p->genki); n = put(o, cap, n, "reviews", p->reviews); n = put(o, cap, n, "perfects", p->perfects);
-    n = put(o, cap, n, "chats", p->chats); n = put(o, cap, n, "hw", p->homeworks); n = put(o, cap, n, "reads", p->reads); n = put(o, cap, n, "ach", (int)p->ach);
+    n = put(o, cap, n, "chats", p->chats); n = put(o, cap, n, "hw", p->homeworks); n = put(o, cap, n, "reads", p->reads); n = put(o, cap, n, "listens", p->listens); n = put(o, cap, n, "ach", (int)p->ach);
     for (i = 0; i < YG_NEXAMS; i++) if (p->exam_score[i]) {
         ys_cpy(o + n, "exam.", cap - n); n += 5; n = put(o, cap, n, YG_EXAMS[i].id, p->exam_score[i]);
     }
@@ -331,6 +331,7 @@ int profile_load_text(Profile *p, const char *text, int len) {
           else if (!ys_cmp(k, "chats")) p->chats = x;
           else if (!ys_cmp(k, "hw")) p->homeworks = x;
           else if (!ys_cmp(k, "reads")) p->reads = x;
+          else if (!ys_cmp(k, "listens")) p->listens = x;
           else if (!ys_cmp(k, "ach")) p->ach = (unsigned)x;
           else if (!ys_ncmp(k, "exam.", 5)) { int e; for (e = 0; e < YG_NEXAMS; e++) if (!ys_cmp(k + 5, YG_EXAMS[e].id)) p->exam_score[e] = (unsigned char)(x < 0 ? 0 : x > 100 ? 100 : x); }
         }
@@ -476,6 +477,7 @@ const YgAch YG_ACH[ACH_COUNT] = {
     {"Bookworm", "本の虫", "Finish 10 reading passages."},
     {"N4 Champion", "N4王者", "Pass the N4 Mastery Exam."},
     {"Word Miner", "ことば集め", "Add 25 of your own words."},
+    {"Good Ears", "いい耳", "Finish 10 listening sessions."},
 };
 void ach_check(Profile *p) {
 #define GOT(a, cond) if (cond) p->ach |= 1u << (a)
@@ -488,6 +490,7 @@ void ach_check(Profile *p) {
         GOT(ACH_N5, !ys_cmp(YG_EXAMS[e].id, "N5")); GOT(ACH_N4, !ys_cmp(YG_EXAMS[e].id, "N4")); } }
     GOT(ACH_READER, p->reads >= 10);
     GOT(ACH_MINER, p->nmy >= 25);
+    GOT(ACH_EARS, p->listens >= 10);
 #undef GOT
 }
 
@@ -525,7 +528,7 @@ static void fill_choices(Question *q, int card, const char *right, int use_readi
 void q_make(Question *q, int card, int pref, int romaji) {
     const YgCard *c = &YG_CARDS[card]; int s;
     for (s = 0; s < 4; s++) q->choices[s] = 0;
-    q->card = (short)card; q->kind = Q_CHOICE; q->sub = ""; q->want = q->want2 = ""; q->tag = "";
+    q->card = (short)card; q->kind = Q_CHOICE; q->sub = ""; q->want = q->want2 = ""; q->tag = ""; q->say = "";
     if (c->type == 'g') {
         int pos = yg_rand() % 4, i = 0, k;
         const char *wr[3]; wr[0] = c->w1; wr[1] = c->w2; wr[2] = c->w3;
@@ -553,7 +556,7 @@ void q_make(Question *q, int card, int pref, int romaji) {
 void q_make_my(Question *q, const Profile *p, int k, int pref) {
     const MyCard *m = &p->my[k]; int s, got = 1, tries;
     for (s = 0; s < 4; s++) q->choices[s] = 0;
-    q->card = (short)(YG_NCARDS + k); q->kind = Q_CHOICE; q->sub = ""; q->want = q->want2 = ""; q->tag = "";
+    q->card = (short)(YG_NCARDS + k); q->kind = Q_CHOICE; q->sub = ""; q->want = q->want2 = ""; q->tag = ""; q->say = "";
     if (pref == 1) { q->kind = Q_TYPE; q->prompt = m->gloss; q->tag = "Your word: type the reading"; q->want = m->reading; return; }
     q->prompt = m->word; q->sub = m->sent; q->tag = "Your word: what does it mean?";
     s = yg_rand() % 4;
@@ -643,6 +646,64 @@ void quiz_genki(Quiz *z, int index) {
     quiz_add_cards(z, g->cards, g->ncards, 0, 1);
     quiz_shuffle(z);
     if (z->n > 15) z->n = 15;
+}
+/* ---- listening ---- */
+static void fill_blank(const YgCard *c, char *s, int cap) {
+    int k = 0; const char *p = c->sentence;
+    while (*p && k < cap - 8) {
+        if (!ys_ncmp(p, "＿", 3)) { ys_cpy(s + k, c->reading, cap - k); k += ys_len(s + k); p += 3; }
+        else s[k++] = *p++;
+    }
+    s[k] = 0;
+}
+/* Hear it, then choose what it meant; every third one is dictation. Sentences come from the day's grammar. */
+void quiz_listen(Quiz *z, int day, int max_chars) {
+    static char said[YG_MAXQ][128];
+    int rom = day_romaji_mode(day), back, i, tries;
+    quiz_new(z);
+    for (back = day; back >= 0 && z->n < 6; back--) {
+        const YgDay *d = &YG_DAYS[back];
+        for (i = 0; i < d->nnew && z->n < 8; i++) {
+            int id = d->cards[i]; const YgCard *c = &YG_CARDS[id]; Question *q = &z->q[z->n];
+            if (c->type == 'j' || (c->type != 'g' && (c->type == 'h' || c->type == 'k') && rom)) continue;
+            if (c->type == 'g' && max_chars && ys_len(c->trans) > max_chars) continue;
+            if (c->type == 'g') {
+                static const char *const none = "---"; int pos = yg_rand() % 4, got = 0, k;
+                q_make(q, id, 0, 0);
+                for (k = 0; k < 4; k++) q->choices[k] = 0;
+                q->choices[pos] = c->trans; q->answer = (short)pos;
+                for (tries = 0; tries < 900 && got < 3; tries++) {
+                    const YgCard *o = &YG_CARDS[yg_rand() % YG_NCARDS]; int dup = 0, m, s = 0;
+                    if (o->type != 'g' || o->day < 0 || (max_chars && ys_len(o->trans) > max_chars)) continue;
+                    for (m = 0; m < 4; m++) if (q->choices[m] && !ys_cmp(q->choices[m], o->trans)) dup = 1;
+                    if (dup) continue;
+                    while (q->choices[s]) s++;
+                    q->choices[s] = o->trans; got++;
+                }
+                for (k = 0; k < 4; k++) if (!q->choices[k]) q->choices[k] = none;
+                fill_blank(c, said[z->n], sizeof said[z->n]);
+                q->say = said[z->n]; q->prompt = said[z->n]; q->sub = ""; q->tag = "What did you hear?";
+            } else if (z->n % 3 == 2) {
+                q_make(q, id, 0, rom);
+                q->kind = Q_TYPE; q->say = c->reading; q->prompt = c->front; q->sub = ""; q->tag = "Type what you hear";
+                q->want = c->reading; q->want2 = c->romaji;
+            } else {
+                q_make(q, id, 0, rom);
+                q->say = c->reading; q->prompt = (c->type == 'h' || c->type == 'k') ? c->front : (rom ? c->romaji : c->front); q->sub = ""; q->tag = "What did you hear?";
+            }
+            z->n++;
+        }
+    }
+    quiz_shuffle(z);
+}
+/* Lines to repeat aloud: the day's conversation, then its grammar sentences, then its words */
+int shadow_lines(int day, ShadowLine *out, int max) {
+    static char said[8][128];
+    const YgDay *d = &YG_DAYS[day]; int n = 0, i;
+    if (d->chat >= 0) { const YgChat *c = &YG_CHATS[d->chat]; for (i = 0; i < c->nturns && n < max; i++) if (*c->turns[i].say) { out[n].jp = c->turns[i].say; out[n].ro = c->turns[i].romaji; out[n].en = c->turns[i].en; n++; } }
+    for (i = 0; i < d->nnew && n < max && n < 8; i++) { const YgCard *c = &YG_CARDS[d->cards[i]]; if (c->type == 'g') { fill_blank(c, said[n], sizeof said[n]); out[n].jp = said[n]; out[n].ro = ""; out[n].en = c->trans; n++; } }
+    for (i = 0; i < d->nnew && n < max; i++) { const YgCard *c = &YG_CARDS[d->cards[i]]; if (c->type == 'w') { out[n].jp = c->front; out[n].ro = c->romaji; out[n].en = c->en; n++; } }
+    return n;
 }
 /* Placement walks up the stages, always starting at romaji. Each section samples what that stage teaches. */
 int placement_section(Quiz *z, int section) {

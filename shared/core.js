@@ -66,8 +66,8 @@
 
   // Save file: the same text format as the Windows builds, so a save moves between devices
   const MY_MAX = 2000;
-  const newProfile = (name) => ({ name, xp: 0, streak: 0, best: 0, last: 0, today: 0, placed: 0, day: 0, step: 0, pace: 1, en: 0, genki: 0, reviews: 0, perfects: 0, chats: 0, hw: 0, ach: 0, reads: 0, exams: {}, cards: {}, my: [] });
-  const NUMS = ["xp", "streak", "best", "last", "today", "placed", "day", "step", "pace", "en", "genki", "reviews", "perfects", "chats", "hw", "ach", "reads"];
+  const newProfile = (name) => ({ name, xp: 0, streak: 0, best: 0, last: 0, today: 0, placed: 0, day: 0, step: 0, pace: 1, en: 0, genki: 0, reviews: 0, perfects: 0, chats: 0, hw: 0, ach: 0, reads: 0, listens: 0, exams: {}, cards: {}, my: [] });
+  const NUMS = ["xp", "streak", "best", "last", "today", "placed", "day", "step", "pace", "en", "genki", "reviews", "perfects", "chats", "hw", "ach", "reads", "listens"];
   function saveText(p) {
     let t = "YOMIGO-SAVE 1\nname=" + p.name + "\n";
     for (const k of NUMS) t += k + "=" + p[k] + "\n";
@@ -99,7 +99,7 @@
       else if (k.startsWith("exam.")) { if (examIds.has(k.slice(5))) p.exams[k.slice(5)] = clamp(+v || 0, 0, 100); }
       else if (NUMS.includes(k)) p[k] = +v || 0;
     }
-    p.day = clamp(p.day, 0, C.days.length); p.step = p.step > 9 || p.step < 0 ? 0 : p.step; p.pace = clamp(p.pace, 1, 3);
+    p.day = clamp(p.day, 0, C.days.length); p.step = p.step > 10 || p.step < 0 ? 0 : p.step; p.pace = clamp(p.pace, 1, 3);
     return p.name ? p : null;
   }
 
@@ -223,6 +223,34 @@
   }
   // Genki practice: YomiGo's own cards, grouped by the lesson of the book that covers them
   const quizGenki = (i) => shuffle(C.genki[i].cards.map((id) => q3(id, false))).slice(0, 15);
+  // Hear it, then choose what it meant; every third one is dictation. Sentences come from the day's grammar.
+  const filled = (c) => c.s.replace("＿", c.r);
+  function quizListen(day) {
+    const rom = romajiMode(day), out = [];
+    for (let b = day; b >= 0 && out.length < 6; b--) for (const id of C.days[b].new) {
+      if (out.length >= 8) break;
+      const c = byId[id];
+      if (c.t === "j" || ("hk".includes(c.t) && rom)) continue;
+      const q = makeQ(c, 0, rom);
+      q.tag = "What did you hear?"; q.sub = "";
+      if (c.t === "g") {
+        const wrong = shuffle(C.cards.filter((o) => o.t === "g" && o.day >= 0 && o.tr !== c.tr)).slice(0, 3).map((o) => o.tr);
+        q.say = q.prompt = filled(c); q.answer = c.tr; q.choices = shuffle([c.tr, ...wrong]);
+      } else if (out.length % 3 === 2) {
+        q.kind = "type"; q.tag = "Type what you hear"; q.say = c.r; q.prompt = c.f; q.want = c.r; q.want2 = c.ro; q.choices = [];
+      } else { q.say = c.r; q.prompt = "hk".includes(c.t) ? c.f : rom ? c.ro : c.f; }
+      out.push(q);
+    }
+    return shuffle(out);
+  }
+  // Lines to repeat aloud: the day's conversation, then its grammar sentences, then its words
+  function shadowLines(day, max = 4) {
+    const d = C.days[day], out = [];
+    if (d.chat) for (const t of C.chats[d.chat].turns) if (t.say) out.push({ jp: t.say, ro: t.ro, en: t.en });
+    for (const id of d.new) if (byId[id].t === "g") out.push({ jp: filled(byId[id]), ro: "", en: byId[id].tr });
+    for (const id of d.new) if (byId[id].t === "w") out.push({ jp: byId[id].f, ro: byId[id].ro, en: byId[id].en });
+    return out.slice(0, max);
+  }
   // Always starts at romaji
   function placementSection(i) {
     const type = "whkwgj"[i];
@@ -318,5 +346,5 @@
     return hits.slice(0, 6);
   }
 
-  root.YG = { normKana, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, myAdd, myImport, myExport, makeQMy, lookup, byId, PASS };
+  root.YG = { normKana, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, myAdd, myImport, myExport, makeQMy, quizListen, shadowLines, lookup, byId, PASS };
 })(globalThis);

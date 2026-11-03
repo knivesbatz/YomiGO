@@ -77,6 +77,15 @@ int main(void) {
         CHECK(hit, "dict %s doesn't find the cat", qs[k]); }
       got = dict_search("コーヒー", r, 9); CHECK(got > 0, "dict katakana"); dict_row(r[0], w, rd, g, 128); CHECK(!strcmp(rd, "コーヒー"), "katakana first hit %s", rd);
       CHECK(dict_search("zzqqxx", r, 9) == 0, "nonsense finds nothing"); CHECK(dict_search("", r, 9) == 0, "empty finds nothing"); }
+    /* Listening: something to hear on every class that teaches something, with a real answer */
+    for (i = 0; i < YG_NDAYS; i++) { int k, c; ShadowLine sl[4]; int ns = shadow_lines(i, sl, 4);
+        quiz_listen(&z, i, 34);
+        for (k = 0; k < z.n; k++) if (YG_CARDS[z.q[k].card].type == 'g') for (c = 0; c < 4; c++) CHECK((int)strlen(z.q[k].choices[c]) <= 34 && strcmp(z.q[k].choices[c], "---"), "TV listening choice %s", z.q[k].choices[c]);
+        quiz_listen(&z, i, 0);
+        CHECK(z.n > 0 || i == 0, "day %d has no listening", i);
+        for (k = 0; k < z.n; k++) { const Question *q = &z.q[k]; CHECK(*q->say, "day %d q%d says nothing", i, k); CHECK(*q->prompt, "day %d q%d no reveal", i, k);
+            if (q->kind == Q_CHOICE) { for (c = 0; c < 4; c++) CHECK(q->choices[c] && strcmp(q->choices[c], "---"), "day %d q%d blank choice", i, k); } else CHECK(*q->want, "day %d q%d no want", i, k); }
+        for (k = 0; k < ns; k++) { CHECK(*sl[k].jp && !strstr(sl[k].jp, "＿"), "day %d shadow line %d: %s", i, k, sl[k].jp); CHECK(*sl[k].en, "day %d shadow en", i); } }
     /* Your own words: same save format as the JS core, adding, duplicates, import, review, damage */
     CHECK(profile_load_text(&b, MYLINE, (int)strlen(MYLINE)), "my line loads");
     CHECK(b.nmy == 2 && !strcmp(b.my[0].word, "猫") && !strcmp(b.my[0].reading, "ねこ") && !strcmp(b.my[0].gloss, "cat") && !strcmp(b.my[0].sent, "猫がいます"), "my fields %d", b.nmy);

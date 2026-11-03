@@ -21,15 +21,15 @@ No app alone can make someone fluent. Fluency also takes thousands of hours of r
 
 ## Next up
 
-1. **0.5 Listening:** listening questions, dictation, and shadowing
-2. **0.6 OCR and game text:** cards from what's on screen
-3. **0.7 Transcription:** local audio transcription of your own files
-4. **0.8 N3**
-5. **0.9 Conversation AI**
-6. **After that:** N2, N1, Beyond N1, and handwriting
+1. **0.6 OCR and game text:** cards from what's on screen
+2. **0.7 Transcription:** local audio transcription of your own files
+3. **0.8 N3**
+4. **0.9 Conversation AI**
+5. **After that:** N2, N1, Beyond N1, and handwriting
 
 ## Done
 
+- **0.5:** listening, dictation, and shadowing
 - **0.4:** your own flashcards
 - **0.3:** N4 stage, graded reading
 - **0.2:** dictionary, stroke order, N64 pads, Study Guide

@@ -9,7 +9,7 @@ Complete means implemented and tested as described. **Partial** says what's miss
 | Stages 0-7, up to N4 | Complete | Complete | Complete | n/a |
 | Graded reading with questions | Complete | Complete | Complete | n/a |
 | N3, N2, N1, Beyond N1 | Not started | Not started | Not started | n/a |
-| Daily class with up to 9 steps | Complete | Complete | Complete | n/a |
+| Daily class with up to 10 steps | Complete | Complete | Complete | n/a |
 | Romaji, hiragana, katakana drills | Complete | Complete | Complete | n/a |
 | Stroke order | Complete | Complete | Complete | n/a |
 | Handwriting practice | Not started | Not started | Not started | n/a |
@@ -26,6 +26,7 @@ Complete means implemented and tested as described. **Partial** says what's miss
 | Media picks and links | Complete | Complete | Complete | n/a |
 | Own Material folder | Complete | Complete | Not started | n/a |
 | Genki practice setting | Complete | Complete | Complete | n/a |
+| Listening, dictation, shadowing | Partial: never heard on a real voice | Partial: as Desktop | Partial: not run on a device | n/a |
 | Text-to-speech | Partial: needs a Japanese voice; not yet heard | Partial: as Desktop | Partial: not run on a device | n/a |
 | Speech input | n/a | n/a | Partial: not run on a device | n/a |
 | Controller, prompts, rebinding | n/a | Partial: no real pad tested | n/a | n/a |

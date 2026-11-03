@@ -28,7 +28,7 @@ typedef struct { char word[40], reading[60], gloss[92], sent[120]; CardState st;
 
 /* Profile */
 #define YG_NAME 32
-enum { STEP_WARMUP, STEP_TEACH, STEP_TYPING, STEP_DRILL, STEP_CHAT, STEP_READ, STEP_QUIZ, STEP_HOMEWORK, STEP_IMMERSE, STEP_DONE };
+enum { STEP_WARMUP, STEP_TEACH, STEP_TYPING, STEP_DRILL, STEP_CHAT, STEP_READ, STEP_LISTEN, STEP_QUIZ, STEP_HOMEWORK, STEP_IMMERSE, STEP_DONE };
 typedef struct {
     char name[YG_NAME];
     int xp, streak, best_streak, last_day, done_today, placed;
@@ -36,7 +36,7 @@ typedef struct {
     int pace;               /* classes allowed per real day: 1, 2 or 3 */
     int force_en;           /* keep English labels even after immersion starts */
     int genki;              /* offer practice by Genki lesson */
-    int reviews, perfects, chats, homeworks, reads;
+    int reviews, perfects, chats, homeworks, reads, listens;
     unsigned char exam_score[YG_NEXAMS];
     unsigned int ach;
     CardState cards[YG_NCARDS];
@@ -60,7 +60,7 @@ int  profile_rank(const Profile *p);
 const char *rank_name(int rank, int ja);
 int  rank_count(void);
 
-enum { ACH_FIRST_CLASS, ACH_STREAK3, ACH_STREAK7, ACH_STREAK30, ACH_HIRAGANA, ACH_KATAKANA, ACH_FIRST_CHAT, ACH_REVIEW100, ACH_PERFECT, ACH_N5, ACH_READER, ACH_N4, ACH_MINER, ACH_COUNT };
+enum { ACH_FIRST_CLASS, ACH_STREAK3, ACH_STREAK7, ACH_STREAK30, ACH_HIRAGANA, ACH_KATAKANA, ACH_FIRST_CHAT, ACH_REVIEW100, ACH_PERFECT, ACH_N5, ACH_READER, ACH_N4, ACH_MINER, ACH_EARS, ACH_COUNT };
 typedef struct { const char *en, *ja, *desc; } YgAch;
 extern const YgAch YG_ACH[ACH_COUNT];
 void ach_check(Profile *p);
@@ -79,6 +79,7 @@ typedef struct {
     const char *choices[4];
     short answer;           /* index for Q_CHOICE */
     const char *want, *want2;   /* accepted text for Q_TYPE */
+    const char *say;            /* when set, this is heard first and the prompt stays hidden until answered */
 } Question;
 typedef struct { Question q[YG_MAXQ]; int n; } Quiz;
 
@@ -93,6 +94,9 @@ void quiz_warmup(Quiz *z, const Profile *p);
 void quiz_day(Quiz *z, const Profile *p, int day);
 void quiz_exam(Quiz *z, int exam);
 void quiz_review(Quiz *z, const Profile *p, int today, int max);
+void quiz_listen(Quiz *z, int day, int max_chars);  /* max_chars: longest sentence translation that fits, or 0 */
+typedef struct { const char *jp, *ro, *en; } ShadowLine;
+int  shadow_lines(int day, ShadowLine *out, int max);
 void quiz_genki(Quiz *z, int index);
 int  placement_section(Quiz *z, int section);   /* builds 5 questions; 0 when no sections are left */
 int  day_romaji_mode(int day);

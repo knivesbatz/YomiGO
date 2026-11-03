@@ -101,6 +101,14 @@ test("your own words: same save format as C, adding, import, review, damage", ()
   for (const q of qs) { assert.ok(q.my); if (q.kind === "choice") { assert.equal(new Set(q.choices).size, 4); assert.ok(q.choices.includes(q.answer)); } else assert.ok(q.want); }
   assert.equal(Y.loadText("YOMIGO-SAVE 1\nname=x\nmy 1 2 3\nmy\nmy 1 2 3 4 5\t\t\t\t\n").my.length, 0);
 });
+test("listening has something real to hear on every class", () => {
+  C.days.forEach((d, i) => {
+    const qs = Y.quizListen(i);
+    assert.ok(qs.length > 0 || i === 0, "day " + i);
+    for (const q of qs) { assert.ok(q.say && q.prompt, "day " + i); if (q.kind === "choice") { assert.equal(new Set(q.choices).size, 4, "day " + i + " " + q.say); assert.ok(q.choices.includes(q.answer)); } else assert.ok(q.want); }
+    for (const l of Y.shadowLines(i)) { assert.ok(l.jp && l.en); assert.ok(!l.jp.includes("＿")); }
+  });
+});
 test("lookup finds words and undoes polite endings", () => {
   assert.equal(Y.lookup("猫がいます")[0].card.id, "v.neko");
   assert.ok(Y.lookup("食べました").some((h) => h.card.id === "v.tabemasu"));

@@ -33,7 +33,7 @@ Need more help? The [install guide](docs/INSTALL.md) has every step.
 
 ## What a day looks like
 
-Each class takes a few minutes and has up to nine steps:
+Each class takes a few minutes and has up to ten steps:
 
 1. **Warm-up:** go over what you learned before.
 2. **Lesson:** meet new sounds, words, or grammar.
@@ -41,9 +41,10 @@ Each class takes a few minutes and has up to nine steps:
 4. **Drill:** practise until it sticks. Anything you miss comes back. Stuck? Press **I don't know**.
 5. **Conversation:** talk to a character using what you just learned.
 6. **Reading:** read a short story, then answer questions on it.
-7. **Quiz:** score 80% to pass.
-8. **Homework:** do a small task, then answer a quick check.
-9. **Immersion:** use Japanese in everyday life, with a simple task.
+7. **Listening:** hear words and sentences, type what you hear, then repeat lines out loud. This needs a Japanese voice on your device.
+8. **Quiz:** score 80% to pass.
+9. **Homework:** do a small task, then answer a quick check.
+10. **Immersion:** use Japanese in everyday life, with a simple task.
 
 Finish every stage's boss exam to move on. Along the way you earn XP, ranks, streaks, and achievements. Choose 1, 2, or 3 classes a day.
 
@@ -73,7 +74,7 @@ YomiGo is in its early days. The course currently runs from zero to **N4**, the 
 | Scripted conversations | AI conversation partners |
 | A dictionary of about 22,000 common words | Larger dictionaries |
 | Your own flashcards, from the dictionary or the browser | Picture-to-text (OCR) for manga and games |
-| Speech input on Android | Listening drills and transcription |
+| Listening, dictation, and shadowing | Transcription of your own audio |
 | Updates that ask first | Automatic sync between devices |
 
 Some things haven't been tried on real hardware yet, including controllers, CRT TVs, Windows 95, and Android phones. See [what's been tested](docs/COMPATIBILITY.md) and [known issues](docs/KNOWN_ISSUES.md), or the full [roadmap](docs/ROADMAP.md).

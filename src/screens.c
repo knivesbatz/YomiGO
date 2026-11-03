@@ -54,8 +54,8 @@
 #define FBY_BTN (FBH - FOOT - 38)
 #endif
 
-typedef enum { S_SPLASH, S_PROFILES, S_NAME, S_PLACE_INTRO, S_PLACE_RESULT, S_HOME, S_CLASS, S_TEACH, S_QUIZ, S_RESULT, S_CHAT, S_TASK, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS, S_BIND, S_FIRST, S_GENKI, S_TYPING, S_READ, S_MYWORDS, S_MYADD } Screen;
-typedef enum { QM_WARMUP, QM_DRILL, QM_DAILY, QM_HW, QM_REVIEW, QM_EXAM, QM_PLACE, QM_PRACTICE } QuizMode;
+typedef enum { S_SPLASH, S_PROFILES, S_NAME, S_PLACE_INTRO, S_PLACE_RESULT, S_HOME, S_CLASS, S_TEACH, S_QUIZ, S_RESULT, S_CHAT, S_TASK, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS, S_BIND, S_FIRST, S_GENKI, S_TYPING, S_READ, S_MYWORDS, S_MYADD, S_SHADOW } Screen;
+typedef enum { QM_WARMUP, QM_DRILL, QM_DAILY, QM_HW, QM_REVIEW, QM_EXAM, QM_PLACE, QM_PRACTICE, QM_LISTEN } QuizMode;
 
 static Screen scr = S_SPLASH;
 static Profile P;
@@ -84,6 +84,8 @@ static const char *flash_msg = "";
 static void flash(const char *m) { flash_msg = m; flash_t = 40; plat_sound(0); }
 static void flash_add(int r) { flash(r > 0 ? "Added!" : r == 0 ? "Already added" : "Deck is full"); }
 static int my_sel, my_confirm, add_step;
+static int q_said = -1, sh_i, sh_n, sh_said;
+static ShadowLine sh_lines[4];
 static char add_word[128], add_reading[128];
 static const char *copy_src;
 static int field_on, field_x, field_y;
@@ -118,15 +120,16 @@ static void go(Screen s) { scr = s; ui_reset_focus(); page = 0; anim = 0; }
 /* ---- widgets ---- */
 static int button(int x, int y, int w, int h, const char *label) {
     int hit = ui_hit(x, y, w, h), f = ui_focused(), tw = text_w(label);
+    if (tw > w - 4) { tw = w - 4; }
     if (HTPC) {
         fill(x, y, w, h, f ? C_ACC : C_PANEL);
         frame(x, y, w, h, f ? 0xFFFFFF & 0xFFF0C0 : C_HI);
-        text(x + (w - tw) / 2, y + (h - 16) / 2, label, f ? 0x1B1033 : C_INK);
+        wrap(x + (w - tw) / 2, y + (h - 16) / 2, tw, label, f ? 0x1B1033 : C_INK, 16, 0, 1);
     } else {
         int press = f && IN.mdown == 1;
         bevel(x, y, w, h, press ? C_LO : C_HI, f ? 0xF8D4DC : 0xEFD9D0, press ? C_HI : C_LO);
         frame(x - 1, y - 1, w + 2, h + 2, C_PLUM);
-        text(x + (w - tw) / 2 + press, y + (h - 16) / 2 + press, label, C_INK);
+        wrap(x + (w - tw) / 2 + press, y + (h - 16) / 2 + press, tw, label, C_INK, 16, 0, 1);
         if (f) { int i; for (i = 3; i < w - 3; i += 2) { fill(x + i, y + 3, 1, 1, C_PLUM); fill(x + i, y + h - 4, 1, 1, C_PLUM); } }
     }
     if (hit) plat_sound(1);
@@ -296,11 +299,11 @@ static void scr_result(void) {
 }
 
 /* ---- class flow ---- */
-static const char *const STEP_EN[] = {"Warm-up review", "New lesson", "Typing practice", "Practice drill", "Conversation", "Reading", "Daily quiz", "Homework", "Immersion"};
-static const char *const STEP_JA[] = {"ふくしゅう", "じゅぎょう", "タイピング", "れんしゅう", "かいわ", "どっかい", "テスト", "しゅくだい", "イマージョン"};
+static const char *const STEP_EN[] = {"Warm-up review", "New lesson", "Typing practice", "Practice drill", "Conversation", "Reading", "Listening", "Daily quiz", "Homework", "Immersion"};
+static const char *const STEP_JA[] = {"ふくしゅう", "じゅぎょう", "タイピング", "れんしゅう", "かいわ", "どっかい", "ききとり", "テスト", "しゅくだい", "イマージョン"};
 
 static void start_quiz(QuizMode m) {
-    qm = m; qi = 0; qright = 0; qanswered = 0; qchoice = 0; q_idk = 0; input[0] = 0;
+    qm = m; qi = 0; qright = 0; qanswered = 0; qchoice = 0; q_idk = 0; input[0] = 0; q_said = -1;
     go(S_QUIZ);
 }
 static void next_step(void);
@@ -334,6 +337,12 @@ static void run_step(void) {
     case STEP_READ:
         if (d->read < 0) { P.step++; run_step(); return; }
         rd_id = d->read; rd_q = -1; rd_right = 0; rd_show_en = 0; rd_skip = 0; rd_pick = -1; go(S_READ); break;
+    case STEP_LISTEN:
+        /* Hearing needs a voice. Without one the class carries on, and Settings shows how to add it. */
+        if (!plat_has_tts()) { P.step++; run_step(); return; }
+        quiz_listen(&Z, P.day, HTPC ? 34 : 0); /* the TV's text is large, so it keeps to sentences that fit */
+        if (!Z.n) { P.step++; run_step(); return; }
+        start_quiz(QM_LISTEN); break;
     case STEP_QUIZ: quiz_day(&Z, &P, P.day); start_quiz(QM_DAILY); break;
     case STEP_HOMEWORK: task_kind = 0; go(S_TASK); break;
     case STEP_IMMERSE: task_kind = 1; go(S_TASK); break;
@@ -462,6 +471,8 @@ static void scr_class(void) {
         if (i == STEP_CHAT && d->chat < 0) { continue; }
         if (i == STEP_TYPING && !day_word_cards(d, 0)) { continue; }
         if (i == STEP_READ && d->read < 0) { continue; }
+        if (i == STEP_LISTEN && !plat_has_tts()) { continue; }
+        if (HTPC && i < P.step - 2) { continue; } /* so the list always fits the TV */
         text(CX + 4, y, mark, col);
         text(CX + 24, y, L(STEP_EN[i], STEP_JA[i], 3), col);
         y += HTPC ? 14 : 24;
@@ -589,6 +600,11 @@ static void quiz_finished(void) {
         ys_fmt(b, sizeof b, pass ? "You scored %d%%. The way forward is open." : "You scored %d%%. You need 80%%. Review your cards and challenge it again.", pct, 0);
         show_result(YG_EXAMS[exam_id].name, b, pass, S_HOME);
         break; }
+    case QM_LISTEN:
+        P.xp += qright; P.listens++; ach_check(&P);
+        sh_n = shadow_lines(P.day, sh_lines, 4); sh_i = 0; sh_said = -1;
+        if (sh_n) go(S_SHADOW); else next_step();
+        break;
     case QM_PRACTICE:
         /* Extra practice is free to repeat, so it earns no XP */
         ys_fmt(b, sizeof b, "%d of %d correct.", qright, Z.n);
@@ -692,8 +708,11 @@ static void osk(int y) {
 static void scr_quiz(void) {
     Question *q = &Z.q[qi];
     char b[64];
-    copy_src = q->prompt;
-    static const char *const hdr[] = {"Warm-up", "Practice", "Daily quiz", "Homework check", "Flashcards", "Exam", "Entrance exam", "Genki practice"};
+    int hearing = *q->say != 0, hidden = hearing && !qanswered;
+    static const char *const hdr[] = {"Warm-up", "Practice", "Daily quiz", "Homework check", "Flashcards", "Exam", "Entrance exam", "Genki practice", "Listening"};
+    if (!hidden) copy_src = q->prompt;
+    if (hearing && q_said != qi) { plat_speak(q->say); q_said = qi; }
+    if (hearing && (IN.pressed & A_Y)) plat_speak(q->say);
     chrome(hdr[qm], 0);
     ys_fmt(b, sizeof b, "%d / %d", qi + 1, Z.n);
     text(CX + CW - text_w(b), CY, b, C_DIM);
@@ -708,17 +727,21 @@ static void scr_quiz(void) {
     /* The TV skips the gap above the question, so its on-screen keyboard fits underneath */
     { int y = CY + (HTPC ? 28 : 32);
       text(CX, y, q->tag, C_DIM); y += HTPC ? 15 : LH;
-      if (2 * text_w(q->prompt) > CW) y += LH * wrap(CX, y, CW, q->prompt, C_INK, LH, 0, 2);
-      else { text2(CX + (CW - 2 * text_w(q->prompt)) / 2, y, q->prompt, C_INK); y += HTPC ? 32 : 34; }
+      { const char *shown = hidden ? "Listen..." : q->prompt; int tight = 0, c_;
+        if (HTPC && q->kind == Q_CHOICE) for (c_ = 0; c_ < 4; c_++) if (text_w(q->choices[c_]) > (CW - 8) / 2 - 8) tight = 1;
+        if (tight || 2 * text_w(shown) > CW) y += LH * wrap(CX, y, CW, shown, hidden ? C_ACC : C_INK, LH, 0, tight ? 1 : 2);
+        else { text2(CX + (CW - 2 * text_w(shown)) / 2, y, shown, hidden ? C_ACC : C_INK); y += HTPC ? 32 : 34; } }
       if (*q->sub) { wrap(CX, y, CW, q->sub, C_DIM, LH, 0, 1); y += LH; }
       if (q->kind == Q_CHOICE) {
-        int bw = (CW - 8) / 2, bh = HTPC ? 26 : 34, i;
+        int bw = (CW - 8) / 2, bh = HTPC ? 26 : 34, i, one = 0;
+        for (i = 0; i < 4; i++) if (text_w(q->choices[i]) > bw - 8) one = 1;
+        if (one) { bw = CW; if (HTPC) bh = 18; }
         for (i = 0; i < 4; i++) {
-            int x = CX + (i % 2) * (bw + 8), yy = y + 4 + (i / 2) * (bh + 6);
+            int x = one ? CX : CX + (i % 2) * (bw + 8), yy = one ? y + 2 + i * (bh + (HTPC ? 1 : 4)) : y + 4 + (i / 2) * (bh + 6);
             if (qanswered) {
                 unsigned f = i == q->answer ? C_GOOD : (i == qchoice ? C_BAD : (HTPC ? C_PANEL : 0xEFD9D0));
                 fill(x, yy, bw, bh, f); frame(x, yy, bw, bh, C_LO);
-                wrap(x + 4, yy + (bh - 16) / 2, bw - 8, q->choices[i], (i == q->answer || i == qchoice) ? 0xFFFFFF : C_INK, LH, 0, 1);
+                wrap(x + 4, yy + (bh - 16) / 2, bw - 8, q->choices[i], (i == q->answer || i == qchoice) ? (HTPC ? 0x1B1033 : 0xFFFFFF) : C_INK, LH, 0, 1);
             } else if (button(x, yy, bw, bh, q->choices[i]) || IN.num == i + 1) {
                 qchoice = i; answer_given(i == q->answer); IN.pressed &= ~A_OK;
             }
@@ -759,11 +782,14 @@ static void scr_quiz(void) {
         if (button(CX, FBY_BTN, 130, 28, L("I don't know", "わかりません", 3))) { qchoice = -1; q_idk = 1; answer_given(0); IN.pressed &= ~A_OK; }
 #endif
       }
+#if !HTPC
+      if (hearing && button(CX + 136, FBY_BTN, 110, 28, L("Hear again", "もう一度", 5))) plat_speak(q->say);
+#endif
     }
 #if HTPC
-    if (qanswered) footer("OK", 0);
-    else if (q->kind == Q_TYPE) { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "OK"); prompt_btn(&x, FBH - SAFE - 17, 2, "Don't know"); }
-    else { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "OK"); prompt_btn(&x, FBH - SAFE - 17, 2, "Don't know"); }
+    if (qanswered) { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "OK"); if (hearing) prompt_btn(&x, FBH - SAFE - 17, 3, "Again"); }
+    else if (q->kind == Q_TYPE) { int x = SAFE + 2; if (!hearing) prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "OK"); prompt_btn(&x, FBH - SAFE - 17, 2, hearing ? "?" : "Don't know"); if (hearing) prompt_btn(&x, FBH - SAFE - 17, 3, "Again"); }
+    else { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "OK"); prompt_btn(&x, FBH - SAFE - 17, 2, "Don't know"); if (hearing) prompt_btn(&x, FBH - SAFE - 17, 3, "Again"); }
 #endif
     /* Leaving a lesson quiz is fine: the class resumes at this step */
     if (qm != QM_EXAM && qm != QM_PLACE && ((!HTPC && (IN.pressed & A_BACK)) || (HTPC && (IN.pressed & A_START) && q->kind != Q_TYPE))) go(S_HOME);
@@ -880,6 +906,30 @@ static void scr_typing(void) {
     }
 }
 
+/* ---- shadowing: hear a line, then say it aloud ---- */
+static void scr_shadow(void) {
+    const ShadowLine *l = &sh_lines[sh_i];
+    int y = CY, stage = profile_stage(&P);
+    char b[40];
+    copy_src = l->jp;
+    if (sh_said != sh_i) { plat_speak(l->jp); sh_said = sh_i; }
+    chrome(L("Shadowing", "シャドーイング", 3), 0);
+    ys_fmt(b, sizeof b, "Line %d of %d", sh_i + 1, sh_n);
+    text(CX, y, b, C_DIM); y += LH;
+    y += LH * wrap(CX, y, CW, HTPC ? "Listen, then say it out loud." : "Listen, then say it out loud, copying the rhythm and tone. Do it as many times as you like.", C_DIM, LH, 0, 2) + 4;
+    panel(CX, y, CW, HTPC ? 62 : 100);
+    y += 4;
+    y += LH * wrap(CX + 8, y, CW - 16, l->jp, C_ACC, LH, 0, 2);
+    if (*l->ro && stage < 4) y += LH * wrap(CX + 8, y, CW - 16, l->ro, C_DIM, LH, 0, 1);
+    wrap(CX + 8, y, CW - 16, l->en, C_INK, LH, 0, 1);
+    /* there's no way to check this here, so it earns no points: it's between you and your mouth */
+    if (button(CX + CW - 120, FBY_BTN, 120, 28, "I said it")) { if (++sh_i >= sh_n) { next_step(); return; } ui_reset_focus(); return; }
+    if (button(CX, FBY_BTN, 110, 28, L("Hear again", "もう一度", 5)) || (IN.pressed & A_Y)) plat_speak(l->jp);
+#if HTPC
+    { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "OK"); prompt_btn(&x, FBH - SAFE - 17, 3, "Again"); }
+#endif
+}
+
 /* ---- reading: a short passage, then questions about it ---- */
 static void rd_shuffle(void) {
     int i;
@@ -922,7 +972,7 @@ static void scr_read(void) {
             if (rd_pick >= 0) {
                 unsigned f = idx == 0 ? C_GOOD : (idx == rd_pick ? C_BAD : (HTPC ? C_PANEL : 0xEFD9D0));
                 fill(CX, yy, CW, bh, f); frame(CX, yy, CW, bh, C_LO);
-                wrap(CX + 4, yy + (bh - 16) / 2, CW - 8, q[1 + idx], (idx == 0 || idx == rd_pick) ? 0xFFFFFF : C_INK, LH, 0, 1);
+                wrap(CX + 4, yy + (bh - 16) / 2, CW - 8, q[1 + idx], (idx == 0 || idx == rd_pick) ? (HTPC ? 0x1B1033 : 0xFFFFFF) : C_INK, LH, 0, 1);
             } else if (button(CX, yy, CW, bh, q[1 + idx]) || IN.num == i + 1) {
                 rd_pick = idx; if (idx == 0) { rd_right++; plat_sound(2); } else plat_sound(4);
                 IN.pressed &= ~A_OK;
@@ -1225,6 +1275,10 @@ static void scr_library(void) {
 
 /* ---- settings ---- */
 static int bind_action;
+static void voice_help(void) {
+    if (plat_has_tts()) show_result("Japanese voice found", "Listening lessons and Hear it buttons are on.", 1, S_SETTINGS);
+    else show_result("No Japanese voice", "Listening needs one. In Windows Settings go to Time & language, then Speech, and add Japanese voices. Then restart YomiGo. Classes still work without it, and skip listening.", 0, S_SETTINGS);
+}
 static void scr_settings(void) {
     int y = CY, bh = HTPC ? 22 : 30, step = bh + (HTPC ? 2 : 6), w = HTPC ? CW : 300;
     char b[64];
@@ -1249,7 +1303,8 @@ static void scr_settings(void) {
     { static const char *const modes[] = {"Buttons: Auto", "Buttons: N64", "Buttons: Xbox", "Buttons: PlayStation"};
       if (button(CX, y, w, bh, modes[pad_mode()])) pad_set_mode((pad_mode() + 1) % 4); }
     y += step;
-    if (button(CX, y, w, bh, crt_mode() ? "Display: CRT / RF TV" : "Display: Flat TV")) crt_set(!crt_mode());
+    if (button(CX, y, w / 2 - 2, bh, crt_mode() ? "TV: CRT / RF" : "TV: Flat")) crt_set(!crt_mode());
+    if (button(CX + w / 2 + 2, y, w / 2 - 2, bh, plat_has_tts() ? "Voice: OK" : "Voice: None")) { voice_help(); return; }
     y += step;
     if (button(CX, y, w / 2 - 2, bh, "Rebind pad")) { bind_action = 0; pad_begin_bind(0); go(S_BIND); return; }
     ys_fmt(b, sizeof b, "Deadzone %d%%", pad_deadzone(), 0);
@@ -1257,6 +1312,8 @@ static void scr_settings(void) {
     if (IN.pressed & A_BACK) go(S_HOME);
     footer("Change", "Menu");
 #else
+    if (button(CX, y, w, bh, plat_has_tts() ? "Japanese voice: found" : "Japanese voice: none. How to add it")) { voice_help(); return; }
+    y += step;
     ys_cpy(b, "YomiGo Desktop ", sizeof b); ys_cat(b, YG_VERSION, sizeof b); text(CX, y + 8, b, C_DIM);
     text(CX, y + 26, "(C) SENKOSOFT", C_DIM);
 #endif
@@ -1475,6 +1532,7 @@ void app_frame(void) {
     case S_READ: scr_read(); break;
     case S_MYWORDS: scr_mywords(); break;
     case S_MYADD: scr_myadd(); break;
+    case S_SHADOW: scr_shadow(); break;
     case S_GENKI: scr_genki(); break;
     }
 #if !HTPC

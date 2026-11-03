@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
     private static final String ACTION_INSTALL = "com.senkosoft.yomigo.INSTALL_STATUS";
     private WebView web;
     private TextToSpeech tts;
+    private volatile boolean ttsJapanese;
     private SpeechRecognizer recognizer;
     private final Handler main = new Handler(Looper.getMainLooper());
 
@@ -65,7 +66,7 @@ public class MainActivity extends Activity {
         web.addJavascriptInterface(new Bridge(), "YomiBridge");
         web.loadUrl("file:///android_asset/www/index.html");
         setContentView(web);
-        tts = new TextToSpeech(this, st -> { if (st == TextToSpeech.SUCCESS) tts.setLanguage(Locale.JAPANESE); });
+        tts = new TextToSpeech(this, st -> { if (st == TextToSpeech.SUCCESS) ttsJapanese = tts.setLanguage(Locale.JAPANESE) >= TextToSpeech.LANG_AVAILABLE; });
     }
 
     @Override protected void onDestroy() {
@@ -122,6 +123,13 @@ public class MainActivity extends Activity {
     class Bridge {
         @JavascriptInterface public String version() { return BuildConfig.VERSION_NAME; }
         @JavascriptInterface public void speak(String t) { if (tts != null) tts.speak(t, TextToSpeech.QUEUE_FLUSH, null, "yg"); }
+        @JavascriptInterface public boolean hasVoice() { return ttsJapanese; }
+        @JavascriptInterface public void installVoice() {
+            main.post(() -> {
+                try { startActivity(new Intent(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA)); }
+                catch (Exception e) { toast("Add a Japanese voice in your phone's text-to-speech settings."); }
+            });
+        }
         @JavascriptInterface public void listen() { main.post(MainActivity.this::listenNow); }
         @JavascriptInterface public void openUrl(String u) {
             // Web links only; a page can't use this to launch other kinds of intent

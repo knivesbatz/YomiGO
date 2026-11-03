@@ -236,39 +236,51 @@ void plat_sound(int k) {
 }
 
 /* ---- speech: uses SAPI when a Japanese voice is installed, looked up at run time ---- */
-typedef struct ISpVoiceVtbl_ { void *q, *a; ULONG (STDMETHODCALLTYPE *Release)(void *); void *pad[17]; HRESULT (STDMETHODCALLTYPE *Speak)(void *, const WCHAR *, DWORD, ULONG *); } ISpVoiceVtbl_;
+typedef struct ISpVoiceVtbl_ { void *q, *a; ULONG (STDMETHODCALLTYPE *Release)(void *); void *pad[17]; HRESULT (STDMETHODCALLTYPE *Speak)(void *, const WCHAR *, DWORD, ULONG *); void *pad2[9]; HRESULT (STDMETHODCALLTYPE *SetVolume)(void *, USHORT); } ISpVoiceVtbl_;
 typedef struct { const ISpVoiceVtbl_ *v; } ISpVoice_;
 static ISpVoice_ *voice;
 static int tts_state; /* 0 unknown, 1 yes, 2 no */
+/* Any installed voice marked Japanese counts. Voice names vary between Windows versions. */
+static int has_ja_voice(void) {
+    HKEY k; DWORD i, n; char name[256]; int found = 0;
+    if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Speech\\Voices\\Tokens", 0, KEY_READ, &k) != 0) return 0;
+    for (i = 0; !found; i++) {
+        n = sizeof name;
+        if (RegEnumKeyExA(k, i, name, &n, 0, 0, 0, 0) != 0) break;
+        if (ys_contains_ci(name, "ja-jp") || ys_contains_ci(name, "jajp") || ys_contains_ci(name, "haruka") || ys_contains_ci(name, "ichiro") || ys_contains_ci(name, "sayaka") || ys_contains_ci(name, "ayumi")) found = 1;
+    }
+    RegCloseKey(k);
+    return found;
+}
+static int voice_create(void);
 int plat_has_tts(void) {
+    if (tts_state) return tts_state == 1;
+    tts_state = 2;
+    if (headless || !is_nt || !has_ja_voice()) return 0;
+    if (voice_create()) tts_state = 1;
+    return tts_state == 1;
+}
+static int voice_create(void) {
     typedef HRESULT (WINAPI *CCI)(REFCLSID, void *, DWORD, REFIID, void **);
     typedef HRESULT (WINAPI *CI)(void *);
     static const GUID CLSID_SpVoice_ = {0x96749377, 0x3391, 0x11D2, {0x9E, 0xE3, 0x00, 0xC0, 0x4F, 0x79, 0x73, 0x96}};
     static const GUID IID_ISpVoice_ = {0x6C44DF74, 0x72B9, 0x4992, {0xA1, 0xEC, 0xEF, 0x99, 0x6E, 0x04, 0x22, 0xD4}};
-    HMODULE ole; CCI cci; CI ci; HKEY key;
-    if (tts_state) return tts_state == 1;
-    tts_state = 2;
-    if (headless || !is_nt) return 0;
-    /* Only offer it if Windows has a Japanese voice. Otherwise it would read Japanese as silence. */
-    if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Speech_OneCore\\Voices\\Tokens\\MSTTS_V110_jaJP_HarukaM", 0, KEY_READ, &key) == 0) RegCloseKey(key);
-    else if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Speech\\Voices\\Tokens\\TTS_MS_JA-JP_HARUKA_11.0", 0, KEY_READ, &key) == 0) RegCloseKey(key);
-    else return 0;
+    HMODULE ole; CCI cci; CI ci;
     ole = LoadLibraryA("ole32.dll");
     if (!ole) return 0;
     ci = (CI)GetProcAddress(ole, "CoInitialize"); cci = (CCI)GetProcAddress(ole, "CoCreateInstance");
     if (!ci || !cci) return 0;
     ci(0);
-    if (cci(&CLSID_SpVoice_, 0, 23 /* CLSCTX_ALL */, &IID_ISpVoice_, (void **)&voice) == 0 && voice) tts_state = 1;
-    return tts_state == 1;
+    return cci(&CLSID_SpVoice_, 0, 23 /* CLSCTX_ALL */, &IID_ISpVoice_, (void **)&voice) == 0 && voice;
 }
 void plat_speak(const char *u) {
     static WCHAR w[512], x[600]; static const char pre[] = "<voice required=\"language=411\">"; int i, n = 0;
-    if (!plat_has_tts()) return;
+    if (!plat_has_tts() || !voice) return;
     for (i = 0; pre[i]; i++) x[n++] = (WCHAR)pre[i];
     to_wide(u, w, 512);
     for (i = 0; w[i] && n < 590; i++) x[n++] = w[i];
     x[n] = 0;
-    voice->v->Speak(voice, x, 1 | 8, 0); /* SPF_ASYNC | SPF_IS_XML */
+    voice->v->Speak(voice, x, 1 | 2 | 8, 0); /* SPF_ASYNC | SPF_PURGEBEFORESPEAK | SPF_IS_XML */
 }
 
 /* ---- updates live in a separate helper, so this program stays free of modern dependencies ---- */
@@ -701,8 +713,17 @@ void yg_entry(void) {
     bmi.bmiHeader.biSize = sizeof bmi.bmiHeader; bmi.bmiHeader.biWidth = FBW; bmi.bmiHeader.biHeight = -FBH;
     bmi.bmiHeader.biPlanes = 1; bmi.bmiHeader.biBitCount = 32; bmi.bmiHeader.biCompression = BI_RGB;
     pad_load();
+    /* Checks the real speech call in silence, using whatever voice is installed. Exit 0 means it worked. */
+    if (arg_value(cl, "--speak-test", script, sizeof script)) {
+        static WCHAR w[] = {'t', 'e', 's', 't', 0};
+        HRESULT hr = E_FAIL;
+        if (voice_create()) { voice->v->SetVolume(voice, 0); hr = voice->v->Speak(voice, w, 0, 0); voice->v->Release(voice); }
+        ExitProcess(hr == 0 ? 0 : 1);
+    }
     if (arg_value(cl, "--script", script, sizeof script)) {
         headless = 1;
+        /* lets the tests walk through the listening screens on a PC with no Japanese voice */
+        { char fv[8]; if (arg_value(cl, "--fake-voice", fv, sizeof fv)) tts_state = 1; }
         yg_seed(12345);
         app_init();
         run_script(script);
