@@ -7,7 +7,6 @@
 - **CRT and RF:** not viewed on a real tube.
 - **Windows Japanese keyboard:** the code is new. It's been tested with simulated keyboard messages only, because the build PC has no Japanese keyboard installed.
 - **Windows speech:** this PC has no Japanese voice, so speech has never been heard.
-- **Long classes:** words added since 0.11 went into existing classes, so some now teach 40 to 66 new cards in one sitting. Splitting them into more classes is planned.
 - **Sync:** tested between YomiGo on this PC and the phone app in a browser on the same PC. It hasn't run between a real phone and a PC over Wi-Fi yet.
 - **Leaving during an exam:** on the phone this relies on Android telling the app it's hidden, which hasn't been tried on a phone yet.
 - **Chimes:** made by YomiGo itself and checked for level, but never heard through the program's own speakers on this PC, or on Windows 95 or 98 sound cards.

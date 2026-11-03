@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.20.0
+
+- No class teaches more than 25 new cards now. Classes that had grown to 40 to 66 are split into parts, such as At a restaurant, part 2, each with its own review, practice, typing, quiz, and homework. The course grows from 85 to 124 classes, and the same cards are taught in the same order
+- Your place is kept: a save from before this update moves to the matching class, and any class you'd finished stays finished. Saves now name their class by where it sits in the course and which part, so future splits keep your place too
+- Exams come after the last part of their class
+
 ## 0.19.0
 
 - 117 new kanji, from 159 to 276 kanji cards: every N5 and N4 kanji now has a card. Each has its readings, its meaning, an original memory hook, and stroke order drawn one stroke at a time

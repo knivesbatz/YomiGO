@@ -141,3 +141,10 @@ test("readings shown in romaji spell as the kana cards do, and as said", () => {
   for (const [k, r] of [["きって", "kitte"], ["まっちゃ", "matcha"], ["ほん", "hon"], ["きんようび", "kin'youbi"], ["コーヒー", "koohii"],
                         ["こんにちは", "konnichiwa"], ["はは", "haha"], ["ちゃわん", "chawan"], ["ファイル", "fairu"]]) assert.equal(Y.kanaRomaji(k), r, k);
 });
+
+test("a save from before 0.20 keeps its class, and a class and part survive a save", () => {
+  const old = Y.loadText("YOMIGO-SAVE 1\nname=Hana\nday=50\n");
+  assert.equal(C.days[old.day].src, 50); assert.equal(C.days[old.day].part, 1);
+  old.day++; assert.equal(Y.loadText(Y.saveText(old)).day, old.day);
+  assert.equal(Y.loadText("YOMIGO-SAVE 1\nname=Hana\nday=85\n").day, C.days.length);
+});

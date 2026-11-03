@@ -127,7 +127,7 @@ root = tempfile.mkdtemp()
 open(os.path.join(root, "Hana.sav"), "w", encoding="utf-8", newline="\n").write(make_brand.save_text(50, 0) + "gender=3\n")
 subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--script", "w2;ow2;ow2;w2;"], timeout=60)
 have = {l.split(" ")[1] for l in open(os.path.join(root, "Hana.sav"), encoding="utf-8").read().splitlines() if l.startswith("card ")}
-want = {i for d in C["days"][:50] for i in d["new"]}
+want = {i for d in C["days"] if d["src"] < 50 for i in d["new"]}  # the save is from before 0.20, so day 50 is class 50 in course.txt
 ok = want <= have
 print("an older save catches up on cards added to its earlier classes:", "OK" if ok else "FAILED", len(want - have), "missing")
 fail += not ok
@@ -176,8 +176,8 @@ wrong = post("YOMIGO-SYNC 1 9999\n" + make_brand.save_text(40, 0))
 right = post("YOMIGO-SYNC 1 1234\n" + make_brand.save_text(40, 0))
 app.wait(timeout=60)
 kept = open(os.path.join(root, "Hana.sav"), encoding="utf-8").read()
-ok = wrong[0] == 403 and right[0] == 200 and "\nday=40\n" in right[1] and "\nday=40\n" in kept
-print("sync with a phone over the home network", "OK" if ok else "FAILED", wrong[0], right[0], "day=40" in right[1], "day=40" in kept)
+ok = wrong[0] == 403 and right[0] == 200 and "\nclass=4001\n" in right[1] and "\nclass=4001\n" in kept  # class 40, part 1
+print("sync with a phone over the home network", "OK" if ok else "FAILED", wrong[0], right[0], "class=4001" in right[1], "class=4001" in kept)
 fail += not ok
 shutil.rmtree(root, ignore_errors=True)
 # Copy and paste, using a stand-in clipboard so the real one is left alone: "Ab" pasted after itself makes "AbAb"

@@ -226,6 +226,30 @@ def load_chats():
                 pending = None
     return chats
 
+# A class teaches at most this many new cards. More, and the rest go to Part 2, Part 3, and so on, cut between groups,
+# each with its own practice and quiz. Saves name a class by where it sits in course.txt and which part, so they keep their place.
+CLASS_MAX = 25
+def split_days(days, exams, stages):
+    out, first = [], []
+    for i, d in enumerate(days):
+        first.append(len(out))
+        parts = [[]]
+        for ch in d.pop("chunks"):
+            if parts[-1] and len(parts[-1]) + len(ch) > CLASS_MAX: parts.append([])
+            parts[-1] += ch
+        d["new"], d["src"], d["part"] = parts[0], i, 1
+        out.append(d)
+        for k, more in enumerate(parts[1:], 2):
+            out.append({"stage": d["stage"], "title": f"{d['title']}, part {k}", "ja": f"{d['ja']} その{k}", "src": i, "part": k,
+                        "notes": [f"Part {k} of {d['title']}: more words and kanji on the same topic, with their own practice and quiz."],
+                        "new": more, "chat": "", "read": "", "mat": "", "exam": -1,
+                        "hw": "Say three of today's new words in sentences of your own, out loud.",
+                        "imm": "Listen and look for today's new words in something Japanese you enjoy."})
+        if len(parts) > 1 and d["exam"] >= 0: out[-1]["exam"], d["exam"] = d["exam"], -1  # the exam comes after the last part
+    for e in exams: e["day"] = next(j for j, d in enumerate(out) if d["exam"] == exams.index(e))
+    for s in stages: s["first"] = first[s["first"]]
+    return out, exams, stages
+
 def load_course(cards, groups, chats, reading):
     byid = {c["id"]: c for c in cards}
     stages, days, exams = [], [], []
@@ -239,7 +263,7 @@ def load_course(cards, groups, chats, reading):
                 stages.append({"name": name, "ja": ja, "desc": desc, "first": len(days)})
             elif line.startswith("@day "):
                 t, ja = [x.strip() for x in line[5:].split("|")]
-                day = {"stage": len(stages)-1, "title": t, "ja": ja, "notes": [], "new": [], "chat": "", "hw": "", "imm": "", "mat": "", "exam": -1, "read": ""}
+                day = {"stage": len(stages)-1, "title": t, "ja": ja, "notes": [], "new": [], "chunks": [], "chat": "", "hw": "", "imm": "", "mat": "", "exam": -1, "read": ""}
                 days.append(day)
             else:
                 k, v = line.split(":", 1); v = v.strip()
@@ -248,10 +272,10 @@ def load_course(cards, groups, chats, reading):
                     for tok in v.split():
                         if tok[0] == "@":
                             if tok[1:] not in groups: die(f"course: unknown group {tok}")
-                            day["new"] += groups[tok[1:]]
+                            day["new"] += groups[tok[1:]]; day["chunks"].append(list(groups[tok[1:]]))
                         else:
                             if tok[1:] not in byid: die(f"course: unknown card {tok}")
-                            day["new"].append(tok[1:])
+                            day["new"].append(tok[1:]); day["chunks"].append([tok[1:]])
                 elif k == "chat":
                     if v not in chats: die(f"course: unknown chat {v}")
                     day["chat"] = v
@@ -266,6 +290,7 @@ def load_course(cards, groups, chats, reading):
                     day["exam"] = len(exams)
                     exams.append({"id": id_, "name": name, "stars": int(stars), "day": len(days)-1})
                 else: die(f"course: unknown key {k}")
+    days, exams, stages = split_days(days, exams, stages)
     seen = {}
     for i, d in enumerate(days):
         if not d["notes"]: die(f"day {i}: no notes")
@@ -417,9 +442,10 @@ def write_c(cards, stages, days, exams, chats, media, table, subs, genki, guide,
     for i, d in enumerate(days):
         w.append("static const char*const DN%d[]={%s};" % (i, ",".join(cstr(n) for n in d["notes"])))
         if d["new"]: w.append("static const short DC%d[]={%s};" % (i, ",".join(str(id2i[c]) for c in d["new"])))
+    w.append(f"#define YG_NSRC {days[-1]['src'] + 1}")
     w.append("static const YgDay YG_DAYS[]={")
     for i, d in enumerate(days):
-        w.append("{%d,%s,%s,%d,DN%d,%d,%s,%d,%s,%s,%s,%d,%d}," % (d["stage"], cstr(d["title"]), cstr(d["ja"]), len(d["notes"]), i, len(d["new"]), ("DC%d" % i) if d["new"] else "0", idx.get(d["chat"], -1), cstr(d["hw"]), cstr(d["imm"]), cstr(d["mat"]), d["exam"], ridx.get(d["read"], -1)))
+        w.append("{%d,%s,%s,%d,DN%d,%d,%s,%d,%s,%s,%s,%d,%d,%d,%d}," % (d["stage"], cstr(d["title"]), cstr(d["ja"]), len(d["notes"]), i, len(d["new"]), ("DC%d" % i) if d["new"] else "0", idx.get(d["chat"], -1), cstr(d["hw"]), cstr(d["imm"]), cstr(d["mat"]), d["exam"], ridx.get(d["read"], -1), d["src"], d["part"]))
     w.append("};")
     w.append("static const YgExam YG_EXAMS[]={")
     for e in exams: w.append("{%s,%s,%d,%d}," % (cstr(e["id"]), cstr(e["name"]), e["stars"], e["day"]))

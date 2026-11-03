@@ -4,7 +4,7 @@
 
 typedef struct { const char *id; char type; const char *front, *reading, *romaji, *en, *note, *sentence, *w1, *w2, *w3, *trans; int day; } YgCard;
 typedef struct { const char *name, *ja, *desc; int first; } YgStage;
-typedef struct { int stage; const char *title, *ja; int nnotes; const char *const *notes; int nnew; const short *cards; int chat; const char *hw, *imm, *mat; int exam, read; } YgDay;
+typedef struct { int stage; const char *title, *ja; int nnotes; const char *const *notes; int nnew; const short *cards; int chat; const char *hw, *imm, *mat; int exam, read; int src, part; /* the class in course.txt, and which part of it */ } YgDay;
 typedef struct { const char *id, *name; int stars, day; } YgExam;
 typedef struct { const char *say, *romaji, *en; int nwant; const char *const *want; const char *hint, *want_ro; } YgTurn;
 typedef struct { const char *title, *ja, *who; int nturns; const YgTurn *turns; } YgChat;

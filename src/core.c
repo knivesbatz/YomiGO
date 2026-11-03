@@ -359,7 +359,7 @@ int profile_save_text(const Profile *p, char *o, int cap) {
     ys_cpy(o + n, p->name, cap - n); n += ys_len(o + n); o[n++] = '\n'; o[n] = 0;
     n = put(o, cap, n, "xp", p->xp); n = put(o, cap, n, "streak", p->streak); n = put(o, cap, n, "best", p->best_streak);
     n = put(o, cap, n, "last", p->last_day); n = put(o, cap, n, "today", p->done_today); n = put(o, cap, n, "placed", p->placed);
-    n = put(o, cap, n, "day", p->day); n = put(o, cap, n, "step", p->step); n = put(o, cap, n, "pace", p->pace);
+    n = put(o, cap, n, "day", p->day); n = put(o, cap, n, "class", p->day < YG_NDAYS ? YG_DAYS[p->day].src * 100 + YG_DAYS[p->day].part : YG_NSRC * 100 + 1); n = put(o, cap, n, "step", p->step); n = put(o, cap, n, "pace", p->pace);
     n = put(o, cap, n, "en", p->force_en); n = put(o, cap, n, "genki", p->genki); n = put(o, cap, n, "gender", p->gender); n = put(o, cap, n, "reviews", p->reviews); n = put(o, cap, n, "perfects", p->perfects);
     n = put(o, cap, n, "chats", p->chats); n = put(o, cap, n, "hw", p->homeworks); n = put(o, cap, n, "reads", p->reads); n = put(o, cap, n, "listens", p->listens); n = put(o, cap, n, "ach", (int)p->ach);
     for (i = 0; i < YG_NEXAMS; i++) if (p->exam_score[i]) {
@@ -420,8 +420,17 @@ static int card_index(const char *id, int n) {
     return -1;
 }
 /* Rejects anything that isn't a YomiGo save, and clamps values so a damaged file can't index out of range */
+/* The class at this place in course.txt, and this part of it. A part that no longer exists means its last one. */
+static int day_of_class(int src, int part) {
+    int i = 0;
+    if (src < 0) src = 0;
+    if (src >= YG_NSRC) return YG_NDAYS;
+    while (i < YG_NDAYS && YG_DAYS[i].src < src) i++;
+    while (i + 1 < YG_NDAYS && YG_DAYS[i + 1].src == src && YG_DAYS[i].part < part) i++;
+    return i;
+}
 int profile_load_text(Profile *p, const char *text, int len) {
-    int i = 0, nl;
+    int i = 0, nl, cls = -1;
     static const char head[] = "YOMIGO-SAVE 1\n";
     if (len < 14 || ys_ncmp(text, head, 14) != 0) return 0;
     profile_new(p, "");
@@ -473,6 +482,7 @@ int profile_load_text(Profile *p, const char *text, int len) {
           else if (!ys_cmp(k, "today")) p->done_today = x;
           else if (!ys_cmp(k, "placed")) p->placed = x;
           else if (!ys_cmp(k, "day")) p->day = x < 0 ? 0 : x > YG_NDAYS ? YG_NDAYS : x;
+          else if (!ys_cmp(k, "class")) cls = x;
           else if (!ys_cmp(k, "step")) p->step = x < 0 ? 0 : x > STEP_DONE ? 0 : x;
           else if (!ys_cmp(k, "pace")) p->pace = x < 1 ? 1 : x > 3 ? 3 : x;
           else if (!ys_cmp(k, "en")) p->force_en = x;
@@ -488,6 +498,8 @@ int profile_load_text(Profile *p, const char *text, int len) {
           else if (!ys_ncmp(k, "exam.", 5)) { int e; for (e = 0; e < YG_NEXAMS; e++) if (!ys_cmp(k + 5, YG_EXAMS[e].id)) p->exam_score[e] = (unsigned char)(x < 0 ? 0 : x > 100 ? 100 : x); }
         }
     }
+    /* Saves name their class by place and part. One from before 0.20 has only the old class number, which is that place, part 1. */
+    p->day = cls >= 0 ? day_of_class(cls / 100, cls % 100) : day_of_class(p->day, 1);
     return p->name[0] != 0;
 }
 int profile_stage(const Profile *p) { int d = p->day >= YG_NDAYS ? YG_NDAYS - 1 : p->day; return YG_DAYS[d].stage; }

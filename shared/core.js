@@ -93,14 +93,25 @@
   function saveText(p) {
     let t = "YOMIGO-SAVE 1\nname=" + p.name + "\n";
     for (const k of NUMS) t += k + "=" + p[k] + "\n";
+    const d = C.days[p.day];
+    t += "class=" + (d ? d.src * 100 + d.part : (C.days[C.days.length - 1].src + 1) * 100 + 1) + "\n";
     for (const e in p.exams) if (p.exams[e]) t += "exam." + e + "=" + p.exams[e] + "\n";
     for (const id in p.cards) { const c = p.cards[id]; t += `card ${id} ${c.reps} ${c.ivl} ${c.lapses} ${c.ease} ${c.due}\n`; }
     for (const m of p.my) t += `my ${m.reps} ${m.ivl} ${m.lapses} ${m.ease} ${m.due}\t${m.word}\t${m.reading}\t${m.gloss}\t${m.sent}\n`;
     return t;
   }
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  // The class at this place in course.txt, and this part of it. A part that no longer exists means its last one.
+  function dayOfClass(src, part) {
+    if (src >= C.days[C.days.length - 1].src + 1) return C.days.length;
+    let i = C.days.findIndex((d) => d.src >= Math.max(src, 0));
+    if (i < 0) return C.days.length;
+    while (i + 1 < C.days.length && C.days[i + 1].src === C.days[i].src && C.days[i].part < part) i++;
+    return i;
+  }
   function loadText(text) {
     if (!text.startsWith("YOMIGO-SAVE 1\n")) return null;
+    let cls = -1;
     const p = newProfile(""), ids = new Set(C.cards.map((c) => c.id)), examIds = new Set(C.exams.map((e) => e.id));
     for (const raw of text.split("\n").slice(1)) {
       const line = raw.replace(/\r$/, "");
@@ -119,8 +130,11 @@
       const k = line.slice(0, eq), v = line.slice(eq + 1);
       if (k === "name") p.name = v.slice(0, 31);
       else if (k.startsWith("exam.")) { if (examIds.has(k.slice(5))) p.exams[k.slice(5)] = clamp(+v || 0, 0, 100); }
+      else if (k === "class") cls = +v || 0;
       else if (NUMS.includes(k)) p[k] = +v || 0;
     }
+    // Saves name their class by place and part. One from before 0.20 has only the old class number, which is that place, part 1.
+    p.day = cls >= 0 ? dayOfClass(Math.floor(cls / 100), cls % 100) : dayOfClass(p.day, 1);
     p.day = clamp(p.day, 0, C.days.length); p.step = p.step > 10 || p.step < 0 ? 0 : p.step; p.pace = clamp(p.pace, 1, 3);
     return p.name ? p : null;
   }

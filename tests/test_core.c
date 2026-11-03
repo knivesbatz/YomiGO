@@ -32,6 +32,11 @@ int main(void) {
     CHECK(answer_ok("kin'youbi", "きんようび", "kin'youbi"), "apostrophe");
     CHECK(answer_ok("konnichiwa", "こんにちは", ""), "a final は typed as said, with no romaji to compare");
     CHECK(!answer_ok("wa", "は", ""), "a lone は is still ha");
+    /* A save from before 0.20 names its class by number only: it lands on that class's first part, and keeps its place through a save and reload */
+    { static Profile a; static char t[YG_SAVE_CAP]; static const char o50[] = "YOMIGO-SAVE 1\nname=Hana\nday=50\n", o85[] = "YOMIGO-SAVE 1\nname=Hana\nday=85\n"; int n;
+      CHECK(profile_load_text(&a, o50, (int)sizeof o50 - 1) && YG_DAYS[a.day].src == 50 && YG_DAYS[a.day].part == 1, "old save keeps its class");
+      a.day++; n = profile_save_text(&a, t, sizeof t); { int d = a.day; CHECK(n > 0 && profile_load_text(&a, t, n) && a.day == d, "class and part survive a save"); }
+      CHECK(profile_load_text(&a, o85, (int)sizeof o85 - 1) && a.day == YG_NDAYS, "a finished course stays finished"); }
     /* Two devices' copies of one learner merge into the furthest along of each, and merging again changes nothing */
     { static Profile a, b;
       profile_new(&a, "Hana"); profile_new(&b, "Hana");
