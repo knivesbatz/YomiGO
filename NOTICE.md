@@ -19,6 +19,11 @@ YomiGo isn't affiliated with or endorsed by Nintendo, The Japan Times (Genki), t
 - **Engine:** [whisper.cpp](https://github.com/ggml-org/whisper.cpp) by Georgi Gerganov and contributors, MIT licence, built into `YomiGoListen.exe` from the pinned copy in `third_party/whisper.cpp`.
 - **Model:** OpenAI's [Whisper](https://github.com/openai/whisper) large-v3-turbo, MIT licence, in the [ggml version](https://huggingface.co/ggerganov/whisper.cpp) hosted on Hugging Face. It's downloaded on first use, not shipped with YomiGo.
 
+## Conversation
+
+- **Engine:** [llama.cpp](https://github.com/ggml-org/llama.cpp) by Georgi Gerganov and contributors, MIT licence, built into `YomiGoTalk.exe` from the pinned copy in `third_party/llama.cpp`.
+- **Model:** Google's [Gemma 4 E4B](https://huggingface.co/google/gemma-4-E4B-it-qat-q4_0-gguf), Apache 2.0, downloaded on first use, not shipped with YomiGo. Sakura is a made-up character, not a real person.
+
 ## Dictionary and stroke data
 
 `content/dict/` keeps its own licences, and they differ from the rest of the project:

@@ -61,6 +61,11 @@ int  plat_ocr_poll(void);                      /* -1 nothing running, -2 still r
 #define YG_SPEECH_MODEL "models\\ggml-large-v3-turbo-q5_0.bin"
 int  plat_listen_start(int get_model);         /* transcribes a file the user picks, or downloads the speech model */
 int  plat_listen_poll(void);                   /* like plat_ocr_poll */
+#define YG_TALK_MODEL "models\\gemma-4-E4B_q4_0-it.gguf"
+int  plat_talk_get(void);                      /* downloads the conversation model; plat_talk_get_poll like plat_ocr_poll */
+int  plat_talk_get_poll(void);
+int  plat_talk_send(const char *req);          /* starts the partner if needed, then asks it; 0 if it couldn't start */
+int  plat_talk_reply(char *buf, int cap);      /* bytes once the reply is in, -1 while it thinks, else -2 minus the partner's exit code */
 int  plat_has(const char *name);               /* this file is beside the program, such as a helper */
 void plat_fetch_helpers(void);                 /* asks the signed updater to fetch missing helpers */
 void plat_topmost(int on);

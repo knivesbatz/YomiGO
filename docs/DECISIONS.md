@@ -34,4 +34,8 @@
 
 **Transcription with whisper.cpp, in its own 64-bit helper.** The main program stays Windows 95 safe. `YomiGoListen.exe` decodes files with Windows' own Media Foundation, so MP4 and M4A work without bundling FFmpeg, and shows the file picker itself, so YomiGo never handles a Unicode path. The model comes from Hugging Face at a fixed revision and is checked against its SHA-256, instead of being uploaded to every release. Large-v3-turbo was chosen over smaller models because they make far more mistakes in Japanese, and a learner can't tell.
 
+**Talk runs a local model in its own 64-bit helper.** The owner chose free and private over a paid service. `YomiGoTalk.exe` keeps the model and the conversation in memory while YomiGo is open, so each reply only reads what's new, and it closes itself when YomiGo does. A 4B-class model can't keep to a reply format, so Sakura just talks, and the translation and the check are separate short questions asked afterwards, then dropped from the conversation. Gemma 4 E4B was picked for Google's good record in Japanese and its official build.
+
+**Speaking aloud is optional on PC and TV.** The owner asked for it. Listening stays in the class, since it only needs a voice to play.
+
 **GitHub releases here.** An older rule against builds on GitHub applies to the owner's game project. YomiGo's updater needs them.

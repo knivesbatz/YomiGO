@@ -23,7 +23,9 @@
 
 - The course ends at N3. Later levels are on the [roadmap](ROADMAP.md). The entrance exam places nobody past N5 Street, so a learner who already knows N4 or N3 still starts there.
 - The entrance exam tests reading only, not listening, typing, or speaking.
-- Conversations are scripted and accept set replies, so a correct but unexpected reply can fail. After three tries, the app shows an accepted answer.
+- Sakura, in Talk, is a small model running on your PC. Her Japanese is usually natural, but her checks miss some mistakes, sometimes flag a right sentence, and can explain a fix wrongly. That's why they say Maybe better. Trust the class notes over her when they disagree.
+- Talk opens at the Grammar Gate, because the model writes poor beginner-only Japanese. It isn't on the phone, and the TV shows only her newest reply.
+- The class conversations are scripted and accept set replies, so a correct but unexpected reply can fail. After three tries, the app shows an accepted answer.
 - Reader's dictionary has about 22,000 common words, and undoes common verb and adjective endings, but not every form. [Yomitan](https://yomitan.wiki/) goes much further.
 - Web pages can detect that Reader is installed, because its dictionary file must be reachable from pages. No page can read your saved words.
 - Words and main kanji readings have been [checked against JMdict](FACTCHECK.md). Notes, grammar explanations, example sentences, and listed on and kun readings haven't been checked against a reference. Kanji memory hooks are mnemonics, not etymology.

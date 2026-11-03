@@ -177,7 +177,7 @@ int plat_clip_image(const char *name) {
     CloseClipboard();
     return ok;
 }
-static HANDLE ocr_proc, listen_proc;
+static HANDLE ocr_proc, listen_proc, talk_proc, talk_get_proc;
 /* Starts a helper beside the program, with no console window */
 static HANDLE run_hidden(char *cmd) {
     STARTUPINFOA si; PROCESS_INFORMATION pi; int i;
@@ -218,6 +218,33 @@ int plat_listen_start(int get_model) {
     return (listen_proc = run_hidden(cmd)) != 0;
 }
 int plat_listen_poll(void) { return proc_poll(&listen_proc); }
+int plat_talk_get(void) {
+    char cmd[MAX_PATH * 4], models[MAX_PATH];
+    if (talk_get_proc || !is_nt) return 0;
+    ys_cpy(models, dir, MAX_PATH); ys_cat(models, "\\models", MAX_PATH); CreateDirectoryA(models, 0);
+    cmd_exe(cmd, sizeof cmd, "YomiGoTalk.exe"); ys_cat(cmd, " --get", sizeof cmd);
+    cmd_path(cmd, sizeof cmd, dir, YG_TALK_MODEL); cmd_path(cmd, sizeof cmd, root, "talk_pct.txt");
+    return (talk_get_proc = run_hidden(cmd)) != 0;
+}
+int plat_talk_get_poll(void) { return proc_poll(&talk_get_proc); }
+/* The partner stays running, holding the model and the conversation so far, and closes itself when YomiGo does */
+int plat_talk_send(const char *req) {
+    char cmd[MAX_PATH * 4], pid[32];
+    if (!is_nt) return 0;
+    if (talk_proc && proc_poll(&talk_proc) != -2) talk_proc = 0;
+    if (!talk_proc) {
+        cmd_exe(cmd, sizeof cmd, "YomiGoTalk.exe"); cmd_path(cmd, sizeof cmd, dir, YG_TALK_MODEL);
+        ys_cat(cmd, " \"", sizeof cmd); ys_cat(cmd, root, sizeof cmd); ys_fmt(pid, sizeof pid, "\" %d", (int)GetCurrentProcessId(), 0); ys_cat(cmd, pid, sizeof cmd);
+        if (!(talk_proc = run_hidden(cmd))) return 0;
+    }
+    return plat_write("talk_req.txt", req, ys_len(req));
+}
+int plat_talk_reply(char *buf, int cap) {
+    char p[MAX_PATH]; int n = plat_read("talk_out.txt", buf, cap - 1), code;
+    if (n >= 0) { buf[n] = 0; path_of(p, "talk_out.txt"); DeleteFileA(p); return n; }
+    code = proc_poll(&talk_proc);
+    return code == -2 ? -1 : -2 - (code < 0 ? 0 : code);
+}
 int plat_has(const char *name) {
     char p[MAX_PATH];
     ys_cpy(p, dir, MAX_PATH); ys_cat(p, "\\", MAX_PATH); ys_cat(p, name, MAX_PATH);
@@ -769,11 +796,15 @@ static void run_script(const char *s) {
             step(0, 0, 0, 0); IN.mx = x; IN.my = y; IN.mclick = 1; IN.mdown = 0; app_frame(); break; }
         case 'A': ys_cpy(test_audio, buf, sizeof test_audio); break; /* the transcriber's file and language, as its arguments */
         /* wait for the helpers, leaving their results for the screens to collect */
-        case 'W': if (ocr_proc) WaitForSingleObject(ocr_proc, 30000); if (listen_proc) WaitForSingleObject(listen_proc, 600000); step(0, 0, 0, 0); break;
+        case 'W': if (ocr_proc) WaitForSingleObject(ocr_proc, 30000); if (listen_proc) WaitForSingleObject(listen_proc, 600000);
+            if (talk_get_proc) WaitForSingleObject(talk_get_proc, 1800000);
+            { char p[MAX_PATH]; int k = 0; path_of(p, "talk_out.txt"); /* the partner keeps running, so wait for its reply instead */
+              while (talk_proc && GetFileAttributesA(p) == 0xFFFFFFFF && WaitForSingleObject(talk_proc, 100) == WAIT_TIMEOUT && k++ < 3000) {} }
+            step(0, 0, 0, 0); break;
         case 'G': { /* play on until the course is complete, or give up after a very long time */
             int k = 200000;
             while (!app_test_done() && k-- > 0) { step(0, 0, 0, 0); app_test_auto(); app_frame(); }
-            if (!app_test_done()) ExitProcess(9);
+            if (!app_test_done()) { write_bmp("stuck"); ExitProcess(9); } /* stuck.bmp shows where it gave up */
             break; }
         default: break;
         }

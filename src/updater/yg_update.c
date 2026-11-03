@@ -138,8 +138,8 @@ static char *next_arg(char **pp, char *out, int cap) {
     *pp = p;
     return out;
 }
-#define YG_NHELPERS 2
-static const char *const helpers[YG_NHELPERS] = {"YomiGoOCR.exe", "YomiGoListen.exe"};
+#define YG_NHELPERS 3
+static const char *const helpers[YG_NHELPERS] = {"YomiGoOCR.exe", "YomiGoListen.exe", "YomiGoTalk.exe"};
 static int fetch_verified(const char *tag, const char *asset, const char *dest) {
     char path[512]; DWORD a = 0, b = 0; char *data, *sig; int ok;
     wsprintfA(path, "/" YG_REPO "/releases/download/v%s/%s", tag, asset);

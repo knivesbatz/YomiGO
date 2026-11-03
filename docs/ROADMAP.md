@@ -21,11 +21,11 @@ No app alone can make someone fluent. Fluency also takes thousands of hours of r
 
 ## Next up
 
-1. **0.9 Conversation AI**
-2. **After that:** Genki II practice, entrance-exam sections for N4 and N3, faster transcription on the graphics card, transcription on Android, vertical manga text, direct game-text hooking, N2, N1, Beyond N1, and handwriting
+1. **Next:** Genki II practice, entrance-exam sections for N4 and N3, faster transcription on the graphics card, transcription on Android, vertical manga text, direct game-text hooking, N2, N1, Beyond N1, and handwriting
 
 ## Done
 
+- **0.9:** a conversation partner that runs on your PC
 - **0.8:** N3 stage, with its exam
 - **0.7:** transcription of your own audio and video, with Japanese subtitles
 - **0.6:** Text Reader, with screenshots, photos, and game text from the clipboard

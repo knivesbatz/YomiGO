@@ -8,80 +8,14 @@
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfreadwrite.h>
-#include <winhttp.h>
-#include <bcrypt.h>
-#include <intrin.h>
-#include <cstdio>
-#include <string>
 #include <thread>
-#include <vector>
 #include "whisper.h"
+#include "../helpers/hf_get.h"
 
 // One revision of the model, checked against the SHA-256 Hugging Face lists for it
 static const wchar_t MODEL_URL_PATH[] = L"/ggerganov/whisper.cpp/resolve/5359861c739e955e79d9a303bcbc70fb988958b1/ggml-large-v3-turbo-q5_0.bin";
 static const char MODEL_SHA256[] = "394221709cd5ad1f40c46e6031ca61bce88931e6e088c188294c6d5a55ffa7e2";
 static const unsigned long long MODEL_SIZE = 574041195;
-
-static const wchar_t *pct_path;
-static void progress(int pct) {
-    FILE *f = _wfopen(pct_path, L"wb");
-    if (f) { fprintf(f, "%d", pct); fclose(f); }
-}
-
-static int get_model(const wchar_t *dest) {
-    std::wstring part = std::wstring(dest) + L".part";
-    std::vector<unsigned char> buf(1 << 16);
-    HINTERNET s = 0, c = 0, r = 0;
-    BCRYPT_ALG_HANDLE alg = 0; BCRYPT_HASH_HANDLE hash = 0;
-    FILE *f = 0; bool ok = false;
-    unsigned long long got = 0; int shown = -1;
-    DWORD status = 0, sz = sizeof status, tls = 0x800 | 0x2000; // TLS 1.2 and 1.3
-    unsigned char digest[32]; char hex[65];
-    if (!(s = WinHttpOpen(L"YomiGoListen", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, 0, 0, 0))) goto done;
-    WinHttpSetOption(s, WINHTTP_OPTION_SECURE_PROTOCOLS, &tls, sizeof tls);
-    // WinHTTP follows the redirect to Hugging Face's file servers by itself
-    if (!(c = WinHttpConnect(s, L"huggingface.co", INTERNET_DEFAULT_HTTPS_PORT, 0))
-        || !(r = WinHttpOpenRequest(c, L"GET", MODEL_URL_PATH, 0, 0, 0, WINHTTP_FLAG_SECURE))
-        || !WinHttpSendRequest(r, 0, 0, 0, 0, 0, 0) || !WinHttpReceiveResponse(r, 0)
-        || !WinHttpQueryHeaders(r, WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER, 0, &status, &sz, 0) || status != 200
-        || BCryptOpenAlgorithmProvider(&alg, BCRYPT_SHA256_ALGORITHM, 0, 0) || BCryptCreateHash(alg, &hash, 0, 0, 0, 0, 0)
-        || !(f = _wfopen(part.c_str(), L"wb"))) goto done;
-    for (;;) {
-        DWORD avail = 0, n = 0;
-        if (!WinHttpQueryDataAvailable(r, &avail)) goto done;
-        if (!avail) break;
-        if (!WinHttpReadData(r, buf.data(), avail < buf.size() ? avail : (DWORD)buf.size(), &n)) goto done;
-        if (!n) break;
-        got += n;
-        if (got > MODEL_SIZE || fwrite(buf.data(), 1, n, f) != n || BCryptHashData(hash, buf.data(), n, 0)) goto done;
-        if ((int)(got * 100 / MODEL_SIZE) != shown) progress(shown = (int)(got * 100 / MODEL_SIZE));
-    }
-    if (fclose(f)) { f = 0; goto done; }
-    f = 0;
-    if (got != MODEL_SIZE || BCryptFinishHash(hash, digest, 32, 0)) goto done;
-    for (int i = 0; i < 32; i++) sprintf(hex + 2 * i, "%02x", digest[i]);
-    ok = !strcmp(hex, MODEL_SHA256) && MoveFileExW(part.c_str(), dest, MOVEFILE_REPLACE_EXISTING);
-done:
-    if (f) fclose(f);
-    if (hash) BCryptDestroyHash(hash);
-    if (alg) BCryptCloseAlgorithmProvider(alg, 0);
-    if (r) WinHttpCloseHandle(r);
-    if (c) WinHttpCloseHandle(c);
-    if (s) WinHttpCloseHandle(s);
-    if (!ok) DeleteFileW(part.c_str());
-    return ok ? 0 : 5;
-}
-
-// The engine is built for AVX2, which an older processor would crash on
-static bool has_avx2() {
-    int r[4];
-    __cpuid(r, 0);
-    if (r[0] < 7) return false;
-    __cpuid(r, 1);
-    if (!(r[2] & (1 << 27)) || !(r[2] & (1 << 12)) || !(r[2] & (1 << 29)) || (_xgetbv(0) & 6) != 6) return false; // OS saves AVX state, FMA, F16C
-    __cpuidex(r, 7, 0);
-    return (r[1] & (1 << 5)) != 0;
-}
 
 // Windows decodes the file (MP3, M4A, WAV, MP4, MKV and others); this mixes it to the 16 kHz mono that whisper wants
 static bool decode(const wchar_t *path, std::vector<float> &pcm) {
@@ -125,13 +59,6 @@ static bool decode(const wchar_t *path, std::vector<float> &pcm) {
     return ok && !pcm.empty();
 }
 
-static std::string utf8(const wchar_t *w) {
-    int n = WideCharToMultiByte(CP_UTF8, 0, w, -1, 0, 0, 0, 0);
-    std::string s(n > 0 ? n - 1 : 0, '\0');
-    if (n > 1) WideCharToMultiByte(CP_UTF8, 0, w, -1, s.data(), n, 0, 0);
-    return s;
-}
-
 // The model is read through _wfopen, so a YomiGo folder with Japanese in its path still works
 static size_t ld_read(void *f, void *out, size_t n) { return fread(out, 1, n, (FILE *)f); }
 static bool ld_eof(void *f) { return feof((FILE *)f) != 0; }
@@ -147,7 +74,7 @@ int wmain(int argc, wchar_t **argv) {
     if (argc < 4) return 1;
     pct_path = argv[3];
     progress(0);
-    if (!wcscmp(argv[1], L"--get")) return get_model(argv[2]);
+    if (!wcscmp(argv[1], L"--get")) return get_model(argv[2], MODEL_URL_PATH, MODEL_SIZE, MODEL_SHA256);
     if (!has_avx2()) return 4;
     wchar_t media[MAX_PATH * 2] = L"";
     if (argc > 4) wcsncpy(media, argv[4], MAX_PATH * 2 - 1);

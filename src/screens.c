@@ -54,7 +54,7 @@
 #define FBY_BTN (FBH - FOOT - 38)
 #endif
 
-typedef enum { S_SPLASH, S_PROFILES, S_NAME, S_PLACE_INTRO, S_PLACE_RESULT, S_HOME, S_CLASS, S_TEACH, S_QUIZ, S_RESULT, S_CHAT, S_TASK, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS, S_BIND, S_FIRST, S_GENKI, S_TYPING, S_READ, S_MYWORDS, S_MYADD, S_SHADOW, S_TEXT, S_SPEAKER } Screen;
+typedef enum { S_SPLASH, S_PROFILES, S_NAME, S_PLACE_INTRO, S_PLACE_RESULT, S_HOME, S_CLASS, S_TEACH, S_QUIZ, S_RESULT, S_CHAT, S_TASK, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS, S_BIND, S_FIRST, S_GENKI, S_TYPING, S_READ, S_MYWORDS, S_MYADD, S_SHADOW, S_TEXT, S_SPEAKER, S_TALK } Screen;
 typedef enum { QM_WARMUP, QM_DRILL, QM_DAILY, QM_HW, QM_REVIEW, QM_EXAM, QM_PLACE, QM_PRACTICE, QM_LISTEN } QuizMode;
 
 static Screen scr = S_SPLASH;
@@ -85,6 +85,7 @@ static void flash(const char *m) { flash_msg = m; flash_t = 40; plat_sound(0); }
 static void flash_add(int r) { flash(r > 0 ? "Added!" : r == 0 ? "Already added" : "Deck is full"); }
 static int my_sel, my_confirm, add_step;
 static Screen sp_next; /* where the who's-learning question returns to */
+static int ls_day = -1, ls_test; /* the day optional speaking was last done; the test player asks for it once a day */
 static const char *const gender_name[] = {"Not asked", "Woman", "Man", "Rather not say"};
 static int q_said = -1, sh_i, sh_n, sh_said;
 #define TX_MAX 400 /* room for an episode's transcript */
@@ -252,8 +253,8 @@ static void sakura(int x, int y, int s) {
 #if !HTPC
 static const struct { const char *en, *ja; int st; Screen s; } NAV[] = {
     {"Today", "きょう", 2, S_HOME}, {"Flashcards", "カード", 3, S_CARDS}, {"Exams", "しけん", 2, S_EXAMS},
-    {"Quest", "クエスト", 3, S_QUEST}, {"Library", "本だな", 5, S_LIBRARY}, {"Text", "テキスト", 3, S_TEXT}, {"Settings", "せってい", 2, S_SETTINGS}};
-#define NNAV 7
+    {"Quest", "クエスト", 3, S_QUEST}, {"Library", "本だな", 5, S_LIBRARY}, {"Text", "テキスト", 3, S_TEXT}, {"Talk", "かいわ", 3, S_TALK}, {"Settings", "せってい", 2, S_SETTINGS}};
+#define NNAV 8
 static void chrome(const char *title, const char *sub) {
     int i;
     washi(0, 0, FBW, FBH, C_BG, 0xEADFCC);
@@ -428,10 +429,11 @@ static void scr_home(void) {
     profile_touch_day(&P, today);
 #if HTPC
     {
-        static const char *const items_en[] = {"Today's Class", "Flashcards", "Exams", "Quest", "Library", "Text Reader", "Options"};
-        static const char *const items_ja[] = {"きょうのクラス", "カード", "しけん", "クエスト", "本だな", "テキスト", "せってい"};
-        static const int from[] = {2, 3, 2, 3, 5, 3, 2};
-        static const Screen dest[] = {S_CLASS, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_TEXT, S_SETTINGS};
+        static const char *const items_en[] = {"Today's Class", "Flashcards", "Exams", "Quest", "Library", "Text Reader", "Talk", "Options"};
+        static const char *const items_ja[] = {"きょうのクラス", "カード", "しけん", "クエスト", "本だな", "テキスト", "かいわ", "せってい"};
+        static const int from[] = {2, 3, 2, 3, 5, 3, 3, 2};
+        static const Screen dest[] = {S_CLASS, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_TEXT, S_TALK, S_SETTINGS};
+        const int NI = 8;
         static int sel; static int slide;
         int s = SAFE, i;
         gradient(0, 0, FBW, FBH, 0x1B0F40, 0x8A2A5A);
@@ -443,11 +445,11 @@ static void scr_home(void) {
         ys_fmt(b, sizeof b, "XP %d  Streak %d", P.xp, P.streak);
         text(FBW - s - 2 - text_w(b), s + 6, b, C_INK);
         text(s + 2, s + 32, rank_name(profile_rank(&P), profile_stage(&P) >= 3 && !P.force_en), C_PINK);
-        if (IN.pressed & (A_LEFT)) { sel = (sel + 6) % 7; slide = -40; plat_sound(0); }
-        if (IN.pressed & (A_RIGHT)) { sel = (sel + 1) % 7; slide = 40; plat_sound(0); }
+        if (IN.pressed & (A_LEFT)) { sel = (sel + NI - 1) % NI; slide = -40; plat_sound(0); }
+        if (IN.pressed & (A_RIGHT)) { sel = (sel + 1) % NI; slide = 40; plat_sound(0); }
         slide = slide * 3 / 4;
         for (i = -2; i <= 2; i++) {
-            int k = (sel + i + 7) % 7, x = FBW / 2 + i * 122 + slide - 58, y = 166 + (i < 0 ? -i : i) * 6, w = 116, h = 40 - (i < 0 ? -i : i) * 4;
+            int k = (sel + i + NI) % NI, x = FBW / 2 + i * 122 + slide - 58, y = 166 + (i < 0 ? -i : i) * 6, w = 116, h = 40 - (i < 0 ? -i : i) * 4;
             const char *lab = L(items_en[k], items_ja[k], from[k]);
             fill(x, y, w, h, i == 0 ? C_ACC : C_PANEL);
             frame(x, y, w, h, i == 0 ? 0xFFF0C0 : C_HI);
@@ -543,6 +545,13 @@ static void scr_class(void) {
     }
     if (button(CX + CW / 2 - 70, FBY_BTN, 140, 28, L("Go", "はじめる", 2))) { run_step(); return; }
     if (!HTPC && button(CX, FBY_BTN, 90, 28, L("Later", "あとで", 2))) { go(S_HOME); return; }
+    /* Speaking aloud (shadowing) is extra practice on PC and TV, never a required step. It needs a voice to copy. */
+    if (plat_has_tts() && (button(CX + CW - (HTPC ? 70 : 130), FBY_BTN, HTPC ? 70 : 130, 28, HTPC ? "Speak" : "Speaking") || ls_test)) {
+        ls_test = 0;
+        sh_n = shadow_lines(P.day, sh_lines, 4); sh_i = 0; sh_said = -1;
+        if (sh_n) { go(S_SHADOW); return; }
+        ls_day = P.day; /* nothing to say today */
+    }
     if (IN.pressed & A_BACK) go(S_HOME);
 #if HTPC
     footer("Go", "Menu");
@@ -669,8 +678,7 @@ static void quiz_finished(void) {
         break; }
     case QM_LISTEN:
         P.xp += qright; P.listens++; ach_check(&P);
-        sh_n = shadow_lines(P.day, sh_lines, 4); sh_i = 0; sh_said = -1;
-        if (sh_n) go(S_SHADOW); else next_step();
+        next_step();
         break;
     case QM_PRACTICE:
         /* Extra practice is free to repeat, so it earns no XP */
@@ -1000,7 +1008,7 @@ static void scr_shadow(void) {
     if (*l->ro && stage < 4) y += LH * wrap(CX + 8, y, CW - 16, l->ro, C_DIM, LH, 0, 1);
     wrap(CX + 8, y, CW - 16, l->en, C_INK, LH, 0, 1);
     /* there's no way to check this here, so it earns no points: it's between you and your mouth */
-    if (button(CX + CW - 120, FBY_BTN, 120, 28, "I said it")) { if (++sh_i >= sh_n) { next_step(); return; } ui_reset_focus(); return; }
+    if (button(CX + CW - 120, FBY_BTN, 120, 28, "I said it")) { if (++sh_i >= sh_n) { ls_day = P.day; go(S_CLASS); return; } ui_reset_focus(); return; }
     if (button(CX, FBY_BTN, 110, 28, L("Hear again", "もう一度", 5)) || (IN.pressed & A_Y)) plat_speak(l->jp);
 #if HTPC
     { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "OK"); prompt_btn(&x, FBH - SAFE - 17, 3, "Again"); }
@@ -1571,6 +1579,145 @@ static void scr_name(void) {
         if (k) { profile_new(&P, clean); have_profile = 1; save_profile(); input[0] = 0; sp_next = S_FIRST; go(S_SPEAKER); }
     }
 }
+/* ---- talk: open conversation with a partner that runs on this PC ---- */
+#define TK_MAX 12
+static char tk_text[TK_MAX][640], tk_role[TK_MAX]; /* 'U' the learner, 'A' the partner, raw as it wrote */
+static int tk_n, tk_wait, tk_get, tk_ask, tk_en = !HTPC; /* the TV has room for English only on request */
+static const char *tk_msg = "";
+/* What the partner is told: who it's talking to, the lesson, and the reply format the screen reads */
+static void tk_system(char *s, int cap) {
+    int stage = profile_stage(&P), day = P.day < YG_NDAYS ? P.day : YG_NDAYS - 1, i, n = 0;
+    const YgDay *d = &YG_DAYS[day];
+    ys_cpy(s, "You are Sakura, a friendly young woman from Japan, chatting by text with someone learning Japanese. ", cap);
+    ys_cat(s, stage < 7 ? "They know about JLPT N5. Use simple polite Japanese with です and ます, and only common kanji." : stage < 8 ? "They are working on JLPT N4. Use polite Japanese, with some plain forms." : "They are working on JLPT N3. Use natural, everyday Japanese.", cap);
+    if (P.gender == 1 || P.gender == 2) ys_cat(s, P.gender == 1 ? " They are a woman." : " They are a man.", cap);
+    ys_cat(s, " Today's lesson is: ", cap); ys_cat(s, d->title, cap); ys_cat(s, ".", cap);
+    for (i = 0; i < d->nnew && n < 4; i++) if (YG_CARDS[d->cards[i]].type == 'g') { ys_cat(s, n++ ? ", " : " Use these patterns when they fit: ", cap); ys_cat(s, YG_CARDS[d->cards[i]].front, cap); }
+    ys_cat(s, " Keep each reply to one or two short sentences, and end with a simple question. Write only your reply, in Japanese.", cap);
+}
+static void tk_part(const char *msg, const char *tag, char *out, int cap);
+/* One message per line for the helper; a newline inside a message travels as \n. The X line asks for the checks
+   shown under each reply: is the learner's last message right, an English translation, and romaji for beginners. */
+static void tk_ask_partner(void) {
+    static char req[TK_MAX * 1400 + 2048]; int i;
+    ys_cpy(req, "S\t", sizeof req); tk_system(req + 2, 2046); ys_cat(req, "\n", sizeof req);
+    ys_cat(req, tk_n ? "X\tfix en\n" : "X\ten\n", sizeof req);
+    if (!tk_n) { ys_cat(req, "U\t(Start the conversation: greet me and ask one simple question about today's lesson.)\n", sizeof req); }
+    for (i = 0; i < tk_n; i++) {
+        const char *p = tk_text[i]; char line[1400], ja[640]; int o = 0;
+        if (tk_role[i] == 'A') { tk_part(tk_text[i], "JA:", ja, sizeof ja); if (*ja) p = ja; } /* what Sakura said, without the checks */
+        line[o++] = tk_role[i]; line[o++] = '\t';
+        for (; *p && o < (int)sizeof line - 4; p++) { if (*p == '\n') { line[o++] = '\\'; line[o++] = 'n'; } else if (*p != '\r') line[o++] = *p; }
+        line[o++] = '\n'; line[o] = 0;
+        ys_cat(req, line, sizeof req);
+    }
+    if (plat_talk_send(req)) { tk_wait = 1; tk_msg = ""; }
+    else tk_msg = "Couldn't start the conversation partner. It needs YomiGoTalk.exe beside YomiGo, and 64-bit Windows 10 or later.";
+}
+static void tk_add(char role, const char *t) {
+    int i;
+    if (tk_n == TK_MAX) { for (i = 1; i < TK_MAX; i++) { tk_role[i - 1] = tk_role[i]; ys_cpy(tk_text[i - 1], tk_text[i], sizeof tk_text[0]); } tk_n--; }
+    tk_role[tk_n] = role; ys_cpy(tk_text[tk_n], t, sizeof tk_text[0]); tk_n++;
+}
+/* The partner's JA:, RO:, EN:, or FIX: line, or "" */
+static void tk_part(const char *msg, const char *tag, char *out, int cap) {
+    const char *p = msg; int n = ys_len(tag), o = 0;
+    out[0] = 0;
+    while (*p) {
+        while (*p == ' ' || *p == '\n' || *p == '\r' || *p == '*') p++;
+        if (!ys_ncmp(p, tag, n)) { p += n; while (*p == ' ') p++; while (*p && *p != '\n' && *p != '\r' && o < cap - 1) out[o++] = *p++; out[o] = 0; return; }
+        while (*p && *p != '\n') p++;
+    }
+}
+/* Wraps t onto the screen, at most cap lines and never past bottom */
+static void tk_line(int *y, int bottom, int x, const char *t, unsigned col, int cap) {
+    int n = (bottom - *y) / LH;
+    if (n > cap) n = cap;
+    if (n > 0) *y += LH * wrap(x, *y, CX + CW - x, t, col, LH, 0, n);
+}
+static int tk_est(const char *t, int w, int cap) { int n = text_w(t) / w + 1; return n < cap ? n : cap; }
+/* About how many lines message i takes, drawn as tk_line would */
+static int tk_msg_lines(int i) {
+    char t[640]; int n;
+    if (tk_role[i] == 'U') return HTPC ? 0 : tk_est(tk_text[i], CW - 40, 2); /* the TV has room only for Sakura's side */
+    tk_part(tk_text[i], "JA:", t, sizeof t); n = tk_est(*t ? t : tk_text[i], CW, 3);
+    tk_part(tk_text[i], "EN:", t, sizeof t); if (tk_en && *t) n += tk_est(t, CW, HTPC ? 1 : 2);
+    tk_part(tk_text[i], "FIX:", t, sizeof t); if (*t && ys_ncmp(t, "OK", 2)) n += tk_est(t, CW - 100, HTPC ? 1 : 2);
+    return n;
+}
+static void scr_talk(void) {
+    int y = CY, i, first, code, get = !plat_has(YG_TALK_MODEL), bottom = FBY_BTN - (HTPC ? 70 : 36);
+    static char reply[4096];
+    chrome(L("Talk", "かいわ", 3), 0);
+    if (tk_get) {
+        code = plat_talk_get_poll();
+        if (code != -2) { tk_get = 0; tk_msg = code == 0 ? "" : "The download failed or didn't check out, so nothing was kept. Try again later."; if (!code) tk_ask_partner(); }
+    }
+    if (tk_wait && (code = plat_talk_reply(reply, sizeof reply)) != -1) {
+        tk_wait = 0;
+        if (code >= 0) { tk_add('A', reply); if (!*tk_msg) tk_msg = ""; }
+        else if (code == -4) tk_msg = "The conversation model didn't load. Close some programs and try again.";
+        else if (code == -6 || code == -2 - (int)0xC000001D) tk_msg = "Talking needs a processor with AVX2, from about 2013 or later.";
+        else tk_msg = "The conversation partner stopped. Press New topic to try again.";
+    }
+    /* A small model writes poor beginner Japanese, and talking needs sentences, so it opens at the Grammar Gate */
+    if (profile_stage(&P) < 4) {
+        wrap(CX, y, CW, HTPC ? "Talk opens at the Grammar Gate, once you can build sentences. Until then, practise with each class's conversation." : "Talk opens at the Grammar Gate, once you can build sentences. Then you can chat freely with Sakura, a partner that runs on this PC. Until then, each class's conversation is the place to practise.", C_DIM, LH, 0, 0);
+#if HTPC
+        if (IN.pressed & A_BACK) go(S_HOME);
+        footer(0, "Menu");
+#endif
+        return;
+    }
+    if (!tk_n && !tk_wait && !tk_get) {
+        if (!plat_has("YomiGoTalk.exe") && plat_can_update()) { plat_fetch_helpers(); tk_msg = "Downloading the conversation partner. Come back in a minute."; }
+        else if (get && !tk_ask) tk_msg = HTPC ? "Talking needs a 5.2 GB model, downloaded once. Press Start to get it." : "Talking needs a 5.2 GB model, downloaded once from Hugging Face and checked before use. Everything then runs on this PC, and nothing you write is sent anywhere. Press Start to get it.";
+        else if (!get) tk_ask_partner();
+    }
+    /* The newest messages that fit above the text box, counted from the newest back, then drawn oldest first */
+    { int lines = (bottom - y) / LH - 1, h;
+      for (first = tk_n; first > 0 && (h = tk_msg_lines(first - 1)) <= lines; first--) lines -= h;
+      if (first == tk_n && tk_n) first--; /* the newest always shows, even if it has to be cut */
+      for (i = first; i < tk_n; i++) {
+        char t[640], b[700];
+        if (tk_role[i] == 'U') { if (!HTPC) tk_line(&y, bottom, CX + 40, tk_text[i], C_DIM, 2); continue; }
+        tk_part(tk_text[i], "JA:", t, sizeof t); tk_line(&y, bottom, CX, *t ? t : tk_text[i], C_INK, 3); /* no JA: line means it ignored the format, so show what it wrote */
+        tk_part(tk_text[i], "EN:", t, sizeof t); if (tk_en && *t) tk_line(&y, bottom, CX, t, C_DIM, HTPC ? 1 : 2);
+        tk_part(tk_text[i], "FIX:", t, sizeof t); if (*t && ys_ncmp(t, "OK", 2)) { ys_cpy(b, "Maybe better: ", sizeof b); ys_cat(b, t, sizeof b); tk_line(&y, bottom, CX, b, C_ACC, HTPC ? 1 : 2); }
+      } }
+    if (y > bottom - LH) y = bottom - LH; /* the status line stays above the text box */
+    if (tk_wait) text(CX, y, (anim / 20) % 2 ? "Sakura is typing..." : "Sakura is typing.", C_DIM);
+    else if (tk_get) { char b[8], l[48]; int n = plat_read("talk_pct.txt", b, 7), v = 0, k; for (k = 0; k < n && b[k] >= '0' && b[k] <= '9'; k++) v = v * 10 + b[k] - '0'; ys_fmt(l, sizeof l, "Downloading the model: %d%%", v, 0); text(CX, y, l, C_DIM); }
+    else if (*tk_msg) wrap(CX, y, CW, tk_msg, C_DIM, LH, 0, 4);
+#if HTPC
+    input_box(CX, FBY_BTN - 66, CW, !tk_wait);
+    osk(FBH - SAFE - 75);
+    { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, get && !tk_n ? "Start" : "Send"); prompt_btn(&x, FBH - SAFE - 17, 2, "New"); prompt_btn(&x, FBH - SAFE - 17, 3, "EN"); }
+    if (IN.pressed & A_START) {
+#else
+    input_box(CX, FBY_BTN - 30, CW, !tk_wait);
+    text_entry();
+    if (button(CX + CW - 90, FBY_BTN, 90, 28, get && !tk_n ? "Start" : "Send")) {
+#endif
+        if (get && !tk_n && !tk_get) { tk_ask = 1; if (plat_talk_get()) { tk_get = 1; tk_msg = ""; } else tk_msg = "Couldn't start the download. It needs YomiGoTalk.exe beside YomiGo, and 64-bit Windows 10 or later."; }
+        else if (!tk_wait && input[0] && tk_n) { tk_add('U', input); input[0] = 0; tk_ask_partner(); }
+    }
+#if HTPC
+    if (IN.pressed & A_X) {
+#else
+    if (button(CX, FBY_BTN, 110, 28, "New topic")) {
+#endif
+        if (!tk_wait && !tk_get) { tk_n = 0; tk_msg = ""; input[0] = 0; }
+    }
+#if !HTPC
+    if (button(CX + 116, FBY_BTN, 110, 28, tk_en ? "English: On" : "English: Off")) tk_en = !tk_en;
+    if (plat_has_tts() && tk_n && tk_role[tk_n - 1] == 'A' && button(CX + 232, FBY_BTN, 70, 28, "Hear")) { char ja[640]; tk_part(tk_text[tk_n - 1], "JA:", ja, sizeof ja); plat_speak(*ja ? ja : tk_text[tk_n - 1]); }
+#else
+    if (IN.pressed & A_Y) tk_en = !tk_en;
+    if (IN.pressed & A_BACK) go(S_HOME);
+#endif
+}
+
 /* ---- who's learning: picks the casual words for "I" added to My words ---- */
 static void scr_speaker(void) {
     static const char *const who[] = {"A woman", "A man", HTPC ? "Not saying" : "Rather not say"};
@@ -1672,6 +1819,10 @@ void app_test_auto(void) {
         if (chat_turn < YG_CHATS[chat_id].nturns) ys_cpy(input, YG_CHATS[chat_id].turns[chat_turn].want[0], sizeof input);
         IN.pressed = HTPC ? A_START : A_OK;
         break;
+    case S_CLASS:
+        /* a request the screen didn't take (an exam gate, say) means press on instead */
+        if (ls_test) { ls_test = 0; IN.pressed = A_OK; } else if (plat_has_tts() && ls_day != P.day) ls_test = 1; else IN.pressed = A_OK;
+        break;
     case S_HOME:
         if (P.done_today >= P.pace && P.last_day == plat_today() && profile_exam_gate(&P) < 0) plat_test_next_day();
         else IN.pressed = A_OK;
@@ -1721,6 +1872,7 @@ void app_frame(void) {
 #endif
     case S_FIRST: scr_first(); break;
     case S_SPEAKER: scr_speaker(); break;
+    case S_TALK: scr_talk(); break;
     case S_TYPING: scr_typing(); break;
     case S_READ: scr_read(); break;
     case S_MYWORDS: scr_mywords(); break;

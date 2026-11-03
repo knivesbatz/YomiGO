@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.9.0
+
+- Talk: chat freely in Japanese with Sakura, a conversation partner that runs on your PC. She follows your level and today's lesson, and each reply comes with an English translation and a check of what you wrote. On the PC and the TV, from the Grammar Gate on
+- Her model, Google's Gemma 4 E4B (5.2 GB), downloads once, the first time, and is checked against a fixed SHA-256. Nothing you write leaves the PC
+- On the PC and the TV, speaking aloud (shadowing) is no longer a required step. It's an optional Speaking button on the class screen. The listening quiz stays in the class when Windows has a Japanese voice. Neither has ever used the microphone
+- Model downloads now pick up where they stopped if the connection drops
+
 ## 0.8.0
 
 - N3 Bridge, a new stage of 15 classes: 47 grammar points, 98 words, and 26 kanji with stroke order, three graded readings, three conversations, and the N3 Mastery Exam

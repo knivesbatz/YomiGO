@@ -22,7 +22,8 @@ for exe in ("YomiGo.exe", "YomiGoHTPC.exe"):
     print(exe, "exit", r.returncode, "day", vals.get("day"), "cards", cards, "xp", vals.get("xp"), "chats", vals.get("chats"), "hw", vals.get("hw"), "reads", vals.get("reads"), "OK" if ok else "FAILED")
     fail += not ok
     shutil.rmtree(root, ignore_errors=True)
-# Listening, on a pretend voice since a test PC may have none: the whole course again, through those screens
+# Listening, on a pretend voice since a test PC may have none: the whole course again, through those screens.
+# Speaking aloud is optional on PC and TV, and the test player takes it once a day, so it's walked too.
 for exe in ("YomiGo.exe", "YomiGoHTPC.exe"):
     root = tempfile.mkdtemp()
     script = "w2;ow2;ow2;tEars;w1;ow2;ddw1;ow2;dw1;ow2;dw1;ow2;G;" if exe == "YomiGo.exe" else "w2;ow2;ow2;ow1;sw2;rrw1;ow2;dw1;ow2;dw1;ow2;G;"
@@ -85,6 +86,37 @@ for exe, keys, want in (("YomiGo.exe", "w1;ow2;dw1;ow2;", ["ぼく", "おれ"]),
     print("who's learning on", exe, "OK" if ok else "FAILED", mine)
     fail += not ok
     shutil.rmtree(root, ignore_errors=True)
+# Talking with Sakura, as an N5 learner: a greeting from her, then a reply to a sentence with a mistake in it, with its checks
+if os.path.exists(os.path.join(ROOT, "dist", "models", "gemma-4-E4B_q4_0-it.gguf")):
+    import time
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import make_brand
+    # Through YomiGo: the screen asks, waits, and reads each reply, so none is left over
+    root = tempfile.mkdtemp()
+    open(os.path.join(root, "Hana.sav"), "w", encoding="utf-8", newline="\n").write(make_brand.save_text(50, 0))
+    said = "".join(c if ord(c) < 128 else "\\u%04x" % ord(c) for c in "きのう えいがを みるました。")
+    r = subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--script", "w2;ow2;ow2;llw1;ow2;W;w2;t" + said + ";w1;ow1;W;w2;"], timeout=900)
+    ok = r.returncode == 0 and not os.path.exists(os.path.join(root, "talk_out.txt")) and not os.path.exists(os.path.join(root, "talk_req.txt"))
+    print("talking through YomiGo:", "OK" if ok else "FAILED", r.returncode)
+    fail += not ok
+    shutil.rmtree(root, ignore_errors=True)
+    # The helper itself: a reply in Japanese, a correction of 見るました, and an English line
+    root = tempfile.mkdtemp()
+    p = subprocess.Popen([os.path.join(ROOT, "dist", "YomiGoTalk.exe"), os.path.join(ROOT, "dist", "models", "gemma-4-E4B_q4_0-it.gguf"), root, str(os.getpid())])
+    open(os.path.join(root, "talk_req.txt"), "w", encoding="utf-8", newline="\n").write(
+        "S\tYou are Sakura, chatting with someone learning Japanese at JLPT N5. Reply in one short sentence of simple Japanese.\nX\tfix en\nU\tきのう えいがを みるました。\n")
+    out, t0 = os.path.join(root, "talk_out.txt"), time.time()
+    while not os.path.exists(out) and p.poll() is None and time.time() - t0 < 300: time.sleep(0.2)
+    time.sleep(0.2)
+    got = open(out, encoding="utf-8").read() if os.path.exists(out) else ""
+    p.kill()
+    lines = dict(l.split(": ", 1) for l in got.splitlines() if ": " in l)
+    ok = any(ord(c) > 0x3000 for c in lines.get("JA", "")) and any(w in lines.get("FIX", "") for w in ("見ました", "みました")) and len(lines.get("EN", "")) > 3
+    print("Sakura's reply, correction, and translation:", "OK" if ok else "FAILED", repr(got[:200]))
+    fail += not ok
+    shutil.rmtree(root, ignore_errors=True)
+else:
+    print("talking: SKIPPED, no conversation model in dist\\models")
 # Your own words on the TV: find 猫 in the dictionary, add it, and it must be saved
 root = tempfile.mkdtemp()
 subprocess.run([os.path.join(ROOT, "dist", "YomiGoHTPC.exe"), "--root", root, "--script", "w2;ow2;ow2;tMine;w1;sw2;rrw1;ow2;dw1;ow2;dw1;ow2;rrrrw8;ow2;RRRw2;tneko;w1;sw2;xw2;"], timeout=60)

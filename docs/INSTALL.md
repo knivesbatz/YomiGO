@@ -42,6 +42,14 @@ On the PC, **Text** in the side menu reads Japanese and lets you click any word 
 
 The first time, Transcribe asks before downloading its speech model: 574 MB from Hugging Face, checked against a fixed fingerprint, and kept in `models` beside YomiGo. Everything runs on your PC, and nothing is uploaded. It needs 64-bit Windows 10 or 11, a processor from about 2013 or later, and `YomiGoListen.exe` beside YomiGo. Expect it to take about half as long as the file plays, or longer on a slower PC. You can keep studying while it works.
 
+### Talk
+
+**Talk** in the side menu (on the TV, in the carousel) is open conversation with Sakura, a partner that runs on your PC. It opens at the Grammar Gate. She replies in Japanese at your level, about today's lesson. Under each reply you'll see an English translation, which **English** turns off, and, when she thinks you made a mistake, a suggestion marked **Maybe better**.
+
+The first time, Talk asks before downloading its model: 5.2 GB from Hugging Face, checked against a fixed fingerprint, and kept in `models` beside YomiGo. It needs 64-bit Windows 10 or 11, a processor from about 2013 or later, about 6 GB of free memory, and `YomiGoTalk.exe` beside YomiGo. The first reply takes a little while as the model loads. After that, replies take a few seconds on a recent PC.
+
+On the TV, type on the on-screen keyboard and press Start to send. X starts a new topic, and Y shows or hides English.
+
 ## Android
 
 1. On your phone, download `YomiGo.apk` from the latest release.
