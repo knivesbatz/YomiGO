@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.17.0
+
+- Right answers burst into sakura petals and sparkles, bigger the longer your run. From three in a row a cheer pops up: いいね！, then すごい！ at five, さいこう！ at ten, and てんさい！ at twenty, with the count. Acing a quiz or passing an exam rains petals with the fanfare. A miss starts the run again. On the PC, TV, and phone, where phones set to reduce motion skip the flying petals
+- Exams on the PC and phone: switching to another program or app while a question is open counts that question as wrong, so answers can't be looked up mid-exam. The exam says so when it starts, and the exams list explains it. The TV doesn't do this
+
 ## 0.16.0
 
 - 196 more words, from 1,224 to 1,420 word cards, each with an example sentence. A check against core N5 and N4 vocabulary found everyday words the course had skipped, and they're in now: 公園, 塩, 多い, 少ない, 嫌い, いい, 今年, 毎朝, 階段, 会話, and verbs such as 取る, 置く, 返す, 売る, 習う, 答える, 困る, 慣れる, and 続く. Plus words from real learning material: 先輩, 迷惑, 緊張, 海外, 書類, 獣医, and more

@@ -19,6 +19,7 @@ typedef struct {
     int num;                  /* 1-4 pressed, 0 otherwise */
     int paste, copy;          /* Ctrl+V and Ctrl+C */
     int wheel;                /* mouse wheel notches this frame, + away from you */
+    int left;                 /* another program took over this frame */
 } Input;
 extern Input IN;
 

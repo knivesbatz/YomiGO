@@ -727,6 +727,7 @@ static LRESULT CALLBACK proc(HWND h, UINT m, WPARAM w, LPARAM l) {
     case WM_LBUTTONDOWN: map_mouse(l); pending.mdown = 1; SetCapture(h); return 0;
     case WM_LBUTTONUP: map_mouse(l); pending.mdown = 0; pending.mclick = 1; ReleaseCapture(); return 0;
     case 0x020A: pending.wheel += (short)HIWORD(w) / 120; return 0; /* WM_MOUSEWHEEL, sent to Windows 98 and later */
+    case WM_ACTIVATEAPP: if (!w) pending.left = 1; return 0; /* exams count a question wrong when you switch away */
     case WM_KEYDOWN:
         switch (w) {
         case VK_UP: pending.pressed |= A_UP; break;
@@ -759,7 +760,7 @@ static LRESULT CALLBACK proc(HWND h, UINT m, WPARAM w, LPARAM l) {
     case WM_TIMER:
         pending.pressed |= pad_poll();
         IN = pending;
-        pending.pressed = 0; pending.mclick = 0; pending.text[0] = 0; pending.backspace = 0; pending.num = 0; pending.paste = 0; pending.copy = 0; pending.wheel = 0;
+        pending.pressed = 0; pending.mclick = 0; pending.text[0] = 0; pending.backspace = 0; pending.num = 0; pending.paste = 0; pending.copy = 0; pending.wheel = 0; pending.left = 0;
         app_frame();
         { HDC dc = GetDC(h); present(dc); ReleaseDC(h, dc); }
         if (quit_now) DestroyWindow(h);
@@ -783,7 +784,7 @@ static void write_bmp(const char *name) {
     { int y; for (y = FBH - 1; y >= 0; y--) WriteFile(h, FB + y * FBW, FBW * 4, &put, 0); }
     CloseHandle(h);
 }
-static int step_paste, step_copy;
+static int step_paste, step_copy, step_left;
 /* Win95-style command lines are ANSI, so test scripts spell Japanese as \uXXXX */
 static void unescape(char *b) {
     char *r = b, *w = b;
@@ -801,12 +802,12 @@ static void step(int actions, const char *txt, int num, int back) {
     for (i = 0; i < (int)sizeof IN; i++) ((char *)&IN)[i] = 0;
     IN.mx = IN.my = -1;
     IN.pressed = actions; IN.num = num; IN.backspace = back;
-    IN.paste = step_paste; IN.copy = step_copy; step_paste = step_copy = 0;
+    IN.paste = step_paste; IN.copy = step_copy; IN.left = step_left; step_paste = step_copy = step_left = 0;
     if (txt) ys_cpy(IN.text, txt, sizeof IN.text);
     app_frame();
 }
 static void run_script(const char *s) {
-    /* keys: u d l r o(ok) b(back) s(start) y x(extra) V(paste) C(copy); 1-4 pick; "t<text>;" type; "k<text>;" composing; "w<frames>;" wait; "p<name>;" screenshot */
+    /* keys: u d l r o(ok) b(back) s(start) y x(extra) V(paste) C(copy) F(another program takes over); 1-4 pick; "t<text>;" type; "k<text>;" composing; "w<frames>;" wait; "p<name>;" screenshot */
     char buf[128];
     step(0, 0, 0, 0);
     while (*s) {
@@ -819,6 +820,7 @@ static void run_script(const char *s) {
         case 's': step(A_START, 0, 0, 0); break; case 'y': step(A_Y, 0, 0, 0); break;
         case 'x': step(A_X, 0, 0, 0); break;
         case 'V': step_paste = 1; step(0, 0, 0, 0); break;
+        case 'F': step_left = 1; step(0, 0, 0, 0); break;
         case 'C': step_copy = 1; step(0, 0, 0, 0); break;
         case 'R': step(A_R, 0, 0, 0); break; case 'L': step(A_L, 0, 0, 0); break;
         case '1': case '2': case '3': case '4': step(0, 0, c - '0', 0); break;

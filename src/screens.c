@@ -80,7 +80,7 @@ static int note_skip, note_more;
 static char name_buf[YG_NAME];
 static int new_material;
 static int kb_x, kb_y;
-static int q_idk, flash_t;
+static int q_idk, q_left, flash_t;
 static const char *flash_msg = "";
 static void flash(const char *m) { flash_msg = m; flash_t = 40; plat_sound(0); }
 static void flash_add(int r) { flash(r > 0 ? "Added!" : r == 0 ? "Already added" : "Deck is full"); }
@@ -345,13 +345,60 @@ static void footer(const char *ok, const char *back) {
 }
 #endif
 
+/* ---- effects for right answers: petals and sparkles burst from the mark, bigger the longer the run,
+   a cheer from three in a row, and a rain of petals for acing something. A miss starts the run again. ---- */
+#define FX_N 72
+static struct { int x, y, vx, vy, life, kind; } fx[FX_N]; /* in sixteenths of a pixel */
+static int fx_combo, fx_pop, fx_rain; static unsigned fx_seed = 2026;
+static int fx_rand(int n) { fx_seed = fx_seed * 1103515245u + 12345u; return (int)((fx_seed >> 16) % (unsigned)n); }
+static void fx_spawn(int x, int y, int burst) {
+    int i;
+    for (i = 0; i < FX_N; i++) if (fx[i].life <= 0) {
+        fx[i].x = x << 4; fx[i].y = y << 4; fx[i].kind = fx_rand(4); fx[i].life = 34 + fx_rand(26);
+        fx[i].vx = burst ? fx_rand(97) - 48 : fx_rand(17) - 8; fx[i].vy = burst ? -(fx_rand(64) + 32) : fx_rand(16) + 10;
+        if (HTPC) { fx[i].vx /= 2; fx[i].vy /= 2; }
+        return;
+    }
+}
+static void cheer(void) {
+    int i, n = 10 + 2 * (fx_combo < 10 ? fx_combo : 10);
+    fx_combo++;
+    for (i = 0; i < n; i++) fx_spawn(CX + 24, FBY_BTN + 4, 1);
+    if (fx_combo >= 3) fx_pop = 70;
+    plat_sound(2);
+}
+static void miss(void) { fx_combo = 0; plat_sound(4); }
+static void ace(void) { fx_combo = 0; fx_rain = 150; plat_sound(5); }
+static void fx_draw(void) {
+    int i;
+    if (fx_rain > 0 && (--fx_rain % 3) == 0) fx_spawn(fx_rand(FBW), -10, 0);
+    for (i = 0; i < FX_N; i++) if (fx[i].life > 0) {
+        int x = fx[i].x >> 4, y = fx[i].y >> 4, k = fx[i].kind;
+        unsigned c = k == 1 ? C_PINK : k == 2 ? C_ACC : 0xFFFFFF;
+        fx[i].x += fx[i].vx; fx[i].y += fx[i].vy; fx[i].vy += HTPC ? 2 : 3; fx[i].life--;
+        if (k == 0) sakura(x - 7, y - 7, 1);
+        else if (k == 3) { fill(x - 3, y, 7, 1, c); fill(x, y - 3, 1, 7, c); } /* a twinkle */
+        else fill(x, y, fx[i].life > 12 ? 3 : 2, fx[i].life > 12 ? 3 : 2, c);
+    }
+    /* The cheer drops in, holds, then blinks out. From ten in a row it flashes. */
+    if (fx_pop > 0 && (fx_pop > 12 || (fx_pop & 2))) {
+        const char *w = fx_combo >= 20 ? "てんさい！" : fx_combo >= 10 ? "さいこう！" : fx_combo >= 5 ? "すごい！" : "いいね！";
+        char b[32]; int y = FBY_BTN - (HTPC ? 44 : 86) - (fx_pop > 60 ? (fx_pop - 60) * 3 : 0);
+        unsigned c = fx_combo >= 10 && (anim / 4) & 1 ? C_PINK : C_ACC;
+        ys_itoa(fx_combo, b); ys_cat(b, " in a row", sizeof b);
+        text2(CX + (CW - 2 * text_w(w)) / 2, y, w, c);
+        text_c(CX + CW / 2, y + (HTPC ? 30 : 34), b, c);
+    }
+    if (fx_pop > 0) fx_pop--;
+}
+
 /* ---- result page ---- */
 static void show_result(const char *title, const char *body, int good, Screen next) {
     ys_cpy(result_title, title, sizeof result_title);
     ys_cpy(result_body, body, sizeof result_body);
     result_good = good; result_next = next;
     go(S_RESULT);
-    plat_sound(good == 2 ? 5 : good ? 3 : 4); /* 2: aced it, with the big fanfare */
+    if (good == 2) ace(); else { fx_combo = 0; plat_sound(good ? 3 : 4); } /* 2: aced it, with the big fanfare and petals */
 }
 static void start_quiz(QuizMode m);
 static void scr_result(void) {
@@ -382,7 +429,8 @@ static const char *const STEP_JA[] = {"ふくしゅう", "じゅぎょう", "タ
 
 static Screen quiz_from; /* practice goes back where it started: Genki, or home after a failed exam */
 static void start_quiz(QuizMode m) {
-    quiz_from = scr; qm = m; qi = 0; qright = 0; qanswered = 0; qchoice = 0; q_idk = 0; input[0] = 0; q_said = -1; nmissed = 0;
+    quiz_from = scr; qm = m; qi = 0; qright = 0; qanswered = 0; qchoice = 0; q_idk = 0; q_left = 0; input[0] = 0; q_said = -1; nmissed = 0;
+    if (!HTPC && (m == QM_EXAM || m == QM_PLACE)) { flash_msg = "Leaving YomiGo fails a question"; flash_t = 180; }
     go(S_QUIZ);
 }
 static void next_step(void);
@@ -674,7 +722,7 @@ static void quiz_finished(void) {
     case QM_DAILY:
         if (pct >= 80) {
             P.xp += qright * 2;
-            if (pct == 100) { P.perfects++; plat_sound(5); }
+            if (pct == 100) { P.perfects++; ace(); }
             ach_check(&P);
             next_step();
         } else {
@@ -727,8 +775,8 @@ static void quiz_finished(void) {
 static void answer_given(int ok) {
     qanswered = 1; qok = ok;
     if (!ok && nmissed < 40 && Z.q[qi].card < YG_NCARDS) missed[nmissed++] = Z.q[qi].card;
-    if (!ok) plat_sound(4);
-    if (ok) { qright++; plat_sound(2); }
+    if (!ok) miss();
+    if (ok) { qright++; cheer(); }
     if (qm == QM_REVIEW) {
         int id = Z.q[qi].card;
         CardState *c = id >= YG_NCARDS ? &P.my[id - YG_NCARDS].st : &P.cards[id];
@@ -810,6 +858,8 @@ static void scr_quiz(void) {
     Question *q = &Z.q[qi];
     char b[64];
     int hearing = *q->say != 0, hidden = hearing && !qanswered;
+    /* In an exam on the PC, switching to another program while a question is open counts it as wrong, so answers can't be looked up. Not on the TV. */
+    if (!HTPC && IN.left && (qm == QM_EXAM || qm == QM_PLACE) && !qanswered) { qchoice = -1; q_left = 1; answer_given(0); }
     static const char *const hdr[] = {"Warm-up", "Practice", "Daily quiz", "Homework check", "Flashcards", "Exam", "Entrance exam", "Genki practice", "Listening"};
     if (!hidden) copy_src = q->prompt;
     if (hearing && q_said != qi) { plat_speak(q->say); q_said = qi; }
@@ -882,10 +932,11 @@ static void scr_quiz(void) {
         if (!qok && *why && !HTPC) wrap(CX, FBY_BTN - 40, CW, why, C_DIM, 18, 0, 2);
         /* A big ○ or ×, as Japanese marking uses, so right and wrong are obvious at a glance */
         if (!q_idk) text2(CX, FBY_BTN - 2, qok ? "○" : "×", qok ? C_GOOD : C_BAD);
-        if (!HTPC && !q_idk) text2(CX + 40, FBY_BTN - 2, qok ? L("Correct!", "正解！", 5) : L("Not quite.", "ちがいます", 3), qok ? C_GOOD : C_BAD);
+        if (q_left) text(CX + 40, FBY_BTN + 6, "You left YomiGo: this counts as wrong.", C_BAD);
+        else if (!HTPC && !q_idk) text2(CX + 40, FBY_BTN - 2, qok ? L("Correct!", "正解！", 5) : L("Not quite.", "ちがいます", 3), qok ? C_GOOD : C_BAD);
         else text(CX + (q_idk ? 0 : 40), FBY_BTN + 6, qok ? L("Correct!", "正解！", 5) : q_idk ? (HTPC ? "That's okay." : "That's okay. Here's the answer.") : L("Not quite.", "ちがいます", 3), qok ? C_GOOD : q_idk ? C_DIM : C_BAD);
         if (button(CX + CW - 120, FBY_BTN, 120, 28, L("Next", "つぎ", 2))) {
-            qi++; qanswered = 0; q_idk = 0; input[0] = 0; ui_reset_focus();
+            qi++; qanswered = 0; q_idk = 0; q_left = 0; input[0] = 0; ui_reset_focus();
             if (qi >= Z.n) quiz_finished();
             return;
         }
@@ -957,16 +1008,16 @@ static void scr_chat(void) {
     osk(FBH - SAFE - 80);
     if (IN.pressed & A_X) { chat_fail = 3; input[0] = 0; }
     if (IN.pressed & A_START) {
-        if (chat_ok(input, t)) { chat_turn++; chat_fail = 0; input[0] = 0; plat_sound(2); }
-        else { chat_fail++; plat_sound(4); }
+        if (chat_ok(input, t)) { chat_turn++; chat_fail = 0; input[0] = 0; cheer(); }
+        else { chat_fail++; miss(); }
     }
     { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "Say"); prompt_btn(&x, FBH - SAFE - 17, 2, "Don't know"); }
 #else
     text_entry();
     { int enter = take_enter();
     if (button(CX + CW - 120, FBY_BTN, 120, 28, L("Say it", "言う", 5)) || enter) {
-        if (chat_ok(input, t)) { chat_turn++; chat_fail = 0; input[0] = 0; plat_sound(2); }
-        else { chat_fail++; plat_sound(4); }
+        if (chat_ok(input, t)) { chat_turn++; chat_fail = 0; input[0] = 0; cheer(); }
+        else { chat_fail++; miss(); }
     } }
     if (button(CX + 124, FBY_BTN, 130, 28, L("I don't know", "わかりません", 3))) { chat_fail = 3; input[0] = 0; }
     if (plat_has_tts() && *t->say && button(CX, FBY_BTN, 120, 28, L("Hear it", "聞く", 5))) plat_speak(t->say);
@@ -1015,12 +1066,12 @@ static void scr_typing(void) {
 #endif
     if (submit && input[0]) {
         if (answer_ok(input, c->reading, c->romaji)) {
-            plat_sound(2); ty_bad = 0; input[0] = 0; ty_rep++;
+            cheer(); ty_bad = 0; input[0] = 0; ty_rep++;
             if (ty_rep >= TY_REPS) {
                 ty_rep = 0; ty_i++; P.xp++;
                 if (ty_i >= ty_n) { next_step(); return; }
             }
-        } else { plat_sound(4); ty_bad = 1; input[0] = 0; }
+        } else { miss(); ty_bad = 1; input[0] = 0; }
     }
 }
 
@@ -1093,7 +1144,7 @@ static void scr_read(void) {
                 fill(CX, yy, CW, bh, f); frame(CX, yy, CW, bh, C_LO);
                 wrap(CX + 4, yy + (bh - 16) / 2, CW - 8, q[1 + idx], (idx == 0 || idx == rd_pick) ? (HTPC ? 0x1B1033 : 0xFFFFFF) : C_INK, LH, 0, 1);
             } else if (button(CX, yy, CW, bh, q[1 + idx]) || IN.num == i + 1) {
-                rd_pick = idx; if (idx == 0) { rd_right++; plat_sound(2); } else plat_sound(4);
+                rd_pick = idx; if (idx == 0) { rd_right++; cheer(); } else miss();
                 IN.pressed &= ~A_OK;
             }
         }
@@ -1350,7 +1401,7 @@ static void scr_exams(void) {
         text(CX + (HTPC ? 198 : 282), y + (h - 16) / 2, b, passed ? C_GOOD : i == gate ? C_BAD : C_DIM);
         y += h + (HTPC ? 2 : 6);
     }
-    if (!HTPC) wrap(CX, y + 4, CW, "These are YomiGo's own exams, not official JLPT tests. N2, N1, and YomiGo's own Beyond N1 arrive in updates.", C_DIM, 18, 0, 4);
+    if (!HTPC) wrap(CX, y + 4, CW, "These are YomiGo's own exams, not official JLPT tests. Stay in YomiGo while you take one: switching to another program counts that question as wrong.", C_DIM, 18, 0, 4);
 #if HTPC
     if (IN.pressed & A_BACK) go(S_HOME);
     footer("Challenge", "Menu");
@@ -1964,6 +2015,7 @@ void app_frame(void) {
         if (src && *src) { plat_clip_set(src); flash("Copied!"); }
     }
     plat_ime_field(field_on, field_x, field_y);
+    fx_draw();
     if (flash_t > 0) { int w = text_w(flash_msg) + 8; flash_t--; fill(FBW - w - 4, FBH / 2, w, 20, C_ACC); text(FBW - w, FBH / 2 + 2, flash_msg, HTPC ? 0x1B1033 : 0xFFFFFF); }
     ui_end();
 }

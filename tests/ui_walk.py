@@ -148,6 +148,15 @@ ok = "\t猫\tねこ\t" in open(os.path.join(root, "Hana.sav"), encoding="utf-8")
 print("Enter searches the PC dictionary", "OK" if ok else "FAILED")
 fail += not ok
 shutil.rmtree(root, ignore_errors=True)
+# Leaving YomiGo during an exam fails the open question: switch away (F) before picking each answer, so none can score
+root = tempfile.mkdtemp()
+open(os.path.join(root, "Hana.sav"), "w", encoding="utf-8", newline="\n").write("".join(l + "\n" for l in make_brand.save_text(5, 0).splitlines() if not l.startswith("exam.S0=")))
+subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--script", "w2;ow2;ow2;M50,150;w2;ow2;" + "Fw1;1w1;ow1;" * 20 + "w2;"], timeout=60)
+vals = dict(l.split("=", 1) for l in open(os.path.join(root, "Hana.sav"), encoding="utf-8").read().splitlines() if "=" in l)
+ok = vals.get("exam.S0", "0") == "0"
+print("leaving during an exam fails the question", "OK" if ok else "FAILED", vals.get("exam.S0"))
+fail += not ok
+shutil.rmtree(root, ignore_errors=True)
 # Copy and paste, using a stand-in clipboard so the real one is left alone: "Ab" pasted after itself makes "AbAb"
 root = tempfile.mkdtemp()
 subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--script", "w2;ow2;ow2;tAb;w1;C;w1;V;w1;ow2;"], timeout=60)

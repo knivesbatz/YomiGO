@@ -18,6 +18,40 @@ const btn = (label, on, cls) => h("button", { on, cls: cls || "" }, label);
 // Chimes, as on the PC: a right answer climbs a note for each one in a row, and acing something gets a fanfare
 let actx = null, combo = 0;
 const muted = () => { try { return localStorage.getItem("yg.mute") === "1"; } catch { return false; } };
+// Petals burst from the answer on every right one, bigger the longer the run, and from three in a row a cheer pops up.
+// Acing something rains petals. Phones set to reduce motion get the cheer without the flying petals.
+let streak = 0;
+const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function fly(x, y, path, char, color, ms) {
+  const s = h("span", { cls: "petal" }, char);
+  s.style.cssText = `left:${x}px;top:${y}px;color:${color};font-size:${14 + Math.random() * 12}px`;
+  document.body.append(s);
+  s.animate(path, { duration: ms, easing: "ease-out" }).onfinish = () => s.remove();
+}
+function cheerRight(anchor) {
+  streak++; chime("ok");
+  requestAnimationFrame(() => {
+    const r = (anchor || document.body).getBoundingClientRect(), n = 10 + 2 * Math.min(streak, 10);
+    if (!calm) for (let i = 0; i < n; i++) {
+      const dx = (Math.random() - 0.5) * 320, up = 80 + Math.random() * 160, spin = Math.random() * 540;
+      fly(r.left + 24, r.top + 16, [{ transform: "translate(0,0)", opacity: 1 }, { transform: `translate(${dx * 0.6}px,${-up}px) rotate(${spin / 2}deg)`, opacity: 1, offset: 0.45 },
+        { transform: `translate(${dx}px,${120 - up / 2}px) rotate(${spin}deg)`, opacity: 0 }], i % 3 ? "✦" : "🌸", ["#f2b6c4", "#c2436b", "#ffc24a"][i % 3], 1000);
+    }
+    if (streak >= 3) {
+      const p = h("div", { cls: "cheer" }, streak >= 20 ? "てんさい！" : streak >= 10 ? "さいこう！" : streak >= 5 ? "すごい！" : "いいね！", h("small", null, `${streak} in a row`));
+      document.body.append(p);
+      p.animate([{ transform: "translate(-50%,-40px) scale(.6)", opacity: 0 }, { transform: "translate(-50%,0) scale(1.1)", opacity: 1, offset: 0.2 },
+        { transform: "translate(-50%,0) scale(1)", opacity: 1, offset: 0.8 }, { transform: "translate(-50%,0) scale(1)", opacity: 0 }], { duration: 1300 }).onfinish = () => p.remove();
+    }
+  });
+}
+function cheerMiss() { streak = 0; chime("bad"); }
+function petalRain() {
+  if (!calm) for (let i = 0; i < 40; i++) setTimeout(() => fly(Math.random() * innerWidth, -30, [{ transform: "translate(0,0)" }, { transform: `translate(${(Math.random() - 0.5) * 120}px,${innerHeight + 60}px) rotate(${Math.random() * 720}deg)` }], "🌸", "#f2b6c4", 2400), i * 50);
+}
+// In an exam, switching to another app while a question is open counts it as wrong, so answers can't be looked up
+let leaveHook = null;
+document.addEventListener("visibilitychange", () => { if (document.hidden && leaveHook) leaveHook(); });
 function chime(kind) {
   if (muted()) return;
   try { actx = actx || new AudioContext(); } catch { return; }
@@ -211,7 +245,7 @@ function runStep() {
     }
     case 7: return runQuiz(Y.quizDay(P.day), "Daily quiz", (right, n) => {
       const pct = Math.trunc(right * 100 / n);
-      if (pct >= Y.PASS) { P.xp += right * 2; if (pct === 100) { P.perfects++; chime("ace"); } return nextStep(); }
+      if (pct >= Y.PASS) { P.xp += right * 2; if (pct === 100) { P.perfects++; streak = 0; chime("ace"); petalRain(); } return nextStep(); }
       P.step = 1; store.save(); result("Not yet!", `You scored ${pct}%. You need 80% to continue. Look at your notes and try again.`, false, runStep);
     });
     case 8: return task(d.hw, L("Homework", "しゅくだい", 3), L("I did it!", "できた！", 2), () => {
@@ -257,7 +291,7 @@ function reading(r, qi, right, en) {
   show(h("div", { cls: "row" }, h("h1", { lang: "ja" }, r.ja), h("span", { cls: "dim" }, `${qi + 1} / ${r.q.length}`)), h("div", { cls: "card pre", lang: "ja" }, r.jp), h("div", { cls: "card" }, h("strong", null, q)), buttons, fb);
 }
 function task(body, title, label, go) { setNav(-1); show(h("h1", null, title), h("div", { cls: "card" }, body), btn(label, go, "main"), btn("Later", home)); }
-function result(title, body, good, next) { chime(good === 2 ? "ace" : good ? "done" : "bad"); setNav(-1); show(h("h1", { cls: good ? "good" : "bad" }, title), h("div", { cls: "card" }, body), btn(L("Continue", "つぎへ", 2), next, "main")); }
+function result(title, body, good, next) { streak = 0; chime(good === 2 ? "ace" : good ? "done" : "bad"); if (good === 2) petalRain(); setNav(-1); show(h("h1", { cls: good ? "good" : "bad" }, title), h("div", { cls: "card" }, body), btn(L("Continue", "つぎへ", 2), next, "main")); }
 
 function teach(page) {
   const d = C.days[P.day], total = d.notes.length + d.new.length, rom = Y.romajiMode(P.day);
@@ -292,7 +326,7 @@ function typing(words, i, rep, bad) {
   const submit = () => {
     if (!inp.value) return inp.focus();
     const ok = Y.answerOk(inp.value, c.r, c.ro);
-    chime(ok ? "ok" : "bad");
+    ok ? cheerRight(inp) : cheerMiss();
     if (!ok) return typing(words, i, rep, true);
     if (rep + 1 < REPS) return typing(words, i, rep + 1, false);
     P.xp++;
@@ -312,14 +346,15 @@ function runQuiz(qs, title, done, opt = {}) {
   const step = () => {
     if (i >= qs.length) return done(right, total0);
     const q = qs[i], fb = h("div"), area = h("div"), big = h("div", { cls: "big", lang: "ja" }, q.say ? "🔊 Listen..." : q.prompt);
-    let idk = false, dontKnow = null;
+    let idk = false, left = false, dontKnow = null;
     const after = (ok) => {
+      leaveHook = null;
       if (dontKnow) dontKnow.remove();
-      chime(ok ? "ok" : "bad");
+      ok ? cheerRight(fb) : cheerMiss();
       if (ok) { if (!opt.seenWrong?.has(i)) right++; } else if (opt.requeue && qs.length < 60) qs.push(q);
       if (opt.onAnswer) opt.onAnswer(q, ok);
       if (q.say) big.textContent = q.prompt;
-      fb.replaceChildren(idk ? "" : h("div", { cls: ok ? "good mark" : "bad mark" }, ok ? "○" : "×"), h("strong", { cls: ok ? "good" : idk ? "dim" : "bad" }, ok ? L("Correct!", "正解！", 5) : idk ? "That's okay. Here's the answer." : L("Not quite.", "ちがいます", 3)), q.kind === "type" && !ok ? h("div", { lang: "ja" }, q.want) : "", !ok && q.card.n ? h("p", { cls: "dim" }, q.card.n) : "", btn(L("Next", "つぎ", 2), () => { i++; step(); }, "main"));
+      fb.replaceChildren(idk ? "" : h("div", { cls: ok ? "good mark" : "bad mark" }, ok ? "○" : "×"), h("strong", { cls: ok ? "good" : idk ? "dim" : "bad" }, ok ? L("Correct!", "正解！", 5) : idk ? "That's okay. Here's the answer." : left ? "You left YomiGo during the exam, so this one counts as wrong." : L("Not quite.", "ちがいます", 3)), q.kind === "type" && !ok ? h("div", { lang: "ja" }, q.want) : "", !ok && q.card.n ? h("p", { cls: "dim" }, q.card.n) : "", btn(L("Next", "つぎ", 2), () => { i++; step(); }, "main"));
     };
     if (q.kind === "choice") {
       const buttons = q.choices.map((c) => { const b = btn(c, () => { buttons.forEach((x) => { x.disabled = true; if (x.textContent === q.answer) x.className = "right"; }); if (c !== q.answer) b.className = "wrong"; after(c === q.answer); }); b.lang = "ja"; return b; });
@@ -332,6 +367,7 @@ function runQuiz(qs, title, done, opt = {}) {
       area.append(inp, pre, check);
       q.focus = inp;
     }
+    if (opt.noExit) leaveHook = () => { left = true; for (const b of area.querySelectorAll("button, input")) b.disabled = true; after(false); };
     // Not knowing is a normal answer. It counts as a miss, and shows the right one.
     dontKnow = btn(L("I don't know", "わかりません", 3), () => {
       idk = true;
@@ -354,7 +390,7 @@ function chat(id, turn, fails) {
   if (turn >= c.turns.length) { P.chats++; P.xp += 30; return nextStep(); }
   const t = c.turns[turn], inp = h("input", { autocapitalize: "off", autocomplete: "off", lang: "ja", placeholder: "Type here", "aria-label": "Your reply" }), pre = h("div", { cls: "acc", lang: "ja" });
   inp.addEventListener("input", () => { pre.textContent = Y.normKana(inp.value); });
-  const send = (text) => { if (Y.chatOk(text, t)) { chime("ok"); chat(id, turn + 1, 0); } else { chime("bad"); chat(id, turn, fails + 1); } };
+  const send = (text) => { if (Y.chatOk(text, t)) { cheerRight(document.activeElement); chat(id, turn + 1, 0); } else { cheerMiss(); chat(id, turn, fails + 1); } };
   inp.addEventListener("keydown", (e) => { if (e.key === "Enter") send(inp.value); });
   setNav(-1);
   show(h("h1", { lang: "ja" }, c.ja), h("div", { cls: "dim" }, c.title),
@@ -399,7 +435,7 @@ function exams() {
   show(h("h1", null, L("Exams", "しけん", 2)), C.exams.map((e, i) => {
     const open = e.day < P.day, s = P.exams[e.id] || 0;
     return h("div", { cls: "card" }, h("div", { cls: "row" }, e.name, h("span", { cls: s >= Y.PASS ? "good" : i === gate ? "bad" : "dim" }, s >= Y.PASS ? `Best ${s}%` : !open ? "Locked" : i === gate ? "Required" : "Open")), open ? btn("Challenge", () => startExam(i)) : "");
-  }), h("p", { cls: "dim" }, "These are YomiGo's own exams, not official JLPT tests. N2, N1, and YomiGo's own Beyond N1 arrive in updates."));
+  }), h("p", { cls: "dim" }, "These are YomiGo's own exams, not official JLPT tests. Stay in YomiGo while you take one: switching to another app counts that question as wrong."));
 }
 const RANKS = [["Newcomer", "入門者"], ["White Sash", "白帯"], ["Road Walker", "道を行く者"], ["Scribe", "書記"], ["Castle Guard", "城の守り"], ["Gatekeeper", "門番"], ["Kanji Knight", "漢字の騎士"], ["N5 Champion", "N5王者"], ["N4 Champion", "N4王者"], ["N3 Champion", "N3王者"]];
 function quest() {
