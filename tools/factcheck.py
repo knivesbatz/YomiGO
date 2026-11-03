@@ -46,9 +46,13 @@ PLAIN = {"分かります": ("分かる", "わかる"), "分かりません": ("
          "出かけます": ("出かける", "でかける"), "持ちます": ("持つ", "もつ"), "助けます": ("助ける", "たすける"), "似合います": ("似合う", "にあう"),
          "呼びます": ("呼ぶ", "よぶ"), "着きます": ("着く", "つく"), "始まります": ("始まる", "はじまる"), "見せます": ("見せる", "みせる"),
          "曲がります": ("曲がる", "まがる"), "消します": ("消す", "けす"), "生まれます": ("生まれる", "うまれる"), "頑張ります": ("頑張る", "がんばる"),
-         "空きます": ("空く", "すく")}
+         "空きます": ("空く", "すく"),
+         "取ります": ("取る", "とる"), "置きます": ("置く", "おく"), "返します": ("返す", "かえす"), "売ります": ("売る", "うる"),
+         "習います": ("習う", "ならう"), "答えます": ("答える", "こたえる"), "つけます": ("付ける", "つける"), "切ります": ("切る", "きる"),
+         "開きます": ("開く", "あく"), "届きます": ("届く", "とどく"), "困ります": ("困る", "こまる"), "動きます": ("動く", "うごく"),
+         "晴れます": ("晴れる", "はれる"), "曇ります": ("曇る", "くもる"), "吹きます": ("吹く", "ふく"), "咲きます": ("咲く", "さく"), "止みます": ("止む", "やむ")}
 # Read by a person: each is right, and only worded differently from JMdict, or a kanji's meaning rather than a word's
-REVIEWED = {"v.akusesarii", "v.anohito", "v.shouhin", "v.kensa", "v.kousokudouro", "v.shukuhaku", "v.perapera", "v.kesshite", "v.fuan", "v.zannen", "v.daikirai", "v.chan", "v.koukoku", "v.fuben", "v.katte", "v.okonau", "v.boshuu", "v.kinshi", "v.kamigata", "v.joubu", "v.suugaku", "v.suru", "v.jouzu", "j.tsukuru", "j.tsukau", "j.motsu", "j.hairu", "j.aruku", "j.ooi", "j.iu", "j.shiru", "j.kangaeru", "j.oshieru", "v.shimasu", "v.arimasu", "v.itadakimasu", "v.gochisousama", "v.desu", "v.ichi", "v.heta", "v.mono", "v.manga", "v.suki", "v.imasu", "v.hitotsu", "v.eeto", "v.hontou",
+REVIEWED = {"v.kirai", "v.hondana", "v.juui", "v.kousaten", "v.naosu", "v.daitai", "v.shikamo", "v.choushi", "v.ririku", "v.gomibako", "v.shitaku", "v.kaeri", "v.kinchou", "v.mitomeru", "v.teishutsu", "v.akusesarii", "v.anohito", "v.shouhin", "v.kensa", "v.kousokudouro", "v.shukuhaku", "v.perapera", "v.kesshite", "v.fuan", "v.zannen", "v.daikirai", "v.chan", "v.koukoku", "v.fuben", "v.katte", "v.okonau", "v.boshuu", "v.kinshi", "v.kamigata", "v.joubu", "v.suugaku", "v.suru", "v.jouzu", "j.tsukuru", "j.tsukau", "j.motsu", "j.hairu", "j.aruku", "j.ooi", "j.iu", "j.shiru", "j.kangaeru", "j.oshieru", "v.shimasu", "v.arimasu", "v.itadakimasu", "v.gochisousama", "v.desu", "v.ichi", "v.heta", "v.mono", "v.manga", "v.suki", "v.imasu", "v.hitotsu", "v.eeto", "v.hontou",
             "j.ichi", "j.iku", "j.kuru", "j.taberu", "j.miru", "j.kaku", "j.hanasu", "j.den", "j.takai",
             # N3, checked by hand in 0.8
             "j.yuu2", "v.totsuzen", "v.omoide", "j.kimeru", "j.kanarazu", "j.ushinau", "j.mamoru", "j.kotowaru", "j.nokoru", "j.shiraberu", "j.tsutaeru",

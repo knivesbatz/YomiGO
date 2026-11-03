@@ -116,6 +116,7 @@ void ys_fmt(char *d, int cap, const char *f, int a, int b);
 int  utf8_next(const char **s);
 int  utf8_put(int cp, char *d);
 void norm_kana(const char *in, char *out, int cap);     /* kana, katakana, kanji, or romaji becomes hiragana */
+void kana_romaji(const char *in, char *out, int cap);   /* a reading in Hepburn romaji, as the kana cards spell it */
 int  answer_ok(const char *input, const char *want, const char *romaji);
 int  chat_ok(const char *input, const YgTurn *t);
 int  dict_search(const char *q, int *out, int max);

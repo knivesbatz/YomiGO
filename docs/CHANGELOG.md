@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.16.0
+
+- 196 more words, from 1,224 to 1,420 word cards, each with an example sentence. A check against core N5 and N4 vocabulary found everyday words the course had skipped, and they're in now: 公園, 塩, 多い, 少ない, 嫌い, いい, 今年, 毎朝, 階段, 会話, and verbs such as 取る, 置く, 返す, 売る, 習う, 答える, 困る, 慣れる, and 続く. Plus words from real learning material: 先輩, 迷惑, 緊張, 海外, 書類, 獣医, and more
+- The dictionary and the Text Reader show each word's romaji beside its reading, on the PC, TV, phone, and in YomiGo Reader. こんにちは reads konnichiwa, as it's said
+- On the PC, Enter searches the dictionary, and Enter sends in the add-a-word and name boxes, even when another button has focus
+- Talk: every message starts with who's speaking, Sakura: or You:, each in its own colour, and suggested corrections show in green
+- The phone's Settings has a YomiGo on GitHub button
+
 ## 0.15.0
 
 - 215 more words, from 1,009 to 1,224 word cards, each with an example sentence, in 27 classes. Common words that had been missing, such as 忙しい, 甘い, 明るい, 鼻, 大人, すぐ, ゆっくり, and 残念, plus the body and health, animals, food and cooking, the post office and getting around, shops, travel and hotels, the home, feelings, and work

@@ -32,6 +32,10 @@ int main(void) {
     CHECK(answer_ok("kin'youbi", "きんようび", "kin'youbi"), "apostrophe");
     CHECK(answer_ok("konnichiwa", "こんにちは", ""), "a final は typed as said, with no romaji to compare");
     CHECK(!answer_ok("wa", "は", ""), "a lone は is still ha");
+    { static const char *const kr[][2] = {{"きって", "kitte"}, {"まっちゃ", "matcha"}, {"ほん", "hon"}, {"きんようび", "kin'youbi"}, {"コーヒー", "koohii"},
+                                         {"こんにちは", "konnichiwa"}, {"はは", "haha"}, {"ちゃわん", "chawan"}, {"ファイル", "fairu"}};
+      int k; char ro[64];
+      for (k = 0; k < 9; k++) { kana_romaji(kr[k][0], ro, sizeof ro); CHECK(!ys_cmp(ro, kr[k][1]), "romaji %d", k); } }
 
     /* Every chat reply must be reachable, typed in romaji and in kana with kanji */
     for (i = 0; i < YG_NCHATS; i++) { int t, w; for (t = 0; t < YG_CHATS[i].nturns; t++) for (w = 0; w < YG_CHATS[i].turns[t].nwant; w++)

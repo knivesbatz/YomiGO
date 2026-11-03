@@ -136,3 +136,8 @@ test("a word's final は can be typed as it's said, but a lone は can't", () =>
   assert.ok(Y.answerOk("こんばんわ", "こんばんは", ""));
   assert.ok(!Y.answerOk("wa", "は", ""));
 });
+
+test("readings shown in romaji spell as the kana cards do, and as said", () => {
+  for (const [k, r] of [["きって", "kitte"], ["まっちゃ", "matcha"], ["ほん", "hon"], ["きんようび", "kin'youbi"], ["コーヒー", "koohii"],
+                        ["こんにちは", "konnichiwa"], ["はは", "haha"], ["ちゃわん", "chawan"], ["ファイル", "fairu"]]) assert.equal(Y.kanaRomaji(k), r, k);
+});

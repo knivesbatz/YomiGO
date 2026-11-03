@@ -21,11 +21,12 @@ No app alone can make someone fluent. Fluency also takes thousands of hours of r
 
 ## Next up
 
-1. **Next:** more words again, toward about 3,700 for N3. The course has 1,224 word cards, up from 443 in 0.10
+1. **Next:** more words again, toward about 3,700 for N3. The course has 1,420 word cards, up from 443 in 0.10
 2. **After that:** entrance-exam sections for N4 and N3, faster transcription on the graphics card, transcription on Android, vertical manga text, direct game-text hooking, N2, N1, Beyond N1, and handwriting
 
 ## Done
 
+- **0.16:** 196 more words, including skipped N5 basics; romaji in the dictionary
 - **0.15:** 215 more words, the Study Guide in place of links, open licences
 - **0.14:** 165 more words
 - **0.13:** 119 more words, chimes, failed-exam practice, automatic updates

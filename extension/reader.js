@@ -40,7 +40,7 @@
     if (!hits.length) box.append(el("div", "color:#7d6670", `No match for "${text.slice(0, 20)}".`));
     for (const { card } of hits) {
       const row = el("div", "padding:4px 0;border-bottom:1px solid #f0dfe3");
-      row.append(el("div", "font-size:20px;color:#c2436b", card.f), el("div", "color:#7d6670", card.r !== card.f ? (card.ro ? `${card.r} (${card.ro})` : card.r) : card.ro), el("div", "", card.en));
+      row.append(el("div", "font-size:20px;color:#c2436b", card.f), el("div", "color:#7d6670", card.r !== card.f ? `${card.r} (${card.ro || YG.kanaRomaji(card.r)})` : card.ro || YG.kanaRomaji(card.r)), el("div", "", card.en));
       const b = el("button", "margin-top:4px;padding:4px 10px;border-radius:8px;border:1px solid #c2436b;background:#fff;color:#34202a;cursor:pointer", "Save with sentence");
       b.addEventListener("click", () => save(card, sentence, b));
       row.append(b);

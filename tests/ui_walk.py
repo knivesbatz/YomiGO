@@ -140,6 +140,14 @@ ok = "\t猫\tねこ\t" in text
 print("adding from the dictionary", "OK" if ok else "FAILED")
 fail += not ok
 shutil.rmtree(root, ignore_errors=True)
+# The PC dictionary: Enter searches even though clicking the Dict tab left it focused, then Add saves the top match
+root = tempfile.mkdtemp()
+open(os.path.join(root, "Hana.sav"), "w", encoding="utf-8", newline="\n").write(make_brand.save_text(30, 0))
+subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--script", "w2;ow2;ow2;M50,233;w2;M369,61;w2;tneko;w1;ow2;M600,120;w2;"], timeout=60)
+ok = "\t猫\tねこ\t" in open(os.path.join(root, "Hana.sav"), encoding="utf-8").read()
+print("Enter searches the PC dictionary", "OK" if ok else "FAILED")
+fail += not ok
+shutil.rmtree(root, ignore_errors=True)
 # Copy and paste, using a stand-in clipboard so the real one is left alone: "Ab" pasted after itself makes "AbAb"
 root = tempfile.mkdtemp()
 subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--script", "w2;ow2;ow2;tAb;w1;C;w1;V;w1;ow2;"], timeout=60)

@@ -87,6 +87,13 @@ def romaji_table():
     del t["n"]  # ん depends on what follows, so the converters handle it themselves
     return t
 
+def hepburn_table():
+    """Hiragana to Hepburn, for showing a reading in romaji: the class rows first, other spellings only for kana they don't cover"""
+    t = {r[1]: r[0] for r in kana_rows() if r[0] != "n"}
+    for ro, kana in ALT.items():
+        if kana not in t: t[kana] = "ti" if ro == "ti2" else ro
+    return t
+
 VOW = {}
 for row, vs in (("あかさたなはまやらわがざだばぱぁゃ","a"),("いきしちにひみりぎじぢびぴぃ","i"),("うくすつぬふむゆるぐずづぶぷぅゅ","u"),("えけせてねへめれげぜでべぺぇ","e"),("おこそとのほもよろをごぞどぼぽぉょ","o")):
     for c in row: VOW[c] = vs
@@ -175,6 +182,8 @@ def load_cards():
         got, want = romaji_to_kana(ro, table), to_hira(kana)
         if len(r) > 5 and r[5] == "p":
             want = want.replace("は", "わ").replace("を", "お").replace("へ", "え")
+        # Hepburn writes づ and ぢ as zu and ji, as they're said
+        got, want = got.replace("づ", "ず").replace("ぢ", "じ"), want.replace("づ", "ず").replace("ぢ", "じ")
         if got != want: die(f"words.tsv {id_}: romaji {ro} gives {got}, kana says {want}")
         c = {"id": "v."+id_, "t": "w", "f": disp, "r": kana, "ro": ro, "en": en, "n": ""}
         if len(r) > 7 and r[6]: # an example sentence, and its English
@@ -432,6 +441,11 @@ def write_c(cards, stages, days, exams, chats, media, table, subs, genki, guide,
     w.append("static const YgGenki YG_GENKI[]={")
     for g in genki: w.append("{%d,%s,%d,GK%d}," % (g["lesson"], cstr(g["topics"]), len(g["cards"]), g["lesson"]))
     w.append("};")
+    hep = hepburn_table()
+    w.append(f"#define YG_NHEP {len(hep)}")
+    w.append("static const YgPair YG_HEP[]={")
+    for k, v in sorted(hep.items(), key=lambda kv: -len(kv[0])): w.append("{%s,%s}," % (cstr(k), cstr(v)))
+    w.append("};")
     w.append("static const YgPair YG_ROMA[]={")
     for k, v in sorted(table.items(), key=lambda kv: -len(kv[0])): w.append("{%s,%s}," % (cstr(k), cstr(v)))
     w.append("};")
@@ -506,7 +520,7 @@ def main():
     pronouns = load_pronouns()
     check_font()
     write_c(cards, stages, days, exams, chats, media, table, subs, genki, guide, reading, pronouns)
-    write_js({"cards": cards, "stages": stages, "days": days, "exams": exams, "chats": chats, "media": media, "roma": table, "subs": subs, "genki": genki, "guide": guide, "reading": reading, "pronouns": pronouns})
+    write_js({"cards": cards, "stages": stages, "days": days, "exams": exams, "chats": chats, "media": media, "roma": table, "hep": hepburn_table(), "subs": subs, "genki": genki, "guide": guide, "reading": reading, "pronouns": pronouns})
     write_data(guide)
     print(f"ok: {len(cards)} cards, {len(days)} days, {len(stages)} stages, {len(exams)} exams, {len(chats)} chats, {len(media)} media")
 

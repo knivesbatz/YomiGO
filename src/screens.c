@@ -1230,10 +1230,11 @@ static void scr_text(void) {
     }
     if (!tx_nres) wrap(CX, y, CW, tx_len || !tx_pos ? (HTPC ? "Pick a character to look it up." : "Click a character, or move to it and press Enter, to look up the word starting there.") : "No match there.", C_DIM, LH, 0, 2);
     for (i = 0; i < tx_nres && i < nres; i++) {
-        static char w[120], rd[120], g[120]; char row[300];
-        dict_row(tx_res[i], w, rd, g, 120);
+        static char w[120], rd[120], g[120]; char row[300], ro[160];
+        dict_row(tx_res[i], w, rd, g, 120); kana_romaji(rd, ro, sizeof ro);
         ys_cpy(row, *w ? w : rd, sizeof row);
         if (*w) { ys_cat(row, " ", sizeof row); ys_cat(row, rd, sizeof row); }
+        ys_cat(row, " ", sizeof row); ys_cat(row, ro, sizeof row);
         ys_cat(row, "  ", sizeof row); ys_cat(row, g, sizeof row);
         wrap(CX, y, CW - (HTPC ? 0 : 50), row, i ? C_INK : C_ACC, LH, 0, 1);
 #if !HTPC
@@ -1300,6 +1301,9 @@ static void scr_mywords(void) {
 static void scr_myadd(void) {
     static const char *const ask[] = {"The word, as it's written:", "Its reading, in kana or romaji. Leave it empty if it's the same:", "What it means:"};
     int submit;
+#if !HTPC
+    int enter = take_enter();
+#endif
     chrome("Add a word", 0);
     wrap(CX, CY, CW, ask[add_step], C_INK, LH, 0, 2);
     input_box(CX, CY + 2 * LH, CW, 1);
@@ -1310,7 +1314,7 @@ static void scr_myadd(void) {
     if ((IN.pressed & A_BACK) && !input[0] && add_step == 0) { go(S_MYWORDS); return; }
 #else
     text_entry();
-    submit = button(CX + CW - 120, FBY_BTN, 120, 28, add_step < 2 ? "Next" : "Add");
+    submit = button(CX + CW - 120, FBY_BTN, 120, 28, add_step < 2 ? "Next" : "Add") || enter;
     if (button(CX, FBY_BTN, 90, 28, "Cancel") || (IN.pressed & A_BACK)) { input[0] = 0; go(S_MYWORDS); return; }
     clip_buttons(CX + CW - 230, FBY_BTN - 26);
 #endif
@@ -1387,6 +1391,9 @@ static void scr_library(void) {
     static int gsec;
     int i, y, per = HTPC ? 6 : 11, n, stage = profile_stage(&P), had = input[0];
     char b[96];
+#if !HTPC
+    int enter = tab == 1 && take_enter(); /* before the tab buttons, so a focused tab can't take it */
+#endif
     chrome(L("Library", "本だな", 5), 0);
     /* Before the tabs are drawn, so this frame already has the new tab's buttons and focus lands on it */
     if (IN.pressed & A_R) { tab = (tab + 1) % 3; page = 0; input[0] = 0; ui_set_focus(tab); }
@@ -1420,7 +1427,7 @@ static void scr_library(void) {
         { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "Find"); if (nres) prompt_btn(&x, FBH - SAFE - 17, 2, "Add 1st"); }
 #else
         text_entry();
-        go_search = (IN.pressed & A_OK) != 0;
+        go_search = enter;
         if (button(CX + CW - 90, FBY_BTN, 90, 28, "Search")) go_search = 1;
         clip_buttons(CX, FBY_BTN + 4);
 #endif
@@ -1431,12 +1438,13 @@ static void scr_library(void) {
         if ((IN.pressed & A_X) && nres) { static char aw[120], ar[120], ag[120]; dict_row(res[0], aw, ar, ag, 120); flash_add(my_add(&P, aw, ar, ag, "", plat_today())); save_profile(); }
 #endif
         for (i = 0; i < nres && i < rows; i++) {
-            static char w[120], rd[120], g[120]; char row[200];
-            dict_row(res[i], w, rd, g, 120);
+            static char w[120], rd[120], g[120]; char row[200], ro[160];
+            dict_row(res[i], w, rd, g, 120); kana_romaji(rd, ro, sizeof ro);
             if (i == 0) copy_src = *w ? w : rd;
-            if (HTPC) { ys_cpy(row, *w ? w : rd, sizeof row); ys_cat(row, " ", sizeof row); if (*w) { ys_cat(row, rd, sizeof row); ys_cat(row, " ", sizeof row); } ys_cat(row, g, sizeof row); wrap(CX, y, CW, row, C_INK, LH, 0, 1); y += LH; }
+            if (HTPC) { ys_cpy(row, *w ? w : rd, sizeof row); ys_cat(row, " ", sizeof row); if (*w) { ys_cat(row, rd, sizeof row); ys_cat(row, " ", sizeof row); } ys_cat(row, ro, sizeof row); ys_cat(row, " ", sizeof row); ys_cat(row, g, sizeof row); wrap(CX, y, CW, row, C_INK, LH, 0, 1); y += LH; }
             else {
-                int tw = text(CX, y, *w ? w : rd, C_ACC); if (*w) text(CX + tw + 10, y, rd, C_DIM);
+                int tw = text(CX, y, *w ? w : rd, C_ACC) + 10; if (*w) tw += text(CX + tw, y, rd, C_DIM) + 10;
+                text(CX + tw, y, ro, C_DIM);
                 wrap(CX, y + 16, CW - 44, g, C_INK, LH, 0, 1);
                 if (button(CX + CW - 40, y + 6, 38, 22, "Add")) { flash_add(my_add(&P, w, rd, g, "", plat_today())); save_profile(); }
                 y += 34;
@@ -1575,6 +1583,9 @@ static void scr_profiles(void) {
 #endif
 }
 static void scr_name(void) {
+#if !HTPC
+    int enter = take_enter();
+#endif
     chrome("Your name", 0);
     text(CX, CY, "Enter a short name for this learner.", C_DIM);
     input_box(CX, CY + 22, CW, 1);
@@ -1588,7 +1599,7 @@ static void scr_name(void) {
 #else
     text_entry();
     if (ys_len(input) > 16) input[16] = 0;
-    if (button(CX + CW - 120, FBY_BTN, 120, 28, "OK") && input[0]) {
+    if ((button(CX + CW - 120, FBY_BTN, 120, 28, "OK") || enter) && input[0]) {
 #endif
         /* Saves are named after the learner, so keep only safe filename characters */
         int i, k = 0; char clean[YG_NAME];
@@ -1672,13 +1683,20 @@ static void tk_line(int *y, int bottom, int x, const char *t, unsigned col, int 
     if (n > 0) *y += LH * wrap(x, *y, CX + CW - x, t, col, LH, 0, n);
 }
 static int tk_est(const char *t, int w, int cap) { int n = text_w(t) / w + 1; return n < cap ? n : cap; }
+/* Each message starts with who's speaking, in their own colour, and lines up after the name */
+#define TK_TAG (text_w("Sakura:") + 8)
+#define C_YOU (HTPC ? C_PINK : C_PLUM)
+static void tk_said(int *y, int bottom, const char *who, unsigned wcol, const char *t, unsigned col, int cap) {
+    if (*y + LH <= bottom) text(CX, *y, who, wcol);
+    tk_line(y, bottom, CX + TK_TAG, t, col, cap);
+}
 /* About how many lines message i takes, drawn as tk_line would */
 static int tk_msg_lines(int i) {
     char t[640]; int n;
-    if (tk_role[i] == 'U') return HTPC ? 0 : tk_est(tk_text[i], CW - 40, 2); /* the TV has room only for Sakura's side */
-    tk_part(tk_text[i], "JA:", t, sizeof t); n = tk_est(*t ? t : tk_text[i], CW, 3);
-    tk_part(tk_text[i], "EN:", t, sizeof t); if (tk_en && *t) n += tk_est(t, CW, HTPC ? 1 : 2);
-    tk_part(tk_text[i], "FIX:", t, sizeof t); if (*t && ys_ncmp(t, "OK", 2)) n += tk_est(t, CW - 100, HTPC ? 1 : 2);
+    if (tk_role[i] == 'U') return HTPC ? 0 : tk_est(tk_text[i], CW - TK_TAG, 2); /* the TV has room only for Sakura's side */
+    tk_part(tk_text[i], "JA:", t, sizeof t); n = tk_est(*t ? t : tk_text[i], CW - TK_TAG, 3);
+    tk_part(tk_text[i], "EN:", t, sizeof t); if (tk_en && *t) n += tk_est(t, CW - TK_TAG, HTPC ? 1 : 2);
+    tk_part(tk_text[i], "FIX:", t, sizeof t); if (*t && ys_ncmp(t, "OK", 2)) n += tk_est(t, CW - TK_TAG - 100, HTPC ? 1 : 2);
     return n;
 }
 static void scr_talk(void) {
@@ -1719,10 +1737,10 @@ static void scr_talk(void) {
       if (first == last && last) first--; /* the last one always shows, even if it has to be cut */
       for (i = first; i < last; i++) {
         char t[640], b[700];
-        if (tk_role[i] == 'U') { if (!HTPC) tk_line(&y, bottom, CX + 40, tk_text[i], C_DIM, 2); continue; }
-        tk_part(tk_text[i], "JA:", t, sizeof t); tk_line(&y, bottom, CX, *t ? t : tk_text[i], C_INK, 3); /* no JA: line means it ignored the format, so show what it wrote */
-        tk_part(tk_text[i], "EN:", t, sizeof t); if (tk_en && *t) tk_line(&y, bottom, CX, t, C_DIM, HTPC ? 1 : 2);
-        tk_part(tk_text[i], "FIX:", t, sizeof t); if (*t && ys_ncmp(t, "OK", 2)) { ys_cpy(b, "Maybe better: ", sizeof b); ys_cat(b, t, sizeof b); tk_line(&y, bottom, CX, b, C_ACC, HTPC ? 1 : 2); }
+        if (tk_role[i] == 'U') { if (!HTPC) tk_said(&y, bottom, "You:", C_YOU, tk_text[i], C_INK, 2); continue; }
+        tk_part(tk_text[i], "JA:", t, sizeof t); tk_said(&y, bottom, "Sakura:", C_ACC, *t ? t : tk_text[i], C_INK, 3); /* no JA: line means it ignored the format, so show what it wrote */
+        tk_part(tk_text[i], "EN:", t, sizeof t); if (tk_en && *t) tk_line(&y, bottom, CX + TK_TAG, t, C_DIM, HTPC ? 1 : 2);
+        tk_part(tk_text[i], "FIX:", t, sizeof t); if (*t && ys_ncmp(t, "OK", 2)) { ys_cpy(b, "Maybe better: ", sizeof b); ys_cat(b, t, sizeof b); tk_line(&y, bottom, CX + TK_TAG, b, C_GOOD, HTPC ? 1 : 2); }
       } }
     if (y > bottom - LH) y = bottom - LH; /* the status line stays above the text box */
     if (tk_wait) text(CX, y, (anim / 20) % 2 ? "Sakura is typing..." : "Sakura is typing.", C_DIM);

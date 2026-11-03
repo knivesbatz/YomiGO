@@ -141,7 +141,7 @@ function textReader(msg) {
   const pick = (line, i) => ensure(() => {
     const hits = Y.dictLookup(line.slice(i)).slice(0, 4);
     out.replaceChildren(...(hits.length ? hits.map(({ card }) => { const add = btn("Add to my words", () => { add.textContent = addedMsg(Y.myAdd(P, card.f, card.r, card.en, line, Y.today())); add.disabled = true; store.save(); });
-      return h("div", { cls: "card" }, h("strong", { lang: "ja" }, card.f), card.r !== card.f ? h("span", { cls: "dim", lang: "ja" }, "  " + card.r) : "", h("div", null, card.en), add); }) : [h("p", { cls: "dim" }, "No match there.")]));
+      return h("div", { cls: "card" }, h("strong", { lang: "ja" }, card.f), h("span", { cls: "dim", lang: "ja" }, (card.r !== card.f ? "  " + card.r : "") + "  " + Y.kanaRomaji(card.r)), h("div", null, card.en), add); }) : [h("p", { cls: "dim" }, "No match there.")]));
   });
   const lines = readerLines.map((line) => h("div", { cls: "card", lang: "ja", style: "font-size:22px;line-height:1.7" }, [...line].map((ch, i) => { const s = h("span", { role: "button", tabindex: "0" }, ch); s.addEventListener("click", () => pick(line, line.indexOf(ch) === i ? i : [...line].slice(0, i).join("").length)); return s; })));
   show(h("h1", null, L("Text Reader", "テキスト", 3)), h("p", { cls: "dim" }, "Paste Japanese, or read it from a photo of a page or screen. Then tap a character to look up the word that starts there."),
@@ -410,12 +410,12 @@ function quest() {
 }
 function library() {
   setNav(4);
-  const stage = Y.stageOf(P), open = (u) => { if (Bridge) Bridge.openUrl(u); else window.open(u, "_blank", "noopener"); };
+  const stage = Y.stageOf(P);
   const era = (isNew) => C.media.filter((m) => m.stage <= stage + 1 && (m.era === "new") === isNew).map((m) => h("div", { cls: "card" }, h("div", { cls: "row" }, h("strong", { lang: "ja" }, m.ja), h("span", { cls: "dim" }, m.year)), h("div", { cls: "dim" }, `${m.type}: ${m.title}`), m.task));
   // The dictionary is big, so it loads the first time you search
   const q = h("input", { placeholder: "Japanese, romaji, or English", "aria-label": "Search the dictionary", lang: "ja", autocapitalize: "off" }), out = h("div");
   const ensure = (then) => { if (globalThis.YG_DICT_TEXT) return then(); const s = document.createElement("script"); s.src = "dict.js"; s.onload = () => { Y.dictLoad(YG_DICT_TEXT); then(); }; document.head.append(s); };
-  const search = () => { if (q.value) ensure(() => { const rows = Y.dictSearch(q.value, 20); out.replaceChildren(...(rows.length ? rows.map((r) => { const add = btn("Add to my words", () => { add.textContent = addedMsg(Y.myAdd(P, r.word, r.reading, r.gloss, "", Y.today())); add.disabled = true; store.save(); }); return h("div", { cls: "card" }, h("strong", { lang: "ja" }, r.word || r.reading), r.word ? h("span", { cls: "dim", lang: "ja" }, "  " + r.reading) : "", h("div", null, r.gloss), add); }) : [h("p", { cls: "dim" }, "Nothing found. Try the plain form of the word.")])); }); };
+  const search = () => { if (q.value) ensure(() => { const rows = Y.dictSearch(q.value, 20); out.replaceChildren(...(rows.length ? rows.map((r) => { const add = btn("Add to my words", () => { add.textContent = addedMsg(Y.myAdd(P, r.word, r.reading, r.gloss, "", Y.today())); add.disabled = true; store.save(); }); return h("div", { cls: "card" }, h("strong", { lang: "ja" }, r.word || r.reading), h("span", { cls: "dim", lang: "ja" }, (r.word ? "  " + r.reading : "") + "  " + Y.kanaRomaji(r.reading)), h("div", null, r.gloss), add); }) : [h("p", { cls: "dim" }, "Nothing found. Try the plain form of the word.")])); }); };
   q.addEventListener("keydown", (e) => { if (e.key === "Enter") search(); });
   show(h("h1", null, L("Library", "本だな", 5)),
     btn("📝 " + L("Text Reader", "テキスト", 3), () => textReader(), "main"),
@@ -435,6 +435,7 @@ function settings() {
     btn("Who's learning: " + GENDER[P.gender], () => askSpeaker(settings)),
     btn(canSpeak() ? "Japanese voice: found" : "Japanese voice: none. Tap to add it", () => { if (Bridge) Bridge.installVoice(); else alert("Listening needs a Japanese voice on this device."); }),
     btn("Check for updates", () => { if (Bridge) Bridge.checkUpdate(); else alert("Updates apply to the Android app."); }),
+    btn("YomiGo on GitHub", () => { const u = "https://github.com/knivesbatz/YomiGO"; if (Bridge) Bridge.openUrl(u); else window.open(u, "_blank", "noopener"); }),
     btn("Switch learner", profiles),
     h("h2", null, "Move a save between devices"), area,
     btn("Show my save", () => { area.value = Y.saveText(P); }),

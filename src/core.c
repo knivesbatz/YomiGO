@@ -138,6 +138,28 @@ static void particle_sound(char *s) {
         p++;
     }
 }
+/* っ doubles the next consonant, ん takes ' before a vowel or y, and ー repeats the vowel. Anything not kana is kept. */
+void kana_romaji(const char *in, char *out, int cap) {
+    char h[256]; int n = 0, o = 0, dbl = 0, nn = 0; const char *p = in;
+    while (*p && n < 250) { int c = utf8_next(&p); if (c >= 0x30A1 && c <= 0x30F6) c -= 0x60; n += utf8_put(c, h + n); }
+    h[n] = 0;
+    for (p = h; *p && o < cap - 8;) {
+        const char *ro = 0; int j, k = 0;
+        if (!ys_ncmp(p, "っ", 3)) { dbl = 1; p += 3; continue; }
+        if (!ys_ncmp(p, "ん", 3)) { if (nn) out[o++] = 'n'; nn = 1; p += 3; continue; }
+        if (!ys_ncmp(p, "ー", 3)) { if (o > 0) out[o] = out[o - 1], o++; p += 3; continue; }
+        for (j = 0; j < YG_NHEP; j++) { k = ys_len(YG_HEP[j].a); if (!ys_ncmp(p, YG_HEP[j].a, k)) { ro = YG_HEP[j].b; break; } }
+        /* a final は after ち, ん, で, に, or と is the old particle, said wa: こんにちは, では. はは (mother) keeps ha */
+        if (ro && !ys_ncmp(p, "は", 3) && !p[3] && p >= h + 3 && (!ys_ncmp(p - 3, "ち", 3) || !ys_ncmp(p - 3, "ん", 3) || !ys_ncmp(p - 3, "で", 3) || !ys_ncmp(p - 3, "に", 3) || !ys_ncmp(p - 3, "と", 3))) ro = "wa";
+        if (!ro) { const char *q = p; int c = utf8_next(&q); if (nn) { out[o++] = 'n'; nn = 0; } o += utf8_put(c, out + o); p = q; dbl = 0; continue; }
+        if (nn) { out[o++] = 'n'; if (ro[0] == 'a' || ro[0] == 'i' || ro[0] == 'u' || ro[0] == 'e' || ro[0] == 'o' || ro[0] == 'y') out[o++] = '\''; nn = 0; }
+        if (dbl) { out[o++] = ro[0] == 'c' ? 't' : ro[0]; dbl = 0; }
+        while (*ro && o < cap - 2) out[o++] = *ro++;
+        p += k;
+    }
+    if (nn && o < cap - 1) out[o++] = 'n';
+    out[o] = 0;
+}
 int answer_ok(const char *input, const char *want, const char *romaji) {
     static char a[256], b[256]; int na, nb;
     if (!*input) return 0;

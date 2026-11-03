@@ -1400,3 +1400,222 @@ meekaa	メーカー	メーカー	meekaa	manufacturer, maker		車のメーカー�
 juuyou	重要	じゅうよう	juuyou	important (formal)		これは重要な書類です。	This is an important document.
 kinyuu	記入	きにゅう	kinyuu	filling in (a form)		こちらにご記入ください。	Please fill this in.
 ofisu	オフィス	オフィス	ofisu	office		オフィスは駅から五分です。	The office is five minutes from the station.
+#greet5
+shitsureishimasu	失礼します	しつれいします	shitsurei shimasu	excuse me (entering, leaving)		先生、失礼します。	Excuse me, sir.
+okaerinasai	お帰りなさい	おかえりなさい	okaerinasai	welcome home (the reply to ただいま)		「ただいま」「お帰りなさい」	"I'm home." "Welcome back."
+moshimoshi	もしもし	もしもし	moshimoshi	hello (on the phone)		もしもし、田中です。	Hello, this is Tanaka.
+#adj9
+ooi	多い	おおい	ooi	many, a lot of		東京は人が多いです。	There are a lot of people in Tokyo.
+sukunai	少ない	すくない	sukunai	few, little		この町は店が少ないです。	This town has few shops.
+kirai	嫌い	きらい	kirai	dislike, hate		野菜が嫌いです。	I don't like vegetables.
+futoi	太い	ふとい	futoi	thick, fat		このペンは太いです。	This pen is thick.
+hosoi	細い	ほそい	hosoi	thin, narrow		この道は細いです。	This road is narrow.
+usui	薄い	うすい	usui	thin; weak (a drink)		このコーヒーは薄いです。	This coffee is weak.
+kiiroi	黄色い	きいろい	kiiroi	yellow		黄色い花がきれいです。	The yellow flowers are pretty.
+marui	丸い	まるい	marui	round		その皿は丸くないです。	That plate isn't round.
+nigiyaka	賑やか	にぎやか	nigiyaka	lively, busy		この町は賑やかです。	This town is lively.
+shinsetsu	親切	しんせつ	shinsetsu	kind, helpful		駅の人はとても親切です。	The station staff are very kind.
+iroiro	色々	いろいろ	iroiro	various, all sorts of		色々な国の人がいます。	There are people from all sorts of countries.
+nemui	眠い	ねむい	nemui	sleepy		今日はとても眠いです。	I'm really sleepy today.
+ii	いい	いい	ii	good (also written 良い)		今日はいい天気です。	It's nice weather today.
+umai	うまい	うまい	umai	tasty; skilful (casual)		このラーメン、うまい！	This ramen is great!
+fukai	深い	ふかい	fukai	deep		この川は深いです。	This river is deep.
+kibishii	厳しい	きびしい	kibishii	strict, tough		私の先生は厳しいです。	My teacher is strict.
+#house4
+kaidan	階段	かいだん	kaidan	stairs		階段の下に猫がいます。	There's a cat at the bottom of the stairs.
+rouka	廊下	ろうか	rouka	corridor, hallway		廊下に箱があります。	There's a box in the hallway.
+genkan	玄関	げんかん	genkan	entrance hall (where shoes come off)		玄関に靴があります。	There are shoes in the entrance.
+to	戸	と	to	door (often sliding)		戸の前に犬がいます。	There's a dog in front of the door.
+hondana	本棚	ほんだな	hondana	bookcase		本棚に辞書があります。	There's a dictionary on the bookcase.
+denki	電気	でんき	denki	electricity; the light		部屋に電気がありません。	There's no light in the room.
+shinshitsu	寝室	しんしつ	shinshitsu	bedroom		寝室は二階にあります。	The bedroom is upstairs.
+hikidashi	引き出し	ひきだし	hikidashi	drawer		引き出しにはさみがあります。	There are scissors in the drawer.
+makura	枕	まくら	makura	pillow		ベッドに枕が二つあります。	There are two pillows on the bed.
+#time7
+kotoshi	今年	ことし	kotoshi	this year		今年は二〇二六年です。	This year is 2026.
+kongetsu	今月	こんげつ	kongetsu	this month		今月は忙しいです。	This month is busy.
+konshuu	今週	こんしゅう	konshuu	this week		今週は月曜日から仕事です。	This week, work starts on Monday.
+natsuyasumi	夏休み	なつやすみ	natsuyasumi	summer holidays		夏休みは七月からです。	The summer holidays start in July.
+maiasa	毎朝	まいあさ	maiasa	every morning		毎朝六時に起きます。	I get up at six every morning.
+maiban	毎晩	まいばん	maiban	every night		毎晩十一時に寝ます。	I go to bed at eleven every night.
+yuugata	夕方	ゆうがた	yuugata	early evening		夕方五時に帰ります。	I go home at five in the evening.
+hiru	昼	ひる	hiru	noon, daytime		昼は十二時から一時までです。	Lunchtime is twelve to one.
+han	半	はん	han	half (past)		今、三時半です。	It's half past three now.
+shuumatsu	週末	しゅうまつ	shuumatsu	weekend		週末は何をしますか。	What are you doing at the weekend?
+#verbs7
+torimasu	取ります	とります	torimasu	to take, to pick up		塩を取ってください。	Please pass the salt.
+okimasu	置きます	おきます	okimasu	to put, to leave		かばんをここに置きます。	I'll put my bag here.
+kaeshimasu	返します	かえします	kaeshimasu	to give back, to return		明日本を返します。	I'll return the book tomorrow.
+urimasu	売ります	うります	urimasu	to sell		この店は古い本を売ります。	This shop sells old books.
+naraimasu	習います	ならいます	naraimasu	to learn (from a teacher)		ピアノを習います。	I'm learning the piano.
+kotaemasu	答えます	こたえます	kotaemasu	to answer		質問に答えてください。	Please answer the question.
+tsukemasu	つけます	つけます	tsukemasu	to switch on		電気をつけます。	I'll switch the light on.
+kirimasu	切ります	きります	kirimasu	to cut		はさみで紙を切ります。	I cut the paper with scissors.
+akimasu	開きます	あきます	akimasu	to open (by itself)		ドアが開きました。	The door opened.
+todokimasu	届きます	とどきます	todokimasu	to arrive (a parcel, a letter)		荷物が届きました。	The parcel has arrived.
+komarimasu	困ります	こまります	komarimasu	to be in trouble, not know what to do		かぎがなくて、困りました。	I lost my key and didn't know what to do.
+ugokimasu	動きます	うごきます	ugokimasu	to move, to work (a machine)		この時計は動きません。	This clock doesn't work.
+#school5
+kaiwa	会話	かいわ	kaiwa	conversation		日本語の会話は楽しいです。	Japanese conversation is fun.
+kotae	答え	こたえ	kotae	answer		答えはノートに書いてください。	Please write the answers in your notebook.
+hiragana	平仮名	ひらがな	hiragana	hiragana		子供は平仮名を書きます。	The children write hiragana.
+katakana	片仮名	かたかな	katakana	katakana		名前を片仮名で書きます。	I write my name in katakana.
+sakubun	作文	さくぶん	sakubun	essay, composition		日本語で作文を書きました。	I wrote an essay in Japanese.
+ryuugakusei	留学生	りゅうがくせい	ryuugakusei	international student		このクラスには留学生が多いです。	There are lots of international students in this class.
+gaikokujin	外国人	がいこくじん	gaikokujin	foreigner		外国人の先生がいます。	There's a teacher from abroad.
+nyuugaku	入学	にゅうがく	nyuugaku	starting school, enrolling		妹は四月に入学します。	My little sister starts school in April.
+senpai	先輩	せんぱい	senpai	senior (at school or work)		先輩はとても優しいです。	My senior is very kind.
+kouhai	後輩	こうはい	kouhai	junior (at school or work)		後輩に日本語を教えました。	I taught Japanese to my junior.
+rekishi	歴史	れきし	rekishi	history		日本の歴史が好きです。	I like Japanese history.
+suiei	水泳	すいえい	suiei	swimming		水泳の授業は金曜日です。	Swimming lessons are on Friday.
+#clothes5
+megane	眼鏡	めがね	megane	glasses		父は黒い眼鏡をかけています。	Dad wears black glasses.
+kutsushita	靴下	くつした	kutsushita	socks		白い靴下を買いました。	I bought white socks.
+kimono	着物	きもの	kimono	kimono		祖母は赤い着物が好きです。	My grandmother likes red kimono.
+beruto	ベルト	ベルト	beruto	belt		茶色のベルトがほしいです。	I want a brown belt.
+poketto	ポケット	ポケット	poketto	pocket		かぎはポケットの中です。	The key is in my pocket.
+oshare	おしゃれ	おしゃれ	oshare	stylish, fashionable		姉はいつもおしゃれです。	My sister is always stylish.
+#people6
+shujin	主人	しゅじん	shujin	my husband; the owner		主人は会社員です。	My husband works for a company.
+shinseki	親戚	しんせき	shinseki	relative		お正月に親戚が来ます。	Relatives come at New Year.
+shiriai	知り合い	しりあい	shiriai	acquaintance		東京に知り合いがいます。	I know someone in Tokyo.
+hitorigurashi	一人暮らし	ひとりぐらし	hitorigurashi	living alone		兄は一人暮らしをしています。	My older brother lives on his own.
+kon'yaku	婚約	こんやく	kon'yaku	engagement (to marry)		姉は先月婚約しました。	My sister got engaged last month.
+ningen	人間	にんげん	ningen	human, person		犬は人間の友達です。	Dogs are humans' friends.
+#animals3
+raion	ライオン	ライオン	raion	lion		動物園でライオンを見ましたよ。	I saw a lion at the zoo!
+kuma	熊	くま	kuma	bear		この山には熊がいますよ。	There are bears in these mountains!
+juui	獣医	じゅうい	juui	vet		うちの猫は獣医が嫌いですね。	Our cat hates the vet.
+#weather3
+haremasu	晴れます	はれます	haremasu	to clear up, to be sunny		明日は晴れますよ。	It'll be sunny tomorrow.
+kumorimasu	曇ります	くもります	kumorimasu	to cloud over		午後から曇りますね。	It'll cloud over from the afternoon.
+fukimasu	吹きます	ふきます	fukimasu	to blow (the wind)		今日は風が強く吹いていますね。	The wind's really blowing today.
+sakimasu	咲きます	さきます	sakimasu	to bloom		四月に桜が咲きますよ。	The cherry blossoms bloom in April.
+yamimasu	止みます	やみます	yamimasu	to stop (rain, snow)		雨が止みましたね。	The rain has stopped.
+#shop6
+reji	レジ	レジ	reji	till, checkout		レジはあちらです。	The checkout is over there.
+kaikei	会計	かいけい	kaikei	the bill; paying		お会計をお願いします。	The bill, please.
+#food8
+shio	塩	しお	shio	salt		塩を少しください。	A little salt, please.
+shouyu	醤油	しょうゆ	shouyu	soy sauce		醤油はありますか。	Do you have soy sauce?
+chawan	茶碗	ちゃわん	chawan	rice bowl		茶碗にご飯をください。	A bowl of rice, please.
+gyuuniku	牛肉	ぎゅうにく	gyuuniku	beef		牛肉と豚肉、どちらがいいですか。	Beef or pork, which would you like?
+butaniku	豚肉	ぶたにく	butaniku	pork		豚肉は食べません。	I don't eat pork.
+asagohan	朝ご飯	あさごはん	asagohan	breakfast		朝ご飯はパンです。	I have bread for breakfast.
+hirugohan	昼ご飯	ひるごはん	hirugohan	lunch		昼ご飯はもう食べましたか。	Have you had lunch yet?
+bangohan	晩ご飯	ばんごはん	bangohan	dinner		晩ご飯はカレーにします。	I'll have curry for dinner.
+ohiru	お昼	おひる	ohiru	lunch; noon		お昼は何にしますか。	What will you have for lunch?
+shokudou	食堂	しょくどう	shokudou	dining hall, canteen		会社の食堂は安いです。	The office canteen is cheap.
+karee	カレー	カレー	karee	curry		辛いカレーをお願いします。	A spicy curry, please.
+toufu	豆腐	とうふ	toufu	tofu		豆腐のサラダにします。	I'll have the tofu salad.
+tenpura	天ぷら	てんぷら	tenpura	tempura		天ぷらの定食をください。	The tempura set meal, please.
+chiizu	チーズ	チーズ	chiizu	cheese		チーズのピザが好きです。	I like cheese pizza.
+#post2
+kouen	公園	こうえん	kouen	park		公園はこの道の先です。	The park is at the end of this road.
+kousaten	交差点	こうさてん	kousaten	crossroads, junction		次の交差点を左に曲がってください。	Turn left at the next junction.
+taishikan	大使館	たいしかん	taishikan	embassy		大使館は駅の近くです。	The embassy is near the station.
+fuutou	封筒	ふうとう	fuutou	envelope		封筒と切手をください。	An envelope and a stamp, please.
+hagaki	葉書	はがき	hagaki	postcard		この葉書をアメリカに送りたいです。	I'd like to send this postcard to America.
+deguchi	出口	でぐち	deguchi	exit		東の出口から出てください。	Please leave by the east exit.
+hantaigawa	反対側	はんたいがわ	hantaigawa	the other side		バス停は道の反対側です。	The bus stop is on the other side of the road.
+shoumen	正面	しょうめん	shoumen	front, straight ahead		ホテルは駅の正面にあります。	The hotel is right in front of the station.
+tooku	遠く	とおく	tooku	far away, a long way		遠くに山が見えます。	You can see mountains in the distance.
+minato	港	みなと	minato	port, harbour		港まで歩いて十分です。	It's a ten-minute walk to the harbour.
+madoguchi	窓口	まどぐち	madoguchi	counter, window (at a station, bank)		切符は二番の窓口で買えます。	You can buy tickets at window two.
+jidousha	自動車	じどうしゃ	jidousha	car, motor vehicle		この道は自動車が多いです。	There are a lot of cars on this road.
+#verbs8
+narabu	並ぶ	ならぶ	narabu	to line up, to queue		駅の前で並んだ。	We queued in front of the station.
+naraberu	並べる	ならべる	naraberu	to line up, to set out		皿をテーブルに並べて。	Set the plates out on the table.
+atsumeru	集める	あつめる	atsumeru	to collect		切手を集めてる。	I collect stamps.
+atsumaru	集まる	あつまる	atsumaru	to gather		駅に人が集まった。	People gathered at the station.
+tsuzuku	続く	つづく	tsuzuku	to continue		雨が三日続いた。	The rain went on for three days.
+modoru	戻る	もどる	modoru	to go back, to return		すぐ戻るね。	I'll be right back.
+hirou	拾う	ひろう	hirou	to pick up (from the ground)		道で財布を拾った。	I found a wallet on the street.
+naosu	直す	なおす	naosu	to fix, to correct		自転車を直した。	I fixed the bike.
+kaeru2	変える	かえる	kaeru	to change (something)		髪型を変えた。	I changed my hairstyle.
+kaku2	描く	かく	kaku	to draw, to paint		猫の絵を描いた。	I drew a picture of a cat.
+hiku2	弾く	ひく	hiku	to play (piano, guitar)		ギターを弾くのが好き。	I love playing the guitar.
+makeru	負ける	まける	makeru	to lose		試合に負けた。	We lost the match.
+katsu	勝つ	かつ	katsu	to win		今日は勝った！	We won today!
+#adv2
+tokuni	特に	とくに	tokuni	especially		特に日本の映画が好きだと思います。	I think I especially like Japanese films.
+yatto	やっと	やっと	yatto	at last, finally		やっと宿題が終わったと思う。	I think I've finally finished my homework.
+daitai	大体	だいたい	daitai	roughly, mostly		大体わかったと思います。	I think I mostly understood.
+hakkiri	はっきり	はっきり	hakkiri	clearly		はっきり言ったほうがいいと思う。	I think you should say it clearly.
+betsuni	別に	べつに	betsuni	not particularly (with a negative)		別に問題はないと思います。	I don't think there's any particular problem.
+zettai	絶対	ぜったい	zettai	definitely, absolutely		絶対においしいと思うよ。	I'm sure it'll be delicious.
+mata	また	また	mata	again; also		また来たいと思います。	I'd like to come again.
+hitoride	一人で	ひとりで	hitori de	alone, by yourself		一人で行くのは危ないと思う。	I think it's dangerous to go alone.
+shikamo	しかも	しかも	shikamo	what's more		この店は安いし、しかもおいしいと思う。	This place is cheap, and what's more, I think it's tasty.
+samazama	様々	さまざま	samazama	various, all kinds of		様々な意見があると思います。	I think there are all kinds of opinions.
+#hobbies4
+gitaa	ギター	ギター	gitaa	guitar		兄はギターが弾けます。	My brother can play the guitar.
+dansu	ダンス	ダンス	dansu	dance, dancing		妹はダンスが上手にできます。	My sister can dance well.
+gekijou	劇場	げきじょう	gekijou	theatre		劇場で歌舞伎が見られます。	You can see kabuki at the theatre.
+bideo	ビデオ	ビデオ	bideo	video		旅行のビデオを見ることができます。	You can watch the travel video.
+rirakkusu	リラックス	リラックス	rirakkusu	relaxing		温泉でリラックスできます。	You can relax at the hot spring.
+#health3
+shinsatsu	診察	しんさつ	shinsatsu	medical examination		診察は十時からなら大丈夫です。	If it's from ten, the examination is fine.
+ase	汗	あせ	ase	sweat		運動すると、汗が出ます。	When you exercise, you sweat.
+choushi	調子	ちょうし	choushi	condition, how things are going		体の調子が悪かったら、休んでください。	If you're not feeling well, please rest.
+undou	運動	うんどう	undou	exercise		毎日運動すれば、元気になります。	If you exercise every day, you'll feel better.
+#travel6
+kaigai	海外	かいがい	kaigai	overseas, abroad		来年、海外に行きます。	I'm going abroad next year.
+kankou	観光	かんこう	kankou	sightseeing		京都は観光客に人気です。	Kyoto is popular with tourists.
+taizai	滞在	たいざい	taizai	stay		日本に二週間滞在しました。	I stayed in Japan for two weeks.
+toujou	搭乗	とうじょう	toujou	boarding (a plane)		搭乗は九時に始まります。	Boarding starts at nine.
+ririku	離陸	りりく	ririku	take-off		飛行機は予定通りに離陸しました。	The plane took off on time.
+hijouguchi	非常口	ひじょうぐち	hijouguchi	emergency exit		非常口は後ろにあります。	The emergency exit is at the back.
+kyouto	京都	きょうと	kyouto	Kyoto		京都でお寺をたくさん見ました。	I saw lots of temples in Kyoto.
+bouken	冒険	ぼうけん	bouken	adventure		一人旅は冒険です。	Travelling alone is an adventure.
+#verbs9
+nareru	慣れる	なれる	nareru	to get used to		日本の生活に慣れてきました。	I've got used to life in Japan.
+kizuku	気づく	きづく	kizuku	to notice		間違いに気づきました。	I noticed the mistake.
+kikoeru	聞こえる	きこえる	kikoeru	to be heard, can hear		鳥の声が聞こえます。	I can hear birds.
+ochitsuku	落ち着く	おちつく	ochitsuku	to calm down		お茶を飲みながら、落ち着きましょう。	Let's calm down over a cup of tea.
+kireru	切れる	きれる	kireru	to run out; to snap		電池が切れました。	The battery's run out.
+tooru	通る	とおる	tooru	to go through, to pass		この道は車が通りやすいです。	Cars get through this road easily.
+noboru2	上る	のぼる	noboru	to go up, to climb (stairs, a slope)		階段を上るのは大変です。	Climbing the stairs is hard work.
+nigeru	逃げる	にげる	nigeru	to run away		猫が逃げました。	The cat ran away.
+akiru	飽きる	あきる	akiru	to get tired of, to get bored with		同じ料理に飽きました。	I'm tired of eating the same food.
+kamu	噛む	かむ	kamu	to bite, to chew		よく噛んで食べてください。	Chew well when you eat.
+#home6
+soujiki	掃除機	そうじき	soujiki	vacuum cleaner		毎週掃除機をかけるようにしています。	I make a point of vacuuming every week.
+gomibako	ゴミ箱	ごみばこ	gomibako	bin		ゴミ箱は台所にあります。	The bin is in the kitchen.
+shitaku	支度	したく	shitaku	getting ready		朝の支度は十分でできるようになりました。	I can get ready in the morning in ten minutes now.
+kaeri	帰り	かえり	kaeri	the way home		帰りにパンを買うことにしました。	I've decided to buy bread on the way home.
+#feel5
+kitai	期待	きたい	kitai	expectation, hope		新しい仕事に期待しています。	I've got high hopes for the new job.
+kibou	希望	きぼう	kibou	hope, wish		希望の大学に入れました。	I got into the university I wanted.
+kandou	感動	かんどう	kandou	being moved		その映画に感動しました。	The film really moved me.
+taikutsu	退屈	たいくつ	taikutsu	boring, bored		雨の日は退屈な気がします。	Rainy days feel boring.
+meiwaku	迷惑	めいわく	meiwaku	trouble, nuisance		ご迷惑をおかけしました。	I'm sorry for the trouble.
+kinchou	緊張	きんちょう	kinchou	nervousness		面接の前は緊張します。	I get nervous before interviews.
+muchuu	夢中	むちゅう	muchuu	absorbed in, crazy about		弟はゲームに夢中です。	My little brother is crazy about games.
+gakkari	がっかり	がっかり	gakkari	disappointed		試合に負けて、がっかりしました。	I was disappointed we lost the match.
+kutakuta	くたくた	くたくた	kutakuta	exhausted		一日中歩いて、くたくたです。	I've walked all day and I'm worn out.
+tanoshimi	楽しみ	たのしみ	tanoshimi	something to look forward to		旅行がとても楽しみです。	I'm really looking forward to the trip.
+risou	理想	りそう	risou	ideal		理想の家に住みたいものです。	I'd love to live in my ideal house.
+ren'ai	恋愛	れんあい	ren'ai	love, romance		恋愛の映画が好きです。	I like romance films.
+uso	嘘	うそ	uso	lie		嘘をつくのはよくないです。	Lying isn't good.
+#verbs10
+sodatsu	育つ	そだつ	sodatsu	to grow up		私は大阪で育ちました。	I grew up in Osaka.
+sodateru	育てる	そだてる	sodateru	to raise, to grow		庭でトマトを育てておきました。	I've been growing tomatoes in the garden.
+kubaru	配る	くばる	kubaru	to hand out		会議の前に資料を配っておきます。	I'll hand out the papers before the meeting.
+tataku	叩く	たたく	tataku	to hit, to knock		ドアを叩いてしまいました。	I banged on the door without thinking.
+sageru	下げる	さげる	sageru	to lower		エアコンの温度を下げておいて。	Turn the air conditioner down, please.
+oeru	終える	おえる	oeru	to finish (something)		仕事を全部終えてしまいました。	I've finished all my work.
+utagau	疑う	うたがう	utagau	to doubt, to suspect		彼の話を疑ってしまった。	I ended up doubting his story.
+mitomeru	認める	みとめる	mitomeru	to admit, to accept		自分の間違いを認めた。	I admitted my mistake.
+itamu	痛む	いたむ	itamu	to hurt, to ache		雨の日は足が痛みます。	My leg aches on rainy days.
+futoru	太る	ふとる	futoru	to put on weight		食べすぎて太っちゃった。	I ate too much and put on weight.
+#work6
+zeikin	税金	ぜいきん	zeikin	tax		税金を払いました。	I paid my taxes.
+kouza	口座	こうざ	kouza	bank account		銀行で口座を作りました。	I opened a bank account.
+teian	提案	ていあん	teian	proposal, suggestion		新しい提案があります。	I have a new proposal.
+shorui	書類	しょるい	shorui	documents, papers		この書類にサインしてください。	Please sign these papers.
+sukejuuru	スケジュール	スケジュール	sukejuuru	schedule		来週のスケジュールを確認します。	I'll check next week's schedule.
+teishutsu	提出	ていしゅつ	teishutsu	handing in, submitting		レポートは金曜日までに提出してください。	Please hand in the report by Friday.
+honyaku	翻訳	ほんやく	hon'yaku	translation		この書類の翻訳をお願いします。	Please translate this document.
+chekku	チェック	チェック	chekku	check, checking		メールをチェックしました。	I checked my email.
+gimon	疑問	ぎもん	gimon	question, doubt		何か疑問はありますか。	Do you have any questions?

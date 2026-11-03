@@ -37,6 +37,25 @@
     }
     return res;
   }
+  // A reading in Hepburn romaji, as the kana cards spell it: っ doubles, ん takes ' before a vowel or y, ー repeats the vowel
+  const hepKeys = C ? Object.keys(C.hep).sort((a, b) => b.length - a.length) : [];
+  function kanaRomaji(s) {
+    const h = [...s].map((c) => (c >= "\u30a1" && c <= "\u30f6" ? String.fromCharCode(c.charCodeAt(0) - 0x60) : c)).join("");
+    let out = "", dbl = false, nn = false;
+    for (let i = 0; i < h.length;) {
+      if (h[i] === "っ") { dbl = true; i++; continue; }
+      if (h[i] === "ん") { if (nn) out += "n"; nn = true; i++; continue; }
+      if (h[i] === "ー") { out += out.slice(-1); i++; continue; }
+      const k = hepKeys.find((x) => h.startsWith(x, i));
+      if (!k) { if (nn) { out += "n"; nn = false; } out += h[i]; dbl = false; i++; continue; }
+      // a final は after ち, ん, で, に, or と is the old particle, said wa: こんにちは, では. はは (mother) keeps ha
+      const ro = k === "は" && i === h.length - 1 && i > 0 && "ちんでにと".includes(h[i - 1]) ? "wa" : C.hep[k];
+      if (nn) { out += "aiueoy".includes(ro[0]) ? "n'" : "n"; nn = false; }
+      if (dbl) { out += ro[0] === "c" ? "t" : ro[0]; dbl = false; }
+      out += ro; i += k.length;
+    }
+    return nn ? out + "n" : out;
+  }
   function answerOk(input, want, romaji) {
     const a = normKana(input);
     if (!a) return false;
@@ -358,5 +377,5 @@
     return hits.slice(0, 6);
   }
 
-  root.YG = { normKana, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, catchUp, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, myAdd, myImport, myExport, makeQMy, quizListen, shadowLines, lookup, byId, PASS };
+  root.YG = { normKana, kanaRomaji, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, catchUp, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, myAdd, myImport, myExport, makeQMy, quizListen, shadowLines, lookup, byId, PASS };
 })(globalThis);
