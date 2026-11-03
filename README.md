@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/brand/banner.png" alt="YomiGo by SENKOSOFT: Learn Japanese, one class a day." width="100%">
+  <img src="assets/brand/banner.png" alt="YomiGo: Learn Japanese, one class a day." width="100%">
 </p>
 
 <p align="center">
@@ -89,4 +89,4 @@ Some things haven't been tried on real hardware yet, including controllers, CRT 
 - [Report a problem](https://github.com/knivesbatz/YomiGO/issues/new/choose)
 - [Credits and licences](NOTICE.md)
 
-<p align="center"><img src="assets/brand/logo.png" alt="YomiGo logo" width="72"><br>Made by <strong>SENKOSOFT</strong></p>
+<p align="center"><img src="assets/brand/logo.png" alt="YomiGo logo" width="72"></p>

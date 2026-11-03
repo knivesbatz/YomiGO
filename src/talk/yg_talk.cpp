@@ -17,8 +17,27 @@ static const unsigned long long MODEL_SIZE = 5154941280ull;
 // Asked after each reply, then forgotten, so they never become part of the conversation. Quoting the text keeps a
 // small model from mixing up whose message it's checking.
 static std::string ask_fix(const std::string &said) {
-    return "(Not part of the chat. A Japanese learner wrote: 「" + said + "」 Check it carefully for mistakes in verb forms, particles, and word choice. Spaces between words, and kana where kanji could go, are fine. "
-           "If it's correct and natural, answer only OK. If not, answer with the corrected Japanese, then \" - \", then a few words of English saying why.)";
+    // The learner's own word for "I" is their choice, so a small model mustn't "correct" ぼく to 私
+    return "(Not part of the chat. You are now a Japanese teacher, not Sakura. A learner wrote: 「" + said + "」 Check it only for real mistakes in grammar, verb forms, particles, or word choice. "
+           "Kana instead of kanji, spaces between words, the learner's word for I (わたし, ぼく, おれ, or あたし), and either reading of a number where both are used (きゅう or く, し or よん, しち or なな) are all fine. "
+           "If there's no real mistake, answer only OK. If there is, answer with the corrected Japanese, written in the same kana and kanji the learner used, "
+           "then \" - \", then at most ten words of English saying why.)";
+}
+// Asked first: a small model judges a sentence more reliably than it corrects one, so only a "no" gets a correction
+static std::string ask_judge(const std::string &said) {
+    return "(Not part of the chat. You are now a Japanese teacher, not Sakura. Is this learner's sentence grammatical Japanese? "
+           "Kana instead of kanji, numbers in kana, spaces, politeness, and their word for I (わたし, ぼく, おれ, or あたし) don't count. "
+           "Either reading of a number is fine where both are used (きゅう or く, し or よん, しち or なな), but some words need one: 9 o'clock is only くじ. "
+           "Say NO only for a clear mistake a teacher would mark wrong, not because something else would sound more natural. 「" + said + "」 Answer only YES or NO.)";
+}
+// A "correction" that only swaps the word for I, spacing, or punctuation isn't one
+static std::string plain_form(std::string s) {
+    size_t cut = s.find(" - "); if (cut != std::string::npos) s.resize(cut);
+    static const char *const drop[] = {" ", "　", "、", "。", "！", "？", ",", ".", "!", "?", "「", "」"};
+    static const char *const me[] = {"わたし", "私", "ぼく", "僕", "おれ", "俶", "あたし"};
+    for (const char *d : drop) for (size_t k; (k = s.find(d)) != std::string::npos;) s.erase(k, strlen(d));
+    for (const char *m : me) for (size_t k; (k = s.find(m)) != std::string::npos;) s.replace(k, strlen(m), "I");
+    return s;
 }
 static std::string ask_en(const std::string &ja) { return "(Not part of the chat. Translate this into natural English, and answer with the translation only: 「" + ja + "」)"; }
 
@@ -53,7 +72,7 @@ static std::string one_line(std::string s) {
 static llama_context *ctx;
 static const llama_vocab *vocab;
 static std::vector<llama_token> cached; // what the context holds, so a reply only reads the new messages
-static llama_sampler *smp;
+static llama_sampler *smp, *exact; // Sakura talks with some variety; the checks always give their single best answer
 
 // Reads toks from position at, keeping what's already there before it
 static bool feed(const std::vector<llama_token> &toks, size_t at) {
@@ -65,10 +84,10 @@ static bool feed(const std::vector<llama_token> &toks, size_t at) {
     return true;
 }
 
-static std::string generate(int max) {
+static std::string generate(int max, llama_sampler *with) {
     std::string out;
     for (int i = 0; i < max; i++) {
-        llama_token t = llama_sampler_sample(smp, ctx, -1);
+        llama_token t = llama_sampler_sample(with, ctx, -1);
         if (llama_vocab_is_eog(vocab, t)) break;
         char piece[256]; int pn = llama_token_to_piece(vocab, t, piece, sizeof piece, 0, true);
         std::string ps(piece, pn > 0 ? pn : 0);
@@ -91,7 +110,7 @@ static std::vector<llama_token> tokenize(const std::string &s, bool bos) {
 static std::string side(const std::string &ask) {
     size_t base = cached.size();
     std::string out;
-    if (feed(tokenize(std::string("<turn|>\n<|turn>user\n") + ask + "<turn|>\n<|turn>model\n", false), 0)) out = generate(160);
+    if (feed(tokenize(std::string("<turn|>\n<|turn>user\n") + ask + "<turn|>\n<|turn>model\n", false), 0)) out = generate(160, exact);
     llama_memory_seq_rm(llama_get_memory(ctx), 0, (llama_pos)base, -1);
     cached.resize(base);
     return one_line(out);
@@ -114,6 +133,7 @@ int wmain(int argc, wchar_t **argv) {
     cp.n_threads = cp.n_threads_batch = (int)(std::thread::hardware_concurrency() / 2 ? std::thread::hardware_concurrency() / 2 : 1);
     if (!(ctx = llama_init_from_model(model, cp))) return 2;
     vocab = llama_model_get_vocab(model);
+    exact = llama_sampler_init_greedy();
     smp = llama_sampler_chain_init(llama_sampler_chain_default_params());
     llama_sampler_chain_add(smp, llama_sampler_init_penalties(llama_vocab_n_tokens(vocab), 64, 1.1f, 0.0f, 0.0f));
     llama_sampler_chain_add(smp, llama_sampler_init_top_p(0.9f, 1));
@@ -146,9 +166,16 @@ int wmain(int argc, wchar_t **argv) {
             llama_memory_seq_rm(llama_get_memory(ctx), 0, (llama_pos)keep, -1);
             cached.resize(keep);
             if (feed(toks, keep)) {
-                std::string ja = one_line(generate(200));
+                std::string ja = one_line(generate(200, smp));
                 reply = "JA: " + ja + "\n";
-                if (jobs.find("fix") != std::string::npos) reply += "FIX: " + side(ask_fix(one_line(said))) + "\n";
+                if (jobs.find("fix") != std::string::npos) {
+                    std::string s = one_line(said), fix = "OK", judged = side(ask_judge(s));
+                    if (judged.find("YES") == std::string::npos && judged.find("Yes") == std::string::npos) {
+                        fix = side(ask_fix(s));
+                        if (plain_form(fix) == plain_form(s)) fix = "OK";
+                    }
+                    reply += "FIX: " + fix + "\n";
+                }
                 if (jobs.find("en") != std::string::npos) reply += "EN: " + side(ask_en(ja)) + "\n";
             } else { cached.clear(); llama_memory_clear(llama_get_memory(ctx), true); }
         }
@@ -158,6 +185,7 @@ int wmain(int argc, wchar_t **argv) {
         if (f) { fwrite(reply.data(), 1, reply.size(), f); fclose(f); MoveFileExW(tmp.c_str(), out.c_str(), MOVEFILE_REPLACE_EXISTING); }
     }
     llama_sampler_free(smp);
+    llama_sampler_free(exact);
     llama_free(ctx);
     llama_model_free(model);
     return 0;

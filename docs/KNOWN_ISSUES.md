@@ -7,6 +7,8 @@
 - **CRT and RF:** not viewed on a real tube.
 - **Windows Japanese keyboard:** the code is new. It's been tested with simulated keyboard messages only, because the build PC has no Japanese keyboard installed.
 - **Windows speech:** this PC has no Japanese voice, so speech has never been heard.
+- **Chimes:** made by YomiGo itself and checked for level, but never heard through the program's own speakers on this PC, or on Windows 95 or 98 sound cards.
+- **Automatic updates:** the swap and restart are the same as Check for updates, but the start-up path first runs for real when 0.14 comes out.
 - **Android:** speech input, text-to-speech, and self-update haven't run on a phone.
 - **Reader:** not yet loaded as a real extension in Chrome or Firefox.
 

@@ -3,7 +3,8 @@
    usage: YomiGoUpdate target.exe current_version parent_pid [--quiet]
           YomiGoUpdate --verify file sig   (exit 0 when the signature is good; used by the tests)
           YomiGoUpdate --swap target.exe new.exe  (the swap step alone; used by the tests)
-          --yes after the first form accepts the update and skips the restart, for the end-to-end test. Signatures are still checked. */
+          --yes after the first form accepts the update and skips the restart, for the end-to-end test. Signatures are still checked.
+          --auto accepts without asking and restarts: YomiGo starts it this way each time it opens. */
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <winhttp.h>
@@ -17,7 +18,7 @@ void *memset(void *d, int c, size_t n) { unsigned char *p = (unsigned char *)d; 
 void *memcpy(void *d, const void *s, size_t n) { unsigned char *p = (unsigned char *)d; const unsigned char *q = (const unsigned char *)s; while (n--) *p++ = *q++; return d; }
 
 #define MAX_DL (64 * 1024 * 1024)
-static int quiet, assume_yes;
+static int quiet, assume_yes, restart = 1;
 static char dir[MAX_PATH];
 
 static void say(const char *msg) { if (!quiet) MessageBoxA(0, msg, "YomiGo Update", MB_OK | MB_ICONINFORMATION); }
@@ -186,7 +187,7 @@ void yg_entry(void) {
         ExitProcess(swap_in(t, n) ? 0 : 1);
     }
     next_arg(&cl, cur, 32); next_arg(&cl, pid, 32);
-    while (next_arg(&cl, flag, 32)) { if (!lstrcmpA(flag, "--quiet")) quiet = 1; else if (!lstrcmpA(flag, "--yes")) { assume_yes = 1; quiet = 1; } }
+    while (next_arg(&cl, flag, 32)) { if (!lstrcmpA(flag, "--quiet")) quiet = 1; else if (!lstrcmpA(flag, "--yes")) { assume_yes = 1; quiet = 1; restart = 0; } else if (!lstrcmpA(flag, "--auto")) { assume_yes = 1; quiet = 1; } }
     /* Only our own programs can be updated, whatever the command line says */
     if (lstrcmpA(target, "YomiGo.exe") && lstrcmpA(target, "YomiGoHTPC.exe")) ExitProcess(2);
 
@@ -206,18 +207,22 @@ void yg_entry(void) {
         say("The download failed, or its signature did not check out. Nothing was changed.");
         ExitProcess(4);
     }
+    /* Everything else comes down too before the program closes, so it's gone only for the swap.
+       A running exe can be renamed, so the updater can refresh itself. If that fails, the old updater still works. */
+    { static int got[YG_NHELPERS + 1]; static char h[MAX_PATH], hnew[MAX_PATH];
+    got[YG_NHELPERS] = fetch_verified(tag, "YomiGoUpdate.exe", freshme);
+    for (i = 0; i < YG_NHELPERS; i++) { wsprintfA(hnew, "%s\\%s.new", dir, helpers[i]); got[i] = fetch_verified(tag, helpers[i], hnew); }
     /* Ask the program to close, so it can finish saving */
     { HWND w = 0; while ((w = FindWindowExA(0, w, "YomiGoWnd", 0)) != 0) { DWORD owner = 0; GetWindowThreadProcessId(w, &owner); { DWORD want = 0; const char *p = pid; while (*p >= '0' && *p <= '9') want = want * 10 + (DWORD)(*p++ - '0'); if (owner == want) PostMessageA(w, WM_CLOSE, 0, 0); } } }
     { DWORD want = 0; const char *p = pid; while (*p >= '0' && *p <= '9') want = want * 10 + (DWORD)(*p++ - '0');
       parent = OpenProcess(SYNCHRONIZE, FALSE, want);
       if (parent) { WaitForSingleObject(parent, 15000); CloseHandle(parent); } }
     if (!swap_in(full, fresh)) { DeleteFileA(fresh); quiet = 0; say("Couldn't replace the program, so the old version is still in place."); ExitProcess(5); }
-    /* A running exe can be renamed, so the updater can refresh itself too. If this fails, the old updater still works. */
-    if (fetch_verified(tag, "YomiGoUpdate.exe", freshme)) { if (!swap_in(me, freshme)) DeleteFileA(freshme); }
-    /* The text reader's helpers come along too; YomiGo works without them */
-    for (i = 0; i < YG_NHELPERS; i++) { static char h[MAX_PATH], hnew[MAX_PATH];
+    if (got[YG_NHELPERS] && !swap_in(me, freshme)) DeleteFileA(freshme);
+    /* The helpers come along too; YomiGo works without them */
+    for (i = 0; i < YG_NHELPERS; i++) {
       wsprintfA(h, "%s\\%s", dir, helpers[i]); wsprintfA(hnew, "%s\\%s.new", dir, helpers[i]);
-      if (fetch_verified(tag, helpers[i], hnew)) { if (!swap_in(h, hnew)) DeleteFileA(hnew); } }
-    if (!assume_yes) ShellExecuteA(0, 0, full, 0, dir, SW_SHOWNORMAL);
+      if (got[i] && !swap_in(h, hnew)) DeleteFileA(hnew); } }
+    if (restart) ShellExecuteA(0, 0, full, 0, dir, SW_SHOWNORMAL);
     ExitProcess(0);
 }

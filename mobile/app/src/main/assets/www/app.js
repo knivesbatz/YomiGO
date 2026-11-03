@@ -15,6 +15,25 @@ function h(tag, props, ...kids) {
   return e;
 }
 const btn = (label, on, cls) => h("button", { on, cls: cls || "" }, label);
+// Chimes, as on the PC: a right answer climbs a note for each one in a row, and acing something gets a fanfare
+let actx = null, combo = 0;
+const muted = () => { try { return localStorage.getItem("yg.mute") === "1"; } catch { return false; } };
+function chime(kind) {
+  if (muted()) return;
+  try { actx = actx || new AudioContext(); } catch { return; }
+  const t = actx.currentTime, S = [523, 587, 659, 784, 880, 1047, 1175, 1319, 1568, 1760];
+  const tone = (at, f, vol, len) => {
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.frequency.value = f; g.gain.setValueAtTime(0, t + at); g.gain.linearRampToValueAtTime(vol, t + at + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t + at + len);
+    o.connect(g).connect(actx.destination); o.start(t + at); o.stop(t + at + len);
+  };
+  const note = (at, f, vol = 0.22, len = 0.45) => { tone(at, f, vol, len); tone(at, f * 2, vol / 3, len / 3); tone(at, f * 2.75, vol / 5, len / 5); };
+  if (kind === "ok") { note(0, S[combo]); note(0.07, S[combo + 2]); combo = Math.min(combo + 1, 7); return; }
+  combo = 0; // a miss, or the end of a quiz, starts the climb again
+  if (kind === "bad") { note(0, 330, 0.2, 0.3); note(0.11, 262, 0.2, 0.35); }
+  else if (kind === "done") [784, 988, 1175, 1568].forEach((f, i) => note(i * 0.08, f, 0.2, i === 3 ? 0.9 : 0.4));
+  else { [523, 659, 784, 1047].forEach((f, i) => note(i * 0.07, f)); [1047, 1319, 1568].forEach((f, i) => { note(0.3, f, 0.14, 1.2); note(0.3 + i * 0.1, f * 2, 0.06, 0.3); }); }
+}
 const bar = (v, max) => { const b = h("div", { cls: "bar", role: "progressbar", "aria-valuenow": v, "aria-valuemax": max }, h("i")); b.firstChild.style.width = (max ? Math.min(100, v * 100 / max) : 0) + "%"; return b; };
 let strokeTimer = null;
 function show(...kids) { if (strokeTimer) { clearInterval(strokeTimer); strokeTimer = null; } app.replaceChildren(...kids.flat()); window.scrollTo(0, 0); }
@@ -70,7 +89,7 @@ function setNav(cur) {
 function profiles() {
   P = null; setNav(-1);
   const input = h("input", { placeholder: "Your name", maxlength: 16, "aria-label": "Your name" });
-  show(h("h1", null, "YomiGo ✿ 読みGo"), h("p", { cls: "dim" }, "Developed by SENKOSOFT"),
+  show(h("h1", null, "YomiGo ✿ 読みGo"), 
     store.list().map((n) => btn(n, () => { P = store.load(n); if (!P) { alert("That save couldn't be read."); return; } if (Y.catchUp(P, Y.today())) store.save(); home(); })),
     h("div", { cls: "card" }, h("h2", null, "New learner"), input, h("div", { cls: "dim" }, "Letters A-Z and numbers for now."),
       btn("Start", () => {
@@ -135,7 +154,7 @@ function genki() {
   show(h("h1", null, "Genki practice"), h("p", { cls: "dim" }, "By lesson, using YomiGo's own cards. Follows the order of the 3rd edition. Lessons with no YomiGo cards yet arrive with the N4 update."),
     C.genki.map((g, i) => h("div", { cls: "card" }, h("strong", null, "Lesson " + g.lesson), h("div", { cls: "dim" }, g.topics),
       // Extra practice is free to repeat, so it earns no XP
-      btn("Practice", () => runQuiz(Y.quizGenki(i), "Genki practice", (r, n) => result("Practice done", `${r} of ${n} correct.`, r * 2 >= n, genki))))));
+      btn("Practice", () => runQuiz(Y.quizGenki(i), "Genki practice", (r, n) => result("Practice done", `${r} of ${n} correct.`, r === n ? 2 : r * 2 >= n, genki))))));
 }
 function placeIntro() {
   setNav(-1);
@@ -162,7 +181,7 @@ function home() {
   if (P.last !== t) P.today = 0;
   const parts = [h("div", { cls: "row" }, h("h1", null, L("Today", "きょう", 2)), h("span", { cls: "dim" }, `🔥 ${P.streak}  ·  XP ${P.xp}`))];
   if (gate >= 0) parts.push(h("div", { cls: "card" }, h("div", { cls: "bad" }, "Required to continue"), h("h2", null, C.exams[gate].name), "Pass with 80%. Retake it as often as you need.", btn(L("Take the exam", "しけん", 2), () => startExam(gate), "main")));
-  else if (P.day >= C.days.length) parts.push(h("div", { cls: "card" }, h("h2", { cls: "good" }, "N4 complete!"), "N3 and beyond arrive in a future update. Keep reviewing, and read and listen to real Japanese every day."));
+  else if (P.day >= C.days.length) parts.push(h("div", { cls: "card" }, h("h2", { cls: "good" }, "Course complete!"), "More words, then N2, arrive in future updates. Keep reviewing, and read and listen to real Japanese every day."));
   else {
     const d = C.days[P.day], over = P.today >= P.pace && P.last === t;
     parts.push(h("div", { cls: "card" }, h("div", { cls: "row dim" }, h("span", null, C.stages[d.stage].name), h("span", null, `Class ${P.day + 1} of ${C.days.length}`)), h("div", { cls: "big" }, d.ja), h("div", { cls: "dim" }, d.title), bar(P.step, 10),
@@ -192,7 +211,7 @@ function runStep() {
     }
     case 7: return runQuiz(Y.quizDay(P.day), "Daily quiz", (right, n) => {
       const pct = Math.trunc(right * 100 / n);
-      if (pct >= Y.PASS) { P.xp += right * 2; if (pct === 100) P.perfects++; return nextStep(); }
+      if (pct >= Y.PASS) { P.xp += right * 2; if (pct === 100) { P.perfects++; chime("ace"); } return nextStep(); }
       P.step = 1; store.save(); result("Not yet!", `You scored ${pct}%. You need 80% to continue. Look at your notes and try again.`, false, runStep);
     });
     case 8: return task(d.hw, L("Homework", "しゅくだい", 3), L("I did it!", "できた！", 2), () => {
@@ -238,7 +257,7 @@ function reading(r, qi, right, en) {
   show(h("div", { cls: "row" }, h("h1", { lang: "ja" }, r.ja), h("span", { cls: "dim" }, `${qi + 1} / ${r.q.length}`)), h("div", { cls: "card pre", lang: "ja" }, r.jp), h("div", { cls: "card" }, h("strong", null, q)), buttons, fb);
 }
 function task(body, title, label, go) { setNav(-1); show(h("h1", null, title), h("div", { cls: "card" }, body), btn(label, go, "main"), btn("Later", home)); }
-function result(title, body, good, next) { setNav(-1); show(h("h1", { cls: good ? "good" : "bad" }, title), h("div", { cls: "card" }, body), btn(L("Continue", "つぎへ", 2), next, "main")); }
+function result(title, body, good, next) { chime(good === 2 ? "ace" : good ? "done" : "bad"); setNav(-1); show(h("h1", { cls: good ? "good" : "bad" }, title), h("div", { cls: "card" }, body), btn(L("Continue", "つぎへ", 2), next, "main")); }
 
 function teach(page) {
   const d = C.days[P.day], total = d.notes.length + d.new.length, rom = Y.romajiMode(P.day);
@@ -272,7 +291,9 @@ function typing(words, i, rep, bad) {
   inp.addEventListener("input", () => { pre.textContent = Y.normKana(inp.value); });
   const submit = () => {
     if (!inp.value) return inp.focus();
-    if (!Y.answerOk(inp.value, c.r, c.ro)) return typing(words, i, rep, true);
+    const ok = Y.answerOk(inp.value, c.r, c.ro);
+    chime(ok ? "ok" : "bad");
+    if (!ok) return typing(words, i, rep, true);
     if (rep + 1 < REPS) return typing(words, i, rep + 1, false);
     P.xp++;
     return i + 1 < words.length ? typing(words, i + 1, 0, false) : nextStep();
@@ -294,10 +315,11 @@ function runQuiz(qs, title, done, opt = {}) {
     let idk = false, dontKnow = null;
     const after = (ok) => {
       if (dontKnow) dontKnow.remove();
+      chime(ok ? "ok" : "bad");
       if (ok) { if (!opt.seenWrong?.has(i)) right++; } else if (opt.requeue && qs.length < 60) qs.push(q);
       if (opt.onAnswer) opt.onAnswer(q, ok);
       if (q.say) big.textContent = q.prompt;
-      fb.replaceChildren(h("strong", { cls: ok ? "good" : idk ? "dim" : "bad" }, ok ? L("Correct!", "正解！", 5) : idk ? "That's okay. Here's the answer." : L("Not quite.", "ちがいます", 3)), q.kind === "type" && !ok ? h("div", { lang: "ja" }, q.want) : "", !ok && q.card.n ? h("p", { cls: "dim" }, q.card.n) : "", btn(L("Next", "つぎ", 2), () => { i++; step(); }, "main"));
+      fb.replaceChildren(idk ? "" : h("div", { cls: ok ? "good mark" : "bad mark" }, ok ? "○" : "×"), h("strong", { cls: ok ? "good" : idk ? "dim" : "bad" }, ok ? L("Correct!", "正解！", 5) : idk ? "That's okay. Here's the answer." : L("Not quite.", "ちがいます", 3)), q.kind === "type" && !ok ? h("div", { lang: "ja" }, q.want) : "", !ok && q.card.n ? h("p", { cls: "dim" }, q.card.n) : "", btn(L("Next", "つぎ", 2), () => { i++; step(); }, "main"));
     };
     if (q.kind === "choice") {
       const buttons = q.choices.map((c) => { const b = btn(c, () => { buttons.forEach((x) => { x.disabled = true; if (x.textContent === q.answer) x.className = "right"; }); if (c !== q.answer) b.className = "wrong"; after(c === q.answer); }); b.lang = "ja"; return b; });
@@ -332,7 +354,7 @@ function chat(id, turn, fails) {
   if (turn >= c.turns.length) { P.chats++; P.xp += 30; return nextStep(); }
   const t = c.turns[turn], inp = h("input", { autocapitalize: "off", autocomplete: "off", lang: "ja", placeholder: "Type here", "aria-label": "Your reply" }), pre = h("div", { cls: "acc", lang: "ja" });
   inp.addEventListener("input", () => { pre.textContent = Y.normKana(inp.value); });
-  const send = (text) => { if (Y.chatOk(text, t)) chat(id, turn + 1, 0); else chat(id, turn, fails + 1); };
+  const send = (text) => { if (Y.chatOk(text, t)) { chime("ok"); chat(id, turn + 1, 0); } else { chime("bad"); chat(id, turn, fails + 1); } };
   inp.addEventListener("keydown", (e) => { if (e.key === "Enter") send(inp.value); });
   setNav(-1);
   show(h("h1", { lang: "ja" }, c.ja), h("div", { cls: "dim" }, c.title),
@@ -350,17 +372,26 @@ function cards() {
   setNav(1);
   const t = Y.today(), due = Y.dueCount(P, t), all = [...Object.values(P.cards), ...P.my];
   show(h("h1", null, L("Flashcards", "カード", 3)), h("div", { cls: "card" }, h("div", { cls: "big " + (due ? "acc" : "good") }, due), due === 1 ? "card due" : "cards due", h("p", { cls: "dim" }, `Deck: ${all.length}. Struggling with: ${all.filter((c) => c.lapses).length}. Right answers come back later, wrong ones tomorrow. Only due cards earn XP.`)),
-    due ? btn(L("Review", "ふくしゅう", 2), () => runQuiz(Y.quizReview(P, t, 30), "Flashcards", (r, n) => { store.save(); result("Review done", `${r} of ${n} correct. Cards you missed will come back soon.`, r * 2 >= n, home); },
+    due ? btn(L("Review", "ふくしゅう", 2), () => runQuiz(Y.quizReview(P, t, 30), "Flashcards", (r, n) => { store.save(); result("Review done", `${r} of ${n} correct. Cards you missed will come back soon.`, r === n ? 2 : r * 2 >= n, home); },
       { onAnswer: (q, ok) => { Y.srsGrade(q.my || P.cards[q.card.id], ok ? 2 : 0, Y.today()); P.reviews++; if (ok) P.xp += 2; store.save(); } }), "main") : "",
     btn(`My words (${P.my.length})`, myWords),
     P.genki ? btn("Genki practice", genki) : "");
 }
 function startExam(i) {
-  const e = C.exams[i];
+  const e = C.exams[i], missed = [];
   runQuiz(Y.quizExam(i), e.name, (r, n) => {
-    const pct = Math.trunc(r * 100 / n), pass = Y.examResult(P, i, pct); store.save();
-    result(e.name, pass ? `You scored ${pct}%. The way forward is open.` : `You scored ${pct}%. You need 80%. Review your cards and challenge it again.`, pass, home);
-  }, { noExit: true });
+    const pct = Math.trunc(r * 100 / n), pass = Y.examResult(P, i, pct);
+    if (!pass) for (const c of missed) if (P.cards[c.id]) P.cards[c.id].due = Y.today(); // missed cards come up in Flashcards straight away
+    store.save();
+    if (pass) return result(e.name, `You scored ${pct}%. The way forward is open.`, 2, home);
+    // After a failed exam: go over what was missed, or take an unscored practice run of the same exam
+    const practice = (qs, title) => runQuiz(qs, title, (r2, n2) => result(title, `You got ${r2} of ${n2} right.`, r2 === n2 ? 2 : r2 * 5 >= n2 * 4, home));
+    setNav(-1);
+    show(h("h1", { cls: "bad" }, e.name), h("div", { cls: "card" }, `You scored ${pct}%. You need 80%. Practise what you missed, or take a practice test, then challenge it again. Missed cards are in Flashcards too.`),
+      missed.length ? btn(L("Practise missed", "まちがいの練習", 3), () => practice(missed.slice(0, 15).map((c, k) => Y.makeQ(c, k % 3, Y.romajiMode(P.day))), "Practice")) : "",
+      btn(L("Practice test", "れんしゅうテスト", 3), () => practice(Y.quizExam(i), "Practice test")),
+      btn(L("Continue", "つぎへ", 2), home, "main"));
+  }, { noExit: true, onAnswer: (q, ok) => { if (!ok && q.card.id && !missed.includes(q.card)) missed.push(q.card); } });
 }
 function exams() {
   setNav(2);
@@ -368,7 +399,7 @@ function exams() {
   show(h("h1", null, L("Exams", "しけん", 2)), C.exams.map((e, i) => {
     const open = e.day < P.day, s = P.exams[e.id] || 0;
     return h("div", { cls: "card" }, h("div", { cls: "row" }, e.name, h("span", { cls: s >= Y.PASS ? "good" : i === gate ? "bad" : "dim" }, s >= Y.PASS ? `Best ${s}%` : !open ? "Locked" : i === gate ? "Required" : "Open")), open ? btn("Challenge", () => startExam(i)) : "");
-  }), h("p", { cls: "dim" }, "These are YomiGo's own exams, not official JLPT tests. N3, N2, N1, and Beyond N1 arrive in updates. There's no official N0, so YomiGo will offer its own Beyond N1 stage."));
+  }), h("p", { cls: "dim" }, "These are YomiGo's own exams, not official JLPT tests. N2, N1, and YomiGo's own Beyond N1 arrive in updates."));
 }
 const RANKS = [["Newcomer", "入門者"], ["White Sash", "白帯"], ["Road Walker", "道を行く者"], ["Scribe", "書記"], ["Castle Guard", "城の守り"], ["Gatekeeper", "門番"], ["Kanji Knight", "漢字の騎士"], ["N5 Champion", "N5王者"], ["N4 Champion", "N4王者"], ["N3 Champion", "N3王者"]];
 function quest() {
@@ -401,6 +432,7 @@ function settings() {
     btn("Pace: " + paces[P.pace - 1], () => { P.pace = P.pace % 3 + 1; store.save(); settings(); }),
     btn(P.en ? "Labels: Always English" : "Labels: Gradually Japanese", () => { P.en = P.en ? 0 : 1; store.save(); settings(); }),
     btn(P.genki ? "Genki practice: On" : "Genki practice: Off", () => { P.genki = P.genki ? 0 : 1; store.save(); settings(); }),
+    btn(muted() ? "Sounds: Off" : "Sounds: On", () => { try { localStorage.setItem("yg.mute", muted() ? "0" : "1"); } catch {} chime("done"); settings(); }),
     btn("Who's learning: " + GENDER[P.gender], () => askSpeaker(settings)),
     btn(canSpeak() ? "Japanese voice: found" : "Japanese voice: none. Tap to add it", () => { if (Bridge) Bridge.installVoice(); else alert("Listening needs a Japanese voice on this device."); }),
     btn("Check for updates", () => { if (Bridge) Bridge.checkUpdate(); else alert("Updates apply to the Android app."); }),
@@ -408,6 +440,6 @@ function settings() {
     h("h2", null, "Move a save between devices"), area,
     btn("Show my save", () => { area.value = Y.saveText(P); }),
     btn("Load the save above", () => { const p = Y.loadText(area.value); if (!p) return alert("That isn't a YomiGo save."); if (confirm(`Replace ${p.name}'s progress on this device?`)) { P = p; store.save(); home(); } }),
-    h("p", { cls: "dim" }, `YomiGo Mobile ${VERSION}. © SENKOSOFT. Speech feedback checks what the recogniser heard. It can't confirm native-like pronunciation.`));
+    h("p", { cls: "dim" }, `YomiGo Mobile ${VERSION}. Speech feedback checks what the recogniser heard. It can't confirm native-like pronunciation.`));
 }
 profiles();

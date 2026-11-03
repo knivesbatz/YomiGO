@@ -168,7 +168,10 @@
     const out = [right];
     // 時 is both じ and とき: its other meaning isn't a wrong answer
     const pool = shuffle(C.cards.filter((o) => o.t === card.t && o.day >= 0 && (o === card || o.f !== card.f)));
-    pool.sort((a, b) => Math.abs(a.day - card.day) > 8 ? 1 : Math.abs(b.day - card.day) > 8 ? -1 : 0);
+    // Wrong answers of the same kind first (a verb gets verbs, as in the C core), then from nearby classes
+    const kind = (o) => (o.t !== "w" ? "" : o.en.startsWith("to ") ? "v" : o.f.endsWith("い") ? "a" : "n"), k = kind(card);
+    const far = (o) => (Math.abs(o.day - card.day) > 8 ? 1 : 0);
+    pool.sort((a, b) => ((kind(a) !== k) - (kind(b) !== k)) * 2 + far(a) - far(b));
     for (const o of pool) { const t = pick(o); if (t && !out.includes(t)) out.push(t); if (out.length === 4) break; }
     return shuffle(out);
   }

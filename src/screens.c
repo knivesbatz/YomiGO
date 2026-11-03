@@ -74,6 +74,7 @@ static int chat_id, chat_turn, chat_fail, chat_show;
 static char result_title[96], result_body[256];
 static int result_good;
 static Screen result_next;
+static short missed[40]; static int nmissed, result_retry; /* cards missed in this quiz; after a failed exam, offer practice */
 static int task_kind;
 static int note_skip, note_more;
 static char name_buf[YG_NAME];
@@ -277,7 +278,6 @@ static void chrome(const char *title, const char *sub) {
         ys_fmt(b, sizeof b, "XP %d", P.xp, 0); x += text(x, FBH - FOOT + 3, b, C_INK) + 10;
         ys_fmt(b, sizeof b, "Streak %d", P.streak, 0); text(x, FBH - FOOT + 3, b, C_INK);
     }
-    text(FBW - 8 - text_w("SENKOSOFT"), FBH - FOOT + 3, "SENKOSOFT", C_DIM);
 }
 /* Drawn last so the main content gets focus first. Only on main pages: a class has no side doors. */
 static void rail(void) {
@@ -351,17 +351,28 @@ static void show_result(const char *title, const char *body, int good, Screen ne
     ys_cpy(result_body, body, sizeof result_body);
     result_good = good; result_next = next;
     go(S_RESULT);
-    plat_sound(good ? 3 : 4);
+    plat_sound(good == 2 ? 5 : good ? 3 : 4); /* 2: aced it, with the big fanfare */
 }
+static void start_quiz(QuizMode m);
 static void scr_result(void) {
     chrome(result_good ? L("Well done", "やった！", 2) : L("Try again", "もう一度", 2), 0);
     panel(CX, CY, CW, CH - (HTPC ? 0 : 40));
     if (result_good) sakura(CX + 10, CY + 10, HTPC ? 2 : 3);
     wrap(CX + 10, CY + (HTPC ? 44 : 60), CW - 20, result_title, result_good ? C_GOOD : C_BAD, LH, 0, 2);
     wrap(CX + 10, CY + (HTPC ? 44 : 60) + 2 * LH, CW - 20, result_body, C_INK, LH, 0, 0);
-    if (button(CX + CW / 2 - 70, FBY_BTN, 140, 28, L("Continue", "つぎへ", 2))) go(result_next);
+    /* After a failed exam: go over what was missed, or take an unscored practice run of the same exam */
+    if (result_retry) {
+        int bw = (CW - 8) / 2;
+        if (nmissed && button(CX, FBY_BTN - 34, bw, 28, L("Practise missed", "まちがいの練習", 3))) {
+            int i; quiz_new(&Z);
+            for (i = 0; i < nmissed && Z.n < 15; i++) q_make(&Z.q[Z.n++], missed[i], i % 3, day_romaji_mode(P.day));
+            result_retry = 0; start_quiz(QM_PRACTICE); return;
+        }
+        if (button(CX + bw + 8, FBY_BTN - 34, bw, 28, L("Practice test", "れんしゅうテスト", 3))) { result_retry = 0; quiz_exam(&Z, exam_id); start_quiz(QM_PRACTICE); return; }
+    }
+    if (button(CX + CW / 2 - 70, FBY_BTN, 140, 28, L("Continue", "つぎへ", 2))) { result_retry = 0; go(result_next); }
 #if HTPC
-    footer("Continue", 0);
+    footer("Choose", 0);
 #endif
 }
 
@@ -369,8 +380,9 @@ static void scr_result(void) {
 static const char *const STEP_EN[] = {"Warm-up review", "New lesson", "Typing practice", "Practice drill", "Conversation", "Reading", "Listening", "Daily quiz", "Homework", "Immersion"};
 static const char *const STEP_JA[] = {"ふくしゅう", "じゅぎょう", "タイピング", "れんしゅう", "かいわ", "どっかい", "ききとり", "テスト", "しゅくだい", "イマージョン"};
 
+static Screen quiz_from; /* practice goes back where it started: Genki, or home after a failed exam */
 static void start_quiz(QuizMode m) {
-    qm = m; qi = 0; qright = 0; qanswered = 0; qchoice = 0; q_idk = 0; input[0] = 0; q_said = -1;
+    quiz_from = scr; qm = m; qi = 0; qright = 0; qanswered = 0; qchoice = 0; q_idk = 0; input[0] = 0; q_said = -1; nmissed = 0;
     go(S_QUIZ);
 }
 static void next_step(void);
@@ -487,8 +499,8 @@ static void scr_home(void) {
         text2(CX + 10, CY + 30, YG_EXAMS[gate].name, C_INK);
         if (button(CX + CW - 180, CY + 110, 170, 28, L("Take the exam", "しけんを受ける", 5))) { exam_id = gate; quiz_exam(&Z, exam_id); start_quiz(QM_EXAM); }
     } else {
-        text2(CX + 10, CY + 30, "N4 complete!", C_GOOD);
-        wrap(CX + 10, CY + 70, CW - 20, "N3 and beyond arrive in a future update. Keep reviewing your cards, and read and listen to real Japanese every day.", C_INK, LH, 0, 3);
+        text2(CX + 10, CY + 30, "Course complete!", C_GOOD);
+        wrap(CX + 10, CY + 70, CW - 20, "More words, then N2, arrive in future updates. Keep reviewing, and read and listen to real Japanese every day.", C_INK, LH, 0, 3);
     }
     { int y = CY + 158;
       panel(CX, y, (CW - 8) / 2, 120);
@@ -663,7 +675,7 @@ static void quiz_finished(void) {
     case QM_DAILY:
         if (pct >= 80) {
             P.xp += qright * 2;
-            if (pct == 100) P.perfects++;
+            if (pct == 100) { P.perfects++; plat_sound(5); }
             ach_check(&P);
             next_step();
         } else {
@@ -677,13 +689,16 @@ static void quiz_finished(void) {
     case QM_REVIEW:
         save_profile();
         ys_fmt(b, sizeof b, "%d of %d correct. Cards you missed will come back soon.", qright, Z.n);
-        show_result("Review done", b, qright * 2 >= Z.n, S_HOME);
+        show_result("Review done", b, qright == Z.n ? 2 : qright * 2 >= Z.n, S_HOME);
         break;
     case QM_EXAM: {
         int pass = profile_exam_pass(&P, exam_id, pct, plat_today());
         save_profile();
-        ys_fmt(b, sizeof b, pass ? "You scored %d%%. The way forward is open." : "You scored %d%%. You need 80%%. Review your cards and challenge it again.", pct, 0);
-        show_result(YG_EXAMS[exam_id].name, b, pass, S_HOME);
+        if (!pass) { int i; for (i = 0; i < nmissed; i++) if (P.cards[missed[i]].seen) P.cards[missed[i]].due = plat_today(); save_profile(); } /* missed cards come up in Flashcards straight away */
+        ys_fmt(b, sizeof b, pass ? "You scored %d%%. The way forward is open." : (HTPC ? "You scored %d%%. You need 80%%. Missed cards are in Flashcards." /* two lines, above the practice buttons */
+                                         : "You scored %d%%. You need 80%%. The cards you missed are waiting in Flashcards. Practise them, or take a practice test, then challenge it again."), pct, 0);
+        show_result(YG_EXAMS[exam_id].name, b, pass * 2, S_HOME);
+        result_retry = !pass;
         break; }
     case QM_LISTEN:
         P.xp += qright; P.listens++; ach_check(&P);
@@ -692,7 +707,7 @@ static void quiz_finished(void) {
     case QM_PRACTICE:
         /* Extra practice is free to repeat, so it earns no XP */
         ys_fmt(b, sizeof b, "%d of %d correct.", qright, Z.n);
-        show_result("Practice done", b, qright * 2 >= Z.n, S_GENKI);
+        show_result("Practice done", b, qright == Z.n ? 2 : qright * 2 >= Z.n, quiz_from == S_GENKI ? S_GENKI : S_HOME);
         break;
     case QM_PLACE: {
         /* Sections passed: romaji, hiragana, katakana, words, grammar, kanji. Learning always starts at romaji. */
@@ -712,6 +727,7 @@ static void quiz_finished(void) {
 }
 static void answer_given(int ok) {
     qanswered = 1; qok = ok;
+    if (!ok && nmissed < 40 && Z.q[qi].card < YG_NCARDS) missed[nmissed++] = Z.q[qi].card;
     if (!ok) plat_sound(4);
     if (ok) { qright++; plat_sound(2); }
     if (qm == QM_REVIEW) {
@@ -763,6 +779,8 @@ static void input_box(int x, int y, int w, int active) {
     }
 }
 #if !HTPC
+/* With something typed, Enter sends it, even when the mouse rests on another button. Call before drawing that button. */
+static int take_enter(void) { int e = input[0] && (IN.pressed & A_OK); if (e) IN.pressed &= ~A_OK; return e; }
 static void clip_buttons(int x, int y) {
     text(x, y + 2, "Ctrl+C  Ctrl+V", C_DIM);
     if (button(x + 122, y, 52, 20, "Copy")) IN.copy = 1;
@@ -853,8 +871,9 @@ static void scr_quiz(void) {
             osk(FBH - SAFE - 75);
             if (IN.pressed & A_START) { answer_given(answer_ok(input, q->want, q->want2)); IN.pressed &= ~A_OK; }
 #else
-            text_entry();
-            if (button(CX + CW - 90, y + 46, 90, 28, L("Check", "チェック", 3))) { answer_given(answer_ok(input, q->want, q->want2)); IN.pressed &= ~A_OK; }
+            int enter;
+            text_entry(); enter = take_enter();
+            if (button(CX + CW - 90, y + 46, 90, 28, L("Check", "チェック", 3)) || enter) { answer_given(answer_ok(input, q->want, q->want2)); IN.pressed &= ~A_OK; }
             else clip_buttons(CX, y + 50);
 #endif
         }
@@ -862,7 +881,10 @@ static void scr_quiz(void) {
       if (qanswered) {
         const char *why = q->card >= YG_NCARDS ? P.my[q->card - YG_NCARDS].sent : YG_CARDS[q->card].note;
         if (!qok && *why && !HTPC) wrap(CX, FBY_BTN - 40, CW, why, C_DIM, 18, 0, 2);
-        text(CX, FBY_BTN + 6, qok ? L("Correct!", "正解！", 5) : q_idk ? (HTPC ? "That's okay." : "That's okay. Here's the answer.") : L("Not quite.", "ちがいます", 3), qok ? C_GOOD : q_idk ? C_DIM : C_BAD);
+        /* A big ○ or ×, as Japanese marking uses, so right and wrong are obvious at a glance */
+        if (!q_idk) text2(CX, FBY_BTN - 2, qok ? "○" : "×", qok ? C_GOOD : C_BAD);
+        if (!HTPC && !q_idk) text2(CX + 40, FBY_BTN - 2, qok ? L("Correct!", "正解！", 5) : L("Not quite.", "ちがいます", 3), qok ? C_GOOD : C_BAD);
+        else text(CX + (q_idk ? 0 : 40), FBY_BTN + 6, qok ? L("Correct!", "正解！", 5) : q_idk ? (HTPC ? "That's okay." : "That's okay. Here's the answer.") : L("Not quite.", "ちがいます", 3), qok ? C_GOOD : q_idk ? C_DIM : C_BAD);
         if (button(CX + CW - 120, FBY_BTN, 120, 28, L("Next", "つぎ", 2))) {
             qi++; qanswered = 0; q_idk = 0; input[0] = 0; ui_reset_focus();
             if (qi >= Z.n) quiz_finished();
@@ -942,10 +964,11 @@ static void scr_chat(void) {
     { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "Say"); prompt_btn(&x, FBH - SAFE - 17, 2, "Don't know"); }
 #else
     text_entry();
-    if (button(CX + CW - 120, FBY_BTN, 120, 28, L("Say it", "言う", 5))) {
+    { int enter = take_enter();
+    if (button(CX + CW - 120, FBY_BTN, 120, 28, L("Say it", "言う", 5)) || enter) {
         if (chat_ok(input, t)) { chat_turn++; chat_fail = 0; input[0] = 0; plat_sound(2); }
         else { chat_fail++; plat_sound(4); }
-    }
+    } }
     if (button(CX + 124, FBY_BTN, 130, 28, L("I don't know", "わかりません", 3))) { chat_fail = 3; input[0] = 0; }
     if (plat_has_tts() && *t->say && button(CX, FBY_BTN, 120, 28, L("Hear it", "聞く", 5))) plat_speak(t->say);
     clip_buttons(CX + CW - 230, CY + 124);
@@ -986,7 +1009,8 @@ static void scr_typing(void) {
     if (!submit && !input[0] && (IN.pressed & A_BACK)) { go(S_CLASS); return; }
 #else
     text_entry();
-    submit = button(CX + CW - 120, FBY_BTN, 120, 28, "Enter");
+    submit = take_enter();
+    submit = button(CX + CW - 120, FBY_BTN, 120, 28, "Enter") || submit;
     if (button(CX, FBY_BTN, 90, 28, L("Later", "あとで", 2))) { save_profile(); go(S_CLASS); return; }
     clip_buttons(CX + CW - 230, FBY_BTN - 26);
 #endif
@@ -1323,7 +1347,7 @@ static void scr_exams(void) {
         text(CX + (HTPC ? 198 : 282), y + (h - 16) / 2, b, passed ? C_GOOD : i == gate ? C_BAD : C_DIM);
         y += h + (HTPC ? 2 : 6);
     }
-    if (!HTPC) wrap(CX, y + 4, CW, "These are YomiGo's own exams, not official JLPT tests. N3, N2, N1, and Beyond N1 arrive in updates. There's no official N0, so YomiGo will offer its own Beyond N1 stage.", C_DIM, 18, 0, 4);
+    if (!HTPC) wrap(CX, y + 4, CW, "These are YomiGo's own exams, not official JLPT tests. N2, N1, and YomiGo's own Beyond N1 arrive in updates.", C_DIM, 18, 0, 4);
 #if HTPC
     if (IN.pressed & A_BACK) go(S_HOME);
     footer("Challenge", "Menu");
@@ -1469,9 +1493,10 @@ static void voice_help(void) {
 static void scr_settings(void) {
     int y = CY, bh = HTPC ? 22 : 30, step = bh + (HTPC ? 2 : 6), w = HTPC ? CW : 300;
     char b[64];
-    static const char *const pace[] = {"Pace: Gentle (1 class a day)", "Pace: Steady (2 a day)", "Pace: Sprint (3 a day)"};
+    static const char *const pace[] = {"Pace: Gentle (1 class a day)", "Pace: Steady (2 a day)", "Pace: Sprint (3 a day)"}, *const pace_tv[] = {"Pace: 1 a day", "Pace: 2 a day", "Pace: 3 a day"};
     chrome(L("Settings", "せってい", 2), 0);
-    if (button(CX, y, w, bh, pace[P.pace - 1])) { P.pace = P.pace % 3 + 1; save_profile(); }
+    if (button(CX, y, HTPC ? w / 2 - 2 : w, bh, (HTPC ? pace_tv : pace)[P.pace - 1])) { P.pace = P.pace % 3 + 1; save_profile(); }
+    if (button(HTPC ? CX + w / 2 + 2 : CX + w + 8, y, HTPC ? w / 2 - 2 : CW - w - 8, bh, plat_muted() ? "Sounds: Off" : "Sounds: On")) { plat_mute(!plat_muted()); plat_sound(3); } /* a chime to hear it's on */
     y += step;
     if (button(CX, y, w, bh, P.force_en ? "Labels: Always English" : "Labels: Gradually Japanese")) { P.force_en = !P.force_en; save_profile(); }
     y += step;
@@ -1504,7 +1529,6 @@ static void scr_settings(void) {
     if (button(CX, y, w, bh, plat_has_tts() ? "Japanese voice: found" : "Japanese voice: none. How to add it")) { voice_help(); return; }
     y += step;
     ys_cpy(b, "YomiGo Desktop ", sizeof b); ys_cat(b, YG_VERSION, sizeof b); text(CX, y + 8, b, C_DIM);
-    text(CX, y + 26, "(C) SENKOSOFT", C_DIM);
 #endif
 }
 #if HTPC
@@ -1547,7 +1571,6 @@ static void scr_splash(void) {
     text2(FBW / 2 - text_w("読みGo"), 180, "読みGo", C_ACC);
     text_c(FBW / 2, 220, "YomiGo Japanese Learning System", C_INK);
     text_c(FBW / 2, 244, "Version " YG_VERSION, C_DIM);
-    text_c(FBW / 2, 420, "(C) SENKOSOFT", C_DIM);
     if (anim & 16) text_c(FBW / 2, 340, "Click or press Enter", C_PLUM);
 #endif
     if (IN.pressed || IN.mclick) { plat_sound(3); go(S_PROFILES); }
@@ -1596,6 +1619,7 @@ static void scr_name(void) {
 #define TK_MAX 12
 static char tk_text[TK_MAX][640], tk_role[TK_MAX]; /* 'U' the learner, 'A' the partner, raw as it wrote */
 static int tk_n, tk_wait, tk_get, tk_ask, tk_en = !HTPC; /* the TV has room for English only on request */
+static int tk_scroll; /* how many messages back from the newest the view ends */
 static const char *tk_msg = "";
 /* What the partner is told: who it's talking to, the lesson, and the reply format the screen reads */
 static void tk_system(char *s, int cap) {
@@ -1604,8 +1628,22 @@ static void tk_system(char *s, int cap) {
     ys_cpy(s, "You are Sakura, a friendly young woman from Japan, chatting by text with someone learning Japanese. ", cap);
     ys_cat(s, stage < 7 ? "They know about JLPT N5. Use simple polite Japanese with です and ます, and only common kanji." : stage < 8 ? "They are working on JLPT N4. Use polite Japanese, with some plain forms." : "They are working on JLPT N3. Use natural, everyday Japanese.", cap);
     if (P.gender == 1 || P.gender == 2) ys_cat(s, P.gender == 1 ? " They are a woman." : " They are a man.", cap);
+    if (P.gender == 4) ys_cat(s, " They call themselves ぼく.", cap);
     ys_cat(s, " Today's lesson is: ", cap); ys_cat(s, d->title, cap); ys_cat(s, ".", cap);
     for (i = 0; i < d->nnew && n < 4; i++) if (YG_CARDS[d->cards[i]].type == 'g') { ys_cat(s, n++ ? ", " : " Use these patterns when they fit: ", cap); ys_cat(s, YG_CARDS[d->cards[i]].front, cap); }
+    /* What this learner has actually been taught, newest first, so Sakura's Japanese grows with theirs */
+    { int pass, d2, j, n2;
+      for (pass = 0; pass < 2; pass++) {
+        char want = pass ? 'g' : 'w'; int max = pass ? 8 : 40;
+        for (n2 = 0, d2 = (P.day < YG_NDAYS ? P.day : YG_NDAYS) - 1; d2 >= 0 && n2 < max; d2--)
+          for (j = 0; j < YG_DAYS[d2].nnew && n2 < max; j++) {
+            const YgCard *c = &YG_CARDS[YG_DAYS[d2].cards[j]];
+            if (c->type != want) continue;
+            ys_cat(s, n2++ ? ", " : pass ? ". Grammar they've learned lately: " : " Words they've learned lately: ", cap);
+            ys_cat(s, c->front, cap);
+          }
+      }
+      ys_cat(s, ". Mostly use words they know, and no grammar much harder than theirs.", cap); }
     ys_cat(s, " Keep each reply to one or two short sentences, and end with a simple question. Write only your reply, in Japanese.", cap);
 }
 static void tk_part(const char *msg, const char *tag, char *out, int cap);
@@ -1630,7 +1668,7 @@ static void tk_ask_partner(void) {
 static void tk_add(char role, const char *t) {
     int i;
     if (tk_n == TK_MAX) { for (i = 1; i < TK_MAX; i++) { tk_role[i - 1] = tk_role[i]; ys_cpy(tk_text[i - 1], tk_text[i], sizeof tk_text[0]); } tk_n--; }
-    tk_role[tk_n] = role; ys_cpy(tk_text[tk_n], t, sizeof tk_text[0]); tk_n++;
+    tk_role[tk_n] = role; ys_cpy(tk_text[tk_n], t, sizeof tk_text[0]); tk_n++; tk_scroll = 0;
 }
 /* The partner's JA:, RO:, EN:, or FIX: line, or "" */
 static void tk_part(const char *msg, const char *tag, char *out, int cap) {
@@ -1687,11 +1725,14 @@ static void scr_talk(void) {
         else if (get && !tk_ask) tk_msg = HTPC ? "Talking needs a 5.2 GB model, downloaded once. Press Start to get it." : "Talking needs a 5.2 GB model, downloaded once from Hugging Face and checked before use. Everything then runs on this PC, and nothing you write is sent anywhere. Press Start to get it.";
         else if (!get) tk_ask_partner();
     }
-    /* The newest messages that fit above the text box, counted from the newest back, then drawn oldest first */
-    { int lines = (bottom - y) / LH - 1, h;
-      for (first = tk_n; first > 0 && (h = tk_msg_lines(first - 1)) <= lines; first--) lines -= h;
-      if (first == tk_n && tk_n) first--; /* the newest always shows, even if it has to be cut */
-      for (i = first; i < tk_n; i++) {
+    /* Scrolling: the wheel, PgUp and PgDn (L and R on a pad), or the arrow buttons */
+    if (((IN.pressed & A_L) || IN.wheel > 0) && tk_scroll < tk_n - 1) tk_scroll++;
+    if (((IN.pressed & A_R) || IN.wheel < 0) && tk_scroll > 0) tk_scroll--;
+    /* The messages that fit above the text box, counted back from the last one in view, then drawn oldest first */
+    { int lines = (bottom - y) / LH - 1, h, last = tk_n - tk_scroll;
+      for (first = last; first > 0 && (h = tk_msg_lines(first - 1)) <= lines; first--) lines -= h;
+      if (first == last && last) first--; /* the last one always shows, even if it has to be cut */
+      for (i = first; i < last; i++) {
         char t[640], b[700];
         if (tk_role[i] == 'U') { if (!HTPC) tk_line(&y, bottom, CX + 40, tk_text[i], C_DIM, 2); continue; }
         tk_part(tk_text[i], "JA:", t, sizeof t); tk_line(&y, bottom, CX, *t ? t : tk_text[i], C_INK, 3); /* no JA: line means it ignored the format, so show what it wrote */
@@ -1710,11 +1751,15 @@ static void scr_talk(void) {
 #else
     input_box(CX, FBY_BTN - 30, CW, !tk_wait);
     text_entry();
-    if (button(CX + CW - 90, FBY_BTN, 90, 28, get && !tk_n ? "Start" : "Send")) {
+    { int enter = take_enter();
+    if (button(CX + CW - 90, FBY_BTN, 90, 28, get && !tk_n ? "Start" : "Send") || enter) {
 #endif
         if (get && !tk_n && !tk_get) { tk_ask = 1; if (plat_talk_get()) { tk_get = 1; tk_msg = ""; } else tk_msg = "Couldn't start the download. It needs YomiGoTalk.exe beside YomiGo, and 64-bit Windows 10 or later."; }
         else if (!tk_wait && input[0] && tk_n) { tk_add('U', input); input[0] = 0; tk_ask_partner(); }
     }
+#if !HTPC
+    }
+#endif
 #if HTPC
     if (IN.pressed & A_X) {
 #else
@@ -1724,6 +1769,8 @@ static void scr_talk(void) {
     }
 #if !HTPC
     if (button(CX + 116, FBY_BTN, 110, 28, tk_en ? "English: On" : "English: Off")) tk_en = !tk_en;
+    if (tk_n > 1 && button(CX + 308, FBY_BTN, 30, 28, "▲") && tk_scroll < tk_n - 1) tk_scroll++; /* up: older */
+    if (tk_scroll && button(CX + 342, FBY_BTN, 30, 28, "▼")) tk_scroll--;
     if (plat_has_tts() && tk_n && tk_role[tk_n - 1] == 'A' && button(CX + 232, FBY_BTN, 70, 28, "Hear")) { char ja[640]; tk_part(tk_text[tk_n - 1], "JA:", ja, sizeof ja); plat_speak(*ja ? ja : tk_text[tk_n - 1]); }
 #else
     if (IN.pressed & A_Y) tk_en = !tk_en;

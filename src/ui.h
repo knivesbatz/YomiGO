@@ -18,6 +18,7 @@ typedef struct {
     int backspace;
     int num;                  /* 1-4 pressed, 0 otherwise */
     int paste, copy;          /* Ctrl+V and Ctrl+C */
+    int wheel;                /* mouse wheel notches this frame, + away from you */
 } Input;
 extern Input IN;
 
@@ -73,7 +74,9 @@ const char *plat_ime_comp(void);              /* what the Japanese keyboard is s
 void plat_ime_field(int on, int x, int y);    /* a text box is showing, and where */
 int  plat_has_tts(void);
 void plat_speak(const char *utf8);
-void plat_sound(int kind);
+void plat_sound(int kind); /* 0 move, 1 press, 2 right, 3 done, 4 wrong, 5 aced */
+int  plat_muted(void);
+void plat_mute(int on);
 void plat_quit(void);
 void plat_update_check(int quiet);
 int  plat_can_update(void);

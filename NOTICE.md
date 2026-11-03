@@ -1,6 +1,6 @@
 # Licences and attribution
 
-YomiGo's source code and course content are © SENKOSOFT, all rights reserved. The repository is public so the apps can update from it. The owner can choose an open-source licence later.
+YomiGo's source code and course content are © knivesbatz, all rights reserved. The repository is public so the apps can update from it. The owner can choose an open-source licence later.
 
 | Part | Licence | Notes |
 |---|---|---|

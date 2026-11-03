@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.13.0
+
+- 119 more words, from 725 to 844 word cards, each with an example sentence: cooking, sweets, travel, money, rules and signs, the home, the body, and more verbs such as 呼ぶ, 始まる, 見せる, and 頑張る
+- Chimes: a right answer rings a bell that climbs a note for each one you get in a row, and acing a quiz or passing an exam plays a fanfare. A miss plays a soft low tone and starts the climb again. Settings > Sounds turns them off, on each device
+- Right and wrong are obvious: a big ○ or × after every answer, in Japanese marking style, on the PC, TV, and phone
+- Fail an exam and you can practise just the cards you missed, or take an unscored practice test. The missed cards are due in Flashcards straight away
+- Multiple-choice answers now offer verbs against verbs and adjectives against adjectives, so a verb can't be guessed by its "to"
+- On the PC, Enter in an answer box always checks your answer. Before, it pressed whichever button the mouse was resting on, which could be I don't know
+- Pronouns: "I use ぼく" is a choice for who's learning, and the course's examples and Sakura follow it
+- Back buttons on more screens: chats, reading, tasks, your words, Genki, practice quizzes, and Talk
+- Talk: Sakura uses the words and grammar you've learned lately, her check no longer corrects your word for I or flags either reading of a number such as きゅう and く, Enter sends instead of starting a new topic, and you can scroll back through the chat
+- Updates install on their own: the PC and TV check each time YomiGo opens, and a newer version downloads, is checked against its signature, and restarts YomiGo. The phone checks at start and opens Android's install screen, which always needs your tap
+- The SENKOSOFT name is gone from the apps and the README
+- Finishing the whole course now says Course complete, not N4 complete
+
 ## 0.12.0
 
 - 117 more words, from 608 to 725 word cards, each with a natural example sentence, in 20 classes across the course

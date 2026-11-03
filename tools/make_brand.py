@@ -65,8 +65,6 @@ def banner(w, h, name):
     im.paste(title, ((w - title.width) // 2, int(h * .17)), title)
     tag = pixel_text("Learn Japanese, one class a day.", max(2, int(2 * k)), PINK)
     im.paste(tag, ((w - tag.width) // 2, int(h * .55)), tag)
-    co = pixel_text("YomiGo by SENKOSOFT", max(2, int(1.5 * k)), GOLD)
-    im.paste(co, ((w - co.width) // 2, int(h * .72)), co)
     d = ImageDraw.Draw(im)
     for x in range(0, w, 32): d.rectangle((x, h - 8, x + 15, h - 5), fill=PINK)
     im.save(os.path.join(OUT, name))

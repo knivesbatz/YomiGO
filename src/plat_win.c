@@ -17,8 +17,7 @@ void *memcpy(void *d, const void *s, size_t n) { unsigned char *p = (unsigned ch
 
 static HWND wnd;
 static char dir[MAX_PATH], root[MAX_PATH];
-static int headless, is_nt, quit_now, crt, sound_on = 1;
-static char last_day_checked[16];
+static int headless, is_nt, quit_now, crt, muted;
 
 /* ---- files ---- */
 static void path_of(char *out, const char *name) {
@@ -327,8 +326,8 @@ int plat_scan_material(void) {
 const char *plat_material(int i) { return mat_names[i]; }
 const char *plat_material_full(int i) { return mat_full[i]; }
 
-/* ---- sound: square-wave blips made at start-up, played by PlaySound ---- */
-static char wav[5][12000];
+/* ---- sound: square-wave blips for the menus, made at start-up, played by PlaySound ---- */
+static char wav[2][12000];
 static void make_wav(int k, int freq, int freq2, int ms) {
     char *w = wav[k]; int rate = 11025, n = rate * ms / 1000, i, per, total;
     if (n > 11900) n = 11900;
@@ -337,16 +336,60 @@ static void make_wav(int k, int freq, int freq2, int ms) {
     *(short *)(w + 20) = 1; *(short *)(w + 22) = 1; *(int *)(w + 24) = rate; *(int *)(w + 28) = rate; *(short *)(w + 32) = 1; *(short *)(w + 34) = 8;
     memcpy(w + 36, "data", 4); *(int *)(w + 40) = n;
     for (i = 0; i < n; i++) {
-        int f = i < n / 2 ? freq : freq2, vol = 50 * (n - i) / n;
+        int f = i < n / 2 ? freq : freq2, vol = 30 * (n - i) / n;
         per = rate / f;
         w[44 + i] = (char)(128 + ((i % per) < per / 2 ? vol : -vol));
     }
 }
-void plat_sound(int k) {
-    if (headless || !sound_on) return;
-    if (k < 0 || k > 4) return;
-    PlaySoundA(wav[k], 0, SND_MEMORY | SND_ASYNC | SND_NODEFAULT);
+/* Answers get bell chimes instead: a sine, a quieter octave, and a glassy overtone that fades first */
+#define RATE 22050
+static char chime[9][44 + RATE], fanfare[2][44 + RATE * 3]; /* half and a second and a half of 16-bit sound */
+static short *wav16(char *w, int bytes) {
+    int n = (bytes - 44) / 2;
+    memcpy(w, "RIFF", 4); *(int *)(w + 4) = 36 + 2 * n; memcpy(w + 8, "WAVEfmt ", 8); *(int *)(w + 16) = 16;
+    *(short *)(w + 20) = 1; *(short *)(w + 22) = 1; *(int *)(w + 24) = RATE; *(int *)(w + 28) = 2 * RATE; *(short *)(w + 32) = 2; *(short *)(w + 34) = 16;
+    memcpy(w + 36, "data", 4); *(int *)(w + 40) = 2 * n;
+    return (short *)(w + 44);
 }
+/* Adds a note struck at ms; it dies away over about 2^decay samples */
+static void bell(char *w, int bytes, int ms, int freq, int vol, int decay) {
+    short *s = wav16(w, bytes); int n = (bytes - 44) / 2, i = RATE * ms / 1000, k;
+    unsigned p1 = 0, p2 = 0, p3 = 0, d1 = (unsigned)freq * 194783u, d3 = (unsigned)(freq * 11 / 4) * 194783u; /* 2^32 / RATE per Hz */
+    int e1 = vol << 8, e2 = e1 / 3, e3 = e1 / 5;
+    for (k = 0; i < n; i++, k++) {
+        int v = (isin(p1 >> 24) * (e1 >> 8) + isin(p2 >> 24) * (e2 >> 8) + isin(p3 >> 24) * (e3 >> 8)) >> 8;
+        if (k < 44) v = v * k / 44; /* 2 ms of attack, so it doesn't click */
+        v += s[i]; s[i] = (short)(v > 32767 ? 32767 : v < -32768 ? -32768 : v);
+        p1 += d1; p2 += 2 * d1; p3 += d3;
+        e1 -= e1 >> decay; e2 -= e2 >> (decay - 2); e3 -= e3 >> (decay - 3);
+    }
+}
+static void make_chimes(void) {
+    static const short scale[10] = {523, 587, 659, 784, 880, 1047, 1175, 1319, 1568, 1760}; /* C major pentatonic */
+    static const short up[4] = {523, 659, 784, 1047}, chord[3] = {1047, 1319, 1568};
+    int k;
+    /* A right answer: two rising notes, a step higher for each one in a row */
+    for (k = 0; k < 8; k++) { bell(chime[k], sizeof chime[k], 0, scale[k], 10000, 11); bell(chime[k], sizeof chime[k], 70, scale[k + 2], 10000, 11); }
+    /* Wrong: two soft, falling low notes */
+    bell(chime[8], sizeof chime[8], 0, 330, 7500, 11); bell(chime[8], sizeof chime[8], 110, 262, 7500, 11);
+    /* Done: a quick rising arpeggio that rings out */
+    for (k = 0; k < 4; k++) bell(fanfare[0], sizeof fanfare[0], k * 80, up[k] * 3 / 2, 8500, k == 3 ? 13 : 11);
+    /* Aced: the arpeggio, a held chord, and sparkles on top */
+    for (k = 0; k < 4; k++) bell(fanfare[1], sizeof fanfare[1], k * 70, up[k], 9000, 11);
+    for (k = 0; k < 3; k++) { bell(fanfare[1], sizeof fanfare[1], 300, chord[k], 6000, 13); bell(fanfare[1], sizeof fanfare[1], 300 + k * 100, chord[k] * 2, 2800, 10); }
+}
+static int combo;
+/* 0 move, 1 press, 2 right, 3 done, 4 wrong, 5 aced */
+void plat_sound(int k) {
+    const char *w;
+    if (headless || muted || k < 0 || k > 5) return;
+    if (k < 2) w = wav[k];
+    else if (k == 2) { w = chime[combo]; if (combo < 7) combo++; }
+    else { combo = 0; w = k == 4 ? chime[8] : fanfare[k == 5]; } /* a miss, or the end of a quiz, starts the climb again */
+    PlaySoundA(w, 0, SND_MEMORY | SND_ASYNC | SND_NODEFAULT);
+}
+int plat_muted(void) { return muted; }
+void plat_mute(int on) { muted = on; pad_save(); }
 
 /* ---- speech: uses SAPI when a Japanese voice is installed, looked up at run time ---- */
 typedef struct ISpVoiceVtbl_ { void *q, *a; ULONG (STDMETHODCALLTYPE *Release)(void *); void *pad[17]; HRESULT (STDMETHODCALLTYPE *Speak)(void *, const WCHAR *, DWORD, ULONG *); void *pad2[9]; HRESULT (STDMETHODCALLTYPE *SetVolume)(void *, USHORT); } ISpVoiceVtbl_;
@@ -414,17 +457,8 @@ void plat_update_check(int quiet) {
 #endif
     ys_cat(cmd, YG_VERSION " ", sizeof cmd);
     ys_itoa((int)GetCurrentProcessId(), num); ys_cat(cmd, num, sizeof cmd);
-    if (quiet) ys_cat(cmd, " --quiet", sizeof cmd);
+    if (quiet) ys_cat(cmd, " --auto", sizeof cmd); /* installs a newer version without asking, then restarts YomiGo */
     if (CreateProcessA(0, cmd, 0, 0, FALSE, 0, 0, dir, &si, &pi)) { CloseHandle(pi.hProcess); CloseHandle(pi.hThread); }
-}
-static void daily_update_check(void) {
-    char t[16]; int n, today = plat_today();
-    if (headless || !plat_can_update()) return;
-    n = plat_read("update.day", last_day_checked, 15);
-    if (n > 0) { last_day_checked[n] = 0; if (ys_atoi(last_day_checked) == today) return; }
-    n = ys_itoa(today, t);
-    plat_write("update.day", t, n);
-    plat_update_check(1);
 }
 
 /* ---- controllers: XInput where it exists, the Windows 95 joystick API for everything else ---- */
@@ -477,20 +511,22 @@ void pad_save(void) {
     n += ys_itoa(deadzone, b + n); b[n++] = ' ';
     n += ys_itoa(crt, b + n); b[n++] = ' ';
     n += ys_itoa(prompt_mode, b + n); b[n++] = ' ';
-    n += ys_itoa(custom, b + n); b[n++] = '\n'; b[n] = 0;
+    n += ys_itoa(custom, b + n); b[n++] = ' ';
+    n += ys_itoa(muted, b + n); b[n++] = '\n'; b[n] = 0;
     plat_write("input.cfg", b, n);
 }
 static void pad_load(void) {
     char b[128]; int n = plat_read("input.cfg", b, 127), i; const char *p = b;
     if (n <= 0) return;
     b[n] = 0;
-    for (i = 0; i < 11; i++) {
+    for (i = 0; i < 12; i++) { /* a file from before sounds could be turned off reads as on */
         int v = ys_atoi(p);
         if (i < 7) { if (v >= 0 && v < 32) binds[i] = v; }
         else if (i == 7) deadzone = (v >= 0 && v <= 80) ? v : 25;
         else if (i == 8) crt = v != 0;
         else if (i == 9) prompt_mode = (v >= 0 && v <= 3) ? v : 0;
-        else custom = v != 0;
+        else if (i == 10) custom = v != 0;
+        else muted = v != 0;
         while (*p && *p != ' ') p++;
         if (*p) p++;
     }
@@ -690,6 +726,7 @@ static LRESULT CALLBACK proc(HWND h, UINT m, WPARAM w, LPARAM l) {
     case WM_MOUSEMOVE: map_mouse(l); if (pending.mdown != 1) pending.mdown = 2; return 0;
     case WM_LBUTTONDOWN: map_mouse(l); pending.mdown = 1; SetCapture(h); return 0;
     case WM_LBUTTONUP: map_mouse(l); pending.mdown = 0; pending.mclick = 1; ReleaseCapture(); return 0;
+    case 0x020A: pending.wheel += (short)HIWORD(w) / 120; return 0; /* WM_MOUSEWHEEL, sent to Windows 98 and later */
     case WM_KEYDOWN:
         switch (w) {
         case VK_UP: pending.pressed |= A_UP; break;
@@ -722,7 +759,7 @@ static LRESULT CALLBACK proc(HWND h, UINT m, WPARAM w, LPARAM l) {
     case WM_TIMER:
         pending.pressed |= pad_poll();
         IN = pending;
-        pending.pressed = 0; pending.mclick = 0; pending.text[0] = 0; pending.backspace = 0; pending.num = 0; pending.paste = 0; pending.copy = 0;
+        pending.pressed = 0; pending.mclick = 0; pending.text[0] = 0; pending.backspace = 0; pending.num = 0; pending.paste = 0; pending.copy = 0; pending.wheel = 0;
         app_frame();
         { HDC dc = GetDC(h); present(dc); ReleaseDC(h, dc); }
         if (quit_now) DestroyWindow(h);
@@ -854,7 +891,7 @@ void yg_entry(void) {
         run_script(script);
         ExitProcess(0);
     }
-    make_wav(0, 880, 880, 25); make_wav(1, 660, 990, 60); make_wav(2, 784, 1175, 120); make_wav(3, 523, 1046, 300); make_wav(4, 196, 147, 180);
+    make_wav(0, 880, 880, 25); make_wav(1, 660, 990, 60); make_chimes();
     ime_load();
     { HMODULE x = LoadLibraryA("xinput1_4.dll"); if (!x) x = LoadLibraryA("xinput1_3.dll"); if (!x) x = LoadLibraryA("xinput9_1_0.dll");
       if (x) xi_get = (XIGS)GetProcAddress(x, "XInputGetState"); }
@@ -893,7 +930,7 @@ void yg_entry(void) {
 #ifdef YG_HTPC
     ShowCursor(FALSE);
 #endif
-    daily_update_check();
+    plat_update_check(1); /* every start, so YomiGo is always the newest version */
     SetTimer(wnd, 1, 33, 0);
     {
         MSG msg;

@@ -18,8 +18,9 @@ Complete means implemented and tested as described. **Partial** says what's miss
 | Your own cards | Complete | Complete | Complete | Saved words, copied into YomiGo |
 | Exams gating progress | Complete | Complete | Complete | n/a |
 | Conversations | Partial: scripted | Partial: scripted | Partial: scripted | n/a |
-| Open AI conversation | Not started | Not started | Not started | n/a |
+| Open AI conversation | Partial: Talk, from the Grammar Gate | Partial: as Desktop, newest reply only | Not started | n/a |
 | XP, ranks, streaks, boss exams | Complete | Complete | Partial: no achievements list | n/a |
+| Chimes, with a sound switch | Partial: checked for level, not yet heard | Partial: as Desktop | Partial: not run on a device | n/a |
 | Weekly tournaments, skill trees | Not started | Not started | Not started | n/a |
 | Homework with a check | Complete | Complete | Complete | n/a |
 | Progressive Japanese labels | Partial: navigation and buttons | Partial | Partial | n/a |
@@ -31,7 +32,7 @@ Complete means implemented and tested as described. **Partial** says what's miss
 | Speech input | n/a | n/a | Partial: not run on a device | n/a |
 | Controller, prompts, rebinding | n/a | Partial: no real pad tested | n/a | n/a |
 | CRT mode | n/a | Partial: no real CRT tested | n/a | n/a |
-| Updates | Complete on Windows 7+ | Complete on Windows 7+ | Partial: not run on a device | Manual |
+| Updates, automatic at start | Complete on Windows 7+ | Complete on Windows 7+ | Partial: not run on a device | Manual |
 | Backup and restore | Partial: backup copies; restore by hand | Partial: as Desktop | Complete: text export and import | n/a |
 | Dictionary | Complete | Complete | Complete | Complete, not yet in a real browser install |
 | Sentence capture, Anki export | n/a | n/a | n/a | Complete, not yet in a real browser install |

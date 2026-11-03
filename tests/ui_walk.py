@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Plays the whole course through the real screens of both Windows builds, with no window, then checks the save."""
 import json, os, shutil, subprocess, sys, tempfile
+sys.stdout.reconfigure(encoding="utf-8") # Japanese in the output, even when it goes to a file
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DAYS = len(json.load(open(os.path.join(ROOT, "build", "gen", "content.json"), encoding="utf-8"))["days"])
@@ -147,12 +148,13 @@ print("copy and paste", "OK" if ok else "FAILED", os.listdir(root))
 fail += not ok
 shutil.rmtree(root, ignore_errors=True)
 # Text a Japanese keyboard finishes: type every word of day 1 in real kana. Finishing moves the class on and earns 1 XP a word.
+# Focus is moved to Copy first, as a mouse resting there does: Enter must still send the answer.
 esc = lambda s: "".join("\\u%04x" % ord(c) for c in s)
 kana = ["おはようございます", "こんにちは", "こんばんは", "さようなら", "おやすみなさい"]
 root = tempfile.mkdtemp()
 C = json.load(open(os.path.join(ROOT, "build", "gen", "content.json"), encoding="utf-8"))
 pages = len(C["days"][0]["notes"]) + len(C["days"][0]["new"])
-script = "w2;ow2;ow2;tKana;w1;ow2;ddw1;ow2;dw1;ow2;dw1;ow2;ow2;ow2;" + "ow1;" * pages + "".join(f"t{esc(k)};w1;ow1;" * 3 for k in kana)
+script = "w2;ow2;ow2;tKana;w1;ow2;ddw1;ow2;dw1;ow2;dw1;ow2;ow2;ow2;" + "ow1;" * pages + "lw1;" + "".join(f"t{esc(k)};w1;ow1;" * 3 for k in kana)
 subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--script", script], timeout=60)
 vals = dict(l.split("=", 1) for l in open(os.path.join(root, "Kana.sav"), encoding="utf-8").read().splitlines() if "=" in l)
 ok = vals.get("step") == "3" and vals.get("xp") == "5"

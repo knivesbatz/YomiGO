@@ -622,6 +622,15 @@ static const char *answer_text(const YgCard *c, int use_reading, int romaji) {
     return c->en;
 }
 /* Distractors come from cards taught up to now, of the same type, with different answer text */
+/* A word's kind, from its meaning and spelling: v verb, a adjective, n anything else. Wrong answers match it,
+   so a verb isn't given away by being the only "to ..." among nouns. */
+static char word_kind(const YgCard *c) {
+    int n = ys_len(c->front);
+    if (c->type != 'w') return 0;
+    if (!ys_ncmp(c->en, "to ", 3)) return 'v';
+    if (n >= 3 && !ys_cmp(c->front + n - 3, "\xE3\x81\x84")) return 'a'; /* ends in い */
+    return 'n';
+}
 static void fill_choices(Question *q, int card, const char *right, int use_reading, int use_front, int romaji) {
     const YgCard *c = &YG_CARDS[card];
     int slot = yg_rand() % 4, got = 1, tries;
@@ -631,6 +640,7 @@ static void fill_choices(Question *q, int card, const char *right, int use_readi
         const char *t; int i, dup = 0;
         if (o->type != c->type || o->day < 0) continue;
         if (o != c && !ys_cmp(o->front, c->front)) continue; /* 時 is both じ and とき: its other meaning isn't a wrong answer */
+        if (tries < 450 && word_kind(o) != word_kind(c)) continue;
         if (tries < 300 && (o->day > c->day + 2 || o->day < c->day - 8)) continue;
         t = use_front ? (romaji ? o->romaji : o->front) : answer_text(o, use_reading, romaji);
         for (i = 0; i < 4; i++) if ((got > 0) && q->choices[i] && ys_cmp(q->choices[i], t) == 0) dup = 1;

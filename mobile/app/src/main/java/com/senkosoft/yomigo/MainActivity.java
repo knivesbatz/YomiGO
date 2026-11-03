@@ -72,6 +72,7 @@ public class MainActivity extends Activity {
         web.loadUrl("file:///android_asset/www/index.html");
         setContentView(web);
         tts = new TextToSpeech(this, st -> { if (st == TextToSpeech.SUCCESS) ttsJapanese = tts.setLanguage(Locale.JAPANESE) >= TextToSpeech.LANG_AVAILABLE; });
+        if (state == null) new Thread(() -> checkForUpdate(true)).start(); // each start, not on a rotation
     }
 
     @Override protected void onDestroy() {
@@ -158,7 +159,7 @@ public class MainActivity extends Activity {
             // Web links only; a page can't use this to launch other kinds of intent
             if (u != null && u.startsWith("https://")) main.post(() -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(u))));
         }
-        @JavascriptInterface public void checkUpdate() { new Thread(MainActivity.this::checkForUpdate).start(); }
+        @JavascriptInterface public void checkUpdate() { new Thread(() -> checkForUpdate(false)).start(); }
     }
 
     private void toast(String m) { main.post(() -> Toast.makeText(this, m, Toast.LENGTH_LONG).show()); }
@@ -186,25 +187,27 @@ public class MainActivity extends Activity {
         return false;
     }
 
-    private void checkForUpdate() {
+    /** At start (atStart) it's silent unless there's a newer version, which it fetches straight away for Android's install screen. */
+    private void checkForUpdate(boolean atStart) {
         try {
             JSONObject rel = new JSONObject(new String(get(LATEST), "UTF-8"));
             String tag = rel.getString("tag_name").replaceFirst("^v", "");
-            if (!newer(tag, BuildConfig.VERSION_NAME)) { toast("You already have the latest version."); return; }
+            if (!newer(tag, BuildConfig.VERSION_NAME)) { if (!atStart) toast("You already have the latest version."); return; }
             String url = null;
             JSONArray assets = rel.getJSONArray("assets");
             for (int i = 0; i < assets.length(); i++) {
                 JSONObject a = assets.getJSONObject(i);
                 if ("YomiGo.apk".equals(a.getString("name"))) url = a.getString("browser_download_url");
             }
-            if (url == null) { toast("This release has no Android build yet."); return; }
+            if (url == null) { if (!atStart) toast("This release has no Android build yet."); return; }
             final String dl = url;
+            if (atStart) { toast("Updating to YomiGo " + tag + "..."); install(dl); return; }
             main.post(() -> new AlertDialog.Builder(this).setTitle("YomiGo " + tag)
                 .setMessage("A new version is available. Download and install it? Android will ask you to confirm.")
                 .setPositiveButton("Install", (d, w) -> new Thread(() -> install(dl)).start())
                 .setNegativeButton("Later", null).show());
         } catch (Exception e) {
-            toast("Couldn't check for updates: " + e.getMessage());
+            if (!atStart) toast("Couldn't check for updates: " + e.getMessage()); // offline at start is normal
         }
     }
 
