@@ -15,7 +15,7 @@ Complete means implemented and tested as described. **Partial** says what's miss
 | Handwriting practice | Not started | Not started | Not started | n/a |
 | Vocabulary, grammar, 144 kanji | Complete | Complete | Complete | n/a |
 | Spaced repetition | Complete | Complete | Complete | n/a |
-| User-made cards | Not started | Not started | Not started | Saved words only |
+| Your own cards | Complete | Complete | Complete | Saved words, copied into YomiGo |
 | Exams gating progress | Complete | Complete | Complete | n/a |
 | Conversations | Partial: scripted | Partial: scripted | Partial: scripted | n/a |
 | Open AI conversation | Not started | Not started | Not started | n/a |

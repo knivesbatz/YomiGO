@@ -54,7 +54,7 @@
 #define FBY_BTN (FBH - FOOT - 38)
 #endif
 
-typedef enum { S_SPLASH, S_PROFILES, S_NAME, S_PLACE_INTRO, S_PLACE_RESULT, S_HOME, S_CLASS, S_TEACH, S_QUIZ, S_RESULT, S_CHAT, S_TASK, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS, S_BIND, S_FIRST, S_GENKI, S_TYPING, S_READ } Screen;
+typedef enum { S_SPLASH, S_PROFILES, S_NAME, S_PLACE_INTRO, S_PLACE_RESULT, S_HOME, S_CLASS, S_TEACH, S_QUIZ, S_RESULT, S_CHAT, S_TASK, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS, S_BIND, S_FIRST, S_GENKI, S_TYPING, S_READ, S_MYWORDS, S_MYADD } Screen;
 typedef enum { QM_WARMUP, QM_DRILL, QM_DAILY, QM_HW, QM_REVIEW, QM_EXAM, QM_PLACE, QM_PRACTICE } QuizMode;
 
 static Screen scr = S_SPLASH;
@@ -79,7 +79,12 @@ static int note_skip, note_more;
 static char name_buf[YG_NAME];
 static int new_material;
 static int kb_x, kb_y;
-static int q_idk, copied;
+static int q_idk, flash_t;
+static const char *flash_msg = "";
+static void flash(const char *m) { flash_msg = m; flash_t = 40; plat_sound(0); }
+static void flash_add(int r) { flash(r > 0 ? "Added!" : r == 0 ? "Already added" : "Deck is full"); }
+static int my_sel, my_confirm, add_step;
+static char add_word[128], add_reading[128];
 static const char *copy_src;
 static int field_on, field_x, field_y;
 #define TY_MAX 10
@@ -99,7 +104,7 @@ static const char *L(const char *en, const char *ja, int from_stage) {
 }
 
 static void save_profile(void) {
-    static char b[120000], fn[64];
+    static char b[YG_SAVE_CAP], fn[64];
     int n;
     if (!have_profile) return;
     n = profile_save_text(&P, b, sizeof b);
@@ -610,7 +615,8 @@ static void answer_given(int ok) {
     if (!ok) plat_sound(4);
     if (ok) { qright++; plat_sound(2); }
     if (qm == QM_REVIEW) {
-        CardState *c = &P.cards[Z.q[qi].card];
+        int id = Z.q[qi].card;
+        CardState *c = id >= YG_NCARDS ? &P.my[id - YG_NCARDS].st : &P.cards[id];
         srs_grade(c, ok ? GRADE_GOOD : GRADE_AGAIN, plat_today());
         P.reviews++; if (ok) P.xp += 2;
         ach_check(&P);
@@ -737,8 +743,8 @@ static void scr_quiz(void) {
         }
       }
       if (qanswered) {
-        const YgCard *c = &YG_CARDS[q->card];
-        if (!qok && *c->note && !HTPC) wrap(CX, FBY_BTN - 40, CW, c->note, C_DIM, 18, 0, 2);
+        const char *why = q->card >= YG_NCARDS ? P.my[q->card - YG_NCARDS].sent : YG_CARDS[q->card].note;
+        if (!qok && *why && !HTPC) wrap(CX, FBY_BTN - 40, CW, why, C_DIM, 18, 0, 2);
         text(CX, FBY_BTN + 6, qok ? L("Correct!", "正解！", 5) : q_idk ? (HTPC ? "That's okay." : "That's okay. Here's the answer.") : L("Not quite.", "ちがいます", 3), qok ? C_GOOD : q_idk ? C_DIM : C_BAD);
         if (button(CX + CW - 120, FBY_BTN, 120, 28, L("Next", "つぎ", 2))) {
             qi++; qanswered = 0; q_idk = 0; input[0] = 0; ui_reset_focus();
@@ -973,15 +979,95 @@ static void scr_cards(void) {
     panel(CX, CY, CW, HTPC ? 100 : 160);
     ys_fmt(b, sizeof b, due == 1 ? "%d card is due" : "%d cards are due", due, 0);
     text2(CX + 10, CY + 8, b, due ? C_ACC : C_GOOD);
-    { int seen = 0, weak = 0, i; for (i = 0; i < YG_NCARDS; i++) if (P.cards[i].seen) { seen++; if (P.cards[i].lapses) weak++; }
+    { int seen = P.nmy, weak = 0, i; for (i = 0; i < YG_NCARDS; i++) if (P.cards[i].seen) { seen++; if (P.cards[i].lapses) weak++; }
+      for (i = 0; i < P.nmy; i++) if (P.my[i].st.lapses) weak++;
       ys_fmt(b, sizeof b, "Deck: %d cards. Struggling with: %d", seen, weak); text(CX + 10, CY + 46, b, C_INK); }
     wrap(CX + 10, CY + 66, CW - 20, "Right answers come back later, wrong ones tomorrow.", C_DIM, LH, 0, 2);
-    if (due && button(CX + CW / 2 - 80, FBY_BTN, 160, 28, L("Review", "ふくしゅう", 2))) { quiz_review(&Z, &P, plat_today(), 30); start_quiz(QM_REVIEW); return; }
-    if (P.genki && button(CX + CW / 2 - 80, FBY_BTN - 34, 160, 28, "Genki practice")) { go(S_GENKI); return; }
+    { int bw = (CW - 8) / 3;
+      if (due && button(CX, FBY_BTN, bw, 28, L("Review", "ふくしゅう", 2))) { quiz_review(&Z, &P, plat_today(), 30); start_quiz(QM_REVIEW); return; }
+      if (button(CX + bw + 4, FBY_BTN, bw, 28, "My words")) { my_sel = 0; my_confirm = 0; go(S_MYWORDS); return; }
+      if (P.genki && button(CX + 2 * (bw + 4), FBY_BTN, bw, 28, HTPC ? "Genki" : "Genki practice")) { go(S_GENKI); return; } }
 #if HTPC
     if (IN.pressed & A_BACK) go(S_HOME);
     footer(due ? "Review" : 0, "Menu");
 #endif
+}
+
+/* ---- your own words ---- */
+static void scr_mywords(void) {
+    int per = HTPC ? 6 : 11, h = HTPC ? 19 : 24, y = CY + LH, i, bw = (CW - 16) / 5, total = (P.nmy + per - 1) / per;
+    char b[160];
+    chrome("My words", 0);
+    ys_fmt(b, sizeof b, HTPC ? "%d of %d" : "%d of %d. They review with your flashcards.", P.nmy, YG_MY_MAX);
+    text(CX, CY, b, C_DIM);
+    if (my_sel >= P.nmy) my_sel = P.nmy ? P.nmy - 1 : 0;
+    if (!P.nmy) wrap(CX, y + 4, CW, "Nothing here yet. Add a word, or save one from the dictionary in the Library. To bring in words you saved in the browser, copy them from YomiGo Reader and press Import.", C_INK, LH, 0, 0);
+    for (i = page * per; i < P.nmy && i < (page + 1) * per; i++) {
+        const MyCard *m = &P.my[i]; int hit = ui_hit(CX, y, CW, h), sel = i == my_sel;
+        if (ui_focused() || sel) fill(CX, y, CW, h, HTPC ? C_PANEL : 0xF8D4DC);
+        if (sel) frame(CX, y, CW, h, C_ACC);
+        ys_cpy(b, m->word, sizeof b);
+        if (ys_cmp(m->word, m->reading)) { ys_cat(b, " ", sizeof b); ys_cat(b, m->reading, sizeof b); }
+        ys_cat(b, "  ", sizeof b); ys_cat(b, m->gloss, sizeof b);
+        wrap(CX + 4, y + (h - 16) / 2, CW - 8, b, C_INK, LH, 0, 1);
+        if (hit) { my_sel = i; my_confirm = 0; }
+        y += h + 1;
+    }
+    if (button(CX, FBY_BTN, bw, 28, "Add")) { add_step = 0; input[0] = 0; add_word[0] = add_reading[0] = 0; go(S_MYADD); return; }
+    if (button(CX + bw + 4, FBY_BTN, bw, 28, "Import")) {
+        static char clip[400000]; int got;
+        plat_clip_get(clip, sizeof clip);
+        got = my_import(&P, clip, plat_today());
+        save_profile();
+        flash(got ? "Imported!" : "Nothing new to import");
+    }
+    if (button(CX + 2 * (bw + 4), FBY_BTN, bw, 28, "Copy")) {
+        /* Tab-separated, which Anki imports as it stands */
+        static char all[YG_SAVE_CAP];
+        if (my_export(&P, all, sizeof all) > 0) { plat_clip_set(all); flash("Copied all!"); }
+    }
+    if (P.nmy && button(CX + 3 * (bw + 4), FBY_BTN, bw, 28, my_confirm ? "Sure?" : "Delete")) {
+        /* There's no undo, so it takes a second press */
+        if (my_confirm) { my_delete(&P, my_sel); save_profile(); my_confirm = 0; flash("Deleted"); }
+        else my_confirm = 1;
+    }
+    if (total > 1 && button(CX + 4 * (bw + 4), FBY_BTN, bw, 28, "Page")) { page = (page + 1) % total; my_sel = page * per; }
+    if (IN.pressed & A_BACK) { my_confirm = 0; go(S_CARDS); return; }
+#if HTPC
+    footer("OK", "Back");
+#endif
+}
+static void scr_myadd(void) {
+    static const char *const ask[] = {"The word, as it's written:", "Its reading, in kana or romaji. Leave it empty if it's the same:", "What it means:"};
+    int submit;
+    chrome("Add a word", 0);
+    wrap(CX, CY, CW, ask[add_step], C_INK, LH, 0, 2);
+    input_box(CX, CY + 2 * LH, CW, 1);
+#if HTPC
+    osk(FBH - SAFE - 75);
+    submit = (IN.pressed & A_START) != 0;
+    { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "Next"); }
+    if ((IN.pressed & A_BACK) && !input[0] && add_step == 0) { go(S_MYWORDS); return; }
+#else
+    text_entry();
+    submit = button(CX + CW - 120, FBY_BTN, 120, 28, add_step < 2 ? "Next" : "Add");
+    if (button(CX, FBY_BTN, 90, 28, "Cancel") || (IN.pressed & A_BACK)) { input[0] = 0; go(S_MYWORDS); return; }
+    clip_buttons(CX + CW - 230, FBY_BTN - 26);
+#endif
+    if (!submit) return;
+    if (add_step == 0) {
+        if (!input[0]) return;
+        ys_cpy(add_word, input, sizeof add_word); input[0] = 0; add_step = 1;
+    } else if (add_step == 1) {
+        /* romaji is stored as the kana it spells, so answers can be checked later */
+        if (input[0]) norm_kana(input, add_reading, sizeof add_reading); else add_reading[0] = 0;
+        input[0] = 0; add_step = 2;
+    } else if (input[0]) {
+        flash_add(my_add(&P, add_word, add_reading, input, "", plat_today()));
+        save_profile();
+        input[0] = 0;
+        go(S_MYWORDS);
+    }
 }
 
 /* ---- exams ---- */
@@ -1078,7 +1164,7 @@ static void scr_library(void) {
 #if HTPC
         osk(FBH - SAFE - 75);
         go_search = (IN.pressed & A_START) != 0;
-        { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "Search"); }
+        { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Key"); prompt_btn(&x, FBH - SAFE - 17, 1, "Del"); prompt_btn(&x, FBH - SAFE - 17, 6, "Find"); if (nres) prompt_btn(&x, FBH - SAFE - 17, 2, "Add 1st"); }
 #else
         text_entry();
         go_search = (IN.pressed & A_OK) != 0;
@@ -1087,12 +1173,21 @@ static void scr_library(void) {
 #endif
         y += 27;
         if (go_search && input[0]) { nres = dict_search(input, res, rows); searched = 1; }
+#if HTPC
+        /* The on-screen keyboard has the focus, so the extra button saves the top match */
+        if ((IN.pressed & A_X) && nres) { static char aw[120], ar[120], ag[120]; dict_row(res[0], aw, ar, ag, 120); flash_add(my_add(&P, aw, ar, ag, "", plat_today())); save_profile(); }
+#endif
         for (i = 0; i < nres && i < rows; i++) {
             static char w[120], rd[120], g[120]; char row[200];
             dict_row(res[i], w, rd, g, 120);
             if (i == 0) copy_src = *w ? w : rd;
             if (HTPC) { ys_cpy(row, *w ? w : rd, sizeof row); ys_cat(row, " ", sizeof row); if (*w) { ys_cat(row, rd, sizeof row); ys_cat(row, " ", sizeof row); } ys_cat(row, g, sizeof row); wrap(CX, y, CW, row, C_INK, LH, 0, 1); y += LH; }
-            else { int tw = text(CX, y, *w ? w : rd, C_ACC); if (*w) text(CX + tw + 10, y, rd, C_DIM); wrap(CX, y + 16, CW, g, C_INK, LH, 0, 1); y += 34; }
+            else {
+                int tw = text(CX, y, *w ? w : rd, C_ACC); if (*w) text(CX + tw + 10, y, rd, C_DIM);
+                wrap(CX, y + 16, CW - 44, g, C_INK, LH, 0, 1);
+                if (button(CX + CW - 40, y + 6, 38, 22, "Add")) { flash_add(my_add(&P, w, rd, g, "", plat_today())); save_profile(); }
+                y += 34;
+            }
         }
         if (!nres) wrap(CX, y, CW, searched ? "Nothing found. Try the plain form of the word." : "Search in Japanese, romaji, or English. Words from JMdict by EDRDG, CC BY-SA 4.0.", C_DIM, LH, 0, 3);
     } else if (tab == 4) {
@@ -1184,7 +1279,7 @@ static void scr_bind(void) {
 
 /* ---- profiles and first run ---- */
 static void load_profile(const char *name) {
-    static char b[120000], fn[64];
+    static char b[YG_SAVE_CAP], fn[64];
     int n;
     ys_cpy(fn, name, sizeof fn); ys_cat(fn, ".sav", sizeof fn);
     n = plat_read(fn, b, sizeof b - 1);
@@ -1378,6 +1473,8 @@ void app_frame(void) {
     case S_FIRST: scr_first(); break;
     case S_TYPING: scr_typing(); break;
     case S_READ: scr_read(); break;
+    case S_MYWORDS: scr_mywords(); break;
+    case S_MYADD: scr_myadd(); break;
     case S_GENKI: scr_genki(); break;
     }
 #if !HTPC
@@ -1386,9 +1483,9 @@ void app_frame(void) {
     /* Copy takes what you typed, or else the Japanese on screen */
     if (IN.copy) {
         const char *src = input[0] ? input : copy_src;
-        if (src && *src) { plat_clip_set(src); copied = 40; plat_sound(0); }
+        if (src && *src) { plat_clip_set(src); flash("Copied!"); }
     }
     plat_ime_field(field_on, field_x, field_y);
-    if (copied > 0) { copied--; fill(FBW - 76, FBH / 2, 72, 20, C_ACC); text(FBW - 72, FBH / 2 + 2, "Copied!", HTPC ? 0x1B1033 : 0xFFFFFF); }
+    if (flash_t > 0) { int w = text_w(flash_msg) + 8; flash_t--; fill(FBW - w - 4, FBH / 2, w, 20, C_ACC); text(FBW - w, FBH / 2 + 2, flash_msg, HTPC ? 0x1B1033 : 0xFFFFFF); }
     ui_end();
 }

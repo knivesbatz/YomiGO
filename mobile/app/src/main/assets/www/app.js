@@ -84,6 +84,20 @@ function askGenki() {
   show(h("h1", null, "Do you study with Genki?"), h("div", { cls: "card" }, "YomiGo can add practice sorted by Genki lesson. It uses YomiGo's own cards alongside your copy of the book. You can change this later in Settings."),
     btn("Yes, turn on Genki practice", pick(1), "main"), btn("No thanks", pick(0)));
 }
+const addedMsg = (r) => (r > 0 ? "Added to your flashcards." : r === 0 ? "You've already added that." : "Couldn't add that.");
+function myWords() {
+  setNav(1);
+  const word = h("input", { placeholder: "Word", "aria-label": "Word", lang: "ja" }), reading = h("input", { placeholder: "Reading: kana or romaji, optional", "aria-label": "Reading", lang: "ja", autocapitalize: "off" }), mean = h("input", { placeholder: "Meaning", "aria-label": "Meaning" });
+  const area = h("textarea", { rows: 4, "aria-label": "Word list", placeholder: "Paste words from YomiGo Reader, or an Anki export" }), msg = h("p", { cls: "acc", role: "status" });
+  show(h("h1", null, "My words"), h("p", { cls: "dim" }, `${P.my.length} of 2000. They review with your flashcards. To save more, search the dictionary in the Library.`),
+    h("div", { cls: "card" }, h("strong", null, "Add a word"), word, reading, mean,
+      btn("Add", () => { const r = Y.myAdd(P, word.value, reading.value ? Y.normKana(reading.value) : "", mean.value, "", Y.today()); store.save(); if (r > 0) myWords(); else msg.textContent = addedMsg(r); }, "main"), msg),
+    h("div", { cls: "card" }, h("strong", null, "Bring words in or out"), area,
+      btn("Import the list above", () => { const n = Y.myImport(P, area.value, Y.today()); store.save(); msg.textContent = `Imported ${n} word(s).`; if (n) myWords(); }),
+      btn("Show my list, for Anki", () => { area.value = Y.myExport(P); })),
+    P.my.map((m, i) => h("div", { cls: "card" }, h("strong", { lang: "ja" }, m.word), m.reading !== m.word ? h("span", { cls: "dim", lang: "ja" }, "  " + m.reading) : "", h("div", null, m.gloss), m.sent ? h("div", { cls: "dim", lang: "ja" }, m.sent) : "",
+      btn("Delete", () => { if (confirm(`Delete ${m.word}? You can't undo this.`)) { P.my.splice(i, 1); store.save(); myWords(); } }))));
+}
 function genki() {
   setNav(1);
   show(h("h1", null, "Genki practice"), h("p", { cls: "dim" }, "By lesson, using YomiGo's own cards. Follows the order of the 3rd edition. Lessons with no YomiGo cards yet arrive with the N4 update."),
@@ -278,10 +292,11 @@ function chat(id, turn, fails) {
 
 function cards() {
   setNav(1);
-  const t = Y.today(), due = Y.dueCount(P, t), all = Object.values(P.cards);
+  const t = Y.today(), due = Y.dueCount(P, t), all = [...Object.values(P.cards), ...P.my];
   show(h("h1", null, L("Flashcards", "カード", 3)), h("div", { cls: "card" }, h("div", { cls: "big " + (due ? "acc" : "good") }, due), due === 1 ? "card due" : "cards due", h("p", { cls: "dim" }, `Deck: ${all.length}. Struggling with: ${all.filter((c) => c.lapses).length}. Right answers come back later, wrong ones tomorrow. Only due cards earn XP.`)),
     due ? btn(L("Review", "ふくしゅう", 2), () => runQuiz(Y.quizReview(P, t, 30), "Flashcards", (r, n) => { store.save(); result("Review done", `${r} of ${n} correct. Cards you missed will come back soon.`, r * 2 >= n, home); },
-      { onAnswer: (q, ok) => { Y.srsGrade(P.cards[q.card.id], ok ? 2 : 0, Y.today()); P.reviews++; if (ok) P.xp += 2; store.save(); } }), "main") : "",
+      { onAnswer: (q, ok) => { Y.srsGrade(q.my || P.cards[q.card.id], ok ? 2 : 0, Y.today()); P.reviews++; if (ok) P.xp += 2; store.save(); } }), "main") : "",
+    btn(`My words (${P.my.length})`, myWords),
     P.genki ? btn("Genki practice", genki) : "");
 }
 function startExam(i) {
@@ -313,7 +328,7 @@ function library() {
   // The dictionary is big, so it loads the first time you search
   const q = h("input", { placeholder: "Japanese, romaji, or English", "aria-label": "Search the dictionary", lang: "ja", autocapitalize: "off" }), out = h("div");
   const ensure = (then) => { if (globalThis.YG_DICT_TEXT) return then(); const s = document.createElement("script"); s.src = "dict.js"; s.onload = () => { Y.dictLoad(YG_DICT_TEXT); then(); }; document.head.append(s); };
-  const search = () => { if (q.value) ensure(() => { const rows = Y.dictSearch(q.value, 20); out.replaceChildren(...(rows.length ? rows.map((r) => h("div", { cls: "card" }, h("strong", { lang: "ja" }, r.word || r.reading), r.word ? h("span", { cls: "dim", lang: "ja" }, "  " + r.reading) : "", h("div", null, r.gloss))) : [h("p", { cls: "dim" }, "Nothing found. Try the plain form of the word.")])); }); };
+  const search = () => { if (q.value) ensure(() => { const rows = Y.dictSearch(q.value, 20); out.replaceChildren(...(rows.length ? rows.map((r) => { const add = btn("Add to my words", () => { add.textContent = addedMsg(Y.myAdd(P, r.word, r.reading, r.gloss, "", Y.today())); add.disabled = true; store.save(); }); return h("div", { cls: "card" }, h("strong", { lang: "ja" }, r.word || r.reading), r.word ? h("span", { cls: "dim", lang: "ja" }, "  " + r.reading) : "", h("div", null, r.gloss), add); }) : [h("p", { cls: "dim" }, "Nothing found. Try the plain form of the word.")])); }); };
   q.addEventListener("keydown", (e) => { if (e.key === "Enter") search(); });
   show(h("h1", null, L("Library", "本だな", 5)),
     h("h2", null, "Dictionary"), q, btn("Search", search, "main"), out, h("p", { cls: "dim" }, "About 22,000 common words from JMdict by EDRDG, CC BY-SA 4.0."),

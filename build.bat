@@ -20,7 +20,7 @@ set /p VER=<VERSION
 python tools\gen_version.py || exit /b 1
 
 rem Core tests use the normal C runtime
-cl /nologo /utf-8 /W3 /O1 /Ibuild\gen /Isrc /Fobuild\ /Febuild\test_core.exe tests\test_core.c src\core.c || exit /b 1
+cl /nologo /utf-8 /W3 /O1 /Ibuild\gen /Isrc /Fobuild\ /Febuild\test_core.exe tests\test_core.c src\core.c /link /STACK:2097152 || exit /b 1
 build\test_core.exe || exit /b 1
 
 rem The apps: no C runtime, x87 only, ANSI imports, so they can load on Windows 95

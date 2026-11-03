@@ -8,6 +8,6 @@ lines = ["static const struct { const char *a, *b; } NORM[] = {"]
 lines += ['{"%s","%s"},' % (a, b) for a, b in v["norm"]]
 lines += ["};", "static const struct { int r, iv, e, g, wi, we, wr; } SRS[] = {"]
 lines += ["{%d,%d,%d,%d,%d,%d,%d}," % (*s["start"], s["grade"], s["ivl"], s["ease"], s["reps"]) for s in v["srs"]]
-lines += ["};"]
+lines += ["};", 'static const char MYLINE[] = %s;' % json.dumps(v["myline"], ensure_ascii=False)]
 with io.open(os.path.join(ROOT, "build", "gen", "vectors_gen.h"), "w", encoding="utf-8", newline="\n") as f:
     f.write("\n".join(lines) + "\n")

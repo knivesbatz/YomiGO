@@ -65,13 +65,15 @@
   }
 
   // Save file: the same text format as the Windows builds, so a save moves between devices
-  const newProfile = (name) => ({ name, xp: 0, streak: 0, best: 0, last: 0, today: 0, placed: 0, day: 0, step: 0, pace: 1, en: 0, genki: 0, reviews: 0, perfects: 0, chats: 0, hw: 0, ach: 0, reads: 0, exams: {}, cards: {} });
+  const MY_MAX = 2000;
+  const newProfile = (name) => ({ name, xp: 0, streak: 0, best: 0, last: 0, today: 0, placed: 0, day: 0, step: 0, pace: 1, en: 0, genki: 0, reviews: 0, perfects: 0, chats: 0, hw: 0, ach: 0, reads: 0, exams: {}, cards: {}, my: [] });
   const NUMS = ["xp", "streak", "best", "last", "today", "placed", "day", "step", "pace", "en", "genki", "reviews", "perfects", "chats", "hw", "ach", "reads"];
   function saveText(p) {
     let t = "YOMIGO-SAVE 1\nname=" + p.name + "\n";
     for (const k of NUMS) t += k + "=" + p[k] + "\n";
     for (const e in p.exams) if (p.exams[e]) t += "exam." + e + "=" + p.exams[e] + "\n";
     for (const id in p.cards) { const c = p.cards[id]; t += `card ${id} ${c.reps} ${c.ivl} ${c.lapses} ${c.ease} ${c.due}\n`; }
+    for (const m of p.my) t += `my ${m.reps} ${m.ivl} ${m.lapses} ${m.ease} ${m.due}\t${m.word}\t${m.reading}\t${m.gloss}\t${m.sent}\n`;
     return t;
   }
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -83,6 +85,11 @@
       if (line.startsWith("card ")) {
         const [, id, r, i, l, e, d] = line.split(" ");
         if (ids.has(id)) p.cards[id] = { reps: +r || 0, ivl: clamp(+i || 0, 0, 3650), lapses: +l || 0, ease: clamp(+e || 0, 1300, 5000), due: +d || 0 };
+        continue;
+      }
+      if (line.startsWith("my ")) {
+        const [head, word, reading, gloss, sent] = line.split("\t"), [, r, i, l, e, d] = head.split(" ");
+        if (word && gloss && p.my.length < MY_MAX) p.my.push({ word, reading: reading || word, gloss, sent: sent || "", reps: +r || 0, ivl: clamp(+i || 0, 0, 3650), lapses: +l || 0, ease: clamp(+e || 0, 1300, 5000), due: +d || 0 });
         continue;
       }
       const eq = line.indexOf("=");
@@ -103,7 +110,30 @@
   const romajiMode = (day) => day < C.days.length && C.days[day].stage <= 1;
   const examGate = (p) => C.exams.findIndex((e) => e.day < p.day && (p.exams[e.id] || 0) < PASS);
   const rankOf = (p) => { let r = 0; C.exams.forEach((e, i) => { if ((p.exams[e.id] || 0) >= PASS) r = i + 1; }); return r; };
-  const dueCount = (p, t) => Object.values(p.cards).filter((c) => c.due <= t).length;
+  const dueCount = (p, t) => Object.values(p.cards).filter((c) => c.due <= t).length + p.my.filter((m) => m.due <= t).length;
+  // Your own words. Tabs and line breaks can't get in, so a field can't break a save line.
+  const field = (s, max) => (s || "").replace(/[\t\r\n]+/g, " ").trim().slice(0, max);
+  function myAdd(p, word, reading, gloss, sent, t) {
+    let w = field(word, 39), r = field(reading, 59);
+    const g = field(gloss, 91), s = field(sent, 119);
+    if (!r) r = w;
+    if (!w) w = r;
+    if (!w || !g) return -1;
+    if (p.my.some((m) => m.word === w && m.reading === r)) return 0;
+    if (p.my.length >= MY_MAX) return -1;
+    p.my.push({ word: w, reading: r, gloss: g, sent: s, ...srsNew(t) });
+    return 1;
+  }
+  function myImport(p, text, t) {
+    let n = 0;
+    for (const line of text.split(/\r?\n/)) {
+      if (!line || line[0] === "#") continue;
+      const [w, r, g, s] = line.split("\t");
+      if (myAdd(p, w, r, g, s, t) === 1) n++;
+    }
+    return n;
+  }
+  const myExport = (p) => p.my.map((m) => [m.word, m.reading, m.gloss, m.sent].join("\t")).join("\n");
   function learnDay(p, day, t) { for (const id of C.days[day].new) if (!p.cards[id]) p.cards[id] = srsNew(t); }
   function completeDay(p, t) {
     if (p.last !== t) { p.streak = p.last === t - 1 ? p.streak + 1 : 1; p.today = 0; p.last = t; }
@@ -177,8 +207,19 @@
     const earlier = C.cards.filter((c) => c.day >= 0 && c.day < first && !(rom && "hk".includes(c.t)));
     return shuffle([...shuffle(inStage).slice(0, want), ...shuffle(earlier).slice(0, 3)]).map((c) => makeQ(c, rnd(3), rom));
   }
+  function makeQMy(m, pref) {
+    const card = { id: "my", t: "m", f: m.word, r: m.reading, ro: "", en: m.gloss, n: m.sent };
+    const q = { card, my: m, kind: "choice", sub: "", prompt: m.word, tag: "Your word: what does it mean?", choices: [], answer: m.gloss, want: "", want2: "" };
+    if (pref === 1) { q.kind = "type"; q.prompt = m.gloss; q.tag = "Your word: type the reading"; q.want = m.reading; return q; }
+    q.sub = m.sent;
+    const wrong = shuffle(C.cards.filter((c) => c.t === "w" && c.day >= 0 && c.en !== m.gloss)).slice(0, 12).map((c) => c.en);
+    q.choices = shuffle([m.gloss, ...[...new Set(wrong)].slice(0, 3)]);
+    return q;
+  }
+  // Everything due is shuffled together, so your own words can't be crowded out by the course
   function quizReview(p, t, max) {
-    return shuffle(Object.keys(p.cards).filter((id) => p.cards[id].due <= t)).slice(0, max).map((id) => q3(id, romajiMode(byId[id].day) && romajiMode(p.day)));
+    const due = [...Object.keys(p.cards).filter((id) => p.cards[id].due <= t), ...p.my.filter((m) => m.due <= t)];
+    return shuffle(due).slice(0, max).map((d) => (typeof d === "string" ? q3(d, romajiMode(byId[d].day) && romajiMode(p.day)) : makeQMy(d, rnd(2))));
   }
   // Genki practice: YomiGo's own cards, grouped by the lesson of the book that covers them
   const quizGenki = (i) => shuffle(C.genki[i].cards.map((id) => q3(id, false))).slice(0, 15);
@@ -277,5 +318,5 @@
     return hits.slice(0, 6);
   }
 
-  root.YG = { normKana, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, lookup, byId, PASS };
+  root.YG = { normKana, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, myAdd, myImport, myExport, makeQMy, lookup, byId, PASS };
 })(globalThis);

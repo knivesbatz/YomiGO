@@ -17,5 +17,10 @@ $("anki").addEventListener("click", () => store.get({ saved: [] }, ({ saved }) =
   const a = document.createElement("a"); a.href = url; a.download = "yomigo-words.tsv"; a.click();
   setTimeout(() => URL.revokeObjectURL(url), 5000);
 }));
+// Then in YomiGo: Flashcards > My words > Import
+$("copy").addEventListener("click", () => store.get({ saved: [] }, ({ saved }) => {
+  const text = saved.map((s) => [s.word, s.reading, s.meaning, s.sentence].map(cell).join("\t")).join("\n");
+  navigator.clipboard.writeText(text).then(() => { $("count").textContent = `Copied ${saved.length} word(s). In YomiGo: Flashcards > My words > Import.`; }, () => { $("count").textContent = "Couldn't copy. Use the Anki export instead."; });
+}));
 $("clear").addEventListener("click", () => { if (confirm("Delete all saved words from this browser?")) store.set({ saved: [] }, render); });
 render();

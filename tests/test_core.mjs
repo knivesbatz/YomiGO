@@ -80,6 +80,27 @@ test("a word spelled the same never supplies a wrong answer", () => {
   const toki = C.cards.find((c) => c.id === "v.toki"), ji = C.cards.find((c) => c.id === "v.ji");
   for (let i = 0; i < 200; i++) assert.ok(!Y.makeQ(toki, 0, false).choices.includes(ji.en));
 });
+test("your own words: same save format as C, adding, import, review, damage", () => {
+  const b = Y.loadText(V.myline);
+  assert.equal(b.my.length, 2);
+  assert.deepEqual(b.my[0], { word: "猫", reading: "ねこ", gloss: "cat", sent: "猫がいます", reps: 1, ivl: 2, lapses: 3, ease: 2000, due: 5 });
+  assert.equal(b.my[1].sent, "");
+  const a = Y.newProfile("M");
+  assert.equal(Y.myAdd(a, "犬", "いぬ", "dog", "犬がいます", 100), 1);
+  assert.equal(Y.myAdd(a, "犬", "いぬ", "dog again", "", 100), 0);
+  assert.equal(Y.myAdd(a, "", "", "nothing", "", 100), -1);
+  assert.equal(Y.myAdd(a, "かな", "", "kana only", "", 100), 1);
+  assert.equal(a.my[1].reading, "かな");
+  assert.equal(Y.myImport(a, "#separator:tab\n#columns:Word\n猫\tねこ\tcat\t猫だ\tsite.com\n犬\tいぬ\tdog\n\n鳥\tとり\tbird\n", 100), 2);
+  assert.ok(Y.myExport(a).includes("鳥\tとり\tbird\t"));
+  assert.deepEqual(Y.loadText(Y.saveText(a)).my, a.my);
+  assert.equal(Y.dueCount(a, 100), a.my.length);
+  assert.equal(Y.dueCount(a, 99), 0);
+  const qs = Y.quizReview(a, 100, 30);
+  assert.equal(qs.length, a.my.length);
+  for (const q of qs) { assert.ok(q.my); if (q.kind === "choice") { assert.equal(new Set(q.choices).size, 4); assert.ok(q.choices.includes(q.answer)); } else assert.ok(q.want); }
+  assert.equal(Y.loadText("YOMIGO-SAVE 1\nname=x\nmy 1 2 3\nmy\nmy 1 2 3 4 5\t\t\t\t\n").my.length, 0);
+});
 test("lookup finds words and undoes polite endings", () => {
   assert.equal(Y.lookup("猫がいます")[0].card.id, "v.neko");
   assert.ok(Y.lookup("食べました").some((h) => h.card.id === "v.tabemasu"));

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0
+
+- My words: your own flashcards, up to 2,000, reviewed alongside the course
+- Add them from the dictionary, by typing them in, or by importing from YomiGo Reader or an Anki-style list
+- Copy your list out again for Anki, and delete words with a confirmation
+- Words saved with their sentence show it when you review
+
 ## 0.3.0
 
 - New N4 stage: 19 classes covering plain forms, permission and rules, must, experience, opinions, ability, plans, comparing, reasons, conditionals, giving and receiving, passive and causative, guessing, and polite Japanese, with the N4 Mastery Exam

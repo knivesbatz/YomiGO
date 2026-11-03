@@ -72,7 +72,8 @@ YomiGo is in its early days. The course currently runs from zero to **N4**, the 
 | 70 classes, 8 exams, flashcards, and graded reading | N3 through N1, and beyond |
 | Scripted conversations | AI conversation partners |
 | A dictionary of about 22,000 common words | Larger dictionaries |
-| Speech input on Android | Picture-to-text (OCR) for manga and games |
+| Your own flashcards, from the dictionary or the browser | Picture-to-text (OCR) for manga and games |
+| Speech input on Android | Listening drills and transcription |
 | Updates that ask first | Automatic sync between devices |
 
 Some things haven't been tried on real hardware yet, including controllers, CRT TVs, Windows 95, and Android phones. See [what's been tested](docs/COMPATIBILITY.md) and [known issues](docs/KNOWN_ISSUES.md), or the full [roadmap](docs/ROADMAP.md).

@@ -9,7 +9,7 @@ static int fails;
 #define CHECK(c, ...) do { if (!(c)) { fails++; printf("FAIL %s:%d ", __FILE__, __LINE__); printf(__VA_ARGS__); printf("\n"); } } while (0)
 
 static Profile a, b;
-static char buf[200000];
+static char buf[YG_SAVE_CAP];
 
 int main(void) {
     int i, n;
@@ -77,6 +77,27 @@ int main(void) {
         CHECK(hit, "dict %s doesn't find the cat", qs[k]); }
       got = dict_search("コーヒー", r, 9); CHECK(got > 0, "dict katakana"); dict_row(r[0], w, rd, g, 128); CHECK(!strcmp(rd, "コーヒー"), "katakana first hit %s", rd);
       CHECK(dict_search("zzqqxx", r, 9) == 0, "nonsense finds nothing"); CHECK(dict_search("", r, 9) == 0, "empty finds nothing"); }
+    /* Your own words: same save format as the JS core, adding, duplicates, import, review, damage */
+    CHECK(profile_load_text(&b, MYLINE, (int)strlen(MYLINE)), "my line loads");
+    CHECK(b.nmy == 2 && !strcmp(b.my[0].word, "猫") && !strcmp(b.my[0].reading, "ねこ") && !strcmp(b.my[0].gloss, "cat") && !strcmp(b.my[0].sent, "猫がいます"), "my fields %d", b.nmy);
+    CHECK(b.my[0].st.reps == 1 && b.my[0].st.ivl == 2 && b.my[0].st.lapses == 3 && b.my[0].st.ease == 2000 && b.my[0].st.due == 5, "my state");
+    CHECK(!strcmp(b.my[1].word, "だめ") && !b.my[1].sent[0], "my empty sentence");
+    profile_new(&a, "M");
+    CHECK(my_add(&a, "犬", "いぬ", "dog", "犬がいます", 100) == 1, "add");
+    CHECK(my_add(&a, "犬", "いぬ", "dog again", "", 100) == 0, "duplicate refused");
+    CHECK(my_add(&a, "", "", "nothing", "", 100) == -1, "no word refused");
+    CHECK(my_add(&a, "かな", "", "kana only", "", 100) == 1 && !strcmp(a.my[1].reading, "かな"), "reading defaults to the word");
+    CHECK(my_add(&a, "長", "ながいながいながいながいながいながいながいながいながいながいながいながいながいながいながいながい", "long", "", 100) == 1, "long reading");
+    { const unsigned char *r = (const unsigned char *)a.my[2].reading; int l = (int)strlen((const char *)r); CHECK(l % 3 == 0, "cut mid-character at %d", l); }
+    CHECK(my_import(&a, "#separator:tab\n#columns:Word\n猫\tねこ\tcat\t猫だ\tsite.com\n犬\tいぬ\tdog\n\n鳥\tとり\tbird\n", 100) == 2, "import skips headers, duplicates, and blanks");
+    n = my_export(&a, buf, sizeof buf); CHECK(n > 0 && strstr(buf, "鳥\tとり\tbird\t\n"), "export");
+    n = profile_save_text(&a, buf, sizeof buf); CHECK(n > 0 && profile_load_text(&b, buf, n) && b.nmy == a.nmy, "my round trip %d %d", b.nmy, a.nmy);
+    CHECK(!memcmp(b.my, a.my, sizeof(MyCard) * 1) || !strcmp(b.my[0].sent, a.my[0].sent), "my data");
+    CHECK(profile_due(&a, 100) == a.nmy, "new words are due"); CHECK(profile_due(&a, 99) == 0, "not before they're added");
+    quiz_review(&z, &a, 100, 30); CHECK(z.n == a.nmy, "review has them, %d", z.n);
+    for (i = 0; i < z.n; i++) { CHECK(z.q[i].card >= YG_NCARDS, "my card number"); if (z.q[i].kind == Q_CHOICE) { int c, d; for (c = 0; c < 4; c++) { CHECK(z.q[i].choices[c] != 0, "my blank choice"); for (d = 0; d < c; d++) CHECK(strcmp(z.q[i].choices[c], z.q[i].choices[d]), "my dup choice"); } } else CHECK(*z.q[i].want, "my want"); }
+    { int was = a.nmy; my_delete(&a, 0); CHECK(a.nmy == was - 1 && !strcmp(a.my[0].word, "かな"), "delete"); my_delete(&a, 999); CHECK(a.nmy == was - 1, "bad delete ignored"); }
+    { static const char t[] = "YOMIGO-SAVE 1\nname=x\nmy 1 2 3\nmy\nmy 1 2 3 4 5\t\t\t\t\n"; CHECK(profile_load_text(&b, t, (int)strlen(t)) && b.nmy == 0, "damaged my lines dropped, %d", b.nmy); }
     /* Reading: right answers are distinct from wrong ones, and every passage has a class */
     { int r, q, d; for (r = 0; r < YG_NREAD; r++) { const YgRead *x = &YG_READ[r]; int used = 0;
         for (q = 0; q < x->nq; q++) CHECK(strcmp(x->q[q * 4 + 1], x->q[q * 4 + 2]) && strcmp(x->q[q * 4 + 1], x->q[q * 4 + 3]), "reading %s q%d", x->title, q);

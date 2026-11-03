@@ -22,6 +22,14 @@ for exe in ("YomiGo.exe", "YomiGoHTPC.exe"):
     print(exe, "exit", r.returncode, "day", vals.get("day"), "cards", cards, "xp", vals.get("xp"), "chats", vals.get("chats"), "hw", vals.get("hw"), "reads", vals.get("reads"), "OK" if ok else "FAILED")
     fail += not ok
     shutil.rmtree(root, ignore_errors=True)
+# Your own words on the TV: find 猫 in the dictionary, add it, and it must be saved
+root = tempfile.mkdtemp()
+subprocess.run([os.path.join(ROOT, "dist", "YomiGoHTPC.exe"), "--root", root, "--script", "w2;ow2;ow2;tMine;w1;sw2;dw1;ow2;dw1;ow2;rrrrw8;ow2;RRRw2;tneko;w1;sw2;xw2;"], timeout=60)
+text = open(os.path.join(root, "Mine.sav"), encoding="utf-8").read() if os.path.exists(os.path.join(root, "Mine.sav")) else ""
+ok = "\t猫\tねこ\t" in text
+print("adding from the dictionary", "OK" if ok else "FAILED")
+fail += not ok
+shutil.rmtree(root, ignore_errors=True)
 # Copy and paste, using a stand-in clipboard so the real one is left alone: "Ab" pasted after itself makes "AbAb"
 root = tempfile.mkdtemp()
 subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--script", "w2;ow2;ow2;tAb;w1;C;w1;V;w1;ow2;"], timeout=60)

@@ -220,6 +220,7 @@ void profile_new(Profile *p, const char *name) {
     ys_cpy(p->name, name, YG_NAME);
     p->pace = 1;
 }
+static void field_cpy(char *d, const char *s, int cap);
 static int put(char *o, int cap, int n, const char *k, int v) {
     char t[16];
     if (n + 48 >= cap) return n;
@@ -248,6 +249,18 @@ int profile_save_text(const Profile *p, char *o, int cap) {
           for (j = 0; j < 5; j++) { o[n++] = ' '; ys_itoa(vals[j], t); ys_cpy(o + n, t, cap - n); n += ys_len(o + n); } }
         o[n++] = '\n'; o[n] = 0;
     }
+    for (i = 0; i < p->nmy; i++) {
+        const MyCard *m = &p->my[i]; int vals[5], j;
+        if (n + 400 >= cap) return -1;
+        vals[0] = m->st.reps; vals[1] = m->st.ivl; vals[2] = m->st.lapses; vals[3] = m->st.ease; vals[4] = m->st.due;
+        ys_cpy(o + n, "my", cap - n); n += 2;
+        for (j = 0; j < 5; j++) { o[n++] = ' '; ys_itoa(vals[j], t); ys_cpy(o + n, t, cap - n); n += ys_len(o + n); }
+        o[n++] = '\t'; ys_cpy(o + n, m->word, cap - n); n += ys_len(o + n);
+        o[n++] = '\t'; ys_cpy(o + n, m->reading, cap - n); n += ys_len(o + n);
+        o[n++] = '\t'; ys_cpy(o + n, m->gloss, cap - n); n += ys_len(o + n);
+        o[n++] = '\t'; ys_cpy(o + n, m->sent, cap - n); n += ys_len(o + n);
+        o[n++] = '\n'; o[n] = 0;
+    }
     return n;
 }
 static int card_index(const char *id, int n) {
@@ -263,8 +276,8 @@ int profile_load_text(Profile *p, const char *text, int len) {
     profile_new(p, "");
     i = 14;
     while (i < len) {
-        char line[160]; int n = 0, eq;
-        for (nl = i; nl < len && text[nl] != '\n'; nl++) if (n < 159) line[n++] = text[nl];
+        char line[512]; int n = 0, eq;
+        for (nl = i; nl < len && text[nl] != '\n'; nl++) if (n < 511) line[n++] = text[nl];
         line[n] = 0; i = nl + 1;
         if (n > 0 && line[n - 1] == '\r') line[--n] = 0;
         if (ys_ncmp(line, "card ", 5) == 0) {
@@ -277,6 +290,23 @@ int profile_load_text(Profile *p, const char *text, int len) {
                 CardState *c = &p->cards[k];
                 c->seen = 1; c->reps = (short)vals[0]; c->ivl = (short)(vals[1] < 0 ? 0 : vals[1] > 3650 ? 3650 : vals[1]);
                 c->lapses = (short)vals[2]; c->ease = (short)(vals[3] < 1300 ? 1300 : vals[3] > 5000 ? 5000 : vals[3]); c->due = vals[4];
+            }
+            continue;
+        }
+        if (ys_ncmp(line, "my ", 3) == 0 && p->nmy < YG_MY_MAX) {
+            char *q = line + 3, *f[4]; int vals[5], j; MyCard *m = &p->my[p->nmy];
+            for (j = 0; j < 5; j++) { if (*q == ' ') q++; vals[j] = ys_atoi(q); if (*q == '-') q++; while (*q >= '0' && *q <= '9') q++; }
+            for (j = 0; j < 4; j++) {
+                if (*q != '\t') { f[j] = q; while (*q) q++; continue; }
+                *q++ = 0; f[j] = q;
+                while (*q && *q != '\t') q++;
+            }
+            field_cpy(m->word, f[0], sizeof m->word); field_cpy(m->reading, f[1], sizeof m->reading);
+            field_cpy(m->gloss, f[2], sizeof m->gloss); field_cpy(m->sent, f[3], sizeof m->sent);
+            if (m->word[0] && m->gloss[0]) {
+                m->st.seen = 1; m->st.reps = (short)vals[0]; m->st.ivl = (short)(vals[1] < 0 ? 0 : vals[1] > 3650 ? 3650 : vals[1]);
+                m->st.lapses = (short)vals[2]; m->st.ease = (short)(vals[3] < 1300 ? 1300 : vals[3] > 5000 ? 5000 : vals[3]); m->st.due = vals[4];
+                p->nmy++;
             }
             continue;
         }
@@ -311,6 +341,71 @@ int profile_stage(const Profile *p) { int d = p->day >= YG_NDAYS ? YG_NDAYS - 1 
 int profile_due(const Profile *p, int today) {
     int i, n = 0;
     for (i = 0; i < YG_NCARDS; i++) if (p->cards[i].seen && p->cards[i].due <= today) n++;
+    for (i = 0; i < p->nmy; i++) if (p->my[i].st.due <= today) n++;
+    return n;
+}
+/* Whole characters only, with tabs and line breaks turned into spaces, so a field can't break a save line */
+static void field_cpy(char *d, const char *s, int cap) {
+    int n = 0;
+    while (*s && *s != '\n' && n < cap - 1) { d[n++] = (*s == '\t' || *s == '\r') ? ' ' : *s; s++; }
+    if (((unsigned char)*s & 0xC0) == 0x80) { /* stopped inside a character: drop what was copied of it */
+        while (n > 0 && ((unsigned char)d[n - 1] & 0xC0) == 0x80) n--;
+        if (n > 0) n--;
+    }
+    d[n] = 0;
+    while (n > 0 && d[n - 1] == ' ') d[--n] = 0;
+}
+int my_add(Profile *p, const char *word, const char *reading, const char *gloss, const char *sent, int today) {
+    static MyCard m; int i;
+    field_cpy(m.word, word, sizeof m.word); field_cpy(m.reading, reading, sizeof m.reading);
+    field_cpy(m.gloss, gloss, sizeof m.gloss); field_cpy(m.sent, sent, sizeof m.sent);
+    if (!m.reading[0]) ys_cpy(m.reading, m.word, sizeof m.reading);
+    if (!m.word[0]) ys_cpy(m.word, m.reading, sizeof m.word);
+    if (!m.word[0] || !m.gloss[0]) return -1;
+    for (i = 0; i < p->nmy; i++) if (!ys_cmp(p->my[i].word, m.word) && !ys_cmp(p->my[i].reading, m.reading)) return 0;
+    if (p->nmy >= YG_MY_MAX) return -1;
+    srs_new(&m.st, today);
+    p->my[p->nmy++] = m;
+    ach_check(p);
+    return 1;
+}
+void my_delete(Profile *p, int k) {
+    int i;
+    if (k < 0 || k >= p->nmy) return;
+    for (i = k; i < p->nmy - 1; i++) p->my[i] = p->my[i + 1];
+    p->nmy--;
+}
+int my_import(Profile *p, const char *t, int today) {
+    int added = 0;
+    while (*t) {
+        static char f[4][300]; int i, n;
+        const char *e = t;
+        while (*e && *e != '\n') e++;
+        if (*t != '#') {
+            const char *q = t;
+            for (i = 0; i < 4; i++) {
+                n = 0;
+                while (q < e && *q != '\t') { if (n < 299) f[i][n++] = *q; q++; }
+                f[i][n] = 0;
+                if (q < e) q++;
+            }
+            if (my_add(p, f[0], f[1], f[2], f[3], today) == 1) added++;
+        }
+        t = *e ? e + 1 : e;
+    }
+    return added;
+}
+int my_export(const Profile *p, char *o, int cap) {
+    int n = 0, i;
+    o[0] = 0;
+    for (i = 0; i < p->nmy; i++) {
+        const MyCard *m = &p->my[i];
+        if (n + 340 >= cap) return -1;
+        ys_cat(o + n, m->word, cap - n); n += ys_len(o + n); o[n++] = '\t';
+        ys_cpy(o + n, m->reading, cap - n); n += ys_len(o + n); o[n++] = '\t';
+        ys_cpy(o + n, m->gloss, cap - n); n += ys_len(o + n); o[n++] = '\t';
+        ys_cpy(o + n, m->sent, cap - n); n += ys_len(o + n); o[n++] = '\n'; o[n] = 0;
+    }
     return n;
 }
 #define PASS_MARK 80
@@ -380,6 +475,7 @@ const YgAch YG_ACH[ACH_COUNT] = {
     {"N5 Champion", "N5王者", "Pass the N5 Mastery Exam."},
     {"Bookworm", "本の虫", "Finish 10 reading passages."},
     {"N4 Champion", "N4王者", "Pass the N4 Mastery Exam."},
+    {"Word Miner", "ことば集め", "Add 25 of your own words."},
 };
 void ach_check(Profile *p) {
 #define GOT(a, cond) if (cond) p->ach |= 1u << (a)
@@ -391,6 +487,7 @@ void ach_check(Profile *p) {
     { int e; for (e = 0; e < YG_NEXAMS; e++) if (p->exam_score[e] >= PASS_MARK) {
         GOT(ACH_N5, !ys_cmp(YG_EXAMS[e].id, "N5")); GOT(ACH_N4, !ys_cmp(YG_EXAMS[e].id, "N4")); } }
     GOT(ACH_READER, p->reads >= 10);
+    GOT(ACH_MINER, p->nmy >= 25);
 #undef GOT
 }
 
@@ -453,6 +550,25 @@ void q_make(Question *q, int card, int pref, int romaji) {
     else if (pref == 1) { q->prompt = c->en; q->tag = "Which word?"; fill_choices(q, card, romaji ? c->romaji : c->front, 0, 1, romaji); }
     else { q->prompt = c->en; q->kind = Q_TYPE; q->tag = romaji ? "Type it in romaji" : "Type the reading"; q->want = c->reading; q->want2 = c->romaji; }
 }
+void q_make_my(Question *q, const Profile *p, int k, int pref) {
+    const MyCard *m = &p->my[k]; int s, got = 1, tries;
+    for (s = 0; s < 4; s++) q->choices[s] = 0;
+    q->card = (short)(YG_NCARDS + k); q->kind = Q_CHOICE; q->sub = ""; q->want = q->want2 = ""; q->tag = "";
+    if (pref == 1) { q->kind = Q_TYPE; q->prompt = m->gloss; q->tag = "Your word: type the reading"; q->want = m->reading; return; }
+    q->prompt = m->word; q->sub = m->sent; q->tag = "Your word: what does it mean?";
+    s = yg_rand() % 4;
+    q->choices[s] = m->gloss; q->answer = (short)s;
+    for (tries = 0; tries < 900 && got < 4; tries++) {
+        const char *t = YG_CARDS[yg_rand() % YG_NCARDS].en; const YgCard *o; int i, dup = 0;
+        o = &YG_CARDS[yg_rand() % YG_NCARDS];
+        if (o->type != 'w' || o->day < 0) continue;
+        t = o->en;
+        for (i = 0; i < 4; i++) if (q->choices[i] && !ys_cmp(q->choices[i], t)) dup = 1;
+        if (dup) continue;
+        i = 0; while (q->choices[i]) i++;
+        q->choices[i] = t; got++;
+    }
+}
 void quiz_new(Quiz *z) { z->n = 0; }
 void quiz_add_cards(Quiz *z, const short *cards, int n, int romaji, int per) {
     int i, k;
@@ -507,17 +623,18 @@ void quiz_exam(Quiz *z, int exam) {
     }
     quiz_shuffle(z);
 }
+/* Everything due is shuffled together, so your own words can't be crowded out by the course */
 void quiz_review(Quiz *z, const Profile *p, int today, int max) {
-    int i;
+    static short due[YG_NCARDS + YG_MY_MAX]; int i, n = 0;
     quiz_new(z);
-    for (i = 0; i < YG_NCARDS && z->n < max; i++) {
-        const CardState *c = &p->cards[i];
-        if (c->seen && c->due <= today) {
-            int rom = YG_CARDS[i].day >= 0 && day_romaji_mode(YG_CARDS[i].day) && day_romaji_mode(p->day);
-            q_make(&z->q[z->n++], i, (int)(yg_rand() % 3), rom);
-        }
+    for (i = 0; i < YG_NCARDS; i++) if (p->cards[i].seen && p->cards[i].due <= today) due[n++] = (short)i;
+    for (i = 0; i < p->nmy; i++) if (p->my[i].st.due <= today) due[n++] = (short)(YG_NCARDS + i);
+    for (i = n - 1; i > 0; i--) { int j = yg_rand() % (i + 1); short t = due[i]; due[i] = due[j]; due[j] = t; }
+    for (i = 0; i < n && z->n < max; i++) {
+        int c = due[i];
+        if (c >= YG_NCARDS) { q_make_my(&z->q[z->n++], p, c - YG_NCARDS, (int)(yg_rand() % 2)); continue; }
+        q_make(&z->q[z->n++], c, (int)(yg_rand() % 3), YG_CARDS[c].day >= 0 && day_romaji_mode(YG_CARDS[c].day) && day_romaji_mode(p->day));
     }
-    quiz_shuffle(z);
 }
 /* Genki practice: YomiGo's own cards, grouped by the lesson of the book that covers them */
 void quiz_genki(Quiz *z, int index) {

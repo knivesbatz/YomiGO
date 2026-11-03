@@ -22,6 +22,10 @@ enum { GRADE_AGAIN, GRADE_HARD, GRADE_GOOD, GRADE_EASY };
 void srs_new(CardState *c, int today);
 void srs_grade(CardState *c, int grade, int today);
 
+/* Words you add yourself. They review alongside the course's cards. */
+#define YG_MY_MAX 2000
+typedef struct { char word[40], reading[60], gloss[92], sent[120]; CardState st; } MyCard;
+
 /* Profile */
 #define YG_NAME 32
 enum { STEP_WARMUP, STEP_TEACH, STEP_TYPING, STEP_DRILL, STEP_CHAT, STEP_READ, STEP_QUIZ, STEP_HOMEWORK, STEP_IMMERSE, STEP_DONE };
@@ -36,6 +40,8 @@ typedef struct {
     unsigned char exam_score[YG_NEXAMS];
     unsigned int ach;
     CardState cards[YG_NCARDS];
+    int nmy;
+    MyCard my[YG_MY_MAX];
 } Profile;
 
 void profile_new(Profile *p, const char *name);
@@ -54,10 +60,15 @@ int  profile_rank(const Profile *p);
 const char *rank_name(int rank, int ja);
 int  rank_count(void);
 
-enum { ACH_FIRST_CLASS, ACH_STREAK3, ACH_STREAK7, ACH_STREAK30, ACH_HIRAGANA, ACH_KATAKANA, ACH_FIRST_CHAT, ACH_REVIEW100, ACH_PERFECT, ACH_N5, ACH_READER, ACH_N4, ACH_COUNT };
+enum { ACH_FIRST_CLASS, ACH_STREAK3, ACH_STREAK7, ACH_STREAK30, ACH_HIRAGANA, ACH_KATAKANA, ACH_FIRST_CHAT, ACH_REVIEW100, ACH_PERFECT, ACH_N5, ACH_READER, ACH_N4, ACH_MINER, ACH_COUNT };
 typedef struct { const char *en, *ja, *desc; } YgAch;
 extern const YgAch YG_ACH[ACH_COUNT];
 void ach_check(Profile *p);
+int  my_add(Profile *p, const char *word, const char *reading, const char *gloss, const char *sent, int today); /* 1 added, 0 already there, -1 full or incomplete */
+void my_delete(Profile *p, int k);
+int  my_import(Profile *p, const char *tsv, int today);      /* lines of word, reading, meaning, and an optional sentence */
+int  my_export(const Profile *p, char *out, int cap);
+#define YG_SAVE_CAP 900000
 
 /* Quiz building */
 #define YG_MAXQ 60
@@ -74,6 +85,7 @@ typedef struct { Question q[YG_MAXQ]; int n; } Quiz;
 unsigned int yg_rand(void);
 void yg_seed(unsigned int s);
 void q_make(Question *q, int card, int kind_pref, int romaji_mode);
+void q_make_my(Question *q, const Profile *p, int k, int kind_pref);  /* its card number is YG_NCARDS + k */
 void quiz_new(Quiz *z);
 void quiz_add_cards(Quiz *z, const short *cards, int n, int romaji_mode, int per_card);
 void quiz_shuffle(Quiz *z);

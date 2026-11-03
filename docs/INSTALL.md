@@ -50,7 +50,9 @@ Under **More > Check for updates**, YomiGo fetches a new APK and Android asks yo
 
 Don't use **Install Add-on From File** on the Add-ons page. Firefox only accepts extensions signed by Mozilla there, and it reports an unsigned one as corrupt or unverified. A temporary add-on is removed when Firefox restarts, so you'd repeat these steps until Reader is signed. Signing is free, and needs a Mozilla account.
 
-Select Japanese on any page to look it up. Export saved words from the toolbar icon as a `.tsv` file, which Anki can import.
+Select Japanese on any page to look it up, and save it with its sentence. To study those words in YomiGo, press **Copy for YomiGo** on the toolbar icon, then go to **Flashcards > My words > Import**. To use them in Anki, press **Export for Anki**.
+
+On the PC, **Copy** on the My words page puts your whole list on the clipboard, ready to paste into a text file for Anki.
 
 ## Moving a save between devices
 

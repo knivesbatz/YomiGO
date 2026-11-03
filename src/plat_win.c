@@ -108,7 +108,7 @@ static int from_wide(const WCHAR *w, char *u, int cap) {
     return n;
 }
 /* Clipboard. 9x has no Unicode clipboard, so it carries plain ASCII there. */
-static char test_clip[512];
+static char test_clip[4096];
 int plat_clip_get(char *out, int cap) {
     HANDLE h; int n = 0;
     out[0] = 0;
@@ -127,9 +127,9 @@ int plat_clip_get(char *out, int cap) {
     return n;
 }
 void plat_clip_set(const char *u) {
-    static WCHAR w[1024]; int n, i; HGLOBAL g; void *m;
+    static WCHAR w[300000]; int n, i; HGLOBAL g; void *m;
     if (headless) { ys_cpy(test_clip, u, sizeof test_clip); return; }
-    n = to_wide(u, w, 1024);
+    n = to_wide(u, w, 300000);
     g = GlobalAlloc(GMEM_MOVEABLE, (DWORD)(n + 1) * 2);
     if (!g) return;
     m = GlobalLock(g);
