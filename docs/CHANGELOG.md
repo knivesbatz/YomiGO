@@ -2,11 +2,13 @@
 
 ## 0.7.0
 
-- Transcribe: in the Text Reader, pick an audio or video file, and YomiGo writes down the Japanese in it, on your PC. Click any word to look it up and add it, like any other text
+- Transcribe: in the Text Reader, pick an audio or video file (MP3, M4A, WAV, MP4, and others Windows can play), and YomiGo writes down the Japanese in it, on your PC. Click any word to look it up and add it, like any other text
 - Japanese subtitles are saved beside the file as name.ja.srt, which players such as VLC and mpv load by themselves
 - The speech model (Whisper large-v3-turbo, 574 MB) downloads once, the first time, and is checked against a fixed SHA-256 before use
 - The Text Reader keeps up to 400 lines, with Page (or PgUp and PgDn) to move through them. Before, only the newest few could be picked
 - Needs 64-bit Windows 10 or 11 and a processor with AVX2, from about 2013 on
+- Fixed: answers typed on a Japanese keyboard could never be right if it added a full-width space, letters, or 、。！. They now count the same as plain ones
+- Questions that ask for romaji say they take kana too, and typing practice shows both when you miss
 
 ## 0.6.1
 

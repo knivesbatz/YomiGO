@@ -130,7 +130,7 @@ static void tx_poll(void) {
             tx_msg = done;
         }
         else if (code == 2) tx_msg = "The speech model didn't load. Close some programs and try again.";
-        else if (code == 3) tx_msg = "Couldn't get the sound out of that file. MP3, M4A, WAV, MP4 and MKV work.";
+        else if (code == 3) tx_msg = "Couldn't get the sound out of that file. MP3, M4A, WAV and MP4 work.";
         else if (code == 4 || code == (int)0xC000001D) tx_msg = "Transcribing needs a processor with AVX2, from about 2013 or later.";
         else if (code == 6) tx_msg = "No speech found in that file.";
         else if (code == 7) tx_msg = "";
@@ -923,7 +923,7 @@ static void scr_chat(void) {
 static void scr_typing(void) {
     const YgCard *c = &YG_CARDS[ty_cards[ty_i]];
     int rom = day_romaji_mode(P.day), y = CY, submit;
-    char b[64], pre[128];
+    char b[160], pre[128];
     copy_src = c->front;
     chrome(L("Typing practice", "タイピング", 3), 0);
     ys_fmt(b, sizeof b, "Word %d of %d", ty_i + 1, ty_n);
@@ -943,7 +943,7 @@ static void scr_typing(void) {
     input_box(CX, y, CW, 1);
     y += 26;
     norm_kana(input, pre, sizeof pre);
-    if (ty_bad && !input[0]) { ys_cpy(b, "Not quite. Type: ", sizeof b); ys_cat(b, c->romaji, sizeof b); text(CX + 6, y, b, C_BAD); }
+    if (ty_bad && !input[0]) { ys_cpy(b, "Not quite. Type ", sizeof b); ys_cat(b, c->romaji, sizeof b); ys_cat(b, " or ", sizeof b); ys_cat(b, c->reading, sizeof b); text(CX + 6, y, b, C_BAD); }
     else text(CX + 6, y, pre, C_ACC);
 #if HTPC
     osk(FBH - SAFE - 80);

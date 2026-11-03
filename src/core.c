@@ -57,6 +57,20 @@ static int vowel_kana(int k) {
 }
 static int is_vowel_y(char c) { return c == 'a' || c == 'i' || c == 'u' || c == 'e' || c == 'o' || c == 'y'; }
 
+/* A Japanese keyboard types full-width letters, spaces and punctuation: they count the same as plain ones */
+static void fold_width(const char *s, char *out, int cap) {
+    int o = 0;
+    while (*s && o < cap - 4) {
+        const char *p = s; int c = utf8_next(&p);
+        if (c >= 0xFF01 && c <= 0xFF5E) out[o++] = (char)(c - 0xFEE0);
+        else if (c == 0x3000 || c == 0x30FB) out[o++] = ' ';
+        else if (c == 0x3001) out[o++] = ',';
+        else if (c == 0x3002) out[o++] = '.';
+        else while (s < p) out[o++] = *s++;
+        s = p;
+    }
+    out[o] = 0;
+}
 /* Mirrors romaji_to_kana in tools/build_content.py */
 static void kanji_to_kana(const char *in, char *out, int cap) {
     int o = 0;
@@ -71,9 +85,10 @@ static void kanji_to_kana(const char *in, char *out, int cap) {
     out[o] = 0;
 }
 void norm_kana(const char *input, char *out, int cap) {
-    static char sub[512], latin[512];
+    static char wide[512], sub[512], latin[512];
     const char *s; int o = 0, last = 0, c;
-    kanji_to_kana(input, sub, sizeof sub);
+    fold_width(input, wide, sizeof wide);
+    kanji_to_kana(wide, sub, sizeof sub);
     /* lower-case and convert romaji runs */
     { int i = 0; const char *p = sub;
       while (*p && i < (int)sizeof latin - 8) {
@@ -636,7 +651,7 @@ void q_make(Question *q, int card, int pref, int romaji) {
     }
     if (pref == 0) { q->prompt = romaji ? c->romaji : c->front; q->tag = "What does it mean?"; if (!romaji && c->front != c->reading && ys_cmp(c->front, c->reading)) q->sub = c->reading; fill_choices(q, card, c->en, 0, 0, 0); }
     else if (pref == 1) { q->prompt = c->en; q->tag = "Which word?"; fill_choices(q, card, romaji ? c->romaji : c->front, 0, 1, romaji); }
-    else { q->prompt = c->en; q->kind = Q_TYPE; q->tag = romaji ? "Type it in romaji" : "Type the reading"; q->want = c->reading; q->want2 = c->romaji; }
+    else { q->prompt = c->en; q->kind = Q_TYPE; q->tag = romaji ? "Type it in romaji or kana" : "Type the reading"; q->want = c->reading; q->want2 = c->romaji; }
 }
 void q_make_my(Question *q, const Profile *p, int k, int pref) {
     const MyCard *m = &p->my[k]; int s, got = 1, tries;

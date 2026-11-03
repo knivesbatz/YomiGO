@@ -7,7 +7,8 @@
   const vowelOf = (k) => { for (const row in VOWELS) if (row.includes(k)) return VOWELS[row]; return ""; };
 
   function normKana(input) {
-    let s = input;
+    // A Japanese keyboard types full-width letters, spaces and punctuation: they count the same as plain ones
+    let s = input.replace(/[！-～]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0xfee0)).replace(/[　・]/g, " ").replace(/、/g, ",").replace(/。/g, ".");
     for (const [from, to] of subs) s = s.split(from).join(to);
     s = s.toLowerCase().replace(/[ ,.!?]/g, "");
     let out = "", i = 0;
@@ -184,7 +185,7 @@
     const face = (o) => (rom ? o.ro : o.f);
     if (pref === 0) { set(face(card), "What does it mean?", card.en, (o) => o.en); if (!rom && card.f !== card.r) q.sub = card.r; }
     else if (pref === 1) set(card.en, "Which word?", face(card), face);
-    else { q.kind = "type"; q.prompt = card.en; q.tag = rom ? "Type it in romaji" : "Type the reading"; q.want = card.r; q.want2 = card.ro; }
+    else { q.kind = "type"; q.prompt = card.en; q.tag = rom ? "Type it in romaji or kana" : "Type the reading"; q.want = card.r; q.want2 = card.ro; }
     return q;
   }
   const q3 = (id, rom) => makeQ(byId[id], rnd(3), rom);

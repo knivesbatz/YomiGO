@@ -12,7 +12,7 @@
 
 - **Japanese OCR:** the build PC has only English OCR, so screenshot reading has been tested end to end in English. Japanese uses the same code with a different language.
 - **Android photo reading:** built by CI, never run on a phone.
-- **Transcription:** tested on Japanese lesson recordings and an English video. It hasn't been tried on anime or films, where music and overlapping voices make mistakes more likely.
+- **Transcription:** tested on Japanese lesson recordings and an English video. MKV files haven't been tried, and depend on which sound formats Windows has. It hasn't been tried on anime or films, where music and overlapping voices make mistakes more likely.
 
 ## Limits in this version
 

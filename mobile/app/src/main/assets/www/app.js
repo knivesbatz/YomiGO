@@ -265,7 +265,7 @@ function typing(words, i, rep, bad) {
   setNav(-1);
   show(h("div", { cls: "row" }, h("h1", null, L("Typing practice", "タイピング", 3)), h("span", { cls: "dim" }, `Word ${i + 1} of ${words.length}`)), bar(rep, REPS),
     h("div", { cls: "card" }, h("div", { cls: "big acc", lang: "ja" }, rom ? c.ro : c.f), h("div", { cls: "dim", lang: "ja" }, rom ? c.r : c.f !== c.r ? c.r : "", !rom && Y.stageOf(P) < 4 ? "  " + c.ro : ""), h("div", null, c.en), h("div", { cls: "dim" }, `Type it ${REPS} times. This is number ${rep + 1}.`)),
-    bad ? h("div", { cls: "bad" }, "Not quite. Type: " + c.ro) : "", inp, pre, btn("Enter", submit, "main"), btn("Later", home));
+    bad ? h("div", { cls: "bad" }, "Not quite. Type " + c.ro + " or " + c.r) : "", inp, pre, btn("Enter", submit, "main"), btn("Later", home));
   inp.focus();
 }
 
