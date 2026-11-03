@@ -626,8 +626,14 @@ static void scr_teach(void) {
             cy += LH;
             /* on the TV the stroke box ends about here, so the note takes the full width and stops above the buttons */
             if (*c->note) wrap(CX + 10, cy + 2, HTPC ? CW - 20 : CW - 20 - room, c->note, C_DIM, LH, 0, HTPC ? (FBY_BTN - 4 - cy) / LH : 0);
+            /* a word comes with a sentence people actually say, so it's learnt as a phrase */
+            if (c->type == 'w' && *c->sentence && !rom) {
+                cy += HTPC ? 4 : LH + 8; /* the TV has no line to spare above it */
+                cy += LH * wrap(CX + 10, cy, CW - 20, c->sentence, C_ACC, LH, 0, HTPC ? 1 : 2);
+                if (cy + LH <= FBY_BTN - 6) wrap(CX + 10, cy, CW - 20, c->trans, C_DIM, LH, 0, HTPC ? 1 : 2);
+            }
         }
-        if (plat_has_tts() && (IN.pressed & A_Y)) plat_speak(c->reading);
+        if (plat_has_tts() && (IN.pressed & A_Y)) plat_speak(c->type == 'w' && *c->sentence ? c->sentence : c->reading);
     }
     if (button(CX + CW - 120, FBY_BTN, 120, 28, page + 1 < total ? L("Next", "つぎ", 2) : L("Practice!", "れんしゅう", 3))) {
         if (page < d->nnotes && note_more) note_skip += (FBY_BTN - CY - 40) / LH;
@@ -1517,7 +1523,7 @@ static void load_profile(const char *name) {
     ys_cpy(fn, name, sizeof fn); ys_cat(fn, ".sav", sizeof fn);
     n = plat_read(fn, b, sizeof b - 1);
     have_profile = (n > 0 && profile_load_text(&P, b, n));
-    if (have_profile) { profile_touch_day(&P, plat_today()); go(P.placed || P.day ? S_HOME : S_PLACE_INTRO); }
+    if (have_profile) { profile_touch_day(&P, plat_today()); if (profile_catch_up(&P, plat_today())) save_profile(); go(P.placed || P.day ? S_HOME : S_PLACE_INTRO); }
 }
 static void scr_splash(void) {
     washi(0, 0, FBW, FBH, HTPC ? C_BG : C_BG, HTPC ? 0x2A1A44 : 0xEADFCC);

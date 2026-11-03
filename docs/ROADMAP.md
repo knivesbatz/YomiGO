@@ -21,11 +21,12 @@ No app alone can make someone fluent. Fluency also takes thousands of hours of r
 
 ## Next up
 
-1. **Next:** many more words, since vocabulary is the biggest gap. The course has 443 word cards, and N3 needs about 3,700
+1. **Next:** more words again, toward about 3,700 for N3. 0.11 took the course from 443 to 608 word cards
 2. **After that:** entrance-exam sections for N4 and N3, faster transcription on the graphics card, transcription on Android, vertical manga text, direct game-text hooking, N2, N1, Beyond N1, and handwriting
 
 ## Done
 
+- **0.11:** 166 high-frequency words with example sentences, set phrases, and casual reactions
 - **0.10:** Genki II practice, lessons 13 to 23
 - **0.9:** a conversation partner that runs on your PC
 - **0.8:** N3 stage, with its exam

@@ -117,6 +117,19 @@ if os.path.exists(os.path.join(ROOT, "dist", "models", "gemma-4-E4B_q4_0-it.gguf
     shutil.rmtree(root, ignore_errors=True)
 else:
     print("talking: SKIPPED, no conversation model in dist\\models")
+# An older save, from before this update's new words: opening it adds the cards its earlier classes now have
+sys.path.insert(0, os.path.join(ROOT, "tools"))
+import make_brand
+C = json.load(open(os.path.join(ROOT, "build", "gen", "content.json"), encoding="utf-8"))
+root = tempfile.mkdtemp()
+open(os.path.join(root, "Hana.sav"), "w", encoding="utf-8", newline="\n").write(make_brand.save_text(50, 0) + "gender=3\n")
+subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--script", "w2;ow2;ow2;w2;"], timeout=60)
+have = {l.split(" ")[1] for l in open(os.path.join(root, "Hana.sav"), encoding="utf-8").read().splitlines() if l.startswith("card ")}
+want = {i for d in C["days"][:50] for i in d["new"]}
+ok = want <= have
+print("an older save catches up on cards added to its earlier classes:", "OK" if ok else "FAILED", len(want - have), "missing")
+fail += not ok
+shutil.rmtree(root, ignore_errors=True)
 # Your own words on the TV: find 猫 in the dictionary, add it, and it must be saved
 root = tempfile.mkdtemp()
 subprocess.run([os.path.join(ROOT, "dist", "YomiGoHTPC.exe"), "--root", root, "--script", "w2;ow2;ow2;tMine;w1;sw2;rrw1;ow2;dw1;ow2;dw1;ow2;rrrrw8;ow2;RRRw2;tneko;w1;sw2;xw2;"], timeout=60)

@@ -39,12 +39,16 @@ def words(s):
 PLAIN = {"分かります": ("分かる", "わかる"), "分かりません": ("分かる", "わかる"), "食べます": ("食べる", "たべる"), "飲みます": ("飲む", "のむ"),
          "行きます": ("行く", "いく"), "来ます": ("来る", "くる"), "帰ります": ("帰る", "かえる"), "見ます": ("見る", "みる"), "読みます": ("読む", "よむ"),
          "聞きます": ("聞く", "きく"), "書きます": ("書く", "かく"), "話します": ("話す", "はなす"), "買います": ("買う", "かう"), "します": ("する", "する"),
-         "あります": ("ある", "ある"), "います": ("いる", "いる")}
+         "あります": ("ある", "ある"), "います": ("いる", "いる"),
+         "乗ります": ("乗る", "のる"), "運転します": ("運転", "うんてん"), "着ます": ("着る", "きる"), "履きます": ("履く", "はく"),
+         "遊びます": ("遊ぶ", "あそぶ"), "踊ります": ("踊る", "おどる"), "飼います": ("飼う", "かう")}
 # Read by a person: each is right, and only worded differently from JMdict, or a kanji's meaning rather than a word's
 REVIEWED = {"v.suru", "v.jouzu", "j.tsukuru", "j.tsukau", "j.motsu", "j.hairu", "j.aruku", "j.ooi", "j.iu", "j.shiru", "j.kangaeru", "j.oshieru", "v.shimasu", "v.arimasu", "v.itadakimasu", "v.gochisousama", "v.desu", "v.ichi", "v.heta", "v.mono", "v.manga", "v.suki", "v.imasu", "v.hitotsu", "v.eeto", "v.hontou",
             "j.ichi", "j.iku", "j.kuru", "j.taberu", "j.miru", "j.kaku", "j.hanasu", "j.den", "j.takai",
             # N3, checked by hand in 0.8
-            "j.yuu2", "v.totsuzen", "v.omoide", "j.kimeru", "j.kanarazu", "j.ushinau", "j.mamoru", "j.kotowaru", "j.nokoru", "j.shiraberu", "j.tsutaeru"}
+            "j.yuu2", "v.totsuzen", "v.omoide", "j.kimeru", "j.kanarazu", "j.ushinau", "j.mamoru", "j.kotowaru", "j.nokoru", "j.shiraberu", "j.tsutaeru",
+            # 0.11: 降ります has two readings (降りる, 降る); set phrases that aren't headwords as written; meanings in other words
+            "v.orimasu", "v.furimasu", "v.otsukaresama", "v.ohashi", "v.sounanda", "v.majide", "v.daisuki", "v.shusshin", "v.yasai", "v.tashikani", "v.mattaku", "v.untenshimasu"}
 missing, mismatch, meaning, okc = [], [], [], 0
 for c in C["cards"]:
     if c["day"] < 0 or c["t"] not in "wj": continue
@@ -64,6 +68,7 @@ for c in C["cards"]:
         okc += 1
         continue
     else:
+        if c["id"] in REVIEWED: okc += 1; continue # set phrases, checked by hand
         missing.append((c["id"], f, r))
         continue
     if c["id"] not in REVIEWED and not (words(c["en"]) & words(" ".join(gl))):

@@ -119,3 +119,14 @@ test("lookup finds words and undoes polite endings", () => {
   assert.ok(Y.lookup("飲みません").some((h) => h.card.id === "v.nomimasu"));
   assert.equal(Y.lookup("xyz").length, 0);
 });
+test("cards an update adds to classes already taken join the reviews, ten a day", () => {
+  const p = Y.newProfile("Old"); p.day = 40;
+  const ids = [...new Set(C.days.slice(0, 40).flatMap((d) => d.new))];
+  ids.slice(0, 5).forEach((id) => { p.cards[id] = Y.srsNew(1); }); // what an older save had
+  const n = Y.catchUp(p, 100);
+  assert.equal(n, ids.length - 5);
+  assert.ok(ids.every((id) => p.cards[id]));
+  const dues = Object.values(p.cards).filter((c) => c.due >= 100).map((c) => c.due);
+  assert.equal(Math.max(...dues), 100 + Math.floor((n - 1) / 10));
+  assert.equal(Y.catchUp(p, 100), 0); // only once
+});

@@ -22,3 +22,14 @@ All links in `content/resources.tsv` returned HTTP 200 on 2026-11-02. One link t
 - **Opinion:** which media suits which stage, and the kanji memory hooks.
 
 No official JLPT vocabulary or kanji lists are used. N5 content here reflects common teaching practice.
+
+## Research behind the word choices
+
+- [Lexical coverage and listening comprehension](https://jalt-publications.org/sites/default/files/pdf-article/44.5tlt-art1.pdf), JALT. Spoken text leans on high-frequency words: in one study, the 3,000 most frequent covered 95% of listening passages.
+- [Vocabulary size and coverage thresholds](https://www.cambridge.org/core/product/1D217A56A2E0056E67802A6A8360FDDE/core-reader), Cambridge. The 95% and 98% coverage figures, and why spoken discourse needs more research.
+- [Formulaic sequences and fluency in speaking tests](https://www.lltjournal.org/item-detail/978/), François and Albakry, Language Learning & Technology. Using fixed phrases predicted fluency.
+- [Formulaic sequences for improving oral fluency](https://docs.lib.purdue.edu/open_access_dissertations/597), Purdue. Fixed phrases mainly raised speech rate.
+- [Formulaic sequences and second-language fluency](https://teslcanadajournal.ca/index.php/tesl/article/download/1271/1106), TESL Canada. The evidence is still small, and good ways to teach them aren't settled.
+
+These studies are about English. YomiGo applies the principle, frequency first and phrases whole, not their exact numbers.
+

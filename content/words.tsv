@@ -512,3 +512,185 @@ zangyou	残業	ざんぎょう	zangyou	overtime
 shutchou	出張	しゅっちょう	shutchou	business trip
 moushiwake	申し訳ありません	もうしわけありません	moushiwakearimasen	I'm very sorry (formal)
 kashikomarimashita	かしこまりました	かしこまりました	kashikomarimashita	certainly (at work)
+#greet3
+tadaima	ただいま	ただいま	tadaima	I'm home!
+okaeri	おかえり	おかえり	okaeri	welcome home
+ittekimasu	いってきます	いってきます	ittekimasu	I'm off! (leaving home)
+itterasshai	いってらっしゃい	いってらっしゃい	itterasshai	see you later (to someone leaving)
+otsukaresama	おつかれさまです	おつかれさまです	otsukaresamadesu	thanks for your hard work
+odaijini	おだいじに	おだいじに	odaijini	get well soon
+ganbatte	がんばって	がんばって	ganbatte	good luck, hang in there
+#adj3
+nagai	長い	ながい	nagai	long		髪が長いですね。	Your hair is long.
+mijikai	短い	みじかい	mijikai	short		この映画は短いです。	This film is short.
+omoi	重い	おもい	omoi	heavy		このかばんは重いです。	This bag is heavy.
+karui	軽い	かるい	karui	light (not heavy)		このパソコンは軽いです。	This computer is light.
+tsuyoi	強い	つよい	tsuyoi	strong		今日は風が強いです。	The wind is strong today.
+tooi	遠い	とおい	tooi	far		駅は遠いですか。	Is the station far?
+chikai	近い	ちかい	chikai	near, close		学校は家から近いです。	School is close to my house.
+warui	悪い	わるい	warui	bad		今日は天気が悪いです。	The weather is bad today.
+benri	便利	べんり	benri	convenient, handy		コンビニは便利です。	Convenience stores are handy.
+daisuki	大好き	だいすき	daisuki	love, really like		甘いものが大好きです。	I love sweet things.
+#time2
+jikan	時間	じかん	jikan	time; hours		時間がありません。	I don't have time.
+kyonen	去年	きょねん	kyonen	last year		去年、日本に行きました。	I went to Japan last year.
+tsugi	次	つぎ	tsugi	next		次の電車は何時ですか。	What time is the next train?
+hayaku	早く	はやく	hayaku	early; quickly		今日は早く起きました。	I got up early today.
+ototoi	おととい	おととい	ototoi	the day before yesterday		おととい、雨が降りました。	It rained the day before yesterday.
+asatte	あさって	あさって	asatte	the day after tomorrow		あさっては休みです。	The day after tomorrow is a day off.
+choushoku	朝食	ちょうしょく	choushoku	breakfast (hotels, signs)		朝食は七時からです。	Breakfast is from seven.
+yuushoku	夕食	ゆうしょく	yuushoku	dinner (hotels, signs)		夕食は六時半です。	Dinner is at six thirty.
+#travel
+densha	電車	でんしゃ	densha	train		電車で会社に行きます。	I go to work by train.
+hikouki	飛行機	ひこうき	hikouki	plane		飛行機で大阪に行きます。	I'm flying to Osaka.
+jitensha	自転車	じてんしゃ	jitensha	bicycle		自転車で学校へ行きます。	I cycle to school.
+chikatetsu	地下鉄	ちかてつ	chikatetsu	subway, underground		地下鉄で行きましょう。	Let's take the subway.
+norimasu	乗ります	のります	norimasu	to get on, ride		次の駅で電車に乗ります。	I'll get on the train at the next station.
+orimasu	降ります	おります	orimasu	to get off		渋谷で降ります。	I get off at Shibuya.
+untenshimasu	運転します	うんてんします	untenshimasu	to drive		父は毎日車を運転します。	My dad drives every day.
+kuukou	空港	くうこう	kuukou	airport		空港までバスで行きます。	I'll take the bus to the airport.
+#house
+ribingu	リビング	リビング	ribingu	living room		リビングにテレビがあります。	There's a TV in the living room.
+daidokoro	台所	だいどころ	daidokoro	kitchen		台所に母がいます。	My mum is in the kitchen.
+niwa	庭	にわ	niwa	garden, yard		庭に猫がいます。	There's a cat in the garden.
+mado	窓	まど	mado	window		部屋に窓が二つあります。	The room has two windows.
+doa	ドア	ドア	doa	door		ドアの前に犬がいます。	There's a dog in front of the door.
+beddo	ベッド	ベッド	beddo	bed		部屋にベッドがあります。	There's a bed in the room.
+teeburu	テーブル	テーブル	teeburu	table		テーブルの上に本があります。	There's a book on the table.
+tana	棚	たな	tana	shelf		棚の上にかばんがあります。	There's a bag on the shelf.
+hako	箱	はこ	hako	box		箱の中に何がありますか。	What's in the box?
+toire	トイレ	トイレ	toire	toilet		トイレはどこにありますか。	Where's the toilet?
+ofuro	お風呂	おふろ	ofuro	bath		このホテルには大きいお風呂があります。	This hotel has a big bath.
+reizouko	冷蔵庫	れいぞうこ	reizouko	fridge		冷蔵庫に牛乳があります。	There's milk in the fridge.
+#body
+ha	歯	は	ha	tooth		歯が痛いです。	I have a toothache.
+me	目	め	me	eye		猫の目は大きいです。	Cats have big eyes.
+ashi	足	あし	ashi	foot, leg		足が速いですね。	You're a fast runner.
+karada	体	からだ	karada	body		体に気をつけてください。	Look after yourself.
+nodo	喉	のど	nodo	throat		喉が渇きました。	I'm thirsty.
+kubi	首	くび	kubi	neck		首が痛いです。	My neck hurts.
+kami2	髪	かみ	kami	hair		髪を切りました。	I got a haircut.
+byouki	病気	びょうき	byouki	illness		病気で学校を休みました。	I missed school because I was ill.
+haisha	歯医者	はいしゃ	haisha	dentist		明日、歯医者に行きます。	I'm going to the dentist tomorrow.
+#school
+eigo	英語	えいご	eigo	English (language)		英語の先生です。	I'm an English teacher.
+jugyou	授業	じゅぎょう	jugyou	class, lesson		授業は九時からです。	Class starts at nine.
+shukudai	宿題	しゅくだい	shukudai	homework		今日は宿題が多いです。	There's a lot of homework today.
+seito	生徒	せいと	seito	pupil, student		このクラスには生徒が二十人います。	There are twenty pupils in this class.
+shitsumon	質問	しつもん	shitsumon	question		質問はありますか。	Any questions?
+imi	意味	いみ	imi	meaning		この言葉はどういう意味ですか。	What does this word mean?
+kuni	国	くに	kuni	country		どこの国から来ましたか。	Which country are you from?
+shusshin	出身	しゅっしん	shusshin	where you're from		ご出身はどちらですか。	Where are you from?
+jisho	辞書	じしょ	jisho	dictionary		辞書で調べます。	I'll look it up in a dictionary.
+#clothes
+fuku	服	ふく	fuku	clothes		青い服が好きです。	I like blue clothes.
+kutsu	靴	くつ	kutsu	shoes		黒い靴を買いました。	I bought black shoes.
+shatsu	シャツ	シャツ	shatsu	shirt		白いシャツを着ます。	I'll wear a white shirt.
+kooto	コート	コート	kooto	coat		赤いコートを買いました。	I bought a red coat.
+boushi	帽子	ぼうし	boushi	hat		黄色い帽子をかぶります。	I'll put on a yellow hat.
+kaban	かばん	かばん	kaban	bag		茶色いかばんはいくらですか。	How much is the brown bag?
+kimasu2	着ます	きます	kimasu	to wear (clothes on the body)		寒いからコートを着ます。	It's cold, so I'll wear a coat.
+hakimasu	履きます	はきます	hakimasu	to wear (shoes, trousers)		靴を履きます。	I'll put my shoes on.
+#family2
+otto	夫	おっと	otto	(my) husband		夫は会社で働いています。	My husband works at a company.
+tsuma	妻	つま	tsuma	(my) wife		妻は先生です。	My wife is a teacher.
+musuko	息子	むすこ	musuko	son		息子は十歳です。	My son is ten.
+musume	娘	むすめ	musume	daughter		娘は大学生です。	My daughter is at university.
+akachan	赤ちゃん	あかちゃん	akachan	baby		かわいい赤ちゃんですね。	What a cute baby.
+itoko	いとこ	いとこ	itoko	cousin		いとこはアメリカに住んでいます。	My cousin lives in America.
+kare	彼	かれ	kare	he; boyfriend		彼は私の友達です。	He's my friend.
+kanojo	彼女	かのじょ	kanojo	she; girlfriend		彼女は日本人です。	She's Japanese.
+watashitachi	私たち	わたしたち	watashitachi	we		私たちは家族です。	We're family.
+ryoushin	両親	りょうしん	ryoushin	parents		両親は大阪に住んでいます。	My parents live in Osaka.
+#outside
+furimasu	降ります	ふります	furimasu	to fall (rain, snow)		明日は雪が降ります。	It'll snow tomorrow.
+kisetsu	季節	きせつ	kisetsu	season		一番好きな季節は秋です。	My favourite season is autumn.
+atatakai	暖かい	あたたかい	atatakai	warm		今日は暖かいですね。	It's warm today, isn't it?
+suzushii	涼しい	すずしい	suzushii	cool		夜は涼しいですよ。	It gets cool at night.
+ki	木	き	ki	tree		庭に大きい木があります。	There's a big tree in the garden.
+kaminari	雷	かみなり	kaminari	thunder, lightning		雷が怖いです。	I'm scared of thunder.
+tenkiyohou	天気予報	てんきよほう	tenkiyohou	weather forecast		天気予報を見ましたか。	Did you see the forecast?
+#hobbies
+shumi	趣味	しゅみ	shumi	hobby		趣味は何ですか。	What are your hobbies?
+supootsu	スポーツ	スポーツ	supootsu	sport		よくスポーツをします。	I often play sports.
+sakkaa	サッカー	サッカー	sakkaa	football, soccer		毎週サッカーをしています。	I play football every week.
+tenisu	テニス	テニス	tenisu	tennis		時々テニスをします。	I sometimes play tennis.
+sanpo	散歩	さんぽ	sanpo	walk, stroll		毎朝、犬と散歩します。	I walk the dog every morning.
+eiga	映画	えいが	eiga	film, movie		週末はよく映画を見ます。	I often watch films at the weekend.
+bangumi	番組	ばんぐみ	bangumi	TV show, programme		好きな番組は何ですか。	What's your favourite show?
+asobimasu	遊びます	あそびます	asobimasu	to play, hang out		日曜日は友達と遊びます。	On Sundays I hang out with friends.
+odorimasu	踊ります	おどります	odorimasu	to dance		姉はよく踊ります。	My sister often dances.
+doubutsu	動物	どうぶつ	doubutsu	animal		動物が好きです。	I like animals.
+tori	鳥	とり	tori	bird		庭に鳥がいます。	There's a bird in the garden.
+kaimasu2	飼います	かいます	kaimasu	to keep (a pet)		猫を二匹飼っています。	I have two cats.
+#shop2
+kaimono	買い物	かいもの	kaimono	shopping		週末に買い物に行きます。	I'm going shopping at the weekend.
+tenin	店員	てんいん	ten'in	shop assistant		店員さんに聞きましょう。	Let's ask the shop assistant.
+otsuri	おつり	おつり	otsuri	change (money back)		おつりは二百円です。	Your change is 200 yen.
+reshiito	レシート	レシート	reshiito	receipt		レシートをください。	Could I have a receipt?
+#food2
+sakana	魚	さかな	sakana	fish		魚が好きです。	I like fish.
+niku	肉	にく	niku	meat		肉はあまり食べません。	I don't eat much meat.
+yasai	野菜	やさい	yasai	vegetables		野菜を毎日食べます。	I eat vegetables every day.
+kudamono	果物	くだもの	kudamono	fruit		果物は何が好きですか。	What fruit do you like?
+gyuunyuu	牛乳	ぎゅうにゅう	gyuunyuu	milk		朝、牛乳を飲みます。	I drink milk in the morning.
+juusu	ジュース	ジュース	juusu	juice, soft drink		オレンジジュースをください。	Orange juice, please.
+keeki	ケーキ	ケーキ	keeki	cake		このケーキはおいしいですね。	This cake is delicious.
+ringo	りんご	りんご	ringo	apple		りんごを三つください。	Three apples, please.
+aji	味	あじ	aji	taste, flavour		どんな味ですか。	What does it taste like?
+menyuu	メニュー	メニュー	menyuu	menu		メニューをお願いします。	Could I have the menu, please?
+chuumon	注文	ちゅうもん	chuumon	order		注文をお願いします。	We'd like to order, please.
+okaikei	お会計	おかいけい	okaikei	the bill		お会計をお願いします。	The bill, please.
+osara	お皿	おさら	osara	plate, dish		お皿を一枚ください。	Could I have a plate?
+ohashi	お箸	おはし	ohashi	chopsticks		お箸をください。	Chopsticks, please.
+#places
+michi	道	みち	michi	road, way		この道をまっすぐ行ってください。	Go straight down this road.
+kado	角	かど	kado	corner		次の角を右に曲がってください。	Turn right at the next corner.
+shingou	信号	しんごう	shingou	traffic lights		信号を左に曲がってください。	Turn left at the lights.
+hashi	橋	はし	hashi	bridge		橋の近くに銀行があります。	There's a bank near the bridge.
+ginkou	銀行	ぎんこう	ginkou	bank		銀行はどこですか。	Where's the bank?
+toshokan	図書館	としょかん	toshokan	library		図書館は駅の前です。	The library is in front of the station.
+eigakan	映画館	えいがかん	eigakan	cinema		映画館はあのビルの中です。	The cinema's in that building.
+resutoran	レストラン	レストラン	resutoran	restaurant		いいレストランを知っていますか。	Do you know a good restaurant?
+machi	町	まち	machi	town		小さい町に住んでいます。	I live in a small town.
+chikaku	近く	ちかく	chikaku	nearby, near here		この近くにコンビニはありますか。	Is there a convenience store near here?
+kita	北	きた	kita	north		北口で会いましょう。	Let's meet at the north exit.
+minami	南	みなみ	minami	south		南口は向こうです。	The south exit is over there.
+higashi	東	ひがし	higashi	east		ホテルは駅の東にあります。	The hotel is east of the station.
+nishi	西	にし	nishi	west		西口から出てください。	Please leave by the west exit.
+#reactions
+naruhodo	なるほど	なるほど	naruhodo	I see, that makes sense		なるほど、そういうことか。	I see, so that's how it is.
+sounanda	そうなんだ	そうなんだ	sounanda	oh, really? (casual)		えっ、そうなんだ！	Oh, really?
+yappari	やっぱり	やっぱり	yappari	as expected; after all (casual)		やっぱり、こっちにする。	On second thought, I'll go with this one.
+jitsuwa	実は	じつは	jitsuwa	actually, to tell the truth	p	実は、明日休みなんだ。	Actually, I've got tomorrow off.
+toriaezu	とりあえず	とりあえず	toriaezu	for now, to start with		とりあえず、ビール二つ。	Two beers to start with.
+maamaa	まあまあ	まあまあ	maamaa	so-so		テストはまあまあだった。	The test was so-so.
+hontouni	本当に	ほんとうに	hontouni	really, truly		本当にありがとう。	Thank you so much.
+shouganai	しょうがない	しょうがない	shouganai	it can't be helped		雨だから、しょうがないね。	It's raining, so it can't be helped.
+tashikani	確かに	たしかに	tashikani	that's true, sure		確かに、それはいい考えだね。	True, that's a good idea.
+hisashiburi	久しぶり	ひさしぶり	hisashiburi	long time no see		久しぶり！元気だった？	Long time no see! How have you been?
+sugoi	すごい	すごい	sugoi	amazing; really		すごい！上手だね。	Wow, you're really good!
+chotto	ちょっと	ちょっと	chotto	a bit; a soft no		今日はちょっと…。	Today's a bit… (not good).
+douzo	どうぞ	どうぞ	douzo	please, go ahead		どうぞ、座ってください。	Please, have a seat.
+issho	一緒に	いっしょに	isshoni	together		一緒に行こう。	Let's go together.
+mattaku	全く	まったく	mattaku	(not) at all		全く分からない。	I have no idea at all.
+taitei	大抵	たいてい	taitei	usually		週末は大抵家にいる。	At weekends I'm usually at home.
+majide	マジで	マジで	majide	seriously? (very casual)		マジで？すごいね。	Seriously? That's amazing.
+#plain3
+erabu	選ぶ	えらぶ	erabu	to choose		どれを選ぶ？	Which one will you pick?
+nageru	投げる	なげる	nageru	to throw		ボールを投げて！	Throw the ball!
+naku	泣く	なく	naku	to cry		映画を見て泣いた。	I cried watching the film.
+toru	撮る	とる	toru	to take (a photo)		写真を撮ってもいい？	Can I take a photo?
+fuku2	拭く	ふく	fuku	to wipe		テーブルを拭いてね。	Wipe the table, OK?
+ireru	入れる	いれる	ireru	to put in		砂糖、入れる？	Do you take sugar?
+dasu	出す	だす	dasu	to take out; to hand in		宿題を出した？	Did you hand in your homework?
+mitsukeru	見つける	みつける	mitsukeru	to find		いい店を見つけた。	I found a good place.
+akeru	開ける	あける	akeru	to open		窓を開けてもいい？	Mind if I open the window?
+shimeru	閉める	しめる	shimeru	to close		ドアを閉めて。	Close the door.
+ochiru	落ちる	おちる	ochiru	to fall, drop		何か落ちたよ。	You dropped something.
+tobu	飛ぶ	とぶ	tobu	to fly		鳥が飛んでいる。	A bird is flying.
+shinu	死ぬ	しぬ	shinu	to die		お腹がすいて死にそう。	I'm starving.
+iru	要る	いる	iru	to need		傘、要る？	Do you need an umbrella?
+kakaru	かかる	かかる	kakaru	to take (time, money)		駅まで十分かかる。	It takes ten minutes to the station.
+hitsuyou	必要	ひつよう	hitsuyou	necessary, needed		予約は必要？	Do I need to book?
+wakareru	別れる	わかれる	wakareru	to part; to break up		彼氏と別れた。	I broke up with my boyfriend.

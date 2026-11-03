@@ -71,7 +71,7 @@ function profiles() {
   P = null; setNav(-1);
   const input = h("input", { placeholder: "Your name", maxlength: 16, "aria-label": "Your name" });
   show(h("h1", null, "YomiGo ✿ 読みGo"), h("p", { cls: "dim" }, "Developed by SENKOSOFT"),
-    store.list().map((n) => btn(n, () => { P = store.load(n); if (P) home(); else alert("That save couldn't be read."); })),
+    store.list().map((n) => btn(n, () => { P = store.load(n); if (!P) { alert("That save couldn't be read."); return; } if (Y.catchUp(P, Y.today())) store.save(); home(); })),
     h("div", { cls: "card" }, h("h2", null, "New learner"), input, h("div", { cls: "dim" }, "Letters A-Z and numbers for now."),
       btn("Start", () => {
         const name = input.value.replace(/[^A-Za-z0-9_-]/g, "");
@@ -255,6 +255,8 @@ function teach(page) {
       if (!"hk".includes(c.t)) body.push(h("div", { lang: "ja" }, rom ? c.r : c.f !== c.r ? c.r : ""), !rom && Y.stageOf(P) < 4 ? h("div", { cls: "dim" }, c.ro) : null);
       body.push(h("p", null, c.en));
       if (c.n) body.push(h("p", { cls: "dim" }, c.n));
+      // a word comes with a sentence people actually say, so it's learnt as a phrase
+      if (c.t === "w" && c.s && !rom) body.push(h("p", { lang: "ja", cls: "acc" }, c.s), h("p", { cls: "dim" }, c.tr));
     }
     body.push(btn("🔊 " + L("Hear it", "聞く", 5), () => speak(c.t === "g" ? c.s.replace("＿", c.r) : c.r)));
   }

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.11.0
+
+- 166 new words, from 443 to 608 word cards, each with a natural example sentence and its translation, shown on the lesson card. On the PC and TV, Y speaks the sentence
+- Chosen from the most frequent words in real learning material that the course didn't teach, and placed in the classes they belong to: travel, the house and bathroom, the body, school, clothes, family, food and restaurants, directions, hobbies and sport, and weather
+- Set phrases people say every day: ただいま, いってきます, おつかれさまです, and more. Natural reactions for casual talk: なるほど, そうなんだ, やっぱり, 実は, とりあえず, しょうがない, and more
+- Existing saves keep up: words added to classes you've already taken join your reviews, ten a day
+- Every new word checked against JMdict, with the few it flagged reviewed by hand
+
 ## 0.10.0
 
 - Genki II practice: lessons 13 to 23, in the 3rd edition's order, practised with YomiGo's own N4 and N3 cards. Switch books with the Genki I / Genki II button, or L and R on the TV

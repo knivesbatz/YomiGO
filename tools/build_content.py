@@ -174,7 +174,14 @@ def load_cards():
         if len(r) > 5 and r[5] == "p":
             want = want.replace("は", "わ")
         if got != want: die(f"words.tsv {id_}: romaji {ro} gives {got}, kana says {want}")
-        add({"id": "v."+id_, "t": "w", "f": disp, "r": kana, "ro": ro, "en": en, "n": ""}, g)
+        c = {"id": "v."+id_, "t": "w", "f": disp, "r": kana, "ro": ro, "en": en, "n": ""}
+        if len(r) > 7 and r[6]: # an example sentence, and its English
+            stem = disp[:-1] if len(disp) > 1 else disp
+            lead = re.match(r"[^぀-ゟ]+", disp) # the kanji part, which conjugation never changes: 飼 in 飼っています
+            if not r[7]: die(f"words.tsv {id_}: the example has no English")
+            if not any(x in r[6] for x in (disp, kana, stem, kana[:-1], lead.group(0) if lead else disp)): die(f"words.tsv {id_}: the example doesn't use its word")
+            c["s"], c["tr"] = r[6], r[7]
+        add(c, g)
     for g, r in tsv("kanji.tsv"):
         id_, kj, kana, ro, en, readings, hook = r
         if romaji_to_kana(ro, table) != kana: die(f"kanji.tsv {id_}: {ro} != {kana}")

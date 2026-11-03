@@ -543,6 +543,17 @@ int profile_exam_pass(Profile *p, int exam, int score, int today) {
     return 0;
 }
 /* Everything below the placed stage counts as already taught, and those exams as credited */
+/* An update can add cards to classes already taken. They join the reviews, ten a day, rather than being missed. */
+int profile_catch_up(Profile *p, int today) {
+    int d, j, n = 0;
+    for (d = 0; d < p->day && d < YG_NDAYS; d++)
+        for (j = 0; j < YG_DAYS[d].nnew; j++) {
+            CardState *c = &p->cards[YG_DAYS[d].cards[j]];
+            if (c->seen) continue;
+            srs_new(c, today); c->due = today + n / 10; n++;
+        }
+    return n;
+}
 int profile_place(Profile *p, int stage, int today) {
     int i, j;
     if (stage > YG_NSTAGES - 1) stage = YG_NSTAGES - 1;

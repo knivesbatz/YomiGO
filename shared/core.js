@@ -148,6 +148,12 @@
     p.xp += pass ? 200 * e.stars : 20;
     return pass;
   }
+  // An update can add cards to classes already taken. They join the reviews, ten a day, rather than being missed.
+  function catchUp(p, t) {
+    let n = 0;
+    for (let d = 0; d < p.day && d < C.days.length; d++) for (const id of C.days[d].new) if (!p.cards[id]) { p.cards[id] = { ...srsNew(t), due: t + Math.floor(n / 10) }; n++; }
+    return n;
+  }
   function place(p, stage, t) {
     p.day = C.stages[Math.min(stage, C.stages.length - 1)].first; p.step = 0; p.placed = 1;
     for (let d = 0; d < p.day; d++) C.days[d].new.forEach((id, j) => { p.cards[id] = { ...srsNew(t), reps: 2, ivl: 3, due: t + 1 + (j % 5) }; });
@@ -347,5 +353,5 @@
     return hits.slice(0, 6);
   }
 
-  root.YG = { normKana, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, myAdd, myImport, myExport, makeQMy, quizListen, shadowLines, lookup, byId, PASS };
+  root.YG = { normKana, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, catchUp, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, myAdd, myImport, myExport, makeQMy, quizListen, shadowLines, lookup, byId, PASS };
 })(globalThis);

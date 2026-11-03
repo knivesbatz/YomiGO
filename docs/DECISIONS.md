@@ -38,4 +38,6 @@
 
 **Speaking aloud is optional on PC and TV.** The owner asked for it. Listening stays in the class, since it only needs a voice to play.
 
+**Which words, and how they're taught.** New words come from the most frequent words in real learning material that the course doesn't teach yet, so the common ones come first. In English-language studies, the most frequent 3,000 words cover about 95% of spoken text, and spoken language leans on high-frequency words more than writing does. Each word comes with a short sentence people actually say, and the course teaches set phrases and reactions as wholes, because research links fixed phrases with more fluent speech. That evidence is still limited. Sources are in the bibliography.
+
 **GitHub releases here.** An older rule against builds on GitHub applies to the owner's game project. YomiGo's updater needs them.

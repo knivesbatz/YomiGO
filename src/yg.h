@@ -58,6 +58,7 @@ void profile_learn_day(Profile *p, int day, int today);
 void profile_complete_day(Profile *p, int today);
 int  profile_exam_pass(Profile *p, int exam, int score, int today);
 int  profile_place(Profile *p, int stage_reached, int today);
+int  profile_catch_up(Profile *p, int today);   /* cards an update added to classes already taken; returns how many */
 int  profile_rank(const Profile *p);
 const char *rank_name(int rank, int ja);
 int  rank_count(void);
