@@ -605,7 +605,9 @@ static void scr_teach(void) {
               s[k] = 0; text(CX + 10, cy, s, C_ACC); if (!HTPC || nl < 3) wrap(CX + 10, cy + lh, CW - 20, c->trans, C_DIM, lh, 0, 1); }
         } else {
             int room = (c->type == 'h' || c->type == 'k' || c->type == 'j') ? stroke_box(CX + CW - 6, cy - 38, c->front) : 0;
-            if (c->type != 'h' && c->type != 'k') {
+            /* the TV writes a kanji's reading beside it, which leaves a line for the memory hook */
+            if (HTPC && c->type == 'j' && !rom) text(CX + 18 + 2 * text_w(c->front), cy - 28, c->reading, C_INK);
+            else if (c->type != 'h' && c->type != 'k') {
                 if (rom) { text(CX + 10, cy, c->reading, C_DIM); }
                 else if (ys_cmp(c->front, c->reading)) { text(CX + 10, cy, c->reading, C_INK); }
                 if (!rom && profile_stage(&P) < 4) text(CX + 10 + text_w(c->reading) + 16, cy, c->romaji, C_DIM);
@@ -613,7 +615,8 @@ static void scr_teach(void) {
             }
             wrap(CX + 10, cy, CW - 20 - room, c->en, C_INK, LH, 0, 2);
             cy += LH;
-            if (*c->note) wrap(CX + 10, cy + 2, CW - 20 - room, c->note, C_DIM, LH, 0, HTPC ? 4 : 0);
+            /* on the TV the stroke box ends about here, so the note takes the full width and stops above the buttons */
+            if (*c->note) wrap(CX + 10, cy + 2, HTPC ? CW - 20 : CW - 20 - room, c->note, C_DIM, LH, 0, HTPC ? (FBY_BTN - 4 - cy) / LH : 0);
         }
         if (plat_has_tts() && (IN.pressed & A_Y)) plat_speak(c->reading);
     }
@@ -791,15 +794,25 @@ static void scr_quiz(void) {
     /* The TV skips the gap above the question, so its on-screen keyboard fits underneath */
     { int y = CY + (HTPC ? 28 : 32);
       text(CX, y, q->tag, C_DIM); y += HTPC ? 15 : LH;
-      { const char *shown = hidden ? "Listen..." : q->prompt; int tight = 0, c_;
-        if (HTPC && q->kind == Q_CHOICE) for (c_ = 0; c_ < 4; c_++) if (text_w(q->choices[c_]) > (CW - 8) / 2 - 8) tight = 1;
-        if (tight || 2 * text_w(shown) > CW) y += LH * wrap(CX, y, CW, shown, hidden ? C_ACC : C_INK, LH, 0, tight ? 1 : 2);
-        else { text2(CX + (CW - 2 * text_w(shown)) / 2, y, shown, hidden ? C_ACC : C_INK); y += HTPC ? 32 : 34; } }
-      if (*q->sub) { wrap(CX, y, CW, q->sub, C_DIM, LH, 0, 1); y += LH; }
+      { const char *shown = hidden ? "Listen..." : q->prompt; int tight = 0, c_, big = 1;
+        if (HTPC && q->kind == Q_CHOICE) {
+            for (c_ = 0; c_ < 4; c_++) if (text_w(q->choices[c_]) > (CW - 8) / 2 - 8) tight = 1;
+            /* the big prompt only when the answers still fit above the feedback line */
+            if (y + 32 + (*q->sub ? LH : 0) + (tight ? 4 * 19 : 2 * 32) + 4 > FBY_BTN - 2) big = 0;
+        }
+        if (tight || !big || 2 * text_w(shown) > CW) y += LH * wrap(CX, y, CW, shown, hidden ? C_ACC : C_INK, LH, 0, tight ? 1 : 2);
+        else { text2(CX + (CW - 2 * text_w(shown)) / 2, y, shown, hidden ? C_ACC : C_INK); y += HTPC ? 32 : 34; }
+        /* with no line to spare on the TV, a short prompt's reading sits beside it */
+        if (*q->sub && (tight || !big) && text_w(shown) + 8 + text_w(q->sub) <= CW) text(CX + text_w(shown) + 8, y - LH, q->sub, C_DIM);
+        else if (*q->sub) { wrap(CX, y, CW, q->sub, C_DIM, LH, 0, 1); y += LH; } }
       if (q->kind == Q_CHOICE) {
         int bw = (CW - 8) / 2, bh = HTPC ? 26 : 34, i, one = 0;
         for (i = 0; i < 4; i++) if (text_w(q->choices[i]) > bw - 8) one = 1;
         if (one) { bw = CW; if (HTPC) bh = 18; }
+        if (HTPC) { int room = FBY_BTN - 4 - y; /* a two-line prompt can still crowd them */
+          if (one && 4 * (bh + 1) + 2 > room) bh = (room - 2) / 4 - 1;
+          else if (!one && 2 * (bh + 6) + 4 > room) bh = (room - 4) / 2 - 6;
+          if (bh < 17) bh = 17; }
         for (i = 0; i < 4; i++) {
             int x = one ? CX : CX + (i % 2) * (bw + 8), yy = one ? y + 2 + i * (bh + (HTPC ? 1 : 4)) : y + 4 + (i / 2) * (bh + 6);
             if (qanswered) {

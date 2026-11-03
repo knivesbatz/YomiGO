@@ -347,6 +347,16 @@ def load_pronouns():
         out.append({"who": r[0], "word": r[1], "reading": r[2], "en": r[3], "sent": r[4]})
     return out
 
+def check_font():
+    # The Windows apps draw with a font baked from Shift-JIS by tools/build_font.py, so anything outside it shows as a box
+    for f in ("words.tsv", "kanji.tsv", "grammar.tsv", "course.txt", "chats.txt", "reading.txt", "guide.txt", "genki.tsv", "media.tsv", "resources.tsv", "pronouns.tsv"):
+        for n, line in enumerate(io.open(os.path.join(CONTENT, f), encoding="utf-8"), 1):
+            if line.startswith("#"): continue
+            for ch in line.rstrip("\n"):
+                if ord(ch) < 0x80 or ch in "é×〜": continue  # the extras build_font.py adds
+                try: ch.encode("cp932")
+                except UnicodeEncodeError: die(f"{f} line {n}: the Windows font can't draw U+{ord(ch):04X}")
+
 def cstr(s):
     s = s.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n")
     return '"' + s + '"'
@@ -489,6 +499,7 @@ def main():
     genki = load_genki(cards, groups)
     guide = load_guide()
     pronouns = load_pronouns()
+    check_font()
     write_c(cards, stages, days, exams, chats, media, res, table, subs, genki, guide, reading, pronouns)
     write_js({"cards": cards, "stages": stages, "days": days, "exams": exams, "chats": chats, "media": media, "res": res, "roma": table, "subs": subs, "genki": genki, "guide": guide, "reading": reading, "pronouns": pronouns})
     write_data(guide)

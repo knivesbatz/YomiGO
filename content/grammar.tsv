@@ -96,3 +96,62 @@ g.hajimeru	〜始めます／終わります	...hajimemasu / owarimasu	start / f
 #g24
 g.keigo	お〜になります	o ... ni narimasu	respectful verb form	Raises the person you're talking about. Add お to the ます stem, then になります. Some verbs have special words.	社長はもうお帰り＿なりました。	に	を,で,が	The president has already gone home.
 g.kenjou	お〜します	o ... shimasu	humble verb form	Lowers yourself to show respect. Use it for your own actions toward others.	お荷物をお持ち＿ます。	し	なり,い,あり	I'll carry your luggage.
+#g25
+g.younaru	〜ようになる	...you ni naru	come to (be able to)	A change that happened over time. A plain or potential form, then ようになる: 泳げるようになった, I learned to swim.	日本語が話せる＿なりました。	ように	ばかり,ために,そうに	I've become able to speak Japanese.
+g.younisuru	〜ようにする	...you ni suru	make a point of	A habit you work at. A plain form, then ようにしています. With ない it means trying not to: 食べないようにする.	毎日野菜を食べる＿しています。	ように	ことが,ために,ところに	I make a point of eating vegetables every day.
+g.kotoninaru	〜ことになる	...koto ni naru	it's been decided that	A decision made for you, by work, school, or circumstance. A plain form, then ことになりました.	来月、大阪に転勤する＿なりました。	ことに	そうに,ばかり,ながら	It's been decided that I'll transfer to Osaka next month.
+g.kotonisuru	〜ことにする	...koto ni suru	decide to	Your own decision. Compare ことになる, where someone else decided. A plain form, then ことにしました.	今日から毎朝走る＿しました。	ことに	そうに,ばかり,ながら	I've decided to run every morning from today.
+#g26
+g.tokoro	〜ところです	...tokoro desu	about to, in the middle of, just did	Where you are in an action. Dictionary form: about to. ている: in the middle of it. た: just finished.	今、出かける＿です。	ところ	ながら,たり,すぎ	I'm just about to go out.
+g.tabakari	〜たばかり	...ta bakari	just did	The plain past plus ばかり: it happened very recently, or it feels that way to the speaker.	日本に来た＿です。	ばかり	ながら,すぎ,たり	I've only just come to Japan.
+g.uchini	〜うちに	...uchi ni	while (still)	Do it while a state lasts, before it changes. With ない: 暗くならないうちに, before it gets dark.	熱い＿食べてください。	うちに	ように,ばかり,ながら	Please eat it while it's hot.
+g.aidani	〜間に	...aida ni	while, during	Something happens at one point inside a stretch of time. Without に, 間 means the whole time.	寝ている＿、雨が降りました。	間に	までに,すぎて,たり	It rained while I was asleep.
+#g27
+g.hazu	〜はずです	...hazu desu	should be, is expected to	A confident expectation from what you know: 彼は来るはずです, he's due to come.	荷物は明日届く＿です。	はず	ながら,すぎ,たり	The parcel should arrive tomorrow.
+g.wake	〜わけです	...wake desu	that's why, no wonder	A conclusion that follows from what you've just learned.	十年も住んでいたんですか。日本語が上手な＿です。	わけ	ながら,すぎ,たり	You lived there ten years? No wonder your Japanese is good.
+g.wakedewanai	〜わけではありません	...wake dewa arimasen	it's not that	Gently denies what someone might assume: 嫌いなわけではありません, it isn't that I dislike it.	全部わかった＿ではありません。	わけ	そう,ながら,すぎ	It's not that I understood everything.
+g.rashii	〜らしい	...rashii	apparently; typical of	Two uses: something you heard or read, and being typical of something: 子供らしい, like a child should be.	山田さんは会社を辞めた＿です。	らしい	ながら,ために,ことに	Apparently Yamada-san quit the company.
+#g28
+g.souhear	〜そうです (I hear)	...sou desu	I hear that	After a plain form, そうです passes on news: 雨が降るそうです, I hear it'll rain. The ます stem plus そう means looks like, which is different.	天気予報によると、明日は雨が降る＿です。	そう	ながら,すぎ,ために	According to the forecast, it'll rain tomorrow.
+g.mitai	〜みたい	...mitai	like, seems	A casual よう. After a noun it needs no の: 夢みたい, like a dream. It also means seems: 雨みたい.	これは夢＿です。	みたい	ような,ように,そう	This is like a dream.
+g.ppoi	〜っぽい	...ppoi	-ish, kind of	Casual. After a noun or a ます stem: 子供っぽい, childish. 忘れっぽい, forgetful.	彼は忘れ＿です。	っぽい	らしい,みたい,ような	He's forgetful.
+g.niyoruto	〜によると	...ni yoru to	according to	Names your source. The sentence usually ends in そうです or らしい.	ニュース＿、事故があったそうです。	によると	までに,ばかり,にとって	According to the news, there was an accident.
+#g29
+g.nitsuite	〜について	...ni tsuite	about, concerning	The topic you talk, think, or write about. Before a noun it becomes についての: 日本についての本.	日本の文化＿話しました。	について	にとって,によると,までに	We talked about Japanese culture.
+g.nitotte	〜にとって	...ni totte	for, to (someone)	From someone's point of view: 私にとって, for me. Often with 大切, 大変, or 難しい.	私＿、家族は一番大切です。	にとって	について,によって,までに	To me, family matters most.
+g.toshite	〜として	...to shite	as (a role)	The role or capacity something has: 先生として, as a teacher.	彼は通訳＿働いています。	として	にとって,について,によると	He works as an interpreter.
+g.nitaishite	〜に対して	...ni taishite	toward; in contrast to	Aimed at someone: 親に対して, toward your parents. It also contrasts two things.	先生＿失礼なことを言ってはいけません。	に対して	によると,までに,のに	You mustn't say rude things to your teacher.
+#g30
+g.youni	〜ように	...you ni	so that	A goal you can't directly control. Often with potential or ない forms: 忘れないように, so I don't forget.	忘れない＿、メモします。	ように	ことに,ばかり,ところ	I'll make a note so I don't forget.
+g.tameni	〜ために	...tame ni	in order to; because of	With a verb you choose to do, it gives a purpose: 留学するために. After a noun with の, it can mean because of: 雨のために.	日本に留学する＿、お金を貯めています。	ために	ことに,ばかり,ところ	I'm saving money to study in Japan.
+g.okagede	〜おかげで	...okage de	thanks to	A good result, and you're grateful for its cause. After a noun with の, or a plain form.	先生の＿、合格しました。	おかげで	せいで,までに,ばかり	Thanks to my teacher, I passed.
+g.seide	〜せいで	...sei de	because of (blame)	A bad result, and what's to blame. The good version is おかげで.	雨の＿、試合が中止になりました。	せいで	おかげで,までに,ばかり	Because of the rain, the match was cancelled.
+#g31
+g.temo	〜ても	...te mo	even if	The て form plus も. Whatever happens, the result stays the same: 雨が降っても行きます.	雨が降っ＿、行きます。	ても	ては,たり,ながら	I'll go even if it rains.
+g.sae	〜さえ	...sae	even	Stresses an extreme case: 名前さえ知らない, I don't even know the name. With ば: お金さえあれば, if only I had money.	忙しくて、昼ご飯を食べる時間＿ありません。	さえ	から,ので,ながら	I'm so busy I don't even have time to eat lunch.
+g.dakedenaku	〜だけでなく	...dake de naku	not only	Not just this, but that too. The second part often has も.	彼は英語＿、中国語も話せます。	だけでなく	ばかり,しか,さえ	He speaks not only English but Chinese too.
+g.bakari	〜ばかり	...bakari	nothing but	Too much of one thing, often as a complaint: 遊んでばかりいる, does nothing but play.	弟はゲーム＿しています。	ばかり	ほど,だけでなく,ので	My little brother does nothing but play games.
+#g32
+g.beki	〜べきです	...beki desu	should, ought to	A firm opinion about what's right. A plain form, then べき. It can sound preachy, so use it with care.	約束は守る＿です。	べき	すぎ,ながら,ために	You should keep your promises.
+g.kotowanai	〜ことはありません	...koto wa arimasen	there's no need to	Reassures someone: 心配することはありません, there's nothing to worry about.	心配する＿はありません。	こと	ため,ばかり,ながら	There's no need to worry.
+g.wakeniwaikanai	〜わけにはいきません	...wake ni wa ikimasen	can't really	Something you can't do because of duty or how it would look: 休むわけにはいきません, I can't just take the day off.	明日は大事な会議があるので、休む＿にはいきません。	わけ	こと,はず,もの	There's an important meeting tomorrow, so I can't take the day off.
+g.sasete	〜させていただきます	...sasete itadakimasu	(humbly) let me do	The causative plus いただく: you act as if by permission. Common at work: 説明させていただきます.	では、説明＿いただきます。	させて	されて,させ,しに	Now, let me explain.
+#g33
+g.bahodo	〜ば〜ほど	...ba ... hodo	the more ... the more	The same word twice, first in the ば form: 食べれば食べるほど, the more you eat.	練習すれば＿ほど、上手になります。	する	した,して,しない	The more you practise, the better you get.
+g.hodo	〜ほど	...hodo	so ... that; not as ... as	Shows extent: 泣くほど痛い, so painful I could cry. With ない it compares: 東京ほど大きくない, not as big as Tokyo.	今年の夏は去年＿暑くないです。	ほど	のに,ので,ばかり	This summer isn't as hot as last year.
+g.kurai	〜くらい	...kurai	about; so ... that	With numbers it means about: 一時間くらい. It also shows extent, like ほど: 歩けないくらい疲れた.	駅まで歩いて十分＿です。	くらい	さえ,ので,のに	It's about ten minutes' walk to the station.
+#g34
+g.tagaru	〜たがる	...tagaru	(someone else) wants to	You can't know another person's wishes directly, so たい becomes たがる for others: 子供が行きたがっています.	子供が外で遊び＿います。	たがって	たくて,たい,たかって	The children want to play outside.
+g.kigasuru	〜気がする	...ki ga suru	have a feeling that	A vague impression: 誰かに見られている気がする, I feel like someone's watching.	どこかで会った＿がします。	気	心,声,目	I feel like we've met somewhere.
+g.furi	〜ふりをする	...furi o suru	pretend to	A plain form, or a noun with の, then ふりをする: 寝たふりをする, pretend to be asleep.	彼は聞こえない＿をしました。	ふり	こと,もの,ため	He pretended not to hear.
+g.mono	〜ものです	...mono desu	used to; it's natural that	With a past form, fond memories: 昔はよく遊んだものです. With the dictionary form, how things naturally are.	子供の頃は、よくこの川で泳いだ＿です。	もの	こと,ながら,すぎ	When I was a child, I'd often swim in this river.
+#g35
+g.zuni	〜ずに	...zu ni	without doing	A written-style ないで. The ない stem plus ずに: 食べずに, without eating. する becomes せずに.	朝ご飯を食べ＿、学校へ行きました。	ずに	ずで,ないに,ずて	I went to school without eating breakfast.
+g.tabini	〜たびに	...tabi ni	every time	A dictionary form, or a noun with の: 会うたびに, every time we meet.	この歌を聞く＿、国を思い出します。	たびに	ことに,たりに,すぎに	Every time I hear this song, I think of home.
+g.toori	〜とおりに	...toori ni	as, just as	Do it the way something says: 説明書のとおりに, as the instructions say. After a verb: 言ったとおりに.	先生が言った＿にしてください。	とおり	ばかり,はず,ため	Please do it the way the teacher said.
+g.kadouka	〜かどうか	...ka dou ka	whether or not	A yes-or-no question inside a sentence: 来るかどうか分かりません.	彼が来る＿分かりません。	かどうか	ことか,ばかり,ように	I don't know whether he'll come.
+#g36
+g.teoku	〜ておく	...te oku	do in advance	The て form plus おく: get something done, ready for later. Casually it shortens to 〜とく.	旅行の前に、ホテルを予約して＿ます。	おき	おく,おか,おこ	Before the trip, I'll book the hotel.
+g.teshimau	〜てしまう	...te shimau	end up doing; finish	Two feelings: getting something completely done, or something unfortunate happening: 財布を忘れてしまった.	電車に傘を忘れて＿ました。	しまい	しまう,しまわ,しまお	I left my umbrella on the train.
+g.chau	〜ちゃう	...chau	(casual) end up doing	Casual てしまう. 〜てしまう becomes 〜ちゃう, and 〜でしまう becomes 〜じゃう: 飲んじゃった.	ケーキを全部食べ＿った。	ちゃ	じゃ,で,しゃ	I ended up eating the whole cake.
+g.causpass	〜させられる	...saserareru	be made to do	The causative plus the passive: you had to do it, and didn't want to.	子供の頃、母にピアノを練習＿ました。	させられ	させれ,さられ,しられ	As a child, my mother made me practise the piano.

@@ -42,7 +42,9 @@ PLAIN = {"分かります": ("分かる", "わかる"), "分かりません": ("
          "あります": ("ある", "ある"), "います": ("いる", "いる")}
 # Read by a person: each is right, and only worded differently from JMdict, or a kanji's meaning rather than a word's
 REVIEWED = {"v.suru", "v.jouzu", "j.tsukuru", "j.tsukau", "j.motsu", "j.hairu", "j.aruku", "j.ooi", "j.iu", "j.shiru", "j.kangaeru", "j.oshieru", "v.shimasu", "v.arimasu", "v.itadakimasu", "v.gochisousama", "v.desu", "v.ichi", "v.heta", "v.mono", "v.manga", "v.suki", "v.imasu", "v.hitotsu", "v.eeto", "v.hontou",
-            "j.ichi", "j.iku", "j.kuru", "j.taberu", "j.miru", "j.kaku", "j.hanasu", "j.den", "j.takai"}
+            "j.ichi", "j.iku", "j.kuru", "j.taberu", "j.miru", "j.kaku", "j.hanasu", "j.den", "j.takai",
+            # N3, checked by hand in 0.8
+            "j.yuu2", "v.totsuzen", "v.omoide", "j.kimeru", "j.kanarazu", "j.ushinau", "j.mamoru", "j.kotowaru", "j.nokoru", "j.shiraberu", "j.tsutaeru"}
 missing, mismatch, meaning, okc = [], [], [], 0
 for c in C["cards"]:
     if c["day"] < 0 or c["t"] not in "wj": continue
@@ -51,7 +53,8 @@ for c in C["cards"]:
     if f in forms:
         if r not in forms[f]:
             # kanji cards may hold a stem, such as 大 for 大きい
-            if not (c["t"] == "j" and any(k.startswith(f) and any(x.startswith(r) for x in forms[k]) for k in forms if len(k) <= 4)):
+            # REVIEWED also covers a kanji whose taught reading comes from a compound, such as 由 in 理由
+            if c["id"] not in REVIEWED and not (c["t"] == "j" and any(k.startswith(f) and any(x.startswith(r) for x in forms[k]) for k in forms if len(k) <= 4)):
                 mismatch.append((c["id"], f, r, sorted(forms[f])[:6]))
                 continue
         gl = gloss[f]

@@ -62,7 +62,7 @@ int  profile_rank(const Profile *p);
 const char *rank_name(int rank, int ja);
 int  rank_count(void);
 
-enum { ACH_FIRST_CLASS, ACH_STREAK3, ACH_STREAK7, ACH_STREAK30, ACH_HIRAGANA, ACH_KATAKANA, ACH_FIRST_CHAT, ACH_REVIEW100, ACH_PERFECT, ACH_N5, ACH_READER, ACH_N4, ACH_MINER, ACH_EARS, ACH_COUNT };
+enum { ACH_FIRST_CLASS, ACH_STREAK3, ACH_STREAK7, ACH_STREAK30, ACH_HIRAGANA, ACH_KATAKANA, ACH_FIRST_CHAT, ACH_REVIEW100, ACH_PERFECT, ACH_N5, ACH_READER, ACH_N4, ACH_MINER, ACH_EARS, ACH_N3, ACH_COUNT };
 typedef struct { const char *en, *ja, *desc; } YgAch;
 extern const YgAch YG_ACH[ACH_COUNT];
 void ach_check(Profile *p);

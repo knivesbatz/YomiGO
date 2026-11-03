@@ -153,3 +153,27 @@ say: いらっしゃいませ。 | irasshaimase. | Welcome.
 want: すみません;はじめまして;おねがいします;しゃちょうはいらっしゃいますか | Greet them, or ask whether the president is in.
 say: 少々お待ちください。 | shoushou omachi kudasai. | One moment, please.
 want: はい;わかりました;ありがとうございます | Say OK politely.
+
+@chat n3late | Running late | 遅刻 | けん
+say: もしもし、今どこ？ | moshimoshi, ima doko? | Hello? Where are you?
+want: えきについたところ;えきについたところです;いまえきについたところ;いまえきについたところです;いまでるところ;いまでるところです | Say you've just reached the station, with ところ.
+say: えっ、映画はもうすぐ始まるよ。 | e, eiga wa mousugu hajimaru yo. | What? The film's about to start.
+want: ごめん;ごめんね;ごめんなさい;すみません | Apologise.
+say: 大丈夫。始まる前に来てね。 | daijoubu. hajimaru mae ni kite ne. | It's fine. Get here before it starts.
+want: うん;わかった;はい;わかりました | Agree.
+
+@chat n3favor | Asking a favour | お願い | ゆき
+say: ちょっと手伝ってもらえる？ | chotto tetsudatte moraeru? | Could you give me a hand?
+want: いいよ;うん;もちろん;いいですよ | Say yes.
+say: この荷物、一人で運ぶのは無理みたい。 | kono nimotsu, hitori de hakobu no wa muri mitai. | Looks like I can't carry this luggage on my own.
+want: てつだうよ;てつだいます;いっしょにはこぼう;もつよ | Offer to help carry it.
+say: ありがとう、助かる！ | arigatou, tasukaru! | Thanks, that's a big help!
+want: どういたしまして;いいよ;きにしないで | Tell her it's nothing.
+
+@chat n3office | First day at work | 初出勤 | ぶちょう
+say: 新しく入った人ですね。自己紹介をお願いします。 | atarashiku haitta hito desu ne. jiko shoukai o onegai shimasu. | You're the new hire. Please introduce yourself.
+want: はじめまして;はじめまして、よろしくおねがいします;よろしくおねがいします | Begin your self-introduction.
+say: 明日の会議の資料を準備しておいてください。 | ashita no kaigi no shiryou o junbi shite oite kudasai. | Please get the materials ready for tomorrow's meeting.
+want: かしこまりました;わかりました;はい、わかりました;はい、かしこまりました | Accept politely.
+say: 分からないことがあったら、遠慮しないで聞いてね。 | wakaranai koto ga attara, enryo shinaide kiite ne. | If there's anything you don't understand, don't hold back. Just ask.
+want: ありがとうございます;はい、ありがとうございます | Thank them.

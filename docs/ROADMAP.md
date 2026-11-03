@@ -21,12 +21,12 @@ No app alone can make someone fluent. Fluency also takes thousands of hours of r
 
 ## Next up
 
-1. **0.8 N3**
-2. **0.9 Conversation AI**
-3. **After that:** faster transcription on the graphics card, transcription on Android, vertical manga text, direct game-text hooking, N2, N1, Beyond N1, and handwriting
+1. **0.9 Conversation AI**
+2. **After that:** Genki II practice, entrance-exam sections for N4 and N3, faster transcription on the graphics card, transcription on Android, vertical manga text, direct game-text hooking, N2, N1, Beyond N1, and handwriting
 
 ## Done
 
+- **0.8:** N3 stage, with its exam
 - **0.7:** transcription of your own audio and video, with Japanese subtitles
 - **0.6:** Text Reader, with screenshots, photos, and game text from the clipboard
 - **0.5:** listening, dictation, and shadowing
@@ -63,7 +63,7 @@ Owner's request. Flashcards made from what's on screen:
 
 ## 0.5 N3
 
-N3 vocabulary, grammar, kanji, and mastery exam, plus Genki II practice.
+N3 vocabulary, grammar, kanji, and mastery exam: done in 0.8. Genki II practice is still to come.
 
 ## 0.6 Conversation AI
 
@@ -71,7 +71,7 @@ Open conversation that remembers the lesson's goals, corrects mistakes, and trac
 
 ## Later
 
-- N3, N2, N1, and YomiGo's own Beyond N1 stage
+- N2, N1, and YomiGo's own Beyond N1 stage
 - Keigo, regional speech, and more on gestures and expressions
 - FSRS scheduling, weekly tournaments, skill trees
 - Automatic sync between devices

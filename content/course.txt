@@ -467,3 +467,97 @@ new: @k12 @k14 @k15
 homework: Write today's season and weather in kanji.
 immerse: Find one of today's kanji in a song or show title.
 exam: N4 | N4 Mastery Exam | 4
+
+@stage 8 | N3 Bridge | N3の橋 | Nuance, news, work, and real Japanese.
+@day Becoming and deciding | 変化と決定
+note: Welcome to N3. From here, the course is less about new forms and more about nuance: how sure you are, who decided, and how you feel about it. Expect longer sentences, and more words you'll first meet in real Japanese.
+note: ことにする is a decision you made. ことになる is one made for you, and Japanese often uses it even for your own choices, because it sounds less pushy.
+new: !g.younaru !g.younisuru !g.kotoninaru !g.kotonisuru @n3change
+read: n3move
+homework: Write three habits you're working on with 〜ようにしています.
+immerse: In a show, listen for ことになった when a character shares news.
+@day Timing | タイミング
+note: ところ pins down exactly where you are in an action. Use it on the phone: 今出るところ, I'm just leaving, is what people say when they're running late.
+new: !g.tokoro !g.tabakari !g.uchini !g.aidani @n3time
+chat: n3late
+homework: Describe three things you're about to do, are doing, and just did, with ところ.
+immerse: Watch a scene where someone is late, and listen for ところ or ばかり.
+@day Expectations | 予想
+note: はず is based on facts, so 来るはずです means the schedule says so. わけ draws a conclusion: そういうわけです, that's the reason.
+note: わけではありません is a polite way to disagree. It softens a no by denying only part of it.
+new: !g.hazu !g.wake !g.wakedewanai !g.rashii @n3guess
+homework: Write three things that should happen tomorrow, with はずです.
+immerse: Listen for わけ in an interview, where people explain their reasons.
+@day Hearsay and looks | 伝聞と様子
+note: Japanese marks how you know something. そうです after a plain form means you heard it. らしい means you gathered it. みたい and よう mean it seems so, from what you see. News reports use these all the time.
+new: !g.souhear !g.mitai !g.ppoi !g.niyoruto @n3news
+read: n3news
+homework: Pass on two pieces of news you read today, with そうです.
+immerse: Read the headlines of a Japanese news site, such as NHK News Web Easy.
+material: The press
+@day About, for, and as | 関係
+note: These work like prepositions and turn up all through written Japanese. Learn them as whole chunks: について, にとって, として, and に対して.
+new: !g.nitsuite !g.nitotte !g.toshite !g.nitaishite @n3society
+homework: Write what Japanese means to you, with にとって.
+immerse: Find について in the title of a YouTube video or article.
+material: My culture
+@day Purpose and cause | 目的と原因
+note: Use ために with actions you choose to do: 留学するために. Use ように with results you can't simply decide, such as abilities and states: 話せるように, 忘れないように.
+note: おかげで thanks something for a good result. せいで blames something for a bad one. Using the wrong one changes the whole tone.
+new: !g.youni !g.tameni !g.okagede !g.seide @n3cause
+homework: Write one thing you're grateful for with おかげで, and one complaint with せいで.
+immerse: Listen for おかげさまで, a polite reply to "how have you been?"
+@day Even and not only | 強調
+note: さえ is stronger than も. It marks the case you'd least expect: 子供でさえ知っている, even a child knows.
+new: !g.temo !g.sae !g.dakedenaku !g.bakari @n3even
+homework: Write three sentences about your week with ばかり.
+immerse: Listen for ばかり when a parent complains in a show.
+@day Should and can't really | 義務と遠慮
+note: Japanese tends to avoid saying no outright. わけにはいきません says your situation won't allow it, which softens a refusal far more than できません.
+note: べき is strong. With friends, 〜たほうがいい is gentler advice.
+new: !g.beki !g.kotowanai !g.wakeniwaikanai !g.sasete @n3should
+chat: n3favor
+homework: Write how you'd turn down an invitation politely, with わけにはいきません.
+immerse: Notice how often people in shows refuse without saying いいえ.
+@day More and less | 程度
+note: ほど and くらい overlap. With numbers, くらい sounds more casual. In "not as ... as" comparisons, ほど is the usual choice.
+new: !g.bahodo !g.hodo !g.kurai @n3degree
+homework: Write three "the more ..., the more ..." sentences about learning Japanese.
+immerse: Compare prices on a Japanese shopping site, and describe them with ほど.
+@day Feelings and memories | 気持ちと思い出
+note: たがる is for other people's wishes, because Japanese doesn't state what's in someone else's head as fact. For yourself, keep using たい.
+new: !g.tagaru !g.kigasuru !g.furi !g.mono @n3feel
+homework: Write about a childhood memory with 〜たものです.
+immerse: Listen to a song about the past, and listen for 懐かしい.
+material: Positive feelings
+@day How and how often | 方法と頻度
+note: ずに means the same as ないで, but it sounds more written and a little more formal. You'll meet it in books and news far more than in chat.
+new: !g.zuni !g.tabini !g.toori !g.kadouka @n3ways
+read: n3memory
+homework: Write the steps of a recipe you know, with とおりに or ずに.
+immerse: Follow a Japanese recipe video, and listen for the steps.
+@day Ahead and after | 準備と結果
+note: ておく shows foresight, and てしまう often shows regret. Casual speech squeezes them: 〜とく and 〜ちゃう. Learning the short forms makes anime and dramas much easier to follow.
+note: させられる is how Japanese complains about being made to do things, such as homework, overtime, or practice.
+new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done
+homework: Write three things you'll prepare before a trip, with ておきます.
+immerse: Listen for ちゃった in any anime episode.
+@day Work Japanese | 仕事の日本語
+note: Offices run on set phrases. かしこまりました is a more formal 分かりました, and 申し訳ありません is a more formal すみません. You'll hear them in every shop, too.
+note: Business keigo takes years even for Japanese people, and new staff get training in it. Recognising it matters far more than producing it perfectly.
+new: @n3work
+chat: n3office
+homework: Introduce yourself as you would on a first day at work.
+immerse: Watch a scene from a drama set in an office.
+material: The job interview
+@day Change and results in kanji | 変化の漢字
+note: Many N3 words are pairs of kanji you now know: 結果, 理由, 原因, 成功, and 失敗. Look for the pieces you recognise inside new words.
+new: @k17
+homework: Write 成功 and 失敗, then find each one in a sentence online.
+immerse: Look for 結果 in sports or election news.
+@day Promises and work in kanji | 約束の漢字
+note: 議, 調, and 説 all contain 言, words. The part on the left often hints at what a kanji is about.
+new: @k18
+homework: Write 約束 and 確認, and use each in a sentence.
+immerse: Read a Japanese shop or office notice, and find 確認.
+exam: N3 | N3 Mastery Exam | 5

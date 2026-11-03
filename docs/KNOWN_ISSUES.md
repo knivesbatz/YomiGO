@@ -21,7 +21,7 @@
 - Transcription runs on the processor only, at a little under twice the speed the file plays on the build PC. Over music or silence, Whisper sometimes writes lines no one said, such as a thank-you for watching. Check a line by ear before you learn from it.
 - Transcription is on the PC app only. The TV app shows text you copy, but has no file picker, and the phone app doesn't transcribe.
 
-- The course ends at N4. Later levels are on the [roadmap](ROADMAP.md).
+- The course ends at N3. Later levels are on the [roadmap](ROADMAP.md). The entrance exam places nobody past N5 Street, so a learner who already knows N4 or N3 still starts there.
 - The entrance exam tests reading only, not listening, typing, or speaking.
 - Conversations are scripted and accept set replies, so a correct but unexpected reply can fail. After three tries, the app shows an accepted answer.
 - Reader's dictionary has about 22,000 common words, and undoes common verb and adjective endings, but not every form. [Yomitan](https://yomitan.wiki/) goes much further.
@@ -30,7 +30,7 @@
 - Media difficulty is YomiGo's judgement, and availability isn't listed.
 - Saves don't sync on their own. Copy them by hand.
 - Firefox rejects Reader through Install Add-on From File, and removes a temporary install on restart, until Mozilla signs it. Someone has reported an error using it there. The exact message is still needed, as Firefox isn't on the build PC.
-- The pronoun notes and examples haven't had a native speaker's review yet, like the N4 grammar.
+- The pronoun notes and examples haven't had a native speaker's review yet, like the N4 and N3 grammar, readings, and conversations.
 - Stroke order is shown, but there's no handwriting check. Youon cards such as きゃ don't show it.
 
 ## Security limits

@@ -64,3 +64,21 @@ jp: わたしは毎朝、音楽を聞きながら駅まで歩きます。最近�
 en: Every morning I walk to the station while listening to music. Lately I've been listening to Japanese songs. Reading the lyrics is hard, but some songs are easy to sing. I think keeping it up every day matters most.
 q: What does the writer do on the way to the station? | Listens to music | Reads a book | Talks with friends
 q: What does the writer think matters most? | Continuing every day | Reading the lyrics | Singing well
+
+@read n3move | A new town | 新しい町
+jp: 去年、父の転勤で大阪に引っ越すことになりました。最初は友達もいなくて、さびしかったです。でも、毎日近所の人にあいさつするようにしたら、少しずつ話せるようになりました。今では、大阪の言葉も少し分かります。来年は東京に戻るかもしれませんが、この町が好きになりました。
+en: Last year my father was transferred, so we ended up moving to Osaka. At first I had no friends and felt lonely. But once I made a point of greeting the neighbours every day, little by little I became able to talk with them. Now I even understand some of the Osaka dialect. We might go back to Tokyo next year, but I've come to love this town.
+q: Why did the family move to Osaka? | The father was transferred | They wanted a bigger house | The writer changed schools
+q: What did the writer make a point of doing? | Greeting the neighbours every day | Studying the Osaka dialect | Phoning friends in Tokyo
+
+@read n3news | Today's news | 今日のニュース
+jp: ニュースによると、昨日の夜、駅の近くで事故があったそうです。車が自転車とぶつかりましたが、けがをした人はいなかったらしいです。警察は事故の原因について調べています。雨のせいで、道がすべりやすかったのかもしれません。
+en: According to the news, there was an accident near the station last night. A car hit a bicycle, but apparently nobody was hurt. The police are looking into the cause. The road may have been slippery because of the rain.
+q: Was anyone hurt? | Apparently not | Yes, the cyclist | Yes, the driver
+q: What are the police doing? | Looking into the cause | Closing the station | Talking to reporters
+
+@read n3memory | The old park | 昔の公園
+jp: 子供の頃、毎日この公園で遊んだものです。友達と暗くなるまでボールを追いかけました。久しぶりに来てみたら、木は大きくなっていましたが、ベンチは昔のままでした。ここに来るたびに、懐かしい気持ちになります。
+en: As a child, I'd play in this park every day. I chased a ball with my friends until it got dark. When I came back after a long time, the trees had grown tall, but the bench was just as it used to be. Every time I come here, I feel nostalgic.
+q: What did the writer do here as a child? | Played ball with friends | Read on the bench | Planted trees
+q: What hadn't changed? | The bench | The trees | The writer's friends

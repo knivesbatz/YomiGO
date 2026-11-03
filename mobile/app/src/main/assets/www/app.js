@@ -368,7 +368,7 @@ function exams() {
     return h("div", { cls: "card" }, h("div", { cls: "row" }, e.name, h("span", { cls: s >= Y.PASS ? "good" : i === gate ? "bad" : "dim" }, s >= Y.PASS ? `Best ${s}%` : !open ? "Locked" : i === gate ? "Required" : "Open")), open ? btn("Challenge", () => startExam(i)) : "");
   }), h("p", { cls: "dim" }, "These are YomiGo's own exams, not official JLPT tests. N3, N2, N1, and Beyond N1 arrive in updates. There's no official N0, so YomiGo will offer its own Beyond N1 stage."));
 }
-const RANKS = [["Newcomer", "入門者"], ["White Sash", "白帯"], ["Road Walker", "道を行く者"], ["Scribe", "書記"], ["Castle Guard", "城の守り"], ["Gatekeeper", "門番"], ["Kanji Knight", "漢字の騎士"], ["N5 Champion", "N5王者"], ["N4 Champion", "N4王者"]];
+const RANKS = [["Newcomer", "入門者"], ["White Sash", "白帯"], ["Road Walker", "道を行く者"], ["Scribe", "書記"], ["Castle Guard", "城の守り"], ["Gatekeeper", "門番"], ["Kanji Knight", "漢字の騎士"], ["N5 Champion", "N5王者"], ["N4 Champion", "N4王者"], ["N3 Champion", "N3王者"]];
 function quest() {
   setNav(3);
   const r = Y.rankOf(P), ja = Y.stageOf(P) >= 3 && !P.en ? 1 : 0;

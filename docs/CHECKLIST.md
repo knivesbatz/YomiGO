@@ -6,9 +6,9 @@ Complete means implemented and tested as described. **Partial** says what's miss
 |---|---|---|---|---|
 | Local profiles | Complete | Complete | Complete | n/a |
 | Entrance exam, adaptive by section | Partial: reading only | Partial: reading only | Partial: reading only | n/a |
-| Stages 0-7, up to N4 | Complete | Complete | Complete | n/a |
+| Stages 0-8, up to N3 | Complete | Complete | Complete | n/a |
 | Graded reading with questions | Complete | Complete | Complete | n/a |
-| N3, N2, N1, Beyond N1 | Not started | Not started | Not started | n/a |
+| N2, N1, Beyond N1 | Not started | Not started | Not started | n/a |
 | Daily class with up to 10 steps | Complete | Complete | Complete | n/a |
 | Romaji, hiragana, katakana drills | Complete | Complete | Complete | n/a |
 | Stroke order | Complete | Complete | Complete | n/a |

@@ -58,7 +58,7 @@ Finish every stage's boss exam to move on. Along the way you earn XP, ranks, str
 
 You start with sounds and romaji, then learn to read and speak step by step:
 
-**Sounds → Romaji → Hiragana → Katakana → Grammar → Kanji → Real-life Japanese → N5 Exam → Casual speech, opinions, plans, and polite Japanese → N4 Exam**
+**Sounds → Romaji → Hiragana → Katakana → Grammar → Kanji → Real-life Japanese → N5 Exam → Casual speech, opinions, plans, and polite Japanese → N4 Exam → Nuance, news, and work Japanese → N3 Exam**
 
 There's also typing practice, stroke order, counting, polite speech, gestures, and manners. The built-in Study Guide shows you how to set up, and how to study each day. As you learn to read, YomiGo's own menus slowly switch into Japanese.
 
@@ -66,11 +66,11 @@ Studying with Genki? Turn on **Genki practice** to review by textbook lesson.
 
 ## Where it's up to
 
-YomiGo is in its early days. The course currently runs from zero to **N4**, the second of the five levels of the Japanese-Language Proficiency Test (JLPT). YomiGo's exams are its own, not official JLPT tests.
+YomiGo is in its early days. The course currently runs from zero to **N3**, the middle of the five levels of the Japanese-Language Proficiency Test (JLPT). YomiGo's exams are its own, not official JLPT tests.
 
 | Works now | Coming later |
 |---|---|
-| 70 classes, 8 exams, flashcards, and graded reading | N3 through N1, and beyond |
+| 85 classes, 9 exams, flashcards, and graded reading | N2 and N1, and beyond |
 | Scripted conversations | AI conversation partners |
 | A dictionary of about 22,000 common words | Larger dictionaries |
 | Your own flashcards, from the dictionary or the browser | Vertical manga text, and direct game hooking |

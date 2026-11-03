@@ -555,10 +555,11 @@ int profile_place(Profile *p, int stage, int today) {
 }
 static const char *const RANKS[][2] = {
     {"Newcomer", "入門者"}, {"White Sash", "白帯"}, {"Road Walker", "道を行く者"}, {"Scribe", "書記"},
-    {"Castle Guard", "城の守り"}, {"Gatekeeper", "門番"}, {"Kanji Knight", "漢字の騎士"}, {"N5 Champion", "N5王者"}, {"N4 Champion", "N4王者"}
+    {"Castle Guard", "城の守り"}, {"Gatekeeper", "門番"}, {"Kanji Knight", "漢字の騎士"}, {"N5 Champion", "N5王者"}, {"N4 Champion", "N4王者"},
+    {"N3 Champion", "N3王者"}
 };
-int rank_count(void) { return 9; }
-const char *rank_name(int r, int ja) { if (r < 0) r = 0; if (r > 8) r = 8; return RANKS[r][ja ? 1 : 0]; }
+int rank_count(void) { return 10; }
+const char *rank_name(int r, int ja) { if (r < 0) r = 0; if (r > 9) r = 9; return RANKS[r][ja ? 1 : 0]; }
 int profile_rank(const Profile *p) {
     int i, r = 0;
     for (i = 0; i < YG_NEXAMS; i++) if (p->exam_score[i] >= PASS_MARK) r = i + 1;
@@ -579,6 +580,7 @@ const YgAch YG_ACH[ACH_COUNT] = {
     {"N4 Champion", "N4王者", "Pass the N4 Mastery Exam."},
     {"Word Miner", "ことば集め", "Add 25 of your own words."},
     {"Good Ears", "いい耳", "Finish 10 listening sessions."},
+    {"N3 Champion", "N3王者", "Pass the N3 Mastery Exam."},
 };
 void ach_check(Profile *p) {
 #define GOT(a, cond) if (cond) p->ach |= 1u << (a)
@@ -588,7 +590,7 @@ void ach_check(Profile *p) {
     GOT(ACH_HIRAGANA, p->exam_score[2] >= PASS_MARK); GOT(ACH_KATAKANA, p->exam_score[3] >= PASS_MARK);
     GOT(ACH_FIRST_CHAT, p->chats > 0); GOT(ACH_REVIEW100, p->reviews >= 100); GOT(ACH_PERFECT, p->perfects > 0);
     { int e; for (e = 0; e < YG_NEXAMS; e++) if (p->exam_score[e] >= PASS_MARK) {
-        GOT(ACH_N5, !ys_cmp(YG_EXAMS[e].id, "N5")); GOT(ACH_N4, !ys_cmp(YG_EXAMS[e].id, "N4")); } }
+        GOT(ACH_N5, !ys_cmp(YG_EXAMS[e].id, "N5")); GOT(ACH_N4, !ys_cmp(YG_EXAMS[e].id, "N4")); GOT(ACH_N3, !ys_cmp(YG_EXAMS[e].id, "N3")); } }
     GOT(ACH_READER, p->reads >= 10);
     GOT(ACH_MINER, p->nmy >= 25);
     GOT(ACH_EARS, p->listens >= 10);

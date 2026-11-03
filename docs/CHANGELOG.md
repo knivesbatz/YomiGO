@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.8.0
+
+- N3 Bridge, a new stage of 15 classes: 47 grammar points, 98 words, and 26 kanji with stroke order, three graded readings, three conversations, and the N3 Mastery Exam
+- Covers deciding and becoming, timing with ところ and うちに, はず and わけ, hearsay, について and にとって, purpose and cause, さえ and ばかり, べき and わけにはいきません, ば〜ほど, feelings, ずに and たびに, ておく and ちゃう, and work Japanese
+- A new N3 Champion rank and achievement
+- Every new word and kanji checked against JMdict, with the few it flagged reviewed by hand
+- TV: long questions and answers no longer run into the feedback line, and kanji cards keep their memory hook on screen
+- Memory hooks that showed boxes on Windows, such as 亻 and 氵, now use characters the font has, and the content build refuses any it can't draw
+
 ## 0.7.1
 
 - Who's learning: YomiGo asks once whether you're a woman, a man, or would rather not say. Men get ぼく and おれ in My words, and women あたし, each with an example. わたし stays in the course for everyone. Change it in Settings

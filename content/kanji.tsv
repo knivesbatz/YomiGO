@@ -80,11 +80,11 @@ j.takai	高	たか	taka	tall, expensive	コウ / たか	A tall watchtower with w
 j.au	会	あ	a	to meet	カイ, エ / あ	People gather under one roof to talk.
 j.sha	社	しゃ	sha	company, shrine	シャ / やしろ	The altar sign beside earth (土): a place people gather.
 j.koto	事	こと	koto	thing, matter	ジ / こと	A hand holding a brush, recording what happened.
-j.tsukuru	作	つく	tsuku	to make	サク, サ / つく	A person (亻) building with a saw.
-j.tsukau	使	つか	tsuka	to use	シ / つか	A person (亻) sends an official on an errand.
-j.motsu	持	も	mo	to hold	ジ / も	A hand (扌) beside a temple: holding on tight.
+j.tsukuru	作	つく	tsuku	to make	サク, サ / つく	A person (人) building with a saw.
+j.tsukau	使	つか	tsuka	to use	シ / つか	A person (人) sends an official on an errand.
+j.motsu	持	も	mo	to hold	ジ / も	A hand (手) beside a temple: holding on tight.
 j.matsu	待	ま	ma	to wait	タイ / ま	Walking (彳) to the temple, then waiting there.
-j.hataraku	働	はたら	hatara	to work	ドウ / はたら	A person (亻) in motion (動). Made in Japan.
+j.hataraku	働	はたら	hatara	to work	ドウ / はたら	A person (人) in motion (動). Made in Japan.
 #k10
 j.aku	開	あ	a	to open	カイ / あ, ひら	Two hands lifting the bar of a gate.
 j.shimeru	閉	し	shi	to close	ヘイ / し, と	A bar locked across a gate.
@@ -138,7 +138,7 @@ j.iro	色	いろ	iro	colour	ショク, シキ / いろ	A person bent over anothe
 j.oto	音	おと	oto	sound	オン / おと, ね	Standing (立) in the sun (日), hearing a sound.
 j.koe	声	こえ	koe	voice	セイ / こえ	A samurai (士) calling out.
 j.sora	空	そら	sora	sky	クウ / そら, あ	A hole (穴) above a tool (工): open air.
-j.umi	海	うみ	umi	sea	カイ / うみ	Water (氵) beside every (毎) shore.
+j.umi	海	うみ	umi	sea	カイ / うみ	Water (水) beside every (毎) shore.
 #k16
 j.omou	思	おも	omo	to think	シ / おも	A field (田) on your heart (心).
 j.iu	言	い	i	to say	ゲン, ゴン / い, こと	Words rising from a mouth (口).
@@ -148,3 +148,31 @@ j.oshieru	教	おし	oshi	to teach	キョウ / おし, おそ	A child (子) bein
 j.narau	習	なら	nara	to learn	シュウ / なら	Wings (羽) over white (白): a bird practising flight.
 j.ben	勉	べん	ben	effort	ベン / -	Pushing through with strength (力).
 j.tsuyoi	強	つよ	tsuyo	strong	キョウ, ゴウ / つよ, し	A bow (弓) and a beetle's tough shell.
+#k17
+j.kawaru	変	か	ka	change, strange	ヘン / か	Arms flung wide, legs walking a new way: change.
+j.kimeru	決	き	ki	decide	ケツ / き	Water (水) bursting through: once it breaks, it's decided.
+j.kanarazu	必	かなら	kanara	certainly	ヒツ / かなら	A heart (心) with an arrow through it: it will certainly hit.
+j.musubu	結	むす	musu	tie, conclude	ケツ / むす, ゆ	Thread (糸) tied for good luck (吉): a knot.
+j.hatasu	果	か	ka	fruit, result	カ / は	Fruit like a field (田) on top of a tree (木): what growing ends in.
+j.ri	理	り	ri	reason, logic	リ / -	A king (王) lays out a village (里) in neat lines: reason.
+j.yuu2	由	ゆう	yuu	reason, cause	ユ, ユウ / よし	A shoot pushing up through a field (田): where it comes from.
+j.hara	原	げん	gen	origin, field	ゲン / はら	A spring (泉) under a cliff: where a river begins.
+j.in	因	いん	in	cause	イン / よ	A big (大) person boxed in (囗): there must be a cause.
+j.naru	成	せい	sei	become, succeed	セイ, ジョウ / な	A halberd (戈) raised when the job is done.
+j.kou2	功	こう	kou	achievement	コウ, ク / -	Craft (工) plus strength (力): an achievement.
+j.ushinau	失	しつ	shitsu	lose	シツ / うしな	A man (夫) with something slipping out past his hand: lost.
+j.yabureru	敗	はい	hai	defeat	ハイ / やぶ	Money (貝, a shell) being struck: defeat.
+#k18
+j.yaku	約	やく	yaku	promise, about	ヤク / -	Thread (糸) wound round a ladle: tied up by a promise.
+j.taba	束	そく	soku	bundle	ソク / たば	A tree (木) with a band round it: a bundle.
+j.mamoru	守	まも	mamo	protect	シュ, ス / まも, もり	A hand (寸) under a roof (宀): guarding the house.
+j.kotowaru	断	ことわ	kotowa	refuse, cut off	ダン / ことわ, た	An axe (斤) chopping a bundle of rice: cutting it off.
+j.tanomu	頼	たの	tano	rely on, request	ライ / たの, たよ	A bundle (束) beside a head (頁): someone you can lean on.
+j.gi	議	ぎ	gi	discussion	ギ / -	Words (言) about what's right (義): a debate.
+j.nokoru	残	のこ	noko	remain	ザン / のこ	Bones (歹) left after the fighting: what remains.
+j.shiraberu	調	しら	shira	investigate, tune	チョウ / しら, ととの	Words (言) going all around (周): asking everywhere.
+j.tsutaeru	伝	つた	tsuta	pass on	デン / つた	A person (人) saying (云) something to pass along.
+j.tashika	確	たし	tashi	certain	カク / たし	As solid as a stone (石): certain.
+j.setsu	説	せつ	setsu	explain, theory	セツ, ゼイ / と	Words (言) that open up a frowning face: an explanation.
+j.fueru	増	ふ	fu	increase	ゾウ / ふ, ま	Earth (土) piled up layer on layer: more and more.
+j.heru	減	へ	he	decrease	ゲン / へ	Water (水) draining away: less and less.
