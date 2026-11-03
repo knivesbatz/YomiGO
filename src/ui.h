@@ -78,6 +78,10 @@ void plat_speak(const char *utf8);
 void plat_sound(int kind); /* 0 move, 1 press, 2 right, 3 done, 4 wrong, 5 aced */
 int  plat_muted(void);
 void plat_mute(int on);
+int  plat_sync_open(char *addr, int cap);   /* listen on the home network for a phone's save; the code to show, or 0 */
+int  plat_sync_poll(char *body, int cap);   /* a whole request's body once one has arrived, else 0 */
+void plat_sync_reply(int status, const char *body, int len);
+void plat_sync_close(void);
 void plat_quit(void);
 void plat_update_check(int quiet);
 int  plat_can_update(void);

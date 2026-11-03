@@ -388,6 +388,32 @@ int profile_save_text(const Profile *p, char *o, int cap) {
     }
     return n;
 }
+/* Two copies of one learner, from two devices, become one. Each card keeps the copy with more reviews behind it,
+   progress and counters take the higher, your own words are joined, and settings come from the copy used last. */
+static int further(const CardState *a, const CardState *b) {
+    int ra = a->reps + a->lapses, rb = b->reps + b->lapses;
+    return ra > rb || (ra == rb && a->due > b->due);
+}
+void profile_merge(Profile *p, const Profile *o) {
+    int i, j, newer = o->last_day > p->last_day;
+    if (newer) { p->pace = o->pace; p->force_en = o->force_en; p->genki = o->genki; p->done_today = o->done_today; }
+    else if (o->last_day == p->last_day && o->done_today > p->done_today) p->done_today = o->done_today;
+    if (o->gender && (newer || !p->gender)) p->gender = o->gender;
+    if (o->day > p->day || (o->day == p->day && o->step > p->step)) { p->day = o->day; p->step = o->step; }
+#define TAKE_MAX(f) if (o->f > p->f) p->f = o->f
+    TAKE_MAX(xp); TAKE_MAX(streak); TAKE_MAX(best_streak); TAKE_MAX(last_day); TAKE_MAX(placed);
+    TAKE_MAX(reviews); TAKE_MAX(perfects); TAKE_MAX(chats); TAKE_MAX(homeworks); TAKE_MAX(reads); TAKE_MAX(listens);
+#undef TAKE_MAX
+    p->ach |= o->ach;
+    for (i = 0; i < YG_NEXAMS; i++) if (o->exam_score[i] > p->exam_score[i]) p->exam_score[i] = o->exam_score[i];
+    for (i = 0; i < YG_NCARDS; i++) if (o->cards[i].seen && (!p->cards[i].seen || further(&o->cards[i], &p->cards[i]))) p->cards[i] = o->cards[i];
+    for (j = 0; j < o->nmy; j++) {
+        const MyCard *m = &o->my[j];
+        for (i = 0; i < p->nmy; i++) if (!ys_cmp(p->my[i].word, m->word) && !ys_cmp(p->my[i].reading, m->reading)) break;
+        if (i < p->nmy) { if (further(&m->st, &p->my[i].st)) p->my[i].st = m->st; }
+        else if (p->nmy < YG_MY_MAX) p->my[p->nmy++] = *m;
+    }
+}
 static int card_index(const char *id, int n) {
     int i;
     for (i = 0; i < YG_NCARDS; i++) if (ys_ncmp(YG_CARDS[i].id, id, n) == 0 && YG_CARDS[i].id[n] == 0) return i;

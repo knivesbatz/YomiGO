@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.18.0
+
+- Sync over home Wi-Fi: open Settings > Sync on the PC or TV, then Settings > Sync with your PC on the phone, and enter the address and code the PC shows. The PC merges the two copies and both keep the result: each card keeps the copy with more reviews, progress and counters take the higher, your own words are joined, and settings come from the device used last. No account and no internet; the PC listens only while its Sync screen is open, and three wrong codes close it. Windows asks once to allow YomiGo on private networks
+- Phone: a tab bar with icons and a highlight on the current tab; Today shows your name, streak, XP, and rank; the blossom no longer sits over the counters at the top; in quizzes, leaving is a small × and I don't know is quieter than Check
+- Phone: the Library's media is one list, without the before-and-after headings
+- Fixed: on the phone, the petals from 0.17's effects were drawn huge, faded, and behind the page
+
 ## 0.17.0
 
 - Right answers burst into sakura petals and sparkles, bigger the longer your run. From three in a row a cheer pops up: いいね！, then すごい！ at five, さいこう！ at ten, and てんさい！ at twenty, with the count. Acing a quiz or passing an exam rains petals with the fanfare. A miss starts the run again. On the PC, TV, and phone, where phones set to reduce motion skip the flying petals

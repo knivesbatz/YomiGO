@@ -32,6 +32,16 @@ int main(void) {
     CHECK(answer_ok("kin'youbi", "きんようび", "kin'youbi"), "apostrophe");
     CHECK(answer_ok("konnichiwa", "こんにちは", ""), "a final は typed as said, with no romaji to compare");
     CHECK(!answer_ok("wa", "は", ""), "a lone は is still ha");
+    /* Two devices' copies of one learner merge into the furthest along of each, and merging again changes nothing */
+    { static Profile a, b;
+      profile_new(&a, "Hana"); profile_new(&b, "Hana");
+      a.xp = 100; b.xp = 250; a.day = 10; b.day = 8; a.last_day = 5; b.last_day = 7; b.pace = 3; a.ach = 1; b.ach = 2; b.exam_score[0] = 90;
+      a.cards[0].seen = 1; a.cards[0].reps = 2; b.cards[0].seen = 1; b.cards[0].reps = 5; b.cards[1].seen = 1; b.cards[1].reps = 1;
+      ys_cpy(b.my[0].word, "猫", 40); ys_cpy(b.my[0].reading, "ねこ", 60); b.my[0].st.reps = 3; b.nmy = 1;
+      profile_merge(&a, &b);
+      CHECK(a.xp == 250 && a.day == 10 && a.pace == 3 && a.last_day == 7 && a.ach == 3 && a.exam_score[0] == 90, "merged progress");
+      CHECK(a.cards[0].reps == 5 && a.cards[1].seen && a.nmy == 1 && a.my[0].st.reps == 3, "merged cards and words");
+      profile_merge(&a, &b); CHECK(a.nmy == 1 && a.cards[0].reps == 5, "merging again changes nothing"); }
     { static const char *const kr[][2] = {{"きって", "kitte"}, {"まっちゃ", "matcha"}, {"ほん", "hon"}, {"きんようび", "kin'youbi"}, {"コーヒー", "koohii"},
                                          {"こんにちは", "konnichiwa"}, {"はは", "haha"}, {"ちゃわん", "chawan"}, {"ファイル", "fairu"}};
       int k; char ro[64];

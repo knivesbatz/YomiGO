@@ -33,6 +33,7 @@ Complete means implemented and tested as described. **Partial** says what's miss
 | Controller, prompts, rebinding | n/a | Partial: no real pad tested | n/a | n/a |
 | CRT mode | n/a | Partial: no real CRT tested | n/a | n/a |
 | Updates, automatic at start | Complete on Windows 7+ | Complete on Windows 7+ | Partial: not run on a device | Manual |
+| Sync over home Wi-Fi | Complete: hosts the merge | Complete: hosts the merge | Partial: not run on a device | n/a |
 | Backup and restore | Partial: backup copies; restore by hand | Partial: as Desktop | Complete: text export and import | n/a |
 | Dictionary | Complete | Complete | Complete | Complete, not yet in a real browser install |
 | Sentence capture, Anki export | n/a | n/a | n/a | Complete, not yet in a real browser install |

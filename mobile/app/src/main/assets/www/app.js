@@ -115,9 +115,9 @@ function listen(cb) {
 }
 
 // Navigation
-const TABS = [["Today", "きょう", 2, home], ["Cards", "カード", 3, cards], ["Exams", "しけん", 2, exams], ["Quest", "クエスト", 3, quest], ["Library", "本だな", 5, library], ["More", "せってい", 2, settings]];
+const TABS = [["Today", "きょう", 2, home, "🏠"], ["Cards", "カード", 3, cards, "🃏"], ["Exams", "しけん", 2, exams, "🏯"], ["Quest", "クエスト", 3, quest, "🗺️"], ["Library", "本だな", 5, library, "📚"], ["More", "せってい", 2, settings, "⚙️"]];
 function setNav(cur) {
-  nav.replaceChildren(...(P && cur >= 0 ? TABS.map((t, i) => h("button", { on: t[3], cls: i === cur ? "on" : "", "aria-current": i === cur ? "page" : "false" }, L(t[0], t[1], t[2]))) : []));
+  nav.replaceChildren(...(P && cur >= 0 ? TABS.map((t, i) => h("button", { on: t[3], cls: i === cur ? "on" : "", "aria-current": i === cur ? "page" : "false" }, h("span", { cls: "ic", "aria-hidden": "true" }, t[4]), h("span", null, L(t[0], t[1], t[2])))) : []));
 }
 
 function profiles() {
@@ -213,7 +213,8 @@ function home() {
   setNav(0);
   const t = Y.today(), gate = Y.examGate(P), due = Y.dueCount(P, t);
   if (P.last !== t) P.today = 0;
-  const parts = [h("div", { cls: "row" }, h("h1", null, L("Today", "きょう", 2)), h("span", { cls: "dim" }, `🔥 ${P.streak}  ·  XP ${P.xp}`))];
+  const parts = [h("div", { cls: "row" }, h("h1", null, L("Today", "きょう", 2)), h("span", { cls: "dim" }, P.name)),
+    h("div", { cls: "chips" }, h("span", { cls: "chip" }, `🔥 ${P.streak}`), h("span", { cls: "chip" }, `⭐ ${P.xp} XP`), h("span", { cls: "chip acc", lang: "ja" }, RANKS[Y.rankOf(P)][Y.stageOf(P) >= 3 && !P.en ? 1 : 0]))];
   if (gate >= 0) parts.push(h("div", { cls: "card" }, h("div", { cls: "bad" }, "Required to continue"), h("h2", null, C.exams[gate].name), "Pass with 80%. Retake it as often as you need.", btn(L("Take the exam", "しけん", 2), () => startExam(gate), "main")));
   else if (P.day >= C.days.length) parts.push(h("div", { cls: "card" }, h("h2", { cls: "good" }, "Course complete!"), "More words, then N2, arrive in future updates. Keep reviewing, and read and listen to real Japanese every day."));
   else {
@@ -373,11 +374,10 @@ function runQuiz(qs, title, done, opt = {}) {
       idk = true;
       for (const b of area.querySelectorAll("button, input")) { b.disabled = true; if (b.textContent === q.answer) b.className = "right"; }
       after(false);
-    });
+    }, "ghost");
     area.append(dontKnow);
-    show(h("div", { cls: "row" }, h("h1", null, title), h("span", { cls: "dim" }, `${i + 1} / ${qs.length}`)), bar(i, qs.length),
-      h("div", { cls: "card" }, h("div", { cls: "dim" }, q.tag), big, q.sub ? h("div", { cls: "dim" }, q.sub) : "", q.say ? btn("🔊 " + L("Hear again", "もう一度", 5), () => speak(q.say)) : q.card.t !== "g" && q.kind === "choice" && /[ぁ-ヿ一-龯]/.test(q.prompt) ? btn("🔊", () => speak(q.card.r)) : ""), area, fb,
-      opt.noExit ? "" : btn("Leave", home));
+    show(h("div", { cls: "row" }, h("h1", null, title), h("span", { cls: "dim" }, `${i + 1} / ${qs.length}`, opt.noExit ? "" : h("button", { cls: "x", on: home, "aria-label": "Leave" }, "×"))), bar(i, qs.length),
+      h("div", { cls: "card" }, h("div", { cls: "dim" }, q.tag), big, q.sub ? h("div", { cls: "dim" }, q.sub) : "", q.say ? btn("🔊 " + L("Hear again", "もう一度", 5), () => speak(q.say)) : q.card.t !== "g" && q.kind === "choice" && /[ぁ-ヿ一-龯]/.test(q.prompt) ? btn("🔊", () => speak(q.card.r)) : ""), area, fb);
     if (q.focus) q.focus.focus();
     if (q.say) speak(q.say);
   };
@@ -447,7 +447,7 @@ function quest() {
 function library() {
   setNav(4);
   const stage = Y.stageOf(P);
-  const era = (isNew) => C.media.filter((m) => m.stage <= stage + 1 && (m.era === "new") === isNew).map((m) => h("div", { cls: "card" }, h("div", { cls: "row" }, h("strong", { lang: "ja" }, m.ja), h("span", { cls: "dim" }, m.year)), h("div", { cls: "dim" }, `${m.type}: ${m.title}`), m.task));
+  const media = () => C.media.filter((m) => m.stage <= stage + 1).map((m) => h("div", { cls: "card" }, h("div", { cls: "row" }, h("strong", { lang: "ja" }, m.ja), h("span", { cls: "dim" }, m.year)), h("div", { cls: "dim" }, `${m.type}: ${m.title}`), m.task));
   // The dictionary is big, so it loads the first time you search
   const q = h("input", { placeholder: "Japanese, romaji, or English", "aria-label": "Search the dictionary", lang: "ja", autocapitalize: "off" }), out = h("div");
   const ensure = (then) => { if (globalThis.YG_DICT_TEXT) return then(); const s = document.createElement("script"); s.src = "dict.js"; s.onload = () => { Y.dictLoad(YG_DICT_TEXT); then(); }; document.head.append(s); };
@@ -457,7 +457,37 @@ function library() {
     btn("📝 " + L("Text Reader", "テキスト", 3), () => textReader(), "main"),
     h("h2", null, "Dictionary"), q, btn("Search", search, "main"), out, h("p", { cls: "dim" }, "About 22,000 common words from JMdict by EDRDG, CC BY-SA 4.0."),
     h("h2", null, "Study Guide"), C.guide.map((g) => { const d = h("details", { cls: "card" }, h("summary", null, h("strong", null, g.title))); g.body.split("\n").forEach((p) => d.append(h("p", null, p))); return d; }),
-    h("h2", null, "Released after 2020"), era(true), h("h2", null, "Released before 1999"), era(false), h("p", { cls: "dim" }, "Difficulty is YomiGo's own judgement. Check your local services for availability."));
+    h("h2", null, "Watch, read, and listen"), media(), h("p", { cls: "dim" }, "Difficulty is YomiGo's own judgement. Check your local services for availability."));
+}
+// Home Wi-Fi sync: the PC or TV keeps the learner's save. This phone sends its copy, the PC merges the two, and both keep the result.
+function syncScreen() {
+  setNav(5);
+  let last = ""; try { last = localStorage.getItem("yg.syncAddr") || ""; } catch {}
+  const addr = h("input", { placeholder: "PC address, like 192.168.1.23", inputmode: "decimal", autocomplete: "off", "aria-label": "PC address", value: last }),
+    code = h("input", { placeholder: "4-digit code", inputmode: "numeric", maxlength: 4, autocomplete: "off", "aria-label": "Code" }),
+    msg = h("p", { cls: "dim" });
+  const run = btn(L("Sync", "どうき", 4), async () => {
+    const a = addr.value.trim(), c = code.value.trim();
+    if (!/^[\d.]+$/.test(a) || !/^\d{4}$/.test(c)) { msg.textContent = "Enter the address and the 4-digit code the PC shows."; return; }
+    run.disabled = true; msg.textContent = "Syncing...";
+    try {
+      const r = await fetch(`http://${a}:47820/sync`, { method: "POST", headers: { "Content-Type": "text/plain" }, body: `YOMIGO-SYNC 1 ${c}\n` + Y.saveText(P) });
+      const text = await r.text();
+      if (r.status === 403) msg.textContent = "Wrong code. Check the code on the PC's Sync screen.";
+      else if (!r.ok) msg.textContent = "The PC couldn't use this save: " + text;
+      else {
+        const p = Y.loadText(text);
+        if (!p) throw new Error("bad reply");
+        P = p; store.save();
+        try { localStorage.setItem("yg.syncAddr", a); } catch {}
+        return result(L("Synced", "どうきしました", 4), `${P.name}'s progress is now the same on this phone and the PC.`, true, home);
+      }
+    } catch { msg.textContent = "Couldn't reach the PC. Check both are on the same Wi-Fi, the PC's Sync screen is open, and Windows allowed YomiGo through its firewall."; }
+    run.disabled = false;
+  }, "main");
+  show(h("h1", null, L("Sync with your PC", "どうき", 4)),
+    h("p", null, "On the PC or TV, open Settings, then Sync. Enter the address and code it shows. Use the same learner name on both."),
+    addr, code, run, msg, btn(L("Back", "もどる", 2), settings));
 }
 function settings() {
   setNav(5);
@@ -469,6 +499,7 @@ function settings() {
     btn(P.genki ? "Genki practice: On" : "Genki practice: Off", () => { P.genki = P.genki ? 0 : 1; store.save(); settings(); }),
     btn(muted() ? "Sounds: Off" : "Sounds: On", () => { try { localStorage.setItem("yg.mute", muted() ? "0" : "1"); } catch {} chime("done"); settings(); }),
     btn("Who's learning: " + GENDER[P.gender], () => askSpeaker(settings)),
+    btn("Sync with your PC", syncScreen),
     btn(canSpeak() ? "Japanese voice: found" : "Japanese voice: none. Tap to add it", () => { if (Bridge) Bridge.installVoice(); else alert("Listening needs a Japanese voice on this device."); }),
     btn("Check for updates", () => { if (Bridge) Bridge.checkUpdate(); else alert("Updates apply to the Android app."); }),
     btn("YomiGo on GitHub", () => { const u = "https://github.com/knivesbatz/YomiGO"; if (Bridge) Bridge.openUrl(u); else window.open(u, "_blank", "noopener"); }),

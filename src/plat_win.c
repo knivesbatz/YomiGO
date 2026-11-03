@@ -5,6 +5,7 @@
 #include <windows.h>
 #include <mmsystem.h>
 #include <shellapi.h>
+#include <winsock.h>
 #undef IN /* windows.h defines it as nothing */
 #include "yg.h"
 #include "ui.h"
@@ -461,6 +462,110 @@ void plat_update_check(int quiet) {
     if (CreateProcessA(0, cmd, 0, 0, FALSE, 0, 0, dir, &si, &pi)) { CloseHandle(pi.hProcess); CloseHandle(pi.hThread); }
 }
 
+/* ---- home Wi-Fi sync: while the Sync screen is open, a tiny web server on the home network takes one save at a time.
+   Winsock is looked up at run time, like the other optional parts, so YomiGo still starts where it's missing. ---- */
+#define SYNC_PORT 47820
+typedef int (WINAPI *WSTART)(WORD, LPWSADATA);
+typedef SOCKET (WINAPI *WSOCKET)(int, int, int);
+typedef int (WINAPI *WBIND)(SOCKET, const struct sockaddr *, int);
+typedef int (WINAPI *WLISTEN)(SOCKET, int);
+typedef SOCKET (WINAPI *WACCEPT)(SOCKET, struct sockaddr *, int *);
+typedef int (WINAPI *WRECV)(SOCKET, char *, int, int);
+typedef int (WINAPI *WSEND)(SOCKET, const char *, int, int);
+typedef int (WINAPI *WCLOSE)(SOCKET);
+typedef int (WINAPI *WSELECT)(int, fd_set *, fd_set *, fd_set *, const struct timeval *);
+typedef int (WINAPI *WHOSTNAME)(char *, int);
+typedef struct hostent *(WINAPI *WHOSTBYNAME)(const char *);
+static struct { WSOCKET socket; WBIND bind; WLISTEN listen; WACCEPT accept; WRECV recv; WSEND send; WCLOSE close; WSELECT select; WHOSTNAME hostname; WHOSTBYNAME hostbyname; } ws;
+static SOCKET sync_sock = INVALID_SOCKET, sync_peer = INVALID_SOCKET;
+static int ws_ready(void) {
+    static int tried, ok; static WSADATA wd; HMODULE d; WSTART start;
+    if (tried) return ok;
+    tried = 1;
+    if (!(d = LoadLibraryA("wsock32.dll"))) return 0;
+    start = (WSTART)GetProcAddress(d, "WSAStartup");
+    ws.socket = (WSOCKET)GetProcAddress(d, "socket"); ws.bind = (WBIND)GetProcAddress(d, "bind"); ws.listen = (WLISTEN)GetProcAddress(d, "listen");
+    ws.accept = (WACCEPT)GetProcAddress(d, "accept"); ws.recv = (WRECV)GetProcAddress(d, "recv"); ws.send = (WSEND)GetProcAddress(d, "send");
+    ws.close = (WCLOSE)GetProcAddress(d, "closesocket"); ws.select = (WSELECT)GetProcAddress(d, "select");
+    ws.hostname = (WHOSTNAME)GetProcAddress(d, "gethostname"); ws.hostbyname = (WHOSTBYNAME)GetProcAddress(d, "gethostbyname");
+    ok = start && ws.socket && ws.bind && ws.listen && ws.accept && ws.recv && ws.send && ws.close && ws.select && ws.hostname && ws.hostbyname && start(0x0101, &wd) == 0;
+    return ok;
+}
+static int sync_wait(SOCKET s, int ms) {
+    fd_set r; struct timeval tv;
+    FD_ZERO(&r); FD_SET(s, &r); tv.tv_sec = ms / 1000; tv.tv_usec = (ms % 1000) * 1000;
+    return ws.select(0, &r, 0, 0, &tv) > 0;
+}
+/* The address a phone on the same network should use: the first private one this PC has */
+static void sync_address(char *out, int cap) {
+    char host[256]; struct hostent *h; int i;
+    ys_cpy(out, "127.0.0.1", cap);
+    if (ws.hostname(host, sizeof host) || !(h = ws.hostbyname(host))) return;
+    for (i = 0; h->h_addr_list[i]; i++) {
+        const unsigned char *a = (const unsigned char *)h->h_addr_list[i]; char t[8]; int k;
+        int priv = a[0] == 10 || (a[0] == 192 && a[1] == 168) || (a[0] == 172 && a[1] >= 16 && a[1] < 32);
+        if (i && !priv) continue;
+        out[0] = 0;
+        for (k = 0; k < 4; k++) { ys_itoa(a[k], t); ys_cat(out, t, cap); if (k < 3) ys_cat(out, ".", cap); }
+        if (priv) return;
+    }
+}
+void plat_sync_close(void) {
+    if (sync_peer != INVALID_SOCKET) ws.close(sync_peer);
+    if (sync_sock != INVALID_SOCKET) ws.close(sync_sock);
+    sync_peer = sync_sock = INVALID_SOCKET;
+}
+int plat_sync_open(char *addr, int cap) {
+    struct sockaddr_in a; int i; char *p = (char *)&a;
+    if (!ws_ready()) return 0;
+    plat_sync_close();
+    if ((sync_sock = ws.socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) return 0;
+    for (i = 0; i < (int)sizeof a; i++) p[i] = 0;
+    a.sin_family = AF_INET; a.sin_port = (unsigned short)((SYNC_PORT >> 8) | ((SYNC_PORT & 255) << 8));
+    a.sin_addr.s_addr = headless ? 0x0100007F : 0; /* tests stay on this PC, so Windows Firewall doesn't ask */
+    if (ws.bind(sync_sock, (struct sockaddr *)&a, sizeof a) || ws.listen(sync_sock, 2)) { plat_sync_close(); return 0; }
+    if (headless) ys_cpy(addr, "127.0.0.1", cap); else sync_address(addr, cap);
+    return headless ? 1234 : 1000 + (int)((GetTickCount() ^ (GetCurrentProcessId() << 7)) % 9000);
+}
+static void sync_send(const char *status, const char *body, int len) {
+    char head[320], t[16];
+    ys_cpy(head, "HTTP/1.0 ", sizeof head); ys_cat(head, status, sizeof head);
+    ys_cat(head, "\r\nAccess-Control-Allow-Origin: *\r\nAccess-Control-Allow-Methods: POST\r\nAccess-Control-Allow-Headers: Content-Type\r\n"
+                 "Content-Type: text/plain; charset=utf-8\r\nConnection: close\r\nContent-Length: ", sizeof head);
+    ys_itoa(len, t); ys_cat(head, t, sizeof head); ys_cat(head, "\r\n\r\n", sizeof head);
+    ws.send(sync_peer, head, ys_len(head), 0);
+    while (len > 0) { int n = ws.send(sync_peer, body, len, 0); if (n <= 0) break; body += n; len -= n; }
+    ws.close(sync_peer); sync_peer = INVALID_SOCKET;
+}
+void plat_sync_reply(int status, const char *body, int len) {
+    if (sync_peer != INVALID_SOCKET) sync_send(status == 200 ? "200 OK" : status == 403 ? "403 Forbidden" : "400 Bad Request", body, len);
+}
+static int lower_ncmp(const char *a, const char *lower, int n) { while (n--) { char x = *a++; if (x >= 'A' && x <= 'Z') x += 32; if (x != *lower++) return 1; } return 0; }
+/* A whole request's body once one has arrived, else 0. Its answer goes back with plat_sync_reply. */
+int plat_sync_poll(char *body, int cap) {
+    static char req[YG_SAVE_CAP + 4096]; int n = 0, head = -1, need = 0, i;
+    if (sync_sock == INVALID_SOCKET || sync_peer != INVALID_SOCKET || !sync_wait(sync_sock, 0)) return 0;
+    if ((sync_peer = ws.accept(sync_sock, 0, 0)) == INVALID_SOCKET) return 0;
+    while (n < (int)sizeof req - 1 && sync_wait(sync_peer, 3000)) { /* a few quiet seconds and it gives up */
+        int got = ws.recv(sync_peer, req + n, (int)sizeof req - 1 - n, 0);
+        if (got <= 0) break;
+        n += got; req[n] = 0;
+        if (head < 0) for (i = 0; i + 3 < n; i++) if (req[i] == '\r' && req[i + 1] == '\n' && req[i + 2] == '\r' && req[i + 3] == '\n') { head = i + 4; break; }
+        if (head >= 0 && !need) {
+            need = -1;
+            for (i = 0; i < head; i++) if (!lower_ncmp(req + i, "content-length:", 15)) { const char *v = req + i + 15; while (*v == ' ') v++; need = ys_atoi(v); break; }
+        }
+        if (head >= 0 && n - head >= (need > 0 ? need : 0)) break;
+    }
+    if (head < 0) { sync_send("400 Bad Request", "", 0); return 0; }
+    if (!ys_ncmp(req, "OPTIONS", 7)) { sync_send("204 No Content", "", 0); return 0; }
+    n -= head;
+    if (n <= 0 || n >= cap) { sync_send("400 Bad Request", "Empty, or too big", 17); return 0; }
+    for (i = 0; i < n; i++) body[i] = req[head + i];
+    body[n] = 0;
+    return n;
+}
+
 /* ---- controllers: XInput where it exists, the Windows 95 joystick API for everything else ---- */
 typedef struct { DWORD pk; WORD buttons; BYTE lt, rt; SHORT lx, ly, rx, ry; } XIS;
 typedef DWORD (WINAPI *XIGS)(DWORD, XIS *);
@@ -812,7 +917,7 @@ static void run_script(const char *s) {
     step(0, 0, 0, 0);
     while (*s) {
         char c = *s++; int n = 0;
-        if (c == 't' || c == 'w' || c == 'p' || c == 'k' || c == 'K' || c == 'I' || c == 'A' || c == 'M') { while (*s && *s != ';' && n < 127) buf[n++] = *s++; buf[n] = 0; if (*s) s++; unescape(buf); }
+        if (c == 't' || c == 'w' || c == 'p' || c == 'k' || c == 'K' || c == 'I' || c == 'A' || c == 'M' || c == 'N') { while (*s && *s != ';' && n < 127) buf[n++] = *s++; buf[n] = 0; if (*s) s++; unescape(buf); }
         switch (c) {
         case 'u': step(A_UP, 0, 0, 0); break; case 'd': step(A_DOWN, 0, 0, 0); break;
         case 'l': step(A_LEFT, 0, 0, 0); break; case 'r': step(A_RIGHT, 0, 0, 0); break;
@@ -821,6 +926,7 @@ static void run_script(const char *s) {
         case 'x': step(A_X, 0, 0, 0); break;
         case 'V': step_paste = 1; step(0, 0, 0, 0); break;
         case 'F': step_left = 1; step(0, 0, 0, 0); break;
+        case 'N': { DWORD end = GetTickCount() + (DWORD)ys_atoi(buf); while (GetTickCount() < end) { step(0, 0, 0, 0); Sleep(10); } break; } /* frames for this many real milliseconds */
         case 'C': step_copy = 1; step(0, 0, 0, 0); break;
         case 'R': step(A_R, 0, 0, 0); break; case 'L': step(A_L, 0, 0, 0); break;
         case '1': case '2': case '3': case '4': step(0, 0, c - '0', 0); break;

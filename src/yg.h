@@ -48,6 +48,7 @@ typedef struct {
 void profile_new(Profile *p, const char *name);
 int  profile_save_text(const Profile *p, char *out, int cap);
 int  profile_load_text(Profile *p, const char *text, int len);
+void profile_merge(Profile *p, const Profile *other);   /* the same learner from another device: keeps the furthest along of each */
 int  profile_stage(const Profile *p);
 int  profile_due(const Profile *p, int today);
 int  profile_exam_gate(const Profile *p);    /* exam that must be passed before the next class, or -1 */

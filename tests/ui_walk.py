@@ -157,6 +157,29 @@ ok = vals.get("exam.S0", "0") == "0"
 print("leaving during an exam fails the question", "OK" if ok else "FAILED", vals.get("exam.S0"))
 fail += not ok
 shutil.rmtree(root, ignore_errors=True)
+# Home Wi-Fi sync, playing the phone's part: the PC's Sync screen refuses a wrong code, then merges a phone save
+# that's further along (day 40) into its own (day 30), sends the merged save back, and keeps it
+import time, urllib.request, urllib.error
+def post(body):
+    try:
+        with urllib.request.urlopen(urllib.request.Request("http://127.0.0.1:47820/sync", data=body.encode("utf-8"), headers={"Content-Type": "text/plain"}), timeout=10) as r:
+            return r.status, r.read().decode("utf-8")
+    except urllib.error.HTTPError as e:
+        return e.code, e.read().decode("utf-8")
+    except OSError as e:
+        return 0, str(e)
+root = tempfile.mkdtemp()
+open(os.path.join(root, "Hana.sav"), "w", encoding="utf-8", newline="\n").write(make_brand.save_text(30, 0))
+app = subprocess.Popen([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--script", "w2;ow2;ow2;M50,359;w2;M526,101;w2;N9000;"])
+time.sleep(3)
+wrong = post("YOMIGO-SYNC 1 9999\n" + make_brand.save_text(40, 0))
+right = post("YOMIGO-SYNC 1 1234\n" + make_brand.save_text(40, 0))
+app.wait(timeout=60)
+kept = open(os.path.join(root, "Hana.sav"), encoding="utf-8").read()
+ok = wrong[0] == 403 and right[0] == 200 and "\nday=40\n" in right[1] and "\nday=40\n" in kept
+print("sync with a phone over the home network", "OK" if ok else "FAILED", wrong[0], right[0], "day=40" in right[1], "day=40" in kept)
+fail += not ok
+shutil.rmtree(root, ignore_errors=True)
 # Copy and paste, using a stand-in clipboard so the real one is left alone: "Ab" pasted after itself makes "AbAb"
 root = tempfile.mkdtemp()
 subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--script", "w2;ow2;ow2;tAb;w1;C;w1;V;w1;ow2;"], timeout=60)

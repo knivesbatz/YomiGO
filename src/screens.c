@@ -54,7 +54,7 @@
 #define FBY_BTN (FBH - FOOT - 38)
 #endif
 
-typedef enum { S_SPLASH, S_PROFILES, S_NAME, S_PLACE_INTRO, S_PLACE_RESULT, S_HOME, S_CLASS, S_TEACH, S_QUIZ, S_RESULT, S_CHAT, S_TASK, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS, S_BIND, S_FIRST, S_GENKI, S_TYPING, S_READ, S_MYWORDS, S_MYADD, S_SHADOW, S_TEXT, S_SPEAKER, S_TALK } Screen;
+typedef enum { S_SPLASH, S_PROFILES, S_NAME, S_PLACE_INTRO, S_PLACE_RESULT, S_HOME, S_CLASS, S_TEACH, S_QUIZ, S_RESULT, S_CHAT, S_TASK, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS, S_BIND, S_FIRST, S_GENKI, S_TYPING, S_READ, S_MYWORDS, S_MYADD, S_SHADOW, S_TEXT, S_SPEAKER, S_TALK, S_SYNC } Screen;
 typedef enum { QM_WARMUP, QM_DRILL, QM_DAILY, QM_HW, QM_REVIEW, QM_EXAM, QM_PLACE, QM_PRACTICE, QM_LISTEN } QuizMode;
 
 static Screen scr = S_SPLASH;
@@ -1528,6 +1528,60 @@ static void scr_library(void) {
 #endif
 }
 
+/* ---- home Wi-Fi sync: this PC keeps each learner's save, and a phone sends its copy here to be merged with it.
+   Both end up with the merged save. Only while this screen is open, and only with the code it shows. ---- */
+static int sync_code, sync_wrong; static char sync_addr[32], sync_note[96];
+static void sync_start(void) { sync_wrong = 0; sync_note[0] = 0; sync_code = plat_sync_open(sync_addr, sizeof sync_addr); go(S_SYNC); }
+static int safe_name(const char *n) {
+    if (!*n) return 0;
+    for (; *n; n++) if (!((*n >= 'a' && *n <= 'z') || (*n >= 'A' && *n <= 'Z') || (*n >= '0' && *n <= '9') || *n == '-' || *n == '_')) return 0;
+    return 1;
+}
+static void sync_take(char *req, int n) {
+    static Profile theirs, mine; static char out[YG_SAVE_CAP]; char fn[64]; const char *body = req; int m;
+    if (ys_ncmp(req, "YOMIGO-SYNC 1 ", 14)) { plat_sync_reply(400, "Not a YomiGo sync", 17); return; }
+    while (*body && *body != '\n') body++;
+    if (*body) body++;
+    if (ys_atoi(req + 14) != sync_code) {
+        plat_sync_reply(403, "Wrong code", 10);
+        if (++sync_wrong >= 3) { plat_sync_close(); sync_code = 0; ys_cpy(sync_note, "Three wrong codes, so sync stopped. Open it again for a new code.", sizeof sync_note); }
+        else ys_cpy(sync_note, "A phone tried a wrong code.", sizeof sync_note);
+        return;
+    }
+    if (!profile_load_text(&theirs, body, n - (int)(body - req)) || !safe_name(theirs.name)) { plat_sync_reply(400, "That isn't a YomiGo save", 24); return; }
+    if (have_profile && !ys_cmp(P.name, theirs.name)) { profile_merge(&P, &theirs); save_profile(); m = profile_save_text(&P, out, sizeof out); }
+    else {
+        ys_cpy(fn, theirs.name, sizeof fn); ys_cat(fn, ".sav", sizeof fn);
+        m = plat_read(fn, out, sizeof out - 1);
+        if (m > 0 && profile_load_text(&mine, out, m)) profile_merge(&mine, &theirs); else mine = theirs;
+        m = profile_save_text(&mine, out, sizeof out);
+        if (m > 0) plat_write(fn, out, m);
+    }
+    if (m <= 0) { plat_sync_reply(400, "The save is too big", 19); return; }
+    plat_sync_reply(200, out, m);
+    ys_cpy(sync_note, "Synced ", sizeof sync_note); ys_cat(sync_note, theirs.name, sizeof sync_note); ys_cat(sync_note, " with a phone.", sizeof sync_note);
+    plat_sound(3);
+}
+static void scr_sync(void) {
+    static char req[YG_SAVE_CAP + 64]; char b[64]; int n, y = CY;
+    chrome(L("Sync", "どうき", 4), 0);
+    if (!sync_code) wrap(CX, y, CW, *sync_note ? sync_note : "Couldn't open the home network. Check this PC is on Wi-Fi or a cable, then try again.", C_BAD, LH, 0, 4);
+    else {
+        y += LH * wrap(CX, y, CW, HTPC ? "On the phone: YomiGo, Settings, Sync with your PC. Enter:" : "On your phone, open YomiGo, then Settings > Sync with your PC, and enter:", C_INK, LH, 0, 3) + 6;
+        text(CX, y + 8, "Address", C_DIM); text2(CX + (HTPC ? 70 : 90), y, sync_addr, C_ACC); y += 38;
+        ys_itoa(sync_code, b); text(CX, y + 8, "Code", C_DIM); text2(CX + (HTPC ? 70 : 90), y, b, C_ACC); y += 42;
+        if (!HTPC) y += LH * wrap(CX, y, CW, "Keep this screen open until the phone says it's done. Both need the same Wi-Fi. If Windows asks, allow YomiGo on private networks.", C_DIM, LH, 0, 3) + 4;
+        if (*sync_note) text(CX, y, sync_note, C_GOOD);
+        if ((n = plat_sync_poll(req, sizeof req - 1)) > 0) sync_take(req, n);
+    }
+#if HTPC
+    if (IN.pressed & A_BACK) { plat_sync_close(); go(S_SETTINGS); return; }
+    footer(0, "Back");
+#else
+    if (back_btn()) { plat_sync_close(); go(S_SETTINGS); }
+#endif
+}
+
 /* ---- settings ---- */
 static int bind_action;
 static void voice_help(void) {
@@ -1542,7 +1596,8 @@ static void scr_settings(void) {
     if (button(CX, y, HTPC ? w / 2 - 2 : w, bh, (HTPC ? pace_tv : pace)[P.pace - 1])) { P.pace = P.pace % 3 + 1; save_profile(); }
     if (button(HTPC ? CX + w / 2 + 2 : CX + w + 8, y, HTPC ? w / 2 - 2 : CW - w - 8, bh, plat_muted() ? "Sounds: Off" : "Sounds: On")) { plat_mute(!plat_muted()); plat_sound(3); } /* a chime to hear it's on */
     y += step;
-    if (button(CX, y, w, bh, P.force_en ? "Labels: Always English" : "Labels: Gradually Japanese")) { P.force_en = !P.force_en; save_profile(); }
+    if (button(CX, y, HTPC ? w / 2 - 2 : w, bh, HTPC ? (P.force_en ? "Labels: English" : "Labels: Mixed") : P.force_en ? "Labels: Always English" : "Labels: Gradually Japanese")) { P.force_en = !P.force_en; save_profile(); }
+    if (button(HTPC ? CX + w / 2 + 2 : CX + w + 8, y, HTPC ? w / 2 - 2 : CW - w - 8, bh, HTPC ? "Sync" : "Sync with phone")) { sync_start(); return; }
     y += step;
     if (button(HTPC ? CX + w / 2 + 2 : CX, HTPC ? y : y, HTPC ? w / 2 - 2 : w, bh, P.genki ? "Genki: On" : "Genki: Off")) { P.genki = !P.genki; save_profile(); }
     if (!HTPC) { y += step; ys_cpy(b, "Who's learning: ", sizeof b); ys_cat(b, gender_name[P.gender], sizeof b); if (button(CX, y, w, bh, b)) { sp_next = S_SETTINGS; go(S_SPEAKER); return; } y += step; }
@@ -1998,6 +2053,7 @@ void app_frame(void) {
     case S_FIRST: scr_first(); break;
     case S_SPEAKER: scr_speaker(); break;
     case S_TALK: scr_talk(); break;
+    case S_SYNC: scr_sync(); break;
     case S_TYPING: scr_typing(); break;
     case S_READ: scr_read(); break;
     case S_MYWORDS: scr_mywords(); break;

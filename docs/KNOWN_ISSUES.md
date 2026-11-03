@@ -7,6 +7,7 @@
 - **CRT and RF:** not viewed on a real tube.
 - **Windows Japanese keyboard:** the code is new. It's been tested with simulated keyboard messages only, because the build PC has no Japanese keyboard installed.
 - **Windows speech:** this PC has no Japanese voice, so speech has never been heard.
+- **Sync:** tested between YomiGo on this PC and the phone app in a browser on the same PC. It hasn't run between a real phone and a PC over Wi-Fi yet.
 - **Leaving during an exam:** on the phone this relies on Android telling the app it's hidden, which hasn't been tried on a phone yet.
 - **Chimes:** made by YomiGo itself and checked for level, but never heard through the program's own speakers on this PC, or on Windows 95 or 98 sound cards.
 - **Automatic updates:** the swap and restart are the same as Check for updates, but the start-up path first runs for real when 0.14 comes out.
@@ -33,7 +34,7 @@
 - Web pages can detect that Reader is installed, because its dictionary file must be reachable from pages. No page can read your saved words.
 - Words and main kanji readings have been [checked against JMdict](FACTCHECK.md). Notes, grammar explanations, example sentences, and listed on and kun readings haven't been checked against a reference. Kanji memory hooks are mnemonics, not etymology.
 - Media difficulty is YomiGo's judgement, and availability isn't listed.
-- Saves don't sync on their own. Copy them by hand.
+- Sync works on home Wi-Fi only, through a PC or TV running YomiGo. Two PCs can't sync with each other yet, and nothing syncs away from home.
 - Firefox rejects Reader through Install Add-on From File, and removes a temporary install on restart, until Mozilla signs it. Someone has reported an error using it there. The exact message is still needed, as Firefox isn't on the build PC.
 - The example sentences on word cards are written for YomiGo and haven't had a native speaker's review yet.
 - The pronoun notes and examples haven't had a native speaker's review yet, like the N4 and N3 grammar, readings, and conversations.
