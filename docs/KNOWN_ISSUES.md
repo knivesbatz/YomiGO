@@ -12,7 +12,7 @@
 
 ## Limits in this version
 
-- The course ends at N5. Later levels are on the [roadmap](ROADMAP.md).
+- The course ends at N4. Later levels are on the [roadmap](ROADMAP.md).
 - The entrance exam tests reading only, not listening, typing, or speaking.
 - Conversations are scripted and accept set replies, so a correct but unexpected reply can fail. After three tries, the app shows an accepted answer.
 - Reader's dictionary has about 22,000 common words, and undoes common verb and adjective endings, but not every form. [Yomitan](https://yomitan.wiki/) goes much further.

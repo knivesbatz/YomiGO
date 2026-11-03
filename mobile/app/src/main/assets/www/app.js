@@ -115,10 +115,10 @@ function home() {
   if (P.last !== t) P.today = 0;
   const parts = [h("div", { cls: "row" }, h("h1", null, L("Today", "きょう", 2)), h("span", { cls: "dim" }, `🔥 ${P.streak}  ·  XP ${P.xp}`))];
   if (gate >= 0) parts.push(h("div", { cls: "card" }, h("div", { cls: "bad" }, "Required to continue"), h("h2", null, C.exams[gate].name), "Pass with 80%. Retake it as often as you need.", btn(L("Take the exam", "しけん", 2), () => startExam(gate), "main")));
-  else if (P.day >= C.days.length) parts.push(h("div", { cls: "card" }, h("h2", { cls: "good" }, "N5 complete!"), "N4 and beyond arrive in a future update. Keep reviewing and immersing."));
+  else if (P.day >= C.days.length) parts.push(h("div", { cls: "card" }, h("h2", { cls: "good" }, "N4 complete!"), "N3 and beyond arrive in a future update. Keep reviewing, and read and listen to real Japanese every day."));
   else {
     const d = C.days[P.day], over = P.today >= P.pace && P.last === t;
-    parts.push(h("div", { cls: "card" }, h("div", { cls: "row dim" }, h("span", null, C.stages[d.stage].name), h("span", null, `Class ${P.day + 1} of ${C.days.length}`)), h("div", { cls: "big" }, d.ja), h("div", { cls: "dim" }, d.title), bar(P.step, 8),
+    parts.push(h("div", { cls: "card" }, h("div", { cls: "row dim" }, h("span", null, C.stages[d.stage].name), h("span", null, `Class ${P.day + 1} of ${C.days.length}`)), h("div", { cls: "big" }, d.ja), h("div", { cls: "dim" }, d.title), bar(P.step, 9),
       over ? h("div", { cls: "good" }, "Today's class is done. Rest, review, or immerse.") : btn(P.step ? L("Continue class", "つづける", 2) : L("Start class", "はじめる", 2), runStep, "main")));
     parts.push(h("div", { cls: "card" }, h("div", { cls: "acc" }, L("Today's immersion", "イマージョン", 3)), d.imm));
   }
@@ -136,23 +136,41 @@ function runStep() {
     case 2: { const w = d.new.map((id) => Y.byId[id]).filter((c) => c.t === "w").slice(0, 10); return w.length ? typing(w, 0, 0, false) : nextStep(); }
     case 3: { const q = Y.shuffle(d.new.slice(0, 20).map((id) => Y.makeQ(Y.byId[id], Math.floor(Math.random() * 3), rom))); if (!q.length) return nextStep(); return runQuiz(q, "Practice", (r) => { P.xp += r; nextStep(); }, { requeue: true }); }
     case 4: return d.chat ? chat(d.chat, 0, 0) : nextStep();
-    case 5: return runQuiz(Y.quizDay(P.day), "Daily quiz", (right, n) => {
+    case 5: return d.read ? reading(C.reading[d.read], -1, 0, false) : nextStep();
+    case 6: return runQuiz(Y.quizDay(P.day), "Daily quiz", (right, n) => {
       const pct = Math.trunc(right * 100 / n);
       if (pct >= Y.PASS) { P.xp += right * 2; if (pct === 100) P.perfects++; return nextStep(); }
       P.step = 1; store.save(); result("Not yet!", `You scored ${pct}%. You need 80% to continue. Look at your notes and try again.`, false, runStep);
     });
-    case 6: return task(d.hw, L("Homework", "しゅくだい", 3), L("I did it!", "できた！", 2), () => {
+    case 7: return task(d.hw, L("Homework", "しゅくだい", 3), L("I did it!", "できた！", 2), () => {
       const q = d.new.length ? Y.shuffle([...d.new]).slice(0, 3).map((id) => Y.makeQ(Y.byId[id], 0, rom)) : [];
       const done = () => { P.hw++; P.xp += 30; nextStep(); };
       if (q.length) runQuiz(q, "Homework check", done); else done();
     });
-    case 7: return task(d.imm, L("Immersion", "イマージョン", 3), L("I'll do it today", "やります！", 2), nextStep);
+    case 8: return task(d.imm, L("Immersion", "イマージョン", 3), L("I'll do it today", "やります！", 2), nextStep);
     default:
       Y.learnDay(P, P.day, Y.today()); Y.completeDay(P, Y.today()); store.save();
       result("Class complete!", `+100 XP. Streak: ${P.streak} day(s). Your new cards are in the flashcard deck.`, true, home);
   }
 }
 function nextStep() { P.step++; store.save(); runStep(); }
+// Reading: a short passage, then questions about it
+function reading(r, qi, right, en) {
+  setNav(-1);
+  if (qi < 0) {
+    show(h("h1", { lang: "ja" }, r.ja), h("div", { cls: "dim" }, r.title), h("div", { cls: "card pre", lang: "ja", style: "font-size:20px;line-height:1.8" }, en ? r.en : r.jp),
+      btn("🔊 " + L("Hear it", "聞く", 5), () => speak(r.jp)), btn(en ? "Japanese" : "English", () => reading(r, -1, 0, !en)), btn(L("Questions", "しつもん", 3), () => reading(r, 0, 0, false), "main"), btn("Later", home));
+    return;
+  }
+  if (qi >= r.q.length) { P.reads++; P.xp += 5 * right; return nextStep(); }
+  const [q, good, ...bad] = r.q[qi], fb = h("div");
+  const buttons = Y.shuffle([good, ...bad]).map((t) => { const b = btn(t, () => {
+    buttons.forEach((x) => { x.disabled = true; if (x.textContent === good) x.className = "right"; });
+    if (t !== good) b.className = "wrong";
+    fb.replaceChildren(btn(L("Next", "つぎ", 2), () => reading(r, qi + 1, right + (t === good ? 1 : 0), false), "main"));
+  }); return b; });
+  show(h("div", { cls: "row" }, h("h1", { lang: "ja" }, r.ja), h("span", { cls: "dim" }, `${qi + 1} / ${r.q.length}`)), h("div", { cls: "card pre", lang: "ja" }, r.jp), h("div", { cls: "card" }, h("strong", null, q)), buttons, fb);
+}
 function task(body, title, label, go) { setNav(-1); show(h("h1", null, title), h("div", { cls: "card" }, body), btn(label, go, "main"), btn("Later", home)); }
 function result(title, body, good, next) { setNav(-1); show(h("h1", { cls: good ? "good" : "bad" }, title), h("div", { cls: "card" }, body), btn(L("Continue", "つぎへ", 2), next, "main")); }
 
@@ -279,9 +297,9 @@ function exams() {
   show(h("h1", null, L("Exams", "しけん", 2)), C.exams.map((e, i) => {
     const open = e.day < P.day, s = P.exams[e.id] || 0;
     return h("div", { cls: "card" }, h("div", { cls: "row" }, e.name, h("span", { cls: s >= Y.PASS ? "good" : i === gate ? "bad" : "dim" }, s >= Y.PASS ? `Best ${s}%` : !open ? "Locked" : i === gate ? "Required" : "Open")), open ? btn("Challenge", () => startExam(i)) : "");
-  }), h("p", { cls: "dim" }, "These are YomiGo's own exams, not official JLPT tests. N4, N3, N2, N1, and Beyond N1 arrive in updates. There's no official N0, so YomiGo will offer its own Beyond N1 stage."));
+  }), h("p", { cls: "dim" }, "These are YomiGo's own exams, not official JLPT tests. N3, N2, N1, and Beyond N1 arrive in updates. There's no official N0, so YomiGo will offer its own Beyond N1 stage."));
 }
-const RANKS = [["Newcomer", "入門者"], ["White Sash", "白帯"], ["Road Walker", "道を行く者"], ["Scribe", "書記"], ["Castle Guard", "城の守り"], ["Gatekeeper", "門番"], ["Kanji Knight", "漢字の騎士"], ["N5 Champion", "N5王者"]];
+const RANKS = [["Newcomer", "入門者"], ["White Sash", "白帯"], ["Road Walker", "道を行く者"], ["Scribe", "書記"], ["Castle Guard", "城の守り"], ["Gatekeeper", "門番"], ["Kanji Knight", "漢字の騎士"], ["N5 Champion", "N5王者"], ["N4 Champion", "N4王者"]];
 function quest() {
   setNav(3);
   const r = Y.rankOf(P), ja = Y.stageOf(P) >= 3 && !P.en ? 1 : 0;

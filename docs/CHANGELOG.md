@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0
+
+- New N4 stage: 19 classes covering plain forms, permission and rules, must, experience, opinions, ability, plans, comparing, reasons, conditionals, giving and receiving, passive and causative, guessing, and polite Japanese, with the N4 Mastery Exam
+- 125 new words and 64 new kanji, checked against JMdict, plus 45 grammar points
+- 8 new conversations
+- Graded reading: 11 original stories, on the classes that use them, with questions and an English switch
+- Genki practice now reaches lessons 8 to 12 of book 1
+- Roadmap: the long-term goal is now written down, along with what it would take to reach it
+
 ## 0.2.0
 
 - Study Guide in the Library: a setup checklist, a daily routine, immersion, mining, and where guides disagree

@@ -208,7 +208,7 @@ def load_chats():
                 pending = None
     return chats
 
-def load_course(cards, groups, chats):
+def load_course(cards, groups, chats, reading):
     byid = {c["id"]: c for c in cards}
     stages, days, exams = [], [], []
     with io.open(os.path.join(CONTENT, "course.txt"), encoding="utf-8") as f:
@@ -221,7 +221,7 @@ def load_course(cards, groups, chats):
                 stages.append({"name": name, "ja": ja, "desc": desc, "first": len(days)})
             elif line.startswith("@day "):
                 t, ja = [x.strip() for x in line[5:].split("|")]
-                day = {"stage": len(stages)-1, "title": t, "ja": ja, "notes": [], "new": [], "chat": "", "hw": "", "imm": "", "mat": "", "exam": -1}
+                day = {"stage": len(stages)-1, "title": t, "ja": ja, "notes": [], "new": [], "chat": "", "hw": "", "imm": "", "mat": "", "exam": -1, "read": ""}
                 days.append(day)
             else:
                 k, v = line.split(":", 1); v = v.strip()
@@ -237,6 +237,9 @@ def load_course(cards, groups, chats):
                 elif k == "chat":
                     if v not in chats: die(f"course: unknown chat {v}")
                     day["chat"] = v
+                elif k == "read":
+                    if v not in reading: die(f"course: unknown reading {v}")
+                    day["read"] = v
                 elif k == "homework": day["hw"] = v
                 elif k == "immerse": day["imm"] = v
                 elif k == "material": day["mat"] = v
@@ -257,6 +260,8 @@ def load_course(cards, groups, chats):
             if c not in seen: die(f"card {c} in group {g} is never taught")
     unused = [k for k in chats if k not in {d["chat"] for d in days}]
     if unused: die(f"chats never used: {unused}")
+    unused = [k for k in reading if k not in {d["read"] for d in days}]
+    if unused: die(f"readings never used: {unused}")
     # Kana are worth drilling only if the course reaches them
     for c in cards:
         c["day"] = seen.get(c["id"], -1)
@@ -287,6 +292,27 @@ def load_guide():
             if not line or line.startswith("#"): continue
             if line.startswith("@ "): out.append({"title": line[2:], "body": ""})
             else: out[-1]["body"] += ("\n" if out[-1]["body"] else "") + line
+    return out
+
+def load_reading():
+    out, cur = {}, None
+    with io.open(os.path.join(CONTENT, "reading.txt"), encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"): continue
+            if line.startswith("@read "):
+                id_, title, ja = [x.strip() for x in line[6:].split("|")]
+                cur = {"id": id_, "title": title, "ja": ja, "jp": "", "en": "", "q": []}
+                out[id_] = cur
+            elif line.startswith("jp:"): cur["jp"] = line[3:].strip().replace("」「", "」\n「")  # each speaker on a line
+            elif line.startswith("en:"): cur["en"] = line[3:].strip().replace('" "', '"\n"')
+            elif line.startswith("q:"):
+                q = [x.strip() for x in line[2:].split("|")]
+                if len(q) != 4: die(f"reading {cur['id']}: a question needs one right and two wrong answers")
+                cur["q"].append(q)
+            else: die(f"reading: unknown line {line}")
+    for r in out.values():
+        if not r["jp"] or not r["en"] or not r["q"]: die(f"reading {r['id']} is incomplete")
     return out
 
 def check_chats(chats, cards):
@@ -326,7 +352,7 @@ def kanji_subs(cards):
                  "勉強": "べんきょう", "私": "わたし", "映画": "えいが", "大人": "おとな", "切符": "きっぷ"})
     return sorted(subs.items(), key=lambda kv: -len(kv[0]))
 
-def write_c(cards, stages, days, exams, chats, media, res, table, subs, genki, guide):
+def write_c(cards, stages, days, exams, chats, media, res, table, subs, genki, guide, reading):
     id2i = {c["id"]: c["i"] for c in cards}
     ol = list(chats.values())
     idx = {c["id"]: i for i, c in enumerate(ol)}
@@ -341,6 +367,14 @@ def write_c(cards, stages, days, exams, chats, media, res, table, subs, genki, g
         wrong = (c.get("w", []) + ["", "", ""])[:3]
         w.append("{%s,'%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%d}," % (cstr(c["id"]), c["t"], cstr(c["f"]), cstr(c["r"]), cstr(c["ro"]), cstr(c["en"]), cstr(c["n"]), cstr(c.get("s","")), cstr(wrong[0]), cstr(wrong[1]), cstr(wrong[2]), cstr(c.get("tr","")), c["day"]))
     w.append("};")
+    rl = list(reading.values())
+    ridx = {r["id"]: i for i, r in enumerate(rl)}
+    w.append(f"#define YG_NREAD {len(rl)}")
+    for i, r in enumerate(rl):
+        w.append("static const char*const RQ%d[]={%s};" % (i, ",".join(cstr(x) for q in r["q"] for x in q)))
+    w.append("static const YgRead YG_READ[]={")
+    for i, r in enumerate(rl): w.append("{%s,%s,%s,%s,%d,RQ%d}," % (cstr(r["title"]), cstr(r["ja"]), cstr(r["jp"]), cstr(r["en"]), len(r["q"]), i))
+    w.append("};")
     w.append("static const YgStage YG_STAGES[]={")
     for s in stages: w.append("{%s,%s,%s,%d}," % (cstr(s["name"]), cstr(s["ja"]), cstr(s["desc"]), s["first"]))
     w.append("};")
@@ -349,7 +383,7 @@ def write_c(cards, stages, days, exams, chats, media, res, table, subs, genki, g
         if d["new"]: w.append("static const short DC%d[]={%s};" % (i, ",".join(str(id2i[c]) for c in d["new"])))
     w.append("static const YgDay YG_DAYS[]={")
     for i, d in enumerate(days):
-        w.append("{%d,%s,%s,%d,DN%d,%d,%s,%d,%s,%s,%s,%d}," % (d["stage"], cstr(d["title"]), cstr(d["ja"]), len(d["notes"]), i, len(d["new"]), ("DC%d" % i) if d["new"] else "0", idx.get(d["chat"], -1), cstr(d["hw"]), cstr(d["imm"]), cstr(d["mat"]), d["exam"]))
+        w.append("{%d,%s,%s,%d,DN%d,%d,%s,%d,%s,%s,%s,%d,%d}," % (d["stage"], cstr(d["title"]), cstr(d["ja"]), len(d["notes"]), i, len(d["new"]), ("DC%d" % i) if d["new"] else "0", idx.get(d["chat"], -1), cstr(d["hw"]), cstr(d["imm"]), cstr(d["mat"]), d["exam"], ridx.get(d["read"], -1)))
     w.append("};")
     w.append("static const YgExam YG_EXAMS[]={")
     for e in exams: w.append("{%s,%s,%d,%d}," % (cstr(e["id"]), cstr(e["name"]), e["stars"], e["day"]))
@@ -434,15 +468,16 @@ def write_js(data):
 def main():
     cards, groups = load_cards()
     chats = load_chats()
-    stages, days, exams = load_course(cards, groups, chats)
+    reading = load_reading()
+    stages, days, exams = load_course(cards, groups, chats, reading)
     check_chats(chats, cards)
     media, res = load_media(), load_res()
     table = romaji_table()
     subs = kanji_subs(cards)
     genki = load_genki(cards, groups)
     guide = load_guide()
-    write_c(cards, stages, days, exams, chats, media, res, table, subs, genki, guide)
-    write_js({"cards": cards, "stages": stages, "days": days, "exams": exams, "chats": chats, "media": media, "res": res, "roma": table, "subs": subs, "genki": genki, "guide": guide})
+    write_c(cards, stages, days, exams, chats, media, res, table, subs, genki, guide, reading)
+    write_js({"cards": cards, "stages": stages, "days": days, "exams": exams, "chats": chats, "media": media, "res": res, "roma": table, "subs": subs, "genki": genki, "guide": guide, "reading": reading})
     write_data(guide)
     print(f"ok: {len(cards)} cards, {len(days)} days, {len(stages)} stages, {len(exams)} exams, {len(chats)} chats, {len(media)} media, {len(res)} links")
 

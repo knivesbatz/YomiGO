@@ -76,3 +76,75 @@ j.hana	花	はな	hana	flower	カ / はな	Grass on top, changing (化) into blo
 j.shiroi	白	しろ	shiro	white	ハク, ビャク / しろ	A ray of sun: pure white.
 j.ta	田	た	ta	rice field	デン / た	A paddy seen from above.
 j.takai	高	たか	taka	tall, expensive	コウ / たか	A tall watchtower with windows.
+#k9
+j.au	会	あ	a	to meet	カイ, エ / あ	People gather under one roof to talk.
+j.sha	社	しゃ	sha	company, shrine	シャ / やしろ	The altar sign beside earth (土): a place people gather.
+j.koto	事	こと	koto	thing, matter	ジ / こと	A hand holding a brush, recording what happened.
+j.tsukuru	作	つく	tsuku	to make	サク, サ / つく	A person (亻) building with a saw.
+j.tsukau	使	つか	tsuka	to use	シ / つか	A person (亻) sends an official on an errand.
+j.motsu	持	も	mo	to hold	ジ / も	A hand (扌) beside a temple: holding on tight.
+j.matsu	待	ま	ma	to wait	タイ / ま	Walking (彳) to the temple, then waiting there.
+j.hataraku	働	はたら	hatara	to work	ドウ / はたら	A person (亻) in motion (動). Made in Japan.
+#k10
+j.aku	開	あ	a	to open	カイ / あ, ひら	Two hands lifting the bar of a gate.
+j.shimeru	閉	し	shi	to close	ヘイ / し, と	A bar locked across a gate.
+j.hairu	入	はい	hai	to enter	ニュウ / はい, い	A person stepping through, one leg first.
+j.deru	出	で	de	to go out	シュツ / で, だ	A sprout growing up out of the ground, twice.
+j.tatsu	立	た	ta	to stand	リツ / た	A person standing on the ground.
+j.aruku	歩	ある	aru	to walk	ホ / ある	Left foot above, right foot below.
+j.hashiru	走	はし	hashi	to run	ソウ / はし	Earth (土) above a foot in full stride.
+j.tomaru	止	と	to	to stop	シ / と	A foot planted, going nowhere.
+#k11
+j.ie	家	いえ	ie	house	カ, ケ / いえ, や	A pig under a roof: an old picture of home.
+j.mise	店	みせ	mise	shop	テン / みせ	A roof with a stand out front.
+j.eki	駅	えき	eki	station	エキ / -	Horse (馬) beside a measure: once a stop for horses.
+j.michi	道	みち	michi	road, way	ドウ / みち	A head (首) moving along a path.
+j.machi	町	まち	machi	town	チョウ / まち	Rice fields (田) with a road through them.
+j.chi	地	ち	chi	ground	チ, ジ / -	Earth (土) stretching out flat.
+j.zu	図	ず	zu	map, drawing	ズ, ト / はか	A frame with a plan drawn inside.
+j.sekai	世	せ	se	world, generation	セ, セイ / よ	Three tens joined: thirty years, a generation.
+#k12
+j.asa	朝	あさ	asa	morning	チョウ / あさ	Sun coming up through grass, the moon still out.
+j.hiru	昼	ひる	hiru	noon	チュウ / ひる	The sun (日) high with a line beneath it.
+j.yoru	夜	よる	yoru	night	ヤ / よる, よ	A person under a roof, as night settles.
+j.yuu	夕	ゆう	yuu	evening	セキ / ゆう	A crescent moon, half risen.
+j.haru	春	はる	haru	spring	シュン / はる	The sun (日) under sprouting plants.
+j.natsu	夏	なつ	natsu	summer	カ / なつ	A figure with a big head, walking slowly in the heat.
+j.aki	秋	あき	aki	autumn	シュウ / あき	Grain (禾) beside fire (火): harvest burning.
+j.fuyu	冬	ふゆ	fuyu	winter	トウ / ふゆ	A walker slipping on two drops of ice.
+#k13
+j.chichi	父	ちち	chichi	father	フ / ちち	Two crossed tools held by a working hand.
+j.haha	母	はは	haha	mother	ボ / はは	A figure with two dots for breasts.
+j.ani	兄	あに	ani	older brother	ケイ, キョウ / あに	A big mouth (口) on legs, giving orders.
+j.ane	姉	あね	ane	older sister	シ / あね	A woman (女) in the marketplace (市).
+j.otouto	弟	おとうと	otouto	younger brother	テイ, ダイ / おとうと	A little one tied to a stick, tagging along.
+j.imouto	妹	いもうと	imouto	younger sister	マイ / いもうと	A woman (女) who hasn't yet (未) grown up.
+j.tomo	友	とも	tomo	friend	ユウ / とも	Two hands held together.
+j.oya	親	おや	oya	parent	シン / おや, した	Standing (立) on a tree (木), watching (見).
+#k14
+j.atarashii	新	あたら	atara	new	シン / あたら, あら	Standing tree, freshly cut with an axe (斤).
+j.furui	古	ふる	furu	old	コ / ふる	Ten (十) mouths (口) have told this story.
+j.nagai	長	なが	naga	long	チョウ / なが	Long hair, flowing down.
+j.mijikai	短	みじか	mijika	short	タン / みじか	An arrow (矢) next to a small bowl.
+j.ooi	多	おお	oo	many	タ / おお	Evening (夕) upon evening.
+j.sukunai	少	すこ	suko	a little	ショウ / すこ, すく	Small (小) with one more piece cut off.
+j.hayai	早	はや	haya	early	ソウ / はや	The sun (日) above a sprout (十).
+j.yasui	安	やす	yasu	cheap, calm	アン / やす	A woman (女) safe under a roof.
+#k15
+j.akai	赤	あか	aka	red	セキ / あか	A big (大) fire (火) glowing.
+j.aoi	青	あお	ao	blue	セイ / あお	Plants growing over the moon (月).
+j.kuroi	黒	くろ	kuro	black	コク / くろ	A chimney over a fire: soot.
+j.iro	色	いろ	iro	colour	ショク, シキ / いろ	A person bent over another: the look on a face.
+j.oto	音	おと	oto	sound	オン / おと, ね	Standing (立) in the sun (日), hearing a sound.
+j.koe	声	こえ	koe	voice	セイ / こえ	A samurai (士) calling out.
+j.sora	空	そら	sora	sky	クウ / そら, あ	A hole (穴) above a tool (工): open air.
+j.umi	海	うみ	umi	sea	カイ / うみ	Water (氵) beside every (毎) shore.
+#k16
+j.omou	思	おも	omo	to think	シ / おも	A field (田) on your heart (心).
+j.iu	言	い	i	to say	ゲン, ゴン / い, こと	Words rising from a mouth (口).
+j.shiru	知	し	shi	to know	チ / し	An arrow (矢) to the mouth (口): straight to the point.
+j.kangaeru	考	かんが	kanga	to consider	コウ / かんが	An old person bending to think it over.
+j.oshieru	教	おし	oshi	to teach	キョウ / おし, おそ	A child (子) being guided with a stick.
+j.narau	習	なら	nara	to learn	シュウ / なら	Wings (羽) over white (白): a bird practising flight.
+j.ben	勉	べん	ben	effort	ベン / -	Pushing through with strength (力).
+j.tsuyoi	強	つよ	tsuyo	strong	キョウ, ゴウ / つよ, し	A bow (弓) and a beetle's tough shell.

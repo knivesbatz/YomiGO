@@ -218,6 +218,7 @@ material: 5. Adjectives
 @day There is... | あります、います
 note: Use います for people and animals, あります for everything else. Plants and robots count as things to most speakers, though robots can go either way.
 new: !g.ga !g.nipos @exist
+read: morning
 homework: Say what's in your room with あります and います.
 immerse: Walk through your home naming what's there.
 material: There is_are
@@ -233,6 +234,7 @@ note: Japanese counts with counters that depend on shape: 枚 for flat things, �
 note: Sounds shift: いっぽん, にほん, さんぼん. Practise saying them as a set.
 new: @counters
 chat: shop1
+read: cat
 homework: Count things on your table with the right counter.
 immerse: Read the prices on a Japanese web store.
 material: Numbers II
@@ -326,6 +328,7 @@ note: In many shops, put your money in the small tray rather than in the cashier
 note: Tired today? Watch or play something easy instead of doing nothing. Any Japanese counts, and variety helps, so try different genres.
 new: @town
 chat: shop2
+read: shop
 homework: Roleplay buying something, with a family member.
 immerse: Browse a Japanese shop website for ten minutes.
 material: Money and shopping
@@ -339,7 +342,128 @@ material: At the restaurant
 note: People often gesture with the whole open hand rather than one pointing finger. Use さん-level politeness with strangers.
 note: Time to talk to real people. iTalki and HelloTalk, in the Library, connect you with native speakers. Your first chat will feel hard, and it's the fastest way to improve.
 chat: directions1
+read: trip
 homework: Give directions in Japanese from your home to the nearest shop.
 immerse: Follow one Japanese walking-tour video for 10 minutes.
 material: Asking for directions
 exam: N5 | N5 Mastery Exam | 5
+
+@stage 7 | N4 Road | N4の道 | Casual speech, plans, opinions, and real conversations.
+@day Plain forms | 普通形
+note: Everything so far has been polite. Friends and family talk in plain forms, and most N4 grammar is built on them. You can keep using です and ます with people you don't know well. Using plain forms with a stranger can sound rude.
+note: Verbs come in two main groups. Verbs like 食べる just drop る. Verbs like 飲む change their last sound: のむ, のまない, のみます. する and 来る are the two irregular ones.
+new: !g.plain !g.nai !g.ta !g.nakatta @plain1
+chat: casual1
+read: friends
+homework: Rewrite five of your ます sentences in plain form.
+immerse: Listen for a sentence that ends in plain form in any show. Friends talk this way.
+material: 2. Grammar MADA
+@day More plain verbs | 動詞をふやす
+note: More everyday verbs. Practise each with ない and た as well as ます, because you'll need all three.
+new: @plain2
+homework: Make a table of ます, ない, and た for all eight new verbs.
+immerse: In a show, write down one verb you hear in plain form.
+@day Allowed or not | 許可と禁止
+note: Te forms have sound changes: 待つ becomes 待って, 飲む becomes 飲んで, 書く becomes 書いて, and 行く is the odd one, 行って.
+note: In real life people often say no gently. ちょっと with a hesitant voice can be a refusal, and it's a much softer way to say いけません.
+new: !g.temoii !g.tewa !g.naide @rules
+chat: rules1
+homework: Write three rules for your home using 〜てはいけません.
+immerse: Look at photos of Japanese signs. Spot ください and 禁止.
+@day Must, and don't have to | 義務
+note: Don't mix these up. なければなりません means you must. なくてもいいです means you don't need to. They aren't opposites of permission either, because 〜てはいけません is what forbids.
+new: !g.nakereba !g.nakutemo @must
+read: doctor
+homework: List two things you must do tomorrow, and two you don't have to.
+immerse: Say out loud what you have to do next, in Japanese.
+@day Your experiences | 経験
+note: Tell your life story with 〜たことがあります. Use plain past for something specific, such as yesterday: 昨日、行きました.
+new: !g.takoto !g.tari !g.mou @experience
+chat: exp1
+homework: Write three things you've done, and two you've never done.
+immerse: Ask a partner on a language exchange one question with 〜たことがありますか.
+@day Saying what you think | 意見
+note: Japanese speakers often add 〜と思います even to things they're sure about. It sounds modest. A flat statement of opinion can seem pushy, so use it often.
+new: !g.tomou !g.toiu @think
+read: opinion
+homework: Give your opinion on three things using 〜と思います.
+immerse: Listen for と思います in an interview or YouTube video.
+material: 3. Grammar KARA-MADE
+@day What you can do | 可能
+note: When someone praises your Japanese, the usual reply is a modest denial: いいえ、まだまだです. Accepting with a plain thank you also works, particularly with friends.
+new: !g.koto !g.potential @can
+chat: can1
+homework: Say five things you can and can't do.
+immerse: Look up the lyrics to a song you like, and find one word you know.
+@day Plans | 予定
+note: Three levels of certainty: つもり is decided, 予定 is on the calendar, and 〜ようと思います is an idea still forming.
+new: !g.tsumori !g.you !g.yotei @plans
+read: plans
+homework: Describe your plans for next week.
+immerse: Use a Japanese calendar for a week.
+@day Comparing | 比較
+note: Advice with 〜たほうがいいです is direct. To someone senior, soften it, or don't offer advice at all unless asked.
+new: !g.yori !g.ichiban !g.houga @compare
+chat: compare1
+homework: Compare three pairs of things in your home.
+immerse: Read reviews on a Japanese shop page. Look for より.
+@day Reasons | 理由
+note: 〜ので sounds softer than 〜から. Japanese often gives the reason and leaves the conclusion unsaid: 今日はちょっと…, and the listener understands.
+new: !g.node !g.noni !g.toki @because
+read: sick
+homework: Write three excuses using 〜ので.
+immerse: Notice when someone in a show stops mid-sentence and leaves the rest unsaid.
+@day If and when | 条件
+note: Four words for if, and learners worry too much about them. Start with たら, which works nearly everywhere. Pick up と, ば, and なら as you notice them.
+new: !g.tara !g.to !g.ba !g.nara @ifwhen
+chat: doctor1
+homework: Write three sentences with たら about tomorrow.
+immerse: Listen for たら in a show.
+@day Giving and receiving | やりもり
+note: Japanese always tracks which way a favour moves. Say くれる when it comes toward you and あげる when it goes outward. Saying 〜てあげる to a superior can sound patronising, so avoid it.
+note: Gift-giving has its own customs. Gifts are often accepted with a little polite reluctance, and may be opened later rather than in front of the giver.
+new: !g.ageru !g.morau !g.kureru !g.temorau @give
+read: gift
+homework: Say who gave what to whom, for three gifts you remember.
+immerse: In a show, notice くれる when someone's thanking a friend.
+@day Things that happen to you | 受け身
+note: The Japanese passive often means something happened to you that you didn't want. Use it for being scolded or robbed. Causative forms come up in work and school: making or letting someone do something.
+new: !g.passive !g.causative @passive
+homework: Describe something annoying that happened to you, with the passive.
+immerse: Listen for 〜られた when a character complains.
+material: Active and Passive (present)
+@day Looks like, might be | 推量
+note: Use そう for what you can see, よう for your judgement from the evidence, and かもしれません when you aren't sure. Weather forecasts are a great place to hear でしょう.
+new: !g.sou !g.youda !g.kamo !g.deshou @seem
+chat: weather2
+homework: Look out of a window, and say what the weather seems to be doing.
+immerse: Watch a Japanese weather forecast for two minutes.
+@day Doing and finishing | 動作
+note: These patterns attach to the ます stem, the part before ます. Once you know that, 食べ gives you 食べながら, 食べすぎる, 食べやすい, and 食べ始める all at once.
+new: !g.nagara !g.sugiru !g.yasui !g.hajimeru @actions
+read: routine
+homework: Describe your morning routine in five sentences.
+immerse: Shadow a short line from a show ten times.
+@day Polite Japanese | 敬語
+note: Keigo has two directions. Respectful language raises the other person, and humble language lowers yourself. Don't use either about yourself the wrong way round. At this level, aim to recognise it, and keep using です and ます yourself, which is fine.
+note: You'll hear this all the time in shops and on trains: いらっしゃいませ, お客様, and 少々お待ちください. You don't need to copy it.
+new: !g.keigo !g.kenjou @keigo
+chat: office1
+homework: Listen for one keigo word, and write down where you heard it.
+immerse: Watch one scene set in a shop or office, and listen for 〜ます and お〜.
+@day People and places in kanji | 人と場所の漢字
+note: You've met many of these words already. Now you can read them. Spot the parts inside a kanji, since they often repeat.
+new: @k9 @k11 @k13
+homework: Write the family words in kanji, without looking.
+immerse: Read place names on a Japanese map.
+@day Actions in kanji | 動きの漢字
+note: Pairs help: 入 and 出, 開 and 閉, 立 and 止. Learning opposites together makes both easier to remember.
+new: @k10 @k16
+homework: Label your door with 入 and 出, for fun.
+immerse: Find 入口 and 出口 in a photo of a Japanese station.
+@day Time and description in kanji | 時と形の漢字
+note: Seasons and colours are everywhere in Japanese writing. Look out for them in the names of shows, songs, and people.
+new: @k12 @k14 @k15
+homework: Write today's season and weather in kanji.
+immerse: Find one of today's kanji in a song or show title.
+exam: N4 | N4 Mastery Exam | 4

@@ -36,3 +36,63 @@ g.tai	〜たいです	...tai desu	want to do	Swap ます for たい. Used for yo
 g.ne	〜ね	...ne	right? / isn't it?	Add ね when you expect the other person to agree. It makes you sound friendly.	いい天気です＿。	ね	を,に,で	Nice weather, isn't it?
 g.yo	〜よ	...yo	I'm telling you	Add よ to tell someone something they may not know. Too much can sound pushy.	駅はあそこです＿。	よ	を,に,で	The station is over there, you know.
 g.teiru	〜ています	...te imasu	doing now	Te form plus います means something is going on right now.	今、本を読んで＿。	います	ます,です,ました	I'm reading a book now.
+#g10
+g.plain	Plain form	plain form	dictionary form of a verb	The form in a dictionary. Friends use it to end sentences, and all grammar builds on it.	毎日、水を飲＿。	む	みます,みた,まない	I drink water every day. (casual)
+g.nai	〜ない	...nai	plain negative	The casual "don't". Verbs like 食べる drop る, and verbs like 飲む change to 飲ま.	今日は学校へ行か＿。	ない	ます,た,て	I'm not going to school today. (casual)
+g.ta	〜た	...ta	plain past	Same sound changes as the te form, ending in た or だ.	昨日、映画を見＿。	た	ない,る,ます	I saw a movie yesterday. (casual)
+g.nakatta	〜なかった	...nakatta	plain past negative	Change ない to なかった.	昨日は勉強し＿。	なかった	ない,ました,た	I didn't study yesterday. (casual)
+#g11
+g.temoii	〜てもいいです	...te mo ii desu	you may	Te form plus もいいです gives permission. As a question, it asks for it.	ここに座っても＿ですか。	いい	いけない,だめ,ます	May I sit here?
+g.tewa	〜てはいけません	...te wa ikemasen	you must not	A firm no, often for rules. It sounds strong said to a person directly.	ここでたばこを吸っては＿。	いけません	いいです,ください,ます	You must not smoke here.
+g.naide	〜ないでください	...naide kudasai	please don't	A polite request not to do something.	写真を撮らないで＿。	ください	います,あります,です	Please don't take photos.
+#g12
+g.nakereba	〜なければなりません	...nakereba narimasen	must, have to	The ない form with its い swapped for ければなりません. Casual speech shortens it to なきゃ.	薬を飲まなければ＿。	なりません	いいです,ください,あります	I have to take medicine.
+g.nakutemo	〜なくてもいいです	...nakute mo ii desu	don't have to	Means it isn't necessary. Not the same as being forbidden.	明日は働かなくても＿です。	いい	だめ,いけない,ある	I don't have to work tomorrow.
+#g13
+g.takoto	〜たことがあります	...ta koto ga arimasu	have done before	The た form plus ことがあります talks about life experience. It isn't for things done recently.	日本へ行った＿があります。	こと	もの,とき,の	I have been to Japan.
+g.tari	〜たり〜たりします	...tari ...tari shimasu	do things like A and B	Lists examples of actions, without saying that's everything.	休みの日は、本を読んだり、映画を見＿します。	たり	たら,て,た	On days off I do things like read books and watch movies.
+g.mou	もう／まだ	mou / mada	already / not yet	もう with a past verb means already. まだ with ていません means not yet.	まだ食べて＿。	いません	いました,います,ました	I haven't eaten yet.
+#g14
+g.tomou	〜と思います	...to omoimasu	I think that	Plain form plus と思います. People use it to soften opinions, even ones they're sure of.	明日は雨だ＿思います。	と	を,に,が	I think it will rain tomorrow.
+g.toiu	〜と言いました	...to iimashita	said that	と marks what was said, in plain form or in quotes.	先生は宿題がある＿言いました。	と	を,で,が	The teacher said there's homework.
+#g15
+g.koto	〜ことができます	...koto ga dekimasu	can do	Dictionary form plus ことができます. It's a bit more formal than the potential form.	漢字を書く＿ができます。	こと	もの,とき,の	I can write kanji.
+g.potential	Potential form	potential form	can do (short form)	Verbs like 食べる become 食べられる. Verbs like 飲む become 飲める. が often marks the thing you can do.	日本語が話＿ます。	せ	し,す,さ	I can speak Japanese.
+#g16
+g.tsumori	〜つもりです	...tsumori desu	intend to	Dictionary form plus つもりです is a plan you've already decided on.	来年、留学する＿です。	つもり	とき,こと,もの	I plan to study abroad next year.
+g.you	〜ようと思います	...you to omoimasu	I'm thinking of doing	Verbs like 食べる become 食べよう. Verbs like 行く become 行こう. It's softer than つもり, and fits a plan still forming.	週末は海へ行こう＿思います。	と	を,に,が	I'm thinking of going to the sea this weekend.
+g.yotei	〜予定です	...yotei desu	scheduled to	Dictionary form plus 予定です means it's on the calendar.	五時に帰る＿です。	予定	こと,もの,とき	I'm scheduled to go home at five.
+#g17
+g.yori	AはBより〜	A wa B yori	A is more than B	より marks the thing you compare against. English adds "more", while Japanese doesn't change the adjective.	電車はバス＿早いです。	より	から,まで,の	Trains are faster than buses.
+g.ichiban	〜が一番〜	...ga ichiban	the most	一番 before an adjective makes it the most. Japanese doesn't change the adjective's form.	春が＿好きです。	一番	より,から,もっと	I like spring the most.
+g.houga	〜たほうがいいです	...ta hou ga ii desu	you'd better	The た form plus ほうがいいです is friendly but direct advice. Be careful with people senior to you.	病院へ行った＿がいいです。	ほう	こと,もの,とき	You'd better go to the hospital.
+#g18
+g.node	〜ので	...node	because, so	Softer and more polite than から, and good for giving reasons when asking a favour.	熱がある＿、休みます。	ので	のに,でも,が	I have a fever, so I'll take the day off.
+g.noni	〜のに	...noni	even though	Shows surprise or disappointment that things turned out differently.	薬を飲んだ＿、まだ痛いです。	のに	ので,から,と	Even though I took medicine, it still hurts.
+g.toki	〜時	...toki	when	Plain form before 時 says when something happens. Its tense is about order: 行く時 is on the way, and 行った時 is once you've arrived.	日本へ行った＿、写真を撮りました。	時	前,後,から	When I went to Japan, I took photos.
+#g19
+g.tara	〜たら	...tara	if, when	The た form plus ら. It's the most flexible way to say if, and also covers "once X happens".	雨が降っ＿、行きません。	たら	たり,て,た	If it rains, I won't go.
+g.to	〜と	...to	whenever (natural result)	Dictionary form plus と is for things that always follow, such as machines and directions. You can't end it with a request.	春になる＿、桜が咲きます。	と	を,に,で	When spring comes, the cherry blossoms bloom.
+g.ba	〜ば	...ba	if	Verbs like 行く become 行けば. Verbs like 食べる become 食べれば. It focuses on the condition itself.	＿、買います。	安ければ	安いば,安くば,安いれば	If it's cheap, I'll buy it.
+g.nara	〜なら	...nara	if it's about	Picks up a topic someone just raised, then gives advice about it.	日本へ行く＿、春がいいですよ。	なら	ので,のに,から	If you're going to Japan, spring is good.
+#g20
+g.ageru	〜をあげます	...o agemasu	I give	Use it when giving outward: from you, or between other people.	友達にプレゼントを＿。	あげます	もらいます,くれます,います	I give a present to my friend.
+g.morau	〜にもらいます	...ni moraimasu	I receive from	The giver is marked with に or から.	友達＿手紙をもらいました。	に	を,で,の	I received a letter from a friend.
+g.kureru	〜をくれます	...o kuremasu	someone gives me	Use it when the gift moves toward you or your family. Japanese always marks this direction.	友達が私に本を＿。	くれました	あげました,もらいました,いました	My friend gave me a book.
+g.temorau	〜てもらいます	...te moraimasu	have someone do for me	Te form plus もらう, which shows you're grateful for the favour.	友達に教えて＿ました。	もらい	あげ,い,し	My friend taught me.
+#g21
+g.passive	Passive form	passive form	be done to	Verbs like 飲む become 飲まれる. Verbs like 食べる become 食べられる. It often implies something unwelcome happened to you.	泥棒に財布を盗＿ました。	まれ	み,め,もう	My wallet was stolen by a thief.
+g.causative	Causative form	causative form	make or let someone do	Verbs like 行く become 行かせる. Verbs like 食べる become 食べさせる. Context decides between make and let.	先生は学生に漢字を書か＿ました。	せ	れ,き,け	The teacher made the students write kanji.
+#g22
+g.sou	〜そうです	...sou desu	looks like	Drop the final い of an adjective, then add そう. It's based on what you see.	このケーキは美味し＿です。	そう	よう,かも,たい	This cake looks delicious.
+g.youda	〜ようです	...you desu	it seems that	Your judgement from the evidence. Casual speech often uses みたい instead.	雨が降っている＿です。	よう	そう,もの,つもり	It seems to be raining.
+g.kamo	〜かもしれません	...kamo shiremasen	might	Not very sure. Comes straight after the plain form, and after a noun with no だ.	明日は雪＿しれません。	かも	でも,から,まで	It might snow tomorrow.
+g.deshou	〜でしょう	...deshou	probably	A soft guess, and the classic word in weather forecasts. With a rising tone it means "right?"	明日は晴れる＿。	でしょう	ました,ません,ください	It will probably be sunny tomorrow.
+#g23
+g.nagara	〜ながら	...nagara	while doing	Swap ます for ながら. The main action comes last.	音楽を聞き＿、走ります。	ながら	たら,たり,ので	I run while listening to music.
+g.sugiru	〜すぎます	...sugimasu	too much	Attach it to a verb's ます stem, or to an adjective without its い.	昨日は食べ＿ました。	すぎ	たり,やすく,ながら	I ate too much yesterday.
+g.yasui	〜やすいです	...yasui desu	easy to do	The ます stem plus やすい. The opposite is にくい, hard to do.	この本は読み＿です。	やすい	すぎる,たい,ながら	This book is easy to read.
+g.hajimeru	〜始めます／終わります	...hajimemasu / owarimasu	start / finish doing	The ます stem plus 始める or 終わる.	本を読み＿ました。	終わり	たり,ながら,すぎ	I finished reading the book.
+#g24
+g.keigo	お〜になります	o ... ni narimasu	respectful verb form	Raises the person you're talking about. Add お to the ます stem, then になります. Some verbs have special words.	社長はもうお帰り＿なりました。	に	を,で,が	The president has already gone home.
+g.kenjou	お〜します	o ... shimasu	humble verb form	Lowers yourself to show respect. Use it for your own actions toward others.	お荷物をお持ち＿ます。	し	なり,い,あり	I'll carry your luggage.

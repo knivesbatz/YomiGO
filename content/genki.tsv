@@ -6,4 +6,8 @@
 5	Both kinds of adjective, liking things, let's do	!g.iadj !g.naadj !g.kunai !g.mashou @adj1 @adj2
 6	Requests, and giving reasons	!g.tekudasai !g.kudasai !g.kara !g.made
 7	What you are doing now, family and people, counting people	!g.teiru @family @people !v.hitori !v.futari !v.sannin !v.kazoku
-11	Saying what you want to do	!g.tai !v.ryokou !v.nihon
+8	Plain forms, saying what you think, please don't	!g.plain !g.nai !g.tomou !g.toiu !g.naide @plain1
+9	Plain past, already and not yet	!g.ta !g.nakatta !g.mou @experience
+10	Comparing, plans, and becoming	!g.yori !g.ichiban !g.tsumori @compare @plans
+11	Wanting, doing things like, past experience	!g.tai !g.tari !g.takoto !v.ryokou !v.nihon
+12	Reasons, too much, advice, and must	!g.node !g.sugiru !g.houga !g.nakereba @must

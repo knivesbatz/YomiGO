@@ -41,7 +41,7 @@ PLAIN = {"分かります": ("分かる", "わかる"), "分かりません": ("
          "聞きます": ("聞く", "きく"), "書きます": ("書く", "かく"), "話します": ("話す", "はなす"), "買います": ("買う", "かう"), "します": ("する", "する"),
          "あります": ("ある", "ある"), "います": ("いる", "いる")}
 # Read by a person: each is right, and only worded differently from JMdict, or a kanji's meaning rather than a word's
-REVIEWED = {"v.shimasu", "v.arimasu", "v.itadakimasu", "v.gochisousama", "v.desu", "v.ichi", "v.heta", "v.mono", "v.manga", "v.suki", "v.imasu", "v.hitotsu", "v.eeto", "v.hontou",
+REVIEWED = {"v.suru", "v.jouzu", "j.tsukuru", "j.tsukau", "j.motsu", "j.hairu", "j.aruku", "j.ooi", "j.iu", "j.shiru", "j.kangaeru", "j.oshieru", "v.shimasu", "v.arimasu", "v.itadakimasu", "v.gochisousama", "v.desu", "v.ichi", "v.heta", "v.mono", "v.manga", "v.suki", "v.imasu", "v.hitotsu", "v.eeto", "v.hontou",
             "j.ichi", "j.iku", "j.kuru", "j.taberu", "j.miru", "j.kaku", "j.hanasu", "j.den", "j.takai"}
 missing, mismatch, meaning, okc = [], [], [], 0
 for c in C["cards"]:

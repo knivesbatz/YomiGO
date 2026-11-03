@@ -1,5 +1,42 @@
 # Roadmap
 
+## The goal
+
+Make YomiGo the perfect all-in-one tool for becoming fluent in Japanese, so a learner can go from zero to fluent without needing to leave it, except to use real Japanese and talk with real people.
+
+That's a direction, not something any single update can claim. YomiGo gets there **one complete update at a time**: each one is built, tested, and released before the next begins.
+
+To call it done, YomiGo would need:
+
+- A full course: N3, N2, N1, and Beyond N1
+- Listening at every level, with real audio
+- Speaking practice, and open conversation
+- Reading from real Japanese, including manga and games
+- Your own flashcards, mined from what you read and watch
+- Handwriting practice
+- Courses that adapt to each learner's weak spots
+- Real testing with real learners, native-speaker review of the course, and the hardware it promises to support
+
+No app alone can make someone fluent. Fluency also takes thousands of hours of real Japanese and real conversation. YomiGo's job is to get you there, and to keep you going.
+
+## Next up
+
+1. **0.4 Mining:** your own flashcards, from the dictionary and from YomiGo Reader
+2. **0.5 Listening:** listening questions, dictation, and shadowing
+3. **0.6 OCR and game text:** cards from what's on screen
+4. **0.7 Transcription:** local audio transcription of your own files
+5. **0.8 N3**
+6. **0.9 Conversation AI**
+7. **After that:** N2, N1, Beyond N1, and handwriting
+
+## Done
+
+- **0.3:** N4 stage, graded reading
+- **0.2:** dictionary, stroke order, N64 pads, Study Guide
+- **0.1:** base build through N5, all four apps
+
+## Details
+
 ## 0.1 Base build (now)
 
 Shared course through N5, all four apps, updates, tests, and CI.
@@ -24,9 +61,9 @@ Owner's request. Flashcards made from what's on screen:
 - Dictation and shadowing exercises
 - Vocabulary pulled from transcripts of your own files
 
-## 0.5 N4
+## 0.5 N3
 
-N4 vocabulary, grammar, kanji, and mastery exam. Genki lessons 8, 9, 10, and 12, and Genki II practice.
+N3 vocabulary, grammar, kanji, and mastery exam, plus Genki II practice.
 
 ## 0.6 Conversation AI
 

@@ -54,7 +54,7 @@
 #define FBY_BTN (FBH - FOOT - 38)
 #endif
 
-typedef enum { S_SPLASH, S_PROFILES, S_NAME, S_PLACE_INTRO, S_PLACE_RESULT, S_HOME, S_CLASS, S_TEACH, S_QUIZ, S_RESULT, S_CHAT, S_TASK, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS, S_BIND, S_FIRST, S_GENKI, S_TYPING } Screen;
+typedef enum { S_SPLASH, S_PROFILES, S_NAME, S_PLACE_INTRO, S_PLACE_RESULT, S_HOME, S_CLASS, S_TEACH, S_QUIZ, S_RESULT, S_CHAT, S_TASK, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS, S_BIND, S_FIRST, S_GENKI, S_TYPING, S_READ } Screen;
 typedef enum { QM_WARMUP, QM_DRILL, QM_DAILY, QM_HW, QM_REVIEW, QM_EXAM, QM_PLACE, QM_PRACTICE } QuizMode;
 
 static Screen scr = S_SPLASH;
@@ -90,6 +90,7 @@ static int field_on, field_x, field_y;
 #endif
 static short ty_cards[TY_MAX];
 static int ty_n, ty_i, ty_rep, ty_bad;
+static int rd_id, rd_q, rd_right, rd_show_en, rd_skip, rd_pick, rd_order[3];
 
 /* ---- immersion: labels move into Japanese as the learner can read them ---- */
 static const char *L(const char *en, const char *ja, int from_stage) {
@@ -290,8 +291,8 @@ static void scr_result(void) {
 }
 
 /* ---- class flow ---- */
-static const char *const STEP_EN[] = {"Warm-up review", "New lesson", "Typing practice", "Practice drill", "Conversation", "Daily quiz", "Homework", "Immersion"};
-static const char *const STEP_JA[] = {"ふくしゅう", "じゅぎょう", "タイピング", "れんしゅう", "かいわ", "テスト", "しゅくだい", "イマージョン"};
+static const char *const STEP_EN[] = {"Warm-up review", "New lesson", "Typing practice", "Practice drill", "Conversation", "Reading", "Daily quiz", "Homework", "Immersion"};
+static const char *const STEP_JA[] = {"ふくしゅう", "じゅぎょう", "タイピング", "れんしゅう", "かいわ", "どっかい", "テスト", "しゅくだい", "イマージョン"};
 
 static void start_quiz(QuizMode m) {
     qm = m; qi = 0; qright = 0; qanswered = 0; qchoice = 0; q_idk = 0; input[0] = 0;
@@ -325,6 +326,9 @@ static void run_step(void) {
     case STEP_CHAT:
         if (d->chat < 0) { P.step++; run_step(); return; }
         chat_id = d->chat; chat_turn = 0; chat_fail = 0; chat_show = 0; input[0] = 0; go(S_CHAT); break;
+    case STEP_READ:
+        if (d->read < 0) { P.step++; run_step(); return; }
+        rd_id = d->read; rd_q = -1; rd_right = 0; rd_show_en = 0; rd_skip = 0; rd_pick = -1; go(S_READ); break;
     case STEP_QUIZ: quiz_day(&Z, &P, P.day); start_quiz(QM_DAILY); break;
     case STEP_HOMEWORK: task_kind = 0; go(S_TASK); break;
     case STEP_IMMERSE: task_kind = 1; go(S_TASK); break;
@@ -400,8 +404,8 @@ static void scr_home(void) {
         text2(CX + 10, CY + 30, YG_EXAMS[gate].name, C_INK);
         if (button(CX + CW - 180, CY + 110, 170, 28, L("Take the exam", "しけんを受ける", 5))) { exam_id = gate; quiz_exam(&Z, exam_id); start_quiz(QM_EXAM); }
     } else {
-        text2(CX + 10, CY + 30, "N5 complete!", C_GOOD);
-        wrap(CX + 10, CY + 70, CW - 20, "N4 and beyond arrive in a future update. Keep reviewing your cards and immersing.", C_INK, LH, 0, 3);
+        text2(CX + 10, CY + 30, "N4 complete!", C_GOOD);
+        wrap(CX + 10, CY + 70, CW - 20, "N3 and beyond arrive in a future update. Keep reviewing your cards, and read and listen to real Japanese every day.", C_INK, LH, 0, 3);
     }
     { int y = CY + 158;
       panel(CX, y, (CW - 8) / 2, 120);
@@ -452,6 +456,7 @@ static void scr_class(void) {
         const char *mark = i < P.step ? "\xE2\x97\x8B" : i == P.step ? "\xE2\x86\x92" : "\xE3\x83\xBB";
         if (i == STEP_CHAT && d->chat < 0) { continue; }
         if (i == STEP_TYPING && !day_word_cards(d, 0)) { continue; }
+        if (i == STEP_READ && d->read < 0) { continue; }
         text(CX + 4, y, mark, col);
         text(CX + 24, y, L(STEP_EN[i], STEP_JA[i], 3), col);
         y += HTPC ? 14 : 24;
@@ -869,6 +874,65 @@ static void scr_typing(void) {
     }
 }
 
+/* ---- reading: a short passage, then questions about it ---- */
+static void rd_shuffle(void) {
+    int i;
+    for (i = 0; i < 3; i++) rd_order[i] = i;
+    for (i = 2; i > 0; i--) { int j = yg_rand() % (i + 1), t = rd_order[i]; rd_order[i] = rd_order[j]; rd_order[j] = t; }
+    rd_pick = -1;
+}
+static void scr_read(void) {
+    const YgRead *r = &YG_READ[rd_id];
+    int y = CY, lines, per;
+    copy_src = r->jp;
+    chrome(r->ja, r->title);
+    if (rd_q < 0) {
+        const char *body = rd_show_en ? r->en : r->jp;
+        per = (FBY_BTN - CY - 26) / LH;
+        panel(CX, y, CW, FBY_BTN - y - 4);
+        lines = wrap(CX + 8, y + 6, CW - 16, body, rd_show_en ? C_DIM : C_INK, LH, rd_skip, per);
+        if (button(CX + CW - 120, FBY_BTN, 120, 28, rd_skip + per < lines ? L("More", "つぎ", 2) : L("Questions", "しつもん", 3))) {
+            if (rd_skip + per < lines) rd_skip += per;
+            else { rd_q = 0; rd_shuffle(); }
+            IN.pressed &= ~A_OK;
+            return;
+        }
+        if (button(CX, FBY_BTN, 110, 28, rd_show_en ? "Japanese" : "English")) { rd_show_en = !rd_show_en; rd_skip = 0; }
+        if (plat_has_tts() && (IN.pressed & A_Y)) plat_speak(r->jp);
+#if HTPC
+        footer("OK", 0);
+#endif
+        return;
+    }
+    {
+        const char *const *q = r->q + rd_q * 4;
+        int bh = HTPC ? 24 : 34, i;
+        char b[32];
+        ys_fmt(b, sizeof b, "Question %d of %d", rd_q + 1, r->nq);
+        text(CX, y, b, C_DIM); y += LH;
+        y += LH * wrap(CX, y, CW, q[0], C_INK, LH, 0, 2) + 4;
+        for (i = 0; i < 3; i++) {
+            int idx = rd_order[i], yy = y + i * (bh + 4);
+            if (rd_pick >= 0) {
+                unsigned f = idx == 0 ? C_GOOD : (idx == rd_pick ? C_BAD : (HTPC ? C_PANEL : 0xEFD9D0));
+                fill(CX, yy, CW, bh, f); frame(CX, yy, CW, bh, C_LO);
+                wrap(CX + 4, yy + (bh - 16) / 2, CW - 8, q[1 + idx], (idx == 0 || idx == rd_pick) ? 0xFFFFFF : C_INK, LH, 0, 1);
+            } else if (button(CX, yy, CW, bh, q[1 + idx]) || IN.num == i + 1) {
+                rd_pick = idx; if (idx == 0) { rd_right++; plat_sound(2); } else plat_sound(4);
+                IN.pressed &= ~A_OK;
+            }
+        }
+        if (rd_pick >= 0 && button(CX + CW - 120, FBY_BTN, 120, 28, L("Next", "つぎ", 2))) {
+            ui_reset_focus();
+            if (++rd_q >= r->nq) { P.reads++; P.xp += 5 * rd_right; ach_check(&P); next_step(); return; }
+            rd_shuffle();
+        }
+    }
+#if HTPC
+    footer("OK", 0);
+#endif
+}
+
 /* ---- homework and immersion ---- */
 static void scr_task(void) {
     const YgDay *d = &YG_DAYS[P.day];
@@ -936,7 +1000,7 @@ static void scr_exams(void) {
         text(CX + (HTPC ? 198 : 282), y + (h - 16) / 2, b, passed ? C_GOOD : i == gate ? C_BAD : C_DIM);
         y += h + (HTPC ? 2 : 6);
     }
-    if (!HTPC) wrap(CX, y + 4, CW, "These are YomiGo's own exams, not official JLPT tests. N4, N3, N2, N1, and Beyond N1 arrive in updates. There's no official N0, so YomiGo will offer its own Beyond N1 stage.", C_DIM, 18, 0, 4);
+    if (!HTPC) wrap(CX, y + 4, CW, "These are YomiGo's own exams, not official JLPT tests. N3, N2, N1, and Beyond N1 arrive in updates. There's no official N0, so YomiGo will offer its own Beyond N1 stage.", C_DIM, 18, 0, 4);
 #if HTPC
     if (IN.pressed & A_BACK) go(S_HOME);
     footer("Challenge", "Menu");
@@ -954,10 +1018,10 @@ static void scr_quest(void) {
         fill(CX + rr * bw, y, bw - 2, 10, rr <= r ? C_ACC : (HTPC ? C_LO : 0xD9C8BC)); } y += 16; }
     if (r + 1 < rank_count()) { ys_cpy(b, "Next: ", sizeof b); ys_cat(b, rank_name(r + 1, ja), sizeof b); text(CX, y, b, C_DIM); y += LH; }
     y += 4;
-    { int per = HTPC ? 5 : 10, cols = HTPC ? 1 : 1, shown = 0;
+    { int per = HTPC ? 5 : ACH_COUNT, cols = HTPC ? 1 : 1, shown = 0;
       (void)cols;
-      if (IN.pressed & (A_R | A_RIGHT)) page = (page + 1) % 2;
-      if (IN.pressed & (A_L | A_LEFT)) page = (page + 1) % 2;
+      if (IN.pressed & (A_R | A_RIGHT)) page = (page + 1) % 3;
+      if (IN.pressed & (A_L | A_LEFT)) page = (page + 2) % 3;
       for (i = HTPC ? page * 5 : 0; i < ACH_COUNT && shown < per; i++, shown++) {
         int got = (P.ach >> i) & 1;
         text(CX, y, got ? "\xE2\x98\x85" : "\xE2\x98\x86", got ? C_ACC : C_DIM);
@@ -1246,6 +1310,10 @@ static void scr_place_result(void) {
 void app_test_auto(void) {
     IN.pressed = 0; IN.num = 0; IN.text[0] = 0; IN.mx = IN.my = -1; IN.mclick = 0;
     switch (scr) {
+    case S_READ:
+        if (rd_q < 0 || rd_pick >= 0) IN.pressed = A_OK;
+        else { int i; for (i = 0; i < 3; i++) if (rd_order[i] == 0) IN.num = i + 1; }
+        break;
     case S_TYPING:
         ys_cpy(input, YG_CARDS[ty_cards[ty_i]].romaji, sizeof input);
         IN.pressed = HTPC ? A_START : A_OK;
@@ -1309,6 +1377,7 @@ void app_frame(void) {
 #endif
     case S_FIRST: scr_first(); break;
     case S_TYPING: scr_typing(); break;
+    case S_READ: scr_read(); break;
     case S_GENKI: scr_genki(); break;
     }
 #if !HTPC

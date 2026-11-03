@@ -33,16 +33,17 @@ Need more help? The [install guide](docs/INSTALL.md) has every step.
 
 ## What a day looks like
 
-Each class takes a few minutes and has eight steps:
+Each class takes a few minutes and has up to nine steps:
 
 1. **Warm-up:** go over what you learned before.
 2. **Lesson:** meet new sounds, words, or grammar.
 3. **Typing:** type each new word a few times, so your fingers learn it too.
 4. **Drill:** practise until it sticks. Anything you miss comes back. Stuck? Press **I don't know**.
 5. **Conversation:** talk to a character using what you just learned.
-6. **Quiz:** score 80% to pass.
-7. **Homework:** do a small task, then answer a quick check.
-8. **Immersion:** use Japanese in everyday life, with a simple task.
+6. **Reading:** read a short story, then answer questions on it.
+7. **Quiz:** score 80% to pass.
+8. **Homework:** do a small task, then answer a quick check.
+9. **Immersion:** use Japanese in everyday life, with a simple task.
 
 Finish every stage's boss exam to move on. Along the way you earn XP, ranks, streaks, and achievements. Choose 1, 2, or 3 classes a day.
 
@@ -56,7 +57,7 @@ Finish every stage's boss exam to move on. Along the way you earn XP, ranks, str
 
 You start with sounds and romaji, then learn to read and speak step by step:
 
-**Sounds → Romaji → Hiragana → Katakana → Grammar → Kanji → Real-life Japanese → N5 Mastery Exam**
+**Sounds → Romaji → Hiragana → Katakana → Grammar → Kanji → Real-life Japanese → N5 Exam → Casual speech, opinions, plans, and polite Japanese → N4 Exam**
 
 There's also typing practice, stroke order, counting, polite speech, gestures, and manners. The built-in Study Guide shows you how to set up, and how to study each day. As you learn to read, YomiGo's own menus slowly switch into Japanese.
 
@@ -64,11 +65,11 @@ Studying with Genki? Turn on **Genki practice** to review by textbook lesson.
 
 ## Where it's up to
 
-YomiGo is in its early days. The course currently runs from zero to **N5**, the first level of the Japanese-Language Proficiency Test (JLPT). YomiGo's exams are its own, not official JLPT tests.
+YomiGo is in its early days. The course currently runs from zero to **N4**, the second of the five levels of the Japanese-Language Proficiency Test (JLPT). YomiGo's exams are its own, not official JLPT tests.
 
 | Works now | Coming later |
 |---|---|
-| 51 classes, 7 exams, and flashcards | N4 through N1, and beyond |
+| 70 classes, 8 exams, flashcards, and graded reading | N3 through N1, and beyond |
 | Scripted conversations | AI conversation partners |
 | A dictionary of about 22,000 common words | Larger dictionaries |
 | Speech input on Android | Picture-to-text (OCR) for manga and games |

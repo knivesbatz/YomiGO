@@ -3,6 +3,7 @@
 import json, os, shutil, subprocess, sys, tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DAYS = len(json.load(open(os.path.join(ROOT, "build", "gen", "content.json"), encoding="utf-8"))["days"])
 START = {"YomiGo.exe": "w2;ow2;ow2;tWalker;ow2;odow2;G;", "YomiGoHTPC.exe": None}
 fail = 0
 for exe in ("YomiGo.exe", "YomiGoHTPC.exe"):
@@ -17,8 +18,8 @@ for exe in ("YomiGo.exe", "YomiGoHTPC.exe"):
     text = open(os.path.join(root, saves[0]), encoding="utf-8").read() if saves else ""
     vals = dict(l.split("=", 1) for l in text.splitlines() if "=" in l)
     cards = sum(1 for l in text.splitlines() if l.startswith("card "))
-    ok = r.returncode == 0 and saves and int(vals.get("day", 0)) == 51 and cards > 400 and int(vals.get("xp", 0)) > 5000 and "exam.N5" in vals
-    print(exe, "exit", r.returncode, "day", vals.get("day"), "cards", cards, "xp", vals.get("xp"), "chats", vals.get("chats"), "hw", vals.get("hw"), "OK" if ok else "FAILED")
+    ok = r.returncode == 0 and saves and int(vals.get("day", 0)) == DAYS and cards > 400 and int(vals.get("xp", 0)) > 5000 and "exam.N5" in vals and "exam.N4" in vals and int(vals.get("reads", 0)) >= 10
+    print(exe, "exit", r.returncode, "day", vals.get("day"), "cards", cards, "xp", vals.get("xp"), "chats", vals.get("chats"), "hw", vals.get("hw"), "reads", vals.get("reads"), "OK" if ok else "FAILED")
     fail += not ok
     shutil.rmtree(root, ignore_errors=True)
 # Copy and paste, using a stand-in clipboard so the real one is left alone: "Ab" pasted after itself makes "AbAb"

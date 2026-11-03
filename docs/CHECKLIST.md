@@ -6,12 +6,14 @@ Complete means implemented and tested as described. **Partial** says what's miss
 |---|---|---|---|---|
 | Local profiles | Complete | Complete | Complete | n/a |
 | Entrance exam, adaptive by section | Partial: reading only | Partial: reading only | Partial: reading only | n/a |
-| Stages 0-6, up to N5 | Complete | Complete | Complete | n/a |
-| N4, N3, N2, N1, Beyond N1 | Not started | Not started | Not started | n/a |
-| Daily class with 7 steps | Complete | Complete | Complete | n/a |
+| Stages 0-7, up to N4 | Complete | Complete | Complete | n/a |
+| Graded reading with questions | Complete | Complete | Complete | n/a |
+| N3, N2, N1, Beyond N1 | Not started | Not started | Not started | n/a |
+| Daily class with up to 9 steps | Complete | Complete | Complete | n/a |
 | Romaji, hiragana, katakana drills | Complete | Complete | Complete | n/a |
-| Stroke order and handwriting | Not started | Not started | Not started | n/a |
-| Vocabulary, grammar, 80 kanji | Complete | Complete | Complete | n/a |
+| Stroke order | Complete | Complete | Complete | n/a |
+| Handwriting practice | Not started | Not started | Not started | n/a |
+| Vocabulary, grammar, 144 kanji | Complete | Complete | Complete | n/a |
 | Spaced repetition | Complete | Complete | Complete | n/a |
 | User-made cards | Not started | Not started | Not started | Saved words only |
 | Exams gating progress | Complete | Complete | Complete | n/a |
@@ -30,7 +32,7 @@ Complete means implemented and tested as described. **Partial** says what's miss
 | CRT mode | n/a | Partial: no real CRT tested | n/a | n/a |
 | Updates | Complete on Windows 7+ | Complete on Windows 7+ | Partial: not run on a device | Manual |
 | Backup and restore | Partial: backup copies; restore by hand | Partial: as Desktop | Complete: text export and import | n/a |
-| Dictionary popup | n/a | n/a | n/a | Partial: course words only |
+| Dictionary | Complete | Complete | Complete | Complete, not yet in a real browser install |
 | Sentence capture, Anki export | n/a | n/a | n/a | Complete, not yet in a real browser install |
 | Furigana on pages | n/a | n/a | n/a | Not started |
 | OCR, manga reading, game text | Not started | Not started | Not started | n/a |

@@ -235,7 +235,7 @@ int profile_save_text(const Profile *p, char *o, int cap) {
     n = put(o, cap, n, "last", p->last_day); n = put(o, cap, n, "today", p->done_today); n = put(o, cap, n, "placed", p->placed);
     n = put(o, cap, n, "day", p->day); n = put(o, cap, n, "step", p->step); n = put(o, cap, n, "pace", p->pace);
     n = put(o, cap, n, "en", p->force_en); n = put(o, cap, n, "genki", p->genki); n = put(o, cap, n, "reviews", p->reviews); n = put(o, cap, n, "perfects", p->perfects);
-    n = put(o, cap, n, "chats", p->chats); n = put(o, cap, n, "hw", p->homeworks); n = put(o, cap, n, "ach", (int)p->ach);
+    n = put(o, cap, n, "chats", p->chats); n = put(o, cap, n, "hw", p->homeworks); n = put(o, cap, n, "reads", p->reads); n = put(o, cap, n, "ach", (int)p->ach);
     for (i = 0; i < YG_NEXAMS; i++) if (p->exam_score[i]) {
         ys_cpy(o + n, "exam.", cap - n); n += 5; n = put(o, cap, n, YG_EXAMS[i].id, p->exam_score[i]);
     }
@@ -300,6 +300,7 @@ int profile_load_text(Profile *p, const char *text, int len) {
           else if (!ys_cmp(k, "perfects")) p->perfects = x;
           else if (!ys_cmp(k, "chats")) p->chats = x;
           else if (!ys_cmp(k, "hw")) p->homeworks = x;
+          else if (!ys_cmp(k, "reads")) p->reads = x;
           else if (!ys_cmp(k, "ach")) p->ach = (unsigned)x;
           else if (!ys_ncmp(k, "exam.", 5)) { int e; for (e = 0; e < YG_NEXAMS; e++) if (!ys_cmp(k + 5, YG_EXAMS[e].id)) p->exam_score[e] = (unsigned char)(x < 0 ? 0 : x > 100 ? 100 : x); }
         }
@@ -357,10 +358,10 @@ int profile_place(Profile *p, int stage, int today) {
 }
 static const char *const RANKS[][2] = {
     {"Newcomer", "入門者"}, {"White Sash", "白帯"}, {"Road Walker", "道を行く者"}, {"Scribe", "書記"},
-    {"Castle Guard", "城の守り"}, {"Gatekeeper", "門番"}, {"Kanji Knight", "漢字の騎士"}, {"N5 Champion", "N5王者"}
+    {"Castle Guard", "城の守り"}, {"Gatekeeper", "門番"}, {"Kanji Knight", "漢字の騎士"}, {"N5 Champion", "N5王者"}, {"N4 Champion", "N4王者"}
 };
-int rank_count(void) { return 8; }
-const char *rank_name(int r, int ja) { if (r < 0) r = 0; if (r > 7) r = 7; return RANKS[r][ja ? 1 : 0]; }
+int rank_count(void) { return 9; }
+const char *rank_name(int r, int ja) { if (r < 0) r = 0; if (r > 8) r = 8; return RANKS[r][ja ? 1 : 0]; }
 int profile_rank(const Profile *p) {
     int i, r = 0;
     for (i = 0; i < YG_NEXAMS; i++) if (p->exam_score[i] >= PASS_MARK) r = i + 1;
@@ -377,6 +378,8 @@ const YgAch YG_ACH[ACH_COUNT] = {
     {"Hundred Cards", "百枚", "Review 100 flashcards."},
     {"Flawless", "満点", "Score 100% on a quiz."},
     {"N5 Champion", "N5王者", "Pass the N5 Mastery Exam."},
+    {"Bookworm", "本の虫", "Finish 10 reading passages."},
+    {"N4 Champion", "N4王者", "Pass the N4 Mastery Exam."},
 };
 void ach_check(Profile *p) {
 #define GOT(a, cond) if (cond) p->ach |= 1u << (a)
@@ -385,7 +388,9 @@ void ach_check(Profile *p) {
     GOT(ACH_STREAK3, p->best_streak >= 3); GOT(ACH_STREAK7, p->best_streak >= 7); GOT(ACH_STREAK30, p->best_streak >= 30);
     GOT(ACH_HIRAGANA, p->exam_score[2] >= PASS_MARK); GOT(ACH_KATAKANA, p->exam_score[3] >= PASS_MARK);
     GOT(ACH_FIRST_CHAT, p->chats > 0); GOT(ACH_REVIEW100, p->reviews >= 100); GOT(ACH_PERFECT, p->perfects > 0);
-    GOT(ACH_N5, p->exam_score[YG_NEXAMS - 1] >= PASS_MARK);
+    { int e; for (e = 0; e < YG_NEXAMS; e++) if (p->exam_score[e] >= PASS_MARK) {
+        GOT(ACH_N5, !ys_cmp(YG_EXAMS[e].id, "N5")); GOT(ACH_N4, !ys_cmp(YG_EXAMS[e].id, "N4")); } }
+    GOT(ACH_READER, p->reads >= 10);
 #undef GOT
 }
 
@@ -411,6 +416,7 @@ static void fill_choices(Question *q, int card, const char *right, int use_readi
         const YgCard *o = &YG_CARDS[yg_rand() % YG_NCARDS];
         const char *t; int i, dup = 0;
         if (o->type != c->type || o->day < 0) continue;
+        if (o != c && !ys_cmp(o->front, c->front)) continue; /* 時 is both じ and とき: its other meaning isn't a wrong answer */
         if (tries < 300 && (o->day > c->day + 2 || o->day < c->day - 8)) continue;
         t = use_front ? (romaji ? o->romaji : o->front) : answer_text(o, use_reading, romaji);
         for (i = 0; i < 4; i++) if ((got > 0) && q->choices[i] && ys_cmp(q->choices[i], t) == 0) dup = 1;
@@ -486,7 +492,7 @@ void quiz_day(Quiz *z, const Profile *p, int day) {
 /* An exam samples everything in its stage, and a little from earlier stages */
 void quiz_exam(Quiz *z, int exam) {
     const YgExam *e = &YG_EXAMS[exam];
-    int want = e->stars >= 5 ? 40 : e->stars >= 3 ? 25 : 15, stage = YG_DAYS[e->day].stage, rom = stage <= 1, tries;
+    int want = e->stars >= 4 ? 40 : e->stars >= 3 ? 25 : 15, stage = YG_DAYS[e->day].stage, rom = stage <= 1, tries;
     int first = (e->stars >= 5) ? 0 : YG_STAGES[stage].first;
     static unsigned char used[YG_NCARDS]; int i;
     for (i = 0; i < YG_NCARDS; i++) used[i] = 0;

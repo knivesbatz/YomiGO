@@ -4,13 +4,14 @@
 
 typedef struct { const char *id; char type; const char *front, *reading, *romaji, *en, *note, *sentence, *w1, *w2, *w3, *trans; int day; } YgCard;
 typedef struct { const char *name, *ja, *desc; int first; } YgStage;
-typedef struct { int stage; const char *title, *ja; int nnotes; const char *const *notes; int nnew; const short *cards; int chat; const char *hw, *imm, *mat; int exam; } YgDay;
+typedef struct { int stage; const char *title, *ja; int nnotes; const char *const *notes; int nnew; const short *cards; int chat; const char *hw, *imm, *mat; int exam, read; } YgDay;
 typedef struct { const char *id, *name; int stars, day; } YgExam;
 typedef struct { const char *say, *romaji, *en; int nwant; const char *const *want; const char *hint, *want_ro; } YgTurn;
 typedef struct { const char *title, *ja, *who; int nturns; const YgTurn *turns; } YgChat;
 typedef struct { int stage, is_new; const char *type, *title, *ja; int year; const char *task; } YgMedia;
 typedef struct { const char *cat, *name, *url, *desc; } YgRes;
 typedef struct { const char *a, *b; } YgPair;
+typedef struct { const char *title, *ja, *jp, *en; int nq; const char *const *q; } YgRead;
 typedef struct { int lesson; const char *topics; int ncards; const short *cards; } YgGenki;
 
 #include "content_gen.h"
@@ -23,7 +24,7 @@ void srs_grade(CardState *c, int grade, int today);
 
 /* Profile */
 #define YG_NAME 32
-enum { STEP_WARMUP, STEP_TEACH, STEP_TYPING, STEP_DRILL, STEP_CHAT, STEP_QUIZ, STEP_HOMEWORK, STEP_IMMERSE, STEP_DONE };
+enum { STEP_WARMUP, STEP_TEACH, STEP_TYPING, STEP_DRILL, STEP_CHAT, STEP_READ, STEP_QUIZ, STEP_HOMEWORK, STEP_IMMERSE, STEP_DONE };
 typedef struct {
     char name[YG_NAME];
     int xp, streak, best_streak, last_day, done_today, placed;
@@ -31,7 +32,7 @@ typedef struct {
     int pace;               /* classes allowed per real day: 1, 2 or 3 */
     int force_en;           /* keep English labels even after immersion starts */
     int genki;              /* offer practice by Genki lesson */
-    int reviews, perfects, chats, homeworks;
+    int reviews, perfects, chats, homeworks, reads;
     unsigned char exam_score[YG_NEXAMS];
     unsigned int ach;
     CardState cards[YG_NCARDS];
@@ -53,7 +54,7 @@ int  profile_rank(const Profile *p);
 const char *rank_name(int rank, int ja);
 int  rank_count(void);
 
-enum { ACH_FIRST_CLASS, ACH_STREAK3, ACH_STREAK7, ACH_STREAK30, ACH_HIRAGANA, ACH_KATAKANA, ACH_FIRST_CHAT, ACH_REVIEW100, ACH_PERFECT, ACH_N5, ACH_COUNT };
+enum { ACH_FIRST_CLASS, ACH_STREAK3, ACH_STREAK7, ACH_STREAK30, ACH_HIRAGANA, ACH_KATAKANA, ACH_FIRST_CHAT, ACH_REVIEW100, ACH_PERFECT, ACH_N5, ACH_READER, ACH_N4, ACH_COUNT };
 typedef struct { const char *en, *ja, *desc; } YgAch;
 extern const YgAch YG_ACH[ACH_COUNT];
 void ach_check(Profile *p);

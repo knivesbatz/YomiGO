@@ -93,7 +93,7 @@ int text2(int x, int y, const char *s, unsigned col) { int c, x0 = x; while ((c 
 void text_c(int cx, int y, const char *s, unsigned c) { text(cx - text_w(s) / 2, y, s, c); }
 
 /* Wraps at spaces for Latin text and anywhere in Japanese, keeping closing punctuation off a line start. Returns line count. */
-static int no_line_start(int c) { return c == 0x3001 || c == 0x3002 || c == 0xFF01 || c == 0xFF1F || c == 0x3063 || c == 0x3083 || c == 0x3085 || c == 0x3087 || c == 0x30FC || c == 0xFF09 || c == ')' || c == ',' || c == '.' || c == '!' || c == '?'; }
+static int no_line_start(int c) { return c == 0x3001 || c == 0x3002 || c == 0xFF01 || c == 0xFF1F || c == 0x3063 || c == 0x3083 || c == 0x3085 || c == 0x3087 || c == 0x30FC || c == 0xFF09 || c == 0x300D || c == ')' || c == ',' || c == '.' || c == '!' || c == '?'; }
 int wrap(int x, int y, int w, const char *s, unsigned col, int lh, int skip, int maxl) {
     int line = 0;
     while (*s) {

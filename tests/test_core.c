@@ -56,6 +56,10 @@ int main(void) {
         int pref; if (YG_CARDS[i].day < 0) continue;
         for (pref = 0; pref < 3; pref++) {
             Question q; q_make(&q, i, pref, 0);
+            /* a word spelled like this card must not supply a wrong choice */
+            if (q.kind == Q_CHOICE && YG_CARDS[i].type != 'g') { int c, o; for (c = 0; c < 4; c++) for (o = 0; o < YG_NCARDS; o++)
+                if (o != i && YG_CARDS[o].type == YG_CARDS[i].type && !strcmp(YG_CARDS[o].front, YG_CARDS[i].front) && !strcmp(q.choices[c], YG_CARDS[o].en) && strcmp(YG_CARDS[o].en, YG_CARDS[i].en))
+                    CHECK(0, "card %s offers %s", YG_CARDS[i].id, q.choices[c]); }
             CHECK(q.prompt && *q.prompt, "card %s has empty prompt", YG_CARDS[i].id);
             if (q.kind == Q_CHOICE) { int c, d;
                 for (c = 0; c < 4; c++) { CHECK(q.choices[c] && strcmp(q.choices[c], "---"), "card %s pref %d has blank choice", YG_CARDS[i].id, pref);
@@ -73,6 +77,11 @@ int main(void) {
         CHECK(hit, "dict %s doesn't find the cat", qs[k]); }
       got = dict_search("コーヒー", r, 9); CHECK(got > 0, "dict katakana"); dict_row(r[0], w, rd, g, 128); CHECK(!strcmp(rd, "コーヒー"), "katakana first hit %s", rd);
       CHECK(dict_search("zzqqxx", r, 9) == 0, "nonsense finds nothing"); CHECK(dict_search("", r, 9) == 0, "empty finds nothing"); }
+    /* Reading: right answers are distinct from wrong ones, and every passage has a class */
+    { int r, q, d; for (r = 0; r < YG_NREAD; r++) { const YgRead *x = &YG_READ[r]; int used = 0;
+        for (q = 0; q < x->nq; q++) CHECK(strcmp(x->q[q * 4 + 1], x->q[q * 4 + 2]) && strcmp(x->q[q * 4 + 1], x->q[q * 4 + 3]), "reading %s q%d", x->title, q);
+        for (d = 0; d < YG_NDAYS; d++) if (YG_DAYS[d].read == r) used = 1;
+        CHECK(used, "reading %s has no class", x->title); } }
     /* Course flow: walk the whole thing as a learner would */
     profile_new(&a, "Walker");
     { int today = 1000, guard = 0;
@@ -93,7 +102,7 @@ int main(void) {
       CHECK(profile_course_done(&a), "course can be finished");
       CHECK(a.streak == YG_NDAYS, "streak %d", a.streak);
       CHECK(profile_rank(&a) == YG_NEXAMS, "rank %d", profile_rank(&a));
-      CHECK(a.ach & (1u << ACH_N5), "N5 achievement");
+      CHECK(a.ach & (1u << ACH_N5), "N5 achievement"); CHECK(a.ach & (1u << ACH_N4), "N4 achievement");
       for (i = 0; i < YG_NEXAMS; i++) { quiz_exam(&z, i); CHECK(z.n >= 15, "exam %d has %d", i, z.n); }
     }
     /* Exam gate blocks the next class */

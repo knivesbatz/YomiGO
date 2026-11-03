@@ -256,3 +256,144 @@ amari	あまり	あまり	amari	not much (with a negative)
 zenzen	全然	ぜんぜん	zenzen	not at all (with a negative)
 sukoshi	少し	すこし	sukoshi	a little
 totemo	とても	とても	totemo	very
+#plain1
+taberu	食べる	たべる	taberu	to eat (plain form)
+nomu	飲む	のむ	nomu	to drink (plain form)
+iku	行く	いく	iku	to go (plain form)
+kuru	来る	くる	kuru	to come (plain form)
+suru	する	する	suru	to do (plain form)
+miru	見る	みる	miru	to see (plain form)
+yomu	読む	よむ	yomu	to read (plain form)
+kaku	書く	かく	kaku	to write (plain form)
+#plain2
+hanasu	話す	はなす	hanasu	to speak (plain form)
+kau	買う	かう	kau	to buy (plain form)
+matsu	待つ	まつ	matsu	to wait
+au	会う	あう	au	to meet
+tsukuru	作る	つくる	tsukuru	to make
+oshieru	教える	おしえる	oshieru	to teach, to tell
+oboeru	覚える	おぼえる	oboeru	to memorise, to remember
+wasureru	忘れる	わすれる	wasureru	to forget
+#rules
+tsukau	使う	つかう	tsukau	to use
+hairu	入る	はいる	hairu	to enter
+deru	出る	でる	deru	to leave, to go out
+suwaru	座る	すわる	suwaru	to sit
+tatsu	立つ	たつ	tatsu	to stand
+tomaru	止まる	とまる	tomaru	to stop
+tabako	たばこ	たばこ	tabako	cigarette
+#must
+hataraku	働く	はたらく	hataraku	to work
+isogu	急ぐ	いそぐ	isogu	to hurry
+yasumu	休む	やすむ	yasumu	to rest, to take time off
+harau	払う	はらう	harau	to pay
+okane	お金	おかね	okane	money
+kusuri	薬	くすり	kusuri	medicine
+byouin	病院	びょういん	byouin	hospital
+isha	医者	いしゃ	isha	doctor
+#experience
+keiken	経験	けいけん	keiken	experience
+ryouri	料理	りょうり	ryouri	cooking, cuisine
+oyogu	泳ぐ	およぐ	oyogu	to swim
+noboru	登る	のぼる	noboru	to climb
+umi	海	うみ	umi	sea
+gaikoku	外国	がいこく	gaikoku	foreign country
+hajimete	初めて	はじめて	hajimete	for the first time
+mada	まだ	まだ	mada	still, not yet
+mou	もう	もう	mou	already
+#think
+omou	思う	おもう	omou	to think
+iu	言う	いう	iu	to say
+kangaeru	考える	かんがえる	kangaeru	to consider
+shiru	知る	しる	shiru	to come to know
+iken	意見	いけん	iken	opinion
+tabun	多分	たぶん	tabun	probably
+kitto	きっと	きっと	kitto	surely
+dame	だめ	だめ	dame	no good, not allowed
+#can
+dekiru	できる	できる	dekiru	to be able to
+jouzu	上手	じょうず	jouzu	skilful (な adjective)
+uta	歌	うた	uta	song
+utau	歌う	うたう	utau	to sing
+piano	ピアノ	ピアノ	piano	piano
+kanji	漢字	かんじ	kanji	Chinese characters
+ji2	字	じ	ji	written character
+#plans
+tsumori	つもり	つもり	tsumori	intention
+yotei	予定	よてい	yotei	plan, schedule
+ryuugaku	留学	りゅうがく	ryuugaku	studying abroad
+shigoto	仕事	しごと	shigoto	job, work
+kaisha	会社	かいしゃ	kaisha	company
+raishuu	来週	らいしゅう	raishuu	next week
+rainen	来年	らいねん	rainen	next year
+#compare
+yori	より	より	yori	than
+ichiban	一番	いちばん	ichiban	the most, number one
+onaji	同じ	おなじ	onaji	same
+hayai	早い	はやい	hayai	early
+osoi	遅い	おそい	osoi	late, slow
+muzukashii	難しい	むずかしい	muzukashii	difficult
+yasashii	易しい	やさしい	yasashii	easy
+omoshiroi	面白い	おもしろい	omoshiroi	interesting
+tsumaranai	つまらない	つまらない	tsumaranai	boring
+#because
+toki	時	とき	toki	when, time
+dakara	だから	だから	dakara	so, therefore
+demo	でも	でも	demo	but
+shikashi	しかし	しかし	shikashi	however
+kekkon	結婚	けっこん	kekkon	marriage
+tsukareru	疲れる	つかれる	tsukareru	to get tired
+#ifwhen
+moshi	もし	もし	moshi	if
+kaze2	風邪	かぜ	kaze	a cold (illness)
+netsu	熱	ねつ	netsu	fever
+atama	頭	あたま	atama	head
+onaka	お腹	おなか	onaka	stomach
+itai	痛い	いたい	itai	painful
+daigaku	大学	だいがく	daigaku	university
+shiken	試験	しけん	shiken	exam
+#give
+ageru	あげる	あげる	ageru	to give
+morau	もらう	もらう	morau	to receive
+kureru	くれる	くれる	kureru	to give (to me)
+okuru	送る	おくる	okuru	to send
+purezento	プレゼント	プレゼント	purezento	present, gift
+tegami	手紙	てがみ	tegami	letter
+tanjoubi	誕生日	たんじょうび	tanjoubi	birthday
+kasu	貸す	かす	kasu	to lend
+kariru	借りる	かりる	kariru	to borrow
+#passive
+homeru	褒める	ほめる	homeru	to praise
+shikaru	叱る	しかる	shikaru	to scold
+nusumu	盗む	ぬすむ	nusumu	to steal
+saifu	財布	さいふ	saifu	wallet
+dorobou	泥棒	どろぼう	dorobou	thief
+sasou	誘う	さそう	sasou	to invite
+#seem
+kumo	雲	くも	kumo	cloud
+taifuu	台風	たいふう	taifuu	typhoon
+jishin	地震	じしん	jishin	earthquake
+abunai	危ない	あぶない	abunai	dangerous
+kowai	怖い	こわい	kowai	scary
+ureshii	嬉しい	うれしい	ureshii	happy
+kanashii	悲しい	かなしい	kanashii	sad
+tanoshii	楽しい	たのしい	tanoshii	fun
+#actions
+aruku	歩く	あるく	aruku	to walk
+hashiru	走る	はしる	hashiru	to run
+neru	寝る	ねる	neru	to sleep
+okiru	起きる	おきる	okiru	to wake up
+ongaku	音楽	おんがく	ongaku	music
+renshuu	練習	れんしゅう	renshuu	practice
+hajimeru	始める	はじめる	hajimeru	to begin
+owaru	終わる	おわる	owaru	to end
+tsuzukeru	続ける	つづける	tsudukeru	to continue
+#keigo
+irassharu	いらっしゃる	いらっしゃる	irassharu	to be, go, come (respectful)
+ossharu	おっしゃる	おっしゃる	ossharu	to say (respectful)
+meshiagaru	召し上がる	めしあがる	meshiagaru	to eat, drink (respectful)
+mairu	参る	まいる	mairu	to go, come (humble)
+itadaku	いただく	いただく	itadaku	to receive, eat (humble)
+shachou	社長	しゃちょう	shachou	company president
+okyakusama	お客様	おきゃくさま	okyakusama	customer, guest
+kochira	こちら	こちら	kochira	this way, this person (polite)

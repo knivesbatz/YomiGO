@@ -1,0 +1,66 @@
+# Graded reading. All original stories. Each uses mostly what its class has taught, and sits on a class with a `read:` line.
+@read morning | My morning | わたしの朝
+jp: わたしは毎日六時におきます。朝ごはんを食べます。パンとコーヒーです。七時に学校へ行きます。
+en: I get up at six every day. I eat breakfast: bread and coffee. I go to school at seven.
+q: What does this person eat for breakfast? | Bread and coffee | Rice and tea | Nothing
+q: What time do they go to school? | Seven | Six | Eight
+
+@read cat | The cat at the station | 駅の猫
+jp: 駅に猫がいます。小さい猫です。名前はハナです。ハナは毎日、人を見ています。みんな、ハナが好きです。
+en: There is a cat at the station. It's a small cat. Its name is Hana. Hana watches people every day. Everyone likes Hana.
+q: Where is the cat? | At the station | At school | In a shop
+q: How do people feel about Hana? | Everyone likes her | Nobody knows her | People are scared of her
+
+@read shop | Going shopping | 買い物
+jp: 土曜日に友達と店へ行きました。わたしは本を二冊買いました。友達はきれいな花を買いました。安かったです。それから、一緒にコーヒーを飲みました。
+en: On Saturday I went to a shop with a friend. I bought two books. My friend bought some pretty flowers. They were cheap. After that, we drank coffee together.
+q: What did the writer buy? | Two books | Flowers | Coffee beans
+q: What did they do afterwards? | Had coffee together | Went home | Went to school
+
+@read trip | A letter from Kyoto | 京都から
+jp: 今、京都にいます。天気がいいです。山がきれいです。昨日はお寺を見ました。人が多かったですが、静かでした。食べ物もおいしいです。来月、東京へ帰ります。
+en: I'm in Kyoto now. The weather is nice. The mountains are beautiful. Yesterday I saw a temple. There were a lot of people, but it was quiet. The food is delicious too. I go back to Tokyo next month.
+q: What did the writer see yesterday? | A temple | A castle | The sea
+q: When are they going back to Tokyo? | Next month | Tomorrow | Next year
+
+@read friends | Two friends | 二人の友達
+jp: 「明日、映画見る？」「ごめん、明日はだめ。仕事がある」「そっか。じゃあ、日曜日は？」「日曜日なら大丈夫」「よかった。じゃ、十時に駅で」
+en: "Want to see a movie tomorrow?" "Sorry, tomorrow's no good. I've got work." "Oh, I see. How about Sunday, then?" "Sunday's fine." "Great. Ten o'clock at the station, then."
+q: Why can't the friend go tomorrow? | They have work | They're sick | They saw the movie already
+q: When will they meet? | Sunday at ten | Tomorrow at ten | Sunday at the cinema at two
+
+@read doctor | At the hospital | 病院で
+jp: 朝から頭が痛いので、病院へ行きました。お医者さんは「風邪ですね。薬を飲まなければなりません。でも、学校は休まなくてもいいですよ」と言いました。よかったです。明日、試験がありますから。
+en: My head had hurt since morning, so I went to the hospital. The doctor said, "It's a cold. You have to take medicine. But you don't need to take time off school." That was a relief, because I have an exam tomorrow.
+q: What's wrong with the writer? | They have a cold | They broke a leg | They have no problem
+q: Why is the writer relieved? | They can take tomorrow's exam | They don't need medicine | School is closed
+
+@read opinion | City or country? | 町と田舎
+jp: わたしは東京に住んでいます。便利ですが、人が多すぎると思います。兄は田舎に住んでいます。静かで、空がきれいだと言っています。でも、店が少ないので、車がなければなりません。どちらがいいでしょうか。
+en: I live in Tokyo. It's convenient, but I think there are too many people. My older brother lives in the countryside. He says it's quiet and the sky is beautiful. But there are few shops, so you have to have a car. I wonder which is better.
+q: What does the writer think about Tokyo? | It's convenient, but too crowded | It's too quiet | It has too few shops
+q: What's the problem in the countryside? | You need a car | The sky is dirty | There are too many people
+
+@read plans | Next year | 来年の予定
+jp: 来年、日本へ留学するつもりです。大学で日本語を勉強します。アルバイトもしようと思っています。今はお金をためています。少し怖いですが、楽しみです。
+en: Next year I plan to study abroad in Japan. I'll study Japanese at university. I'm also thinking of getting a part-time job. Right now I'm saving money. I'm a little scared, but looking forward to it.
+q: Why is the writer saving money? | To study abroad in Japan | To buy a car | To quit university
+q: How does the writer feel? | A little scared, but excited | Only scared | Bored
+
+@read sick | Even though I studied | 勉強したのに
+jp: 昨日はたくさん勉強しました。夜二時まで起きていました。勉強したのに、今日の試験は難しかったです。とても疲れていたので、問題がよく分かりませんでした。次は早く寝ようと思います。
+en: I studied a lot yesterday. I stayed up until two at night. Even though I studied, today's exam was difficult. I was so tired that I couldn't understand the questions well. Next time I think I'll go to bed early.
+q: Why did the exam go badly? | The writer was too tired | The writer didn't study | The exam was cancelled
+q: What will the writer do next time? | Go to bed early | Study until later | Skip the exam
+
+@read gift | A birthday present | 誕生日のプレゼント
+jp: 先週はわたしの誕生日でした。母が手紙をくれました。友達はケーキを作ってくれました。とても嬉しかったです。来月は友達の誕生日なので、わたしも何かあげたいです。何がいいと思いますか。
+en: Last week was my birthday. My mother gave me a letter. My friends made me a cake. I was very happy. Next month it's a friend's birthday, so I'd like to give something too. What do you think would be good?
+q: What did the mother give? | A letter | A cake | A book
+q: What does the writer want to do next month? | Give a friend a present | Have another party | Bake a cake for their mother
+
+@read routine | Studying while walking | 歩きながら
+jp: わたしは毎朝、音楽を聞きながら駅まで歩きます。最近は日本語の歌を聞いています。歌詞を読むのは難しいですが、歌いやすい歌もあります。毎日続けることが一番大切だと思います。
+en: Every morning I walk to the station while listening to music. Lately I've been listening to Japanese songs. Reading the lyrics is hard, but some songs are easy to sing. I think keeping it up every day matters most.
+q: What does the writer do on the way to the station? | Listens to music | Reads a book | Talks with friends
+q: What does the writer think matters most? | Continuing every day | Reading the lyrics | Singing well

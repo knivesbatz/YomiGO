@@ -65,8 +65,8 @@
   }
 
   // Save file: the same text format as the Windows builds, so a save moves between devices
-  const newProfile = (name) => ({ name, xp: 0, streak: 0, best: 0, last: 0, today: 0, placed: 0, day: 0, step: 0, pace: 1, en: 0, genki: 0, reviews: 0, perfects: 0, chats: 0, hw: 0, ach: 0, exams: {}, cards: {} });
-  const NUMS = ["xp", "streak", "best", "last", "today", "placed", "day", "step", "pace", "en", "genki", "reviews", "perfects", "chats", "hw", "ach"];
+  const newProfile = (name) => ({ name, xp: 0, streak: 0, best: 0, last: 0, today: 0, placed: 0, day: 0, step: 0, pace: 1, en: 0, genki: 0, reviews: 0, perfects: 0, chats: 0, hw: 0, ach: 0, reads: 0, exams: {}, cards: {} });
+  const NUMS = ["xp", "streak", "best", "last", "today", "placed", "day", "step", "pace", "en", "genki", "reviews", "perfects", "chats", "hw", "ach", "reads"];
   function saveText(p) {
     let t = "YOMIGO-SAVE 1\nname=" + p.name + "\n";
     for (const k of NUMS) t += k + "=" + p[k] + "\n";
@@ -92,7 +92,7 @@
       else if (k.startsWith("exam.")) { if (examIds.has(k.slice(5))) p.exams[k.slice(5)] = clamp(+v || 0, 0, 100); }
       else if (NUMS.includes(k)) p[k] = +v || 0;
     }
-    p.day = clamp(p.day, 0, C.days.length); p.step = p.step > 8 || p.step < 0 ? 0 : p.step; p.pace = clamp(p.pace, 1, 3);
+    p.day = clamp(p.day, 0, C.days.length); p.step = p.step > 9 || p.step < 0 ? 0 : p.step; p.pace = clamp(p.pace, 1, 3);
     return p.name ? p : null;
   }
 
@@ -129,7 +129,8 @@
   function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
   function choices(card, right, pick) {
     const out = [right];
-    const pool = shuffle(C.cards.filter((o) => o.t === card.t && o.day >= 0));
+    // 時 is both じ and とき: its other meaning isn't a wrong answer
+    const pool = shuffle(C.cards.filter((o) => o.t === card.t && o.day >= 0 && (o === card || o.f !== card.f)));
     pool.sort((a, b) => Math.abs(a.day - card.day) > 8 ? 1 : Math.abs(b.day - card.day) > 8 ? -1 : 0);
     for (const o of pool) { const t = pick(o); if (t && !out.includes(t)) out.push(t); if (out.length === 4) break; }
     return shuffle(out);
@@ -170,7 +171,7 @@
     return shuffle(out);
   }
   function quizExam(ex) {
-    const e = C.exams[ex], stage = C.days[e.day].stage, rom = stage <= 1, want = e.stars >= 5 ? 40 : e.stars >= 3 ? 25 : 15;
+    const e = C.exams[ex], stage = C.days[e.day].stage, rom = stage <= 1, want = e.stars >= 4 ? 40 : e.stars >= 3 ? 25 : 15;
     const first = e.stars >= 5 ? 0 : C.stages[stage].first;
     const inStage = C.cards.filter((c) => c.day >= first && c.day <= e.day && !(rom && "hk".includes(c.t)));
     const earlier = C.cards.filter((c) => c.day >= 0 && c.day < first && !(rom && "hk".includes(c.t)));

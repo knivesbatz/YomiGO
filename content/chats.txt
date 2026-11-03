@@ -105,3 +105,51 @@ say: いい天気ですね。 | ii tenki desu ne. | Nice weather, isn't it?
 want: そうですね;はいそうですね;いいてんきですね | Agree with そうですね.
 say: 明日は雨ですよ。 | ashita wa ame desu yo. | It's going to rain tomorrow, you know.
 want: そうですか;ほんとうですか;わかりました | React: そうですか means "is that so?"
+
+@chat casual1 | Talking with a friend | 友達と | はな
+say: 今日、学校行く？ | kyou, gakkou iku? | Are you going to school today?
+want: いく;うんいく;いかない;ううんいかない | Answer in plain form: いく or いかない.
+say: 昨日、映画見た？ | kinou, eiga mita? | Did you see a movie yesterday?
+want: みた;うんみた;みなかった;ううんみなかった | Answer in plain past: みた or みなかった.
+
+@chat rules1 | In a museum | 美術館 | かかりいん
+say: すみません、ここで写真を撮らないでください。 | sumimasen, koko de shashin o toranaide kudasai. | Excuse me, please don't take photos here.
+want: すみません;わかりました;すみませんわかりました | Apologise, or say you understand.
+say: あちらは撮ってもいいですよ。 | achira wa tottemo ii desu yo. | You may take them over there.
+want: ありがとうございます;わかりましたありがとうございます | Thank them.
+
+@chat exp1 | Have you ever? | 経験 | ゆき
+say: 日本へ行ったことがありますか。 | nihon e itta koto ga arimasu ka. | Have you ever been to Japan?
+want: はいいったことがあります;いいえいったことがありません;いいえありません;はいあります | Use 〜たことがあります or ありません.
+say: 納豆を食べたことがありますか。 | nattou o tabeta koto ga arimasu ka. | Have you ever eaten natto?
+want: はいたべたことがあります;いいえたべたことがありません;いいえありません;はいあります | Answer about natto.
+
+@chat can1 | What can you do? | できること | けん
+say: 泳ぐことができますか。 | oyogu koto ga dekimasu ka. | Can you swim?
+want: はいできます;いいえできません;はいおよげます;いいえおよげません | Use できます or できません.
+say: 日本語が上手ですね。 | nihongo ga jouzu desu ne. | Your Japanese is good!
+want: いいえまだまだです;ありがとうございます;まだまだです | Be modest: いいえ、まだまだです.
+
+@chat compare1 | Which is better? | どちら | はな
+say: 夏と冬と、どちらが好きですか。 | natsu to fuyu to, dochira ga suki desu ka. | Which do you like, summer or winter?
+want: なつのほうがすきです;ふゆのほうがすきです;なつがすきです;ふゆがすきです | Use 〜のほうが好きです.
+say: 寿司とラーメンと、どちらがいいですか。 | sushi to raamen to, dochira ga ii desu ka. | Sushi or ramen, which is better?
+want: すしがいいです;ラーメンがいいです;すしのほうがいいです;ラーメンのほうがいいです | Choose one, with がいいです.
+
+@chat doctor1 | At the doctor's | 病院 | おいしゃさん
+say: どうしましたか。 | dou shimashita ka. | What seems to be the problem?
+want: あたまがいたいです;おなかがいたいです;ねつがあります;かぜをひきました | Say what hurts: 頭が痛いです.
+say: 薬を飲んで、休んだほうがいいですよ。 | kusuri o nonde, yasunda hou ga ii desu yo. | You'd better take medicine and rest.
+want: わかりました;はいわかりました;ありがとうございます | Say you understand, or thank them.
+
+@chat weather2 | Looking at the sky | 空を見て | けん
+say: 雨が降りそうですね。 | ame ga furisou desu ne. | It looks like rain, doesn't it?
+want: そうですね;はいそうですね;そうですねかさをもっていきます | Agree with そうですね.
+say: 明日はどうでしょう。 | ashita wa dou deshou. | What about tomorrow, do you think?
+want: はれるでしょう;あめかもしれません;ゆきかもしれません;はれるとおもいます;あめだとおもいます | Guess, using でしょう or かもしれません.
+
+@chat office1 | Visiting a company | 会社で | うけつけ
+say: いらっしゃいませ。 | irasshaimase. | Welcome.
+want: すみません;はじめまして;おねがいします;しゃちょうはいらっしゃいますか | Greet them, or ask whether the president is in.
+say: 少々お待ちください。 | shoushou omachi kudasai. | One moment, please.
+want: はい;わかりました;ありがとうございます | Say OK politely.

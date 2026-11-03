@@ -76,6 +76,10 @@ test("the entrance exam starts with romaji", () => {
   for (const q of Y.placementSection(0)) assert.ok(/^[\x00-\x7f]+$/.test(q.prompt), q.prompt);
   for (let i = 0; i < 6; i++) assert.equal(Y.placementSection(i).length, 5, "section " + i);
 });
+test("a word spelled the same never supplies a wrong answer", () => {
+  const toki = C.cards.find((c) => c.id === "v.toki"), ji = C.cards.find((c) => c.id === "v.ji");
+  for (let i = 0; i < 200; i++) assert.ok(!Y.makeQ(toki, 0, false).choices.includes(ji.en));
+});
 test("lookup finds words and undoes polite endings", () => {
   assert.equal(Y.lookup("猫がいます")[0].card.id, "v.neko");
   assert.ok(Y.lookup("食べました").some((h) => h.card.id === "v.tabemasu"));
