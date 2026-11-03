@@ -30,6 +30,13 @@ Most guides put reading at the centre of long-term progress. Vary what you read,
 Once you've finished the beginner stage, make your own flashcards from real Japanese. Save each word with the sentence you met it in.
 YomiGo Reader does this in your browser, and exports to Anki.
 Words you've met in something you care about stick far better than words from a list.
+@ Saying I, you, he and she
+わたし (私) works for everyone, in any situation. わたくし is more formal still, for work and speeches.
+Casually, many men and boys say ぼく (僕), and おれ (俺) with friends, which sounds rough. Many women and girls say あたし.
+Japanese leaves out "I" once it's clear, so you'll say it far less than in English.
+"You" is mostly left out too. あなた can sound distant or cold, so use the person's name with さん: 田中さんは学生ですか。
+きみ and おまえ are casual, and can sound rude to someone you don't know well.
+かれ (彼) means he, and かのじょ (彼女) she, but they also mean boyfriend and girlfriend. Names are safer.
 @ Grammar and kanji
 Read grammar to understand it, not to memorise it. It won't stick the first time, and that's normal. If an explanation confuses you, try another guide.
 Learn kanji through words. Guides warn against studying kanji only on their own for long. Mnemonics help when kanji look alike.

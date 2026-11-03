@@ -76,8 +76,21 @@ function profiles() {
       btn("Start", () => {
         const name = input.value.replace(/[^A-Za-z0-9_-]/g, "");
         if (!name) { input.focus(); return; }
-        P = store.load(name) || Y.newProfile(name); store.save(); askGenki();
+        P = store.load(name) || Y.newProfile(name); store.save(); askSpeaker(askGenki);
       }, "main")));
+}
+// Who's learning picks the casual words for "I" added to My words. わたし is in the course for everyone.
+const GENDER = ["Not asked", "Woman", "Man", "Rather not say"];
+function askSpeaker(next) {
+  setNav(-1);
+  const pick = (g) => () => {
+    const who = g === 1 ? "w" : g === 2 ? "m" : "";
+    P.gender = g;
+    C.pronouns.filter((p) => p.who === who).forEach((p) => Y.myAdd(P, p.word, p.reading, p.en, p.sent, Y.today()));
+    store.save(); next();
+  };
+  show(h("h1", null, "Who's learning?"), h("div", { cls: "card" }, "Japanese has several words for \"I\". わたし suits everyone, and the course teaches it. Casually, men often say ぼく or おれ, and women あたし. Your answer adds the ones that fit you to My words. You can change it in Settings."),
+    btn("A woman", pick(1), "main"), btn("A man", pick(2)), btn("Rather not say", pick(3)));
 }
 function askGenki() {
   setNav(-1);
@@ -143,6 +156,7 @@ function placement(section, passed) {
 }
 
 function home() {
+  if (!P.gender) return askSpeaker(home); // saves from before 0.7.1 are asked once
   setNav(0);
   const t = Y.today(), gate = Y.examGate(P), due = Y.dueCount(P, t);
   if (P.last !== t) P.today = 0;
@@ -385,6 +399,7 @@ function settings() {
     btn("Pace: " + paces[P.pace - 1], () => { P.pace = P.pace % 3 + 1; store.save(); settings(); }),
     btn(P.en ? "Labels: Always English" : "Labels: Gradually Japanese", () => { P.en = P.en ? 0 : 1; store.save(); settings(); }),
     btn(P.genki ? "Genki practice: On" : "Genki practice: Off", () => { P.genki = P.genki ? 0 : 1; store.save(); settings(); }),
+    btn("Who's learning: " + GENDER[P.gender], () => askSpeaker(settings)),
     btn(canSpeak() ? "Japanese voice: found" : "Japanese voice: none. Tap to add it", () => { if (Bridge) Bridge.installVoice(); else alert("Listening needs a Japanese voice on this device."); }),
     btn("Check for updates", () => { if (Bridge) Bridge.checkUpdate(); else alert("Updates apply to the Android app."); }),
     btn("Switch learner", profiles),

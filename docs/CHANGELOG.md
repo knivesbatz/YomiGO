@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.1
+
+- Who's learning: YomiGo asks once whether you're a woman, a man, or would rather not say. Men get ぼく and おれ in My words, and women あたし, each with an example. わたし stays in the course for everyone. Change it in Settings
+- A new Study Guide page explains the words for I, you, he and she, and why Japanese usually leaves them out
+
 ## 0.7.0
 
 - Transcribe: in the Text Reader, pick an audio or video file (MP3, M4A, WAV, MP4, and others Windows can play), and YomiGo writes down the Japanese in it, on your PC. Click any word to look it up and add it, like any other text

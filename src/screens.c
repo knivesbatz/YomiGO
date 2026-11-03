@@ -54,7 +54,7 @@
 #define FBY_BTN (FBH - FOOT - 38)
 #endif
 
-typedef enum { S_SPLASH, S_PROFILES, S_NAME, S_PLACE_INTRO, S_PLACE_RESULT, S_HOME, S_CLASS, S_TEACH, S_QUIZ, S_RESULT, S_CHAT, S_TASK, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS, S_BIND, S_FIRST, S_GENKI, S_TYPING, S_READ, S_MYWORDS, S_MYADD, S_SHADOW, S_TEXT } Screen;
+typedef enum { S_SPLASH, S_PROFILES, S_NAME, S_PLACE_INTRO, S_PLACE_RESULT, S_HOME, S_CLASS, S_TEACH, S_QUIZ, S_RESULT, S_CHAT, S_TASK, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS, S_BIND, S_FIRST, S_GENKI, S_TYPING, S_READ, S_MYWORDS, S_MYADD, S_SHADOW, S_TEXT, S_SPEAKER } Screen;
 typedef enum { QM_WARMUP, QM_DRILL, QM_DAILY, QM_HW, QM_REVIEW, QM_EXAM, QM_PLACE, QM_PRACTICE, QM_LISTEN } QuizMode;
 
 static Screen scr = S_SPLASH;
@@ -84,6 +84,8 @@ static const char *flash_msg = "";
 static void flash(const char *m) { flash_msg = m; flash_t = 40; plat_sound(0); }
 static void flash_add(int r) { flash(r > 0 ? "Added!" : r == 0 ? "Already added" : "Deck is full"); }
 static int my_sel, my_confirm, add_step;
+static Screen sp_next; /* where the who's-learning question returns to */
+static const char *const gender_name[] = {"Not asked", "Woman", "Man", "Rather not say"};
 static int q_said = -1, sh_i, sh_n, sh_said;
 #define TX_MAX 400 /* room for an episode's transcript */
 static char tx_lines[TX_MAX][256];
@@ -422,6 +424,7 @@ static void next_step(void) { P.step++; save_profile(); run_step(); }
 static void scr_home(void) {
     int today = plat_today(), due = profile_due(&P, today), gate = profile_exam_gate(&P);
     char b[128];
+    if (!P.gender) { sp_next = S_HOME; go(S_SPEAKER); return; } /* saves from before 0.7.1 are asked once */
     profile_touch_day(&P, today);
 #if HTPC
     {
@@ -1439,7 +1442,7 @@ static void scr_settings(void) {
     if (button(CX, y, w, bh, P.force_en ? "Labels: Always English" : "Labels: Gradually Japanese")) { P.force_en = !P.force_en; save_profile(); }
     y += step;
     if (button(HTPC ? CX + w / 2 + 2 : CX, HTPC ? y : y, HTPC ? w / 2 - 2 : w, bh, P.genki ? "Genki: On" : "Genki: Off")) { P.genki = !P.genki; save_profile(); }
-    if (!HTPC) y += step;
+    if (!HTPC) { y += step; ys_cpy(b, "Who's learning: ", sizeof b); ys_cat(b, gender_name[P.gender], sizeof b); if (button(CX, y, w, bh, b)) { sp_next = S_SETTINGS; go(S_SPEAKER); return; } y += step; }
     if (button(CX, y, HTPC ? w / 2 - 2 : w, bh, HTPC ? "Back up" : "Back up my save")) { save_profile(); plat_copy_backup(P.name); show_result("Backed up", "A dated copy of your save is in the backup folder, next to the program.", 1, S_SETTINGS); return; }
     y += step;
     if (button(CX, y, HTPC ? w / 2 - 2 : w, bh, plat_can_update() ? "Check for updates" : (HTPC ? "Manual updates" : "Updates: manual on this Windows"))) {
@@ -1450,8 +1453,10 @@ static void scr_settings(void) {
     if (button(HTPC ? CX + w / 2 + 2 : CX, y, HTPC ? w / 2 - 2 : w, bh, "Switch profile")) { save_profile(); have_profile = 0; go(S_PROFILES); return; }
     y += step;
 #if HTPC
-    { static const char *const modes[] = {"Buttons: Auto", "Buttons: N64", "Buttons: Xbox", "Buttons: PlayStation"};
-      if (button(CX, y, w, bh, modes[pad_mode()])) pad_set_mode((pad_mode() + 1) % 4); }
+    { static const char *const modes[] = {"Pad: Auto", "Pad: N64", "Pad: Xbox", "Pad: PlayStation"};
+      if (button(CX, y, w / 2 - 2, bh, modes[pad_mode()])) pad_set_mode((pad_mode() + 1) % 4); }
+    ys_cpy(b, "I: ", sizeof b); ys_cat(b, P.gender == 1 ? "Woman" : P.gender == 2 ? "Man" : "Not said", sizeof b);
+    if (button(CX + w / 2 + 2, y, w / 2 - 2, bh, b)) { sp_next = S_SETTINGS; go(S_SPEAKER); return; }
     y += step;
     if (button(CX, y, w / 2 - 2, bh, crt_mode() ? "TV: CRT / RF" : "TV: Flat")) crt_set(!crt_mode());
     if (button(CX + w / 2 + 2, y, w / 2 - 2, bh, plat_has_tts() ? "Voice: OK" : "Voice: None")) { voice_help(); return; }
@@ -1550,8 +1555,31 @@ static void scr_name(void) {
             if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '-' || c == '_') clean[k++] = c;
         }
         clean[k] = 0;
-        if (k) { profile_new(&P, clean); have_profile = 1; save_profile(); input[0] = 0; go(S_FIRST); }
+        if (k) { profile_new(&P, clean); have_profile = 1; save_profile(); input[0] = 0; sp_next = S_FIRST; go(S_SPEAKER); }
     }
+}
+/* ---- who's learning: picks the casual words for "I" added to My words ---- */
+static void scr_speaker(void) {
+    static const char *const who[] = {"A woman", "A man", HTPC ? "Not saying" : "Rather not say"};
+    int i, g = 0, bw = HTPC ? (CW - 8) / 3 : CW;
+    chrome("Who's learning?", 0);
+    panel(CX, CY, CW, HTPC ? 126 : 110);
+    wrap(CX + 8, CY + 4, CW - 16, "Japanese has several words for \"I\". わたし suits everyone, and the course teaches it. Casually, men often say ぼく or おれ, and women あたし. Your answer adds the ones that fit you to My words. You can change it in Settings.", C_INK, LH, 0, 0);
+    for (i = 0; i < 3; i++)
+        if (HTPC ? button(CX + i * (bw + 4), FBY_BTN, bw, 28, who[i]) : button(CX, FBY_BTN - (2 - i) * 36, CW, 28, who[i])) g = i + 1;
+    if (g) {
+        char want = g == 1 ? 'w' : g == 2 ? 'm' : 0; int n = 0;
+        P.gender = g;
+        for (i = 0; i < YG_NPRONOUNS; i++)
+            if (YG_PRONOUNS[i].who == want && my_add(&P, YG_PRONOUNS[i].word, YG_PRONOUNS[i].reading, YG_PRONOUNS[i].en, YG_PRONOUNS[i].sent, plat_today()) > 0) n++;
+        save_profile();
+        if (n) flash("Added to My words");
+        go(sp_next);
+        return;
+    }
+#if HTPC
+    footer("Choose", 0);
+#endif
 }
 static void scr_first(void) {
     chrome("Do you study with Genki?", 0);
@@ -1679,6 +1707,7 @@ void app_frame(void) {
     case S_BIND: break;
 #endif
     case S_FIRST: scr_first(); break;
+    case S_SPEAKER: scr_speaker(); break;
     case S_TYPING: scr_typing(); break;
     case S_READ: scr_read(); break;
     case S_MYWORDS: scr_mywords(); break;

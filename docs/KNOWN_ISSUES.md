@@ -30,6 +30,7 @@
 - Media difficulty is YomiGo's judgement, and availability isn't listed.
 - Saves don't sync on their own. Copy them by hand.
 - Firefox rejects Reader through Install Add-on From File, and removes a temporary install on restart, until Mozilla signs it. Someone has reported an error using it there. The exact message is still needed, as Firefox isn't on the build PC.
+- The pronoun notes and examples haven't had a native speaker's review yet, like the N4 grammar.
 - Stroke order is shown, but there's no handwriting check. Youon cards such as きゃ don't show it.
 
 ## Security limits

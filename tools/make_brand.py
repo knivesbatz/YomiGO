@@ -82,7 +82,7 @@ def logo():
 
 # A made-up learner, so screenshots show a course in progress
 def save_text(day, step=0):
-    from_c = ["YOMIGO-SAVE 1", "name=Hana", "xp=4820", "streak=23", "best=23", "last=1", "today=0", "placed=0", f"day={day}", f"step={step}", "pace=1", "en=0", "genki=1", "reviews=340", "perfects=4", "chats=9", "hw=22", "ach=367"]
+    from_c = ["YOMIGO-SAVE 1", "name=Hana", "xp=4820", "streak=23", "best=23", "last=1", "today=0", "placed=0", f"day={day}", f"step={step}", "pace=1", "en=0", "genki=1", "gender=3", "reviews=340", "perfects=4", "chats=9", "hw=22", "ach=367"]
     for i, ex in enumerate(["S0", "S1", "S2", "S3", "S4", "S5", "N5"]):
         stage_first = [4, 8, 22, 26, 36, 44, 47][i]
         if day > stage_first: from_c.append(f"exam.{ex}=92")

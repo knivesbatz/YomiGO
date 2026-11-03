@@ -67,8 +67,8 @@
 
   // Save file: the same text format as the Windows builds, so a save moves between devices
   const MY_MAX = 2000;
-  const newProfile = (name) => ({ name, xp: 0, streak: 0, best: 0, last: 0, today: 0, placed: 0, day: 0, step: 0, pace: 1, en: 0, genki: 0, reviews: 0, perfects: 0, chats: 0, hw: 0, ach: 0, reads: 0, listens: 0, exams: {}, cards: {}, my: [] });
-  const NUMS = ["xp", "streak", "best", "last", "today", "placed", "day", "step", "pace", "en", "genki", "reviews", "perfects", "chats", "hw", "ach", "reads", "listens"];
+  const newProfile = (name) => ({ name, xp: 0, streak: 0, best: 0, last: 0, today: 0, placed: 0, day: 0, step: 0, pace: 1, en: 0, genki: 0, gender: 0, reviews: 0, perfects: 0, chats: 0, hw: 0, ach: 0, reads: 0, listens: 0, exams: {}, cards: {}, my: [] });
+  const NUMS = ["xp", "streak", "best", "last", "today", "placed", "day", "step", "pace", "en", "genki", "gender", "reviews", "perfects", "chats", "hw", "ach", "reads", "listens"];
   function saveText(p) {
     let t = "YOMIGO-SAVE 1\nname=" + p.name + "\n";
     for (const k of NUMS) t += k + "=" + p[k] + "\n";

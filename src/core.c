@@ -335,7 +335,7 @@ int profile_save_text(const Profile *p, char *o, int cap) {
     n = put(o, cap, n, "xp", p->xp); n = put(o, cap, n, "streak", p->streak); n = put(o, cap, n, "best", p->best_streak);
     n = put(o, cap, n, "last", p->last_day); n = put(o, cap, n, "today", p->done_today); n = put(o, cap, n, "placed", p->placed);
     n = put(o, cap, n, "day", p->day); n = put(o, cap, n, "step", p->step); n = put(o, cap, n, "pace", p->pace);
-    n = put(o, cap, n, "en", p->force_en); n = put(o, cap, n, "genki", p->genki); n = put(o, cap, n, "reviews", p->reviews); n = put(o, cap, n, "perfects", p->perfects);
+    n = put(o, cap, n, "en", p->force_en); n = put(o, cap, n, "genki", p->genki); n = put(o, cap, n, "gender", p->gender); n = put(o, cap, n, "reviews", p->reviews); n = put(o, cap, n, "perfects", p->perfects);
     n = put(o, cap, n, "chats", p->chats); n = put(o, cap, n, "hw", p->homeworks); n = put(o, cap, n, "reads", p->reads); n = put(o, cap, n, "listens", p->listens); n = put(o, cap, n, "ach", (int)p->ach);
     for (i = 0; i < YG_NEXAMS; i++) if (p->exam_score[i]) {
         ys_cpy(o + n, "exam.", cap - n); n += 5; n = put(o, cap, n, YG_EXAMS[i].id, p->exam_score[i]);
@@ -426,6 +426,7 @@ int profile_load_text(Profile *p, const char *text, int len) {
           else if (!ys_cmp(k, "pace")) p->pace = x < 1 ? 1 : x > 3 ? 3 : x;
           else if (!ys_cmp(k, "en")) p->force_en = x;
           else if (!ys_cmp(k, "genki")) p->genki = x != 0;
+          else if (!ys_cmp(k, "gender")) p->gender = x >= 0 && x <= 3 ? x : 0;
           else if (!ys_cmp(k, "reviews")) p->reviews = x;
           else if (!ys_cmp(k, "perfects")) p->perfects = x;
           else if (!ys_cmp(k, "chats")) p->chats = x;
