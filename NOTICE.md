@@ -1,11 +1,17 @@
 # Licences and attribution
 
-YomiGo's source code and course content are © knivesbatz, all rights reserved. The repository is public so the apps can update from it. The owner can choose an open-source licence later.
+YomiGo is © knivesbatz, and free to use, share, and change:
+
+- **Source code:** GNU General Public License, version 3 or any later version. See [`LICENSE`](LICENSE).
+- **Course content** (everything in `content/` except `content/dict/`, which keeps its own licences below): Creative Commons Attribution-ShareAlike 4.0. See [`content/LICENSE`](content/LICENSE).
+
+These were chosen so YomiGo can take in as much open knowledge as possible. Most open Japanese-learning tools are GPL-3.0, and the big open Japanese datasets (JMdict, KANJIDIC2, KanjiVG, Wiktionary, Tatoeba, open pitch-accent data) are CC BY-SA or compatible with it. Material that's copyrighted, such as textbooks and paid courses, still never goes in, whatever YomiGo's own licence.
 
 | Part | Licence | Notes |
 |---|---|---|
 | DotGothic16 font | SIL OFL 1.1 | Baked into the Windows apps. See `assets/fonts/DotGothic16-OFL.txt` |
-| Course text, memory hooks, conversations | Original | Written for YomiGo. Facts such as readings and meanings aren't owned by anyone, but the wording here is |
+| Source code | GPL-3.0-or-later | `src/`, `shared/`, `mobile/`, `extension/`, `tools/`, `tests/` |
+| Course text, memory hooks, conversations | CC BY-SA 4.0 | Written for YomiGo. Facts such as readings and meanings aren't owned by anyone, but the wording here is |
 
 YomiGo isn't affiliated with or endorsed by Nintendo, The Japan Times (Genki), the JLPT organisers, Duolingo, WaniKani, Anki, Quizlet, or any other product it mentions. Names are used only to describe compatibility or inspiration.
 

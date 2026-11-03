@@ -421,8 +421,7 @@ function library() {
     btn("📝 " + L("Text Reader", "テキスト", 3), () => textReader(), "main"),
     h("h2", null, "Dictionary"), q, btn("Search", search, "main"), out, h("p", { cls: "dim" }, "About 22,000 common words from JMdict by EDRDG, CC BY-SA 4.0."),
     h("h2", null, "Study Guide"), C.guide.map((g) => { const d = h("details", { cls: "card" }, h("summary", null, h("strong", null, g.title))); g.body.split("\n").forEach((p) => d.append(h("p", null, p))); return d; }),
-    h("h2", null, "Released after 2020"), era(true), h("h2", null, "Released before 1999"), era(false), h("p", { cls: "dim" }, "Difficulty is YomiGo's own judgement. Check your local services for availability."),
-    h("h2", null, "Links"), C.res.map((r) => btn(`${r.name}: ${r.desc}`, () => open(r.url))));
+    h("h2", null, "Released after 2020"), era(true), h("h2", null, "Released before 1999"), era(false), h("p", { cls: "dim" }, "Difficulty is YomiGo's own judgement. Check your local services for availability."));
 }
 function settings() {
   setNav(5);

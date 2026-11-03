@@ -9,7 +9,7 @@
 | Study method | [DJT Guide](https://djtguide.neocities.org/guide), [Japanification](https://japanification.neocities.org/learning-japanese/how-to-learn-japanese), [TheMoeWay](https://learnjapanese.moe/guide/), [Cafe Moof](https://cafemoof.neocities.org/pages/jp-resources/), [JP Tools](https://jptools.neocities.org/). For [AJATT](https://ajatt.top/blog/table-of-contents.html), only the contents page was read. Read through summaries, and restated in YomiGo's own words | 2026-11-02 |
 | N64-era TV design | The owner's N64 launcher project: its README and notes only | 2026-11-02 |
 
-All links in `content/resources.tsv` returned HTTP 200 on 2026-11-02. One link tried and left out: the old NHK World learning URL returned 404.
+YomiGo used to list these sites in a Links tab. Since 0.15 it doesn't link out: the Study Guide covers what they teach, in YomiGo's own words.
 
 ## Facts vs opinions in the course
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.15.0
+
+- 215 more words, from 1,009 to 1,224 word cards, each with an example sentence, in 27 classes. Common words that had been missing, such as 忙しい, 甘い, 明るい, 鼻, 大人, すぐ, ゆっくり, and 残念, plus the body and health, animals, food and cooking, the post office and getting around, shops, travel and hotels, the home, feelings, and work
+- No more Links tab. YomiGo doesn't send you to other sites: the Study Guide now covers what they taught, in YomiGo's own words, with new pages on pitch accent, reading lots of easy Japanese, using YomiGo with real Japanese (pages, games, manga, videos), speaking with real people, and the JLPT levels. Its last page now starts after N3, where the course ends
+- YomiGo is now free software: the code under the GPL, version 3 or later, and the course under Creative Commons BY-SA 4.0, so open Japanese data and open-source tools can be built in
+- On the TV, switching to the Study Guide with R no longer leaves the highlight on Dict, where OK would jump back
+- On the PC, the Media list shows four picks a page, so the last one no longer runs under the page buttons
+
 ## 0.14.0
 
 - 165 more words, from 844 to 1,009 word cards, each with an example sentence, in 22 classes across the course. Chosen from the most frequent words in real learning material that the course didn't teach yet

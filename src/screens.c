@@ -1383,26 +1383,26 @@ static void scr_quest(void) {
 
 /* ---- library ---- */
 static void scr_library(void) {
-    static const char *const tabs[] = {"Media", "Links", "Dict", "Guide"};
+    static const char *const tabs[] = {"Media", "Dict", "Guide"};
     static int gsec;
     int i, y, per = HTPC ? 6 : 11, n, stage = profile_stage(&P), had = input[0];
     char b[96];
     chrome(L("Library", "本だな", 5), 0);
-    for (i = 0; i < 4; i++) {
-        int w = CW / 4;
+    /* Before the tabs are drawn, so this frame already has the new tab's buttons and focus lands on it */
+    if (IN.pressed & A_R) { tab = (tab + 1) % 3; page = 0; input[0] = 0; ui_set_focus(tab); }
+    if (IN.pressed & A_L) { tab = (tab + 2) % 3; page = 0; input[0] = 0; ui_set_focus(tab); }
+    for (i = 0; i < 3; i++) {
+        int w = CW / 3;
         /* On the TV the search box's keyboard needs OK, so its tabs change with L and R only */
-        if (HTPC && tab == 2) { fill(CX + i * w, CY, w - 4, 22, C_PANEL); text_c(CX + i * w + (w - 4) / 2, CY + 3, tabs[i], C_INK); }
+        if (HTPC && tab == 1) { fill(CX + i * w, CY, w - 4, 22, C_PANEL); text_c(CX + i * w + (w - 4) / 2, CY + 3, tabs[i], C_INK); }
         else if (button(CX + i * w, CY, w - 4, 22, tabs[i])) { tab = i; page = 0; input[0] = 0; IN.pressed &= ~A_OK; }
         if (tab == i) fill(CX + i * w, CY + 22, w - 4, 2, C_ACC);
     }
-    /* focus follows, so pressing OK can't jump back to the tab that had it */
-    if (IN.pressed & A_R) { tab = (tab + 1) % 4; page = 0; input[0] = 0; ui_set_focus(tab); }
-    if (IN.pressed & A_L) { tab = (tab + 3) % 4; page = 0; input[0] = 0; ui_set_focus(tab); }
     y = CY + 30;
     if (tab == 0) {
         static short list[YG_NMEDIA]; int m = 0;
         for (i = 0; i < YG_NMEDIA; i++) if (YG_MEDIA[i].stage <= stage + 1) list[m++] = (short)i;
-        n = m; per = HTPC ? 3 : 5;
+        n = m; per = HTPC ? 3 : 4; /* each pick takes up to four lines */
         for (i = page * per; i < n && i < (page + 1) * per; i++) {
             const YgMedia *x = &YG_MEDIA[list[i]];
             ys_fmt(b, sizeof b, "%d", x->year, 0);
@@ -1411,13 +1411,6 @@ static void scr_library(void) {
             y += (HTPC ? 15 : LH - 2) * wrap(CX, y, CW, x->task, C_DIM, HTPC ? 15 : LH - 2, 0, 2) + 2;
         }
     } else if (tab == 1) {
-        n = YG_NRES;
-        for (i = page * per; i < n && i < (page + 1) * per; i++) {
-            if (button(CX, y, HTPC ? CW : 180, 22, YG_RES[i].name)) plat_open(YG_RES[i].url);
-            if (!HTPC) wrap(CX + 188, y + 3, CW - 188, YG_RES[i].desc, C_DIM, 16, 0, 1);
-            y += 26;
-        }
-    } else if (tab == 2) {
         static int res[9], nres, searched; int rows = HTPC ? 3 : 8, go_search;
         n = 0;
         input_box(CX, y, CW, 1);
@@ -1471,8 +1464,8 @@ static void scr_library(void) {
         if (button(CX + CW - 70, FBY_BTN, 70, 28, L("Next", "つぎ", 2)) && (page + 1) * per < n) page++;
     }
 #if HTPC
-    if ((IN.pressed & A_BACK) && !(tab == 2 && had)) { go(S_HOME); return; }
-    if (tab != 2) footer("Open", "Menu");
+    if ((IN.pressed & A_BACK) && !(tab == 1 && had)) { go(S_HOME); return; }
+    if (tab != 1) footer("Open", "Menu");
 #endif
 }
 

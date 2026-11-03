@@ -16,7 +16,7 @@ material: 3. Greetings
 note: すみません is the all-rounder: it calls a waiter, says excuse me, and softens a thanks. ごめんなさい is a more personal "I'm sorry".
 note: Hands together before a meal for いただきます is common at home. It is a thank you for the food. After eating, say ごちそうさまでした.
 note: Little and often beats long and rare. Every study guide says some version of this. Pick an amount you could manage even on a bad day. There's more in the Study Guide, under Library.
-new: @greet2 @greet3
+new: @greet2 @greet3 @greet4
 chat: thanks1
 homework: Use いただきます and ごちそうさまでした at every meal today.
 immerse: Say すみません to yourself whenever you bump into something.
@@ -211,7 +211,7 @@ immerse: Say one thing that you did today before going to bed.
 material: 3. Frequency Adverbs
 @day Adjectives | 形容詞
 note: Two kinds of adjective. Most い adjectives end in い, but きれい and 有名 are な adjectives even though the first ends in い.
-new: !g.iadj !g.naadj !g.kunai @adj1 @adj2 @adj3
+new: !g.iadj !g.naadj !g.kunai @adj1 @adj2 @adj3 @adj7
 homework: Describe three things in your room.
 immerse: Say 美味しい! at your next meal, with feeling.
 material: 5. Adjectives
@@ -252,7 +252,7 @@ exam: S4 | Grammar Gate Trial | 3
 @day Nature and weekdays | 曜日の漢字
 note: Most kanji have an on reading (from Chinese) and a kun reading (native Japanese). Learn each kanji inside words, not alone. Today's seven are the seven days of the week, plus 山.
 note: Learn kanji through words you know, a few at a time. Writing kanji by hand is optional for many learners, so do it if you enjoy it. Reading them is the goal.
-new: @k1 @nature @nature2 @days3
+new: @k1 @nature @nature2 @days3 @nature4
 homework: Copy each kanji five times, following the stroke order shown on each card.
 immerse: Read today's day of the week from a Japanese calendar.
 @day Numbers | 数字の漢字
@@ -262,7 +262,7 @@ homework: Write today's date in kanji numbers.
 immerse: Find one kanji number on a Japanese web page.
 @day People and the body | 人と体
 note: Many kanji began as pictures. Notice 田 and 力 inside 男. Parts like these repeat, so learn them as building blocks.
-new: @k3 @body @body4
+new: @k3 @body @body4 @body5
 homework: Copy each kanji five times.
 immerse: Find 人 inside a Japanese web headline.
 material: 3. Body Parts
@@ -283,7 +283,7 @@ homework: Write your daily schedule using these.
 immerse: Read a Japanese train timetable for one minute.
 @day School and country | 学校と国
 note: Kanji combine to make new words: 学 + 校 is school; 日 + 本 + 語 is Japanese.
-new: @k7 @school @school3
+new: @k7 @school @school3 @school4
 homework: Write 日本語の学生です and read it aloud.
 immerse: Find 語 on a language menu.
 @day Weather and colour | 天気
@@ -298,27 +298,27 @@ exam: S5 | Kanji Keep Trial | 3
 @day Colours | 色
 note: Some colours are い adjectives, like 赤い. Others are nouns that need の before another noun: 緑の車. Use them as you've seen them, and the pattern will come with practice.
 note: You're ready to start mining. When a word in something you enjoy keeps coming back, save it with its sentence using YomiGo Reader. Words from things you care about stick best.
-new: @colors @clothes
+new: @colors @clothes @clothes4
 homework: Name the colours of five things around you.
 immerse: Look at a Japanese shop page, and find a colour word.
 material: 9. Colors
 @day Family | 家族
 note: Japanese has two sets of family words. Use 母 and 父 for your own parents when talking to others, and お母さん and お父さん for someone else's, or to speak to your own.
-new: @family @family2 @family4
+new: @family @family2 @family4 @people5
 chat: family2
 homework: Describe your family in three short sentences.
 immerse: Listen for family words in any show you watch.
 material: 2. Family
 @day Weather talk | 天気
 note: Weather is the safest small talk there is. A sentence ending in ね invites the other person to agree, and it keeps a conversation going. よ tells them something new.
-new: !g.ne !g.yo @weather @outside @animals
+new: !g.ne !g.yo @weather @outside @animals @animals2
 chat: weather1
 homework: Say today's weather three different ways.
 immerse: Check a Japanese weather forecast before you go out.
 material: 5. Weather
 @day How often | よく、ときどき
 note: Words like あまり and 全然 go with a negative verb: あまり飲みません. People use them to soften a no, so you'll hear them constantly.
-new: !g.teiru @often @hobbies
+new: !g.teiru @often @hobbies @time6 @fun
 homework: Say how often you do five things, from いつも to 全然.
 immerse: Say what you are doing right now, using 〜ています, three times today.
 material: 3. Frequency Adverbs
@@ -326,21 +326,21 @@ material: 3. Frequency Adverbs
 note: Staff use very polite language you don't need to copy. いらっしゃいませ is a welcome, not a question, so you don't have to reply. A nod is fine.
 note: In many shops, put your money in the small tray rather than in the cashier's hand.
 note: Tired today? Watch or play something easy instead of doing nothing. Any Japanese counts, and variety helps, so try different genres.
-new: @town @shop2 @shop3 @shop4
+new: @town @shop2 @shop3 @shop4 @shop5
 chat: shop2
 read: shop
 homework: Roleplay buying something, with a family member.
 immerse: Browse a Japanese shop website for ten minutes.
 material: Money and shopping
 @day At a restaurant | レストラン
-new: @food2 @food4
+new: @food2 @food4 @food6
 note: Say すみません to call staff. Tipping isn't customary. Don't stick chopsticks upright in rice or pass food chopstick to chopstick, because both recall funeral customs.
 chat: restaurant1
 homework: Read aloud a Japanese menu online.
 immerse: Order in Japanese next time you eat at a Japanese restaurant, even just one word.
 material: At the restaurant
 @day Directions | 道案内
-new: @places @town2
+new: @places @town2 @town3
 note: People often gesture with the whole open hand rather than one pointing finger. Use さん-level politeness with strangers.
 note: Time to talk to real people. iTalki and HelloTalk, in the Library, connect you with native speakers. Your first chat will feel hard, and it's the fastest way to improve.
 chat: directions1
@@ -354,7 +354,7 @@ exam: N5 | N5 Mastery Exam | 5
 @day Plain forms | 普通形
 note: Everything so far has been polite. Friends and family talk in plain forms, and most N4 grammar is built on them. You can keep using です and ます with people you don't know well. Using plain forms with a stranger can sound rude.
 note: Verbs come in two main groups. Verbs like 食べる just drop る. Verbs like 飲む change their last sound: のむ, のまない, のみます. する and 来る are the two irregular ones.
-new: !g.plain !g.nai !g.ta !g.nakatta @plain1 @reactions
+new: !g.plain !g.nai !g.ta !g.nakatta @plain1 @reactions @words2
 chat: casual1
 read: friends
 homework: Rewrite five of your ます sentences in plain form.
@@ -362,7 +362,7 @@ immerse: Listen for a sentence that ends in plain form in any show. Friends talk
 material: 2. Grammar MADA
 @day More plain verbs | 動詞をふやす
 note: More everyday verbs. Practise each with ない and た as well as ます, because you'll need all three.
-new: @plain2 @plain3 @plain4
+new: @plain2 @plain3 @plain4 @verbs6
 homework: Make a table of ます, ない, and た for all eight new verbs.
 immerse: In a show, write down one verb you hear in plain form.
 @day Allowed or not | 許可と禁止
@@ -374,7 +374,7 @@ homework: Write three rules for your home using 〜てはいけません.
 immerse: Look at photos of Japanese signs. Spot ください and 禁止.
 @day Must, and don't have to | 義務
 note: Don't mix these up. なければなりません means you must. なくてもいいです means you don't need to. They aren't opposites of permission either, because 〜てはいけません is what forbids.
-new: !g.nakereba !g.nakutemo @must @jobs @money
+new: !g.nakereba !g.nakutemo @must @jobs @money @jobs2
 read: doctor
 homework: List two things you must do tomorrow, and two you don't have to.
 immerse: Say out loud what you have to do next, in Japanese.
@@ -393,7 +393,7 @@ immerse: Listen for と思います in an interview or YouTube video.
 material: 3. Grammar KARA-MADE
 @day What you can do | 可能
 note: When someone praises your Japanese, the usual reply is a modest denial: いいえ、まだまだです. Accepting with a plain thank you also works, particularly with friends.
-new: !g.koto !g.potential @can @tech @hobbies2 @hobbies3
+new: !g.koto !g.potential @can @tech @hobbies2 @hobbies3 @tech2
 chat: can1
 homework: Say five things you can and can't do.
 immerse: Look up the lyrics to a song you like, and find one word you know.
@@ -417,7 +417,7 @@ homework: Write three excuses using 〜ので.
 immerse: Notice when someone in a show stops mid-sentence and leaves the rest unsaid.
 @day If and when | 条件
 note: Four words for if, and learners worry too much about them. Start with たら, which works nearly everywhere. Pick up と, ば, and なら as you notice them.
-new: !g.tara !g.to !g.ba !g.nara @ifwhen @health
+new: !g.tara !g.to !g.ba !g.nara @ifwhen @health @health2
 chat: doctor1
 homework: Write three sentences with たら about tomorrow.
 immerse: Listen for たら in a show.
@@ -430,7 +430,7 @@ homework: Say who gave what to whom, for three gifts you remember.
 immerse: In a show, notice くれる when someone's thanking a friend.
 @day Things that happen to you | 受け身
 note: The Japanese passive often means something happened to you that you didn't want. Use it for being scolded or robbed. Causative forms come up in work and school: making or letting someone do something.
-new: !g.passive !g.causative @passive @travel3
+new: !g.passive !g.causative @passive @travel3 @travel5
 homework: Describe something annoying that happened to you, with the passive.
 immerse: Listen for 〜られた when a character complains.
 material: Active and Passive (present)
@@ -442,14 +442,14 @@ homework: Look out of a window, and say what the weather seems to be doing.
 immerse: Watch a Japanese weather forecast for two minutes.
 @day Doing and finishing | 動作
 note: These patterns attach to the ます stem, the part before ます. Once you know that, 食べ gives you 食べながら, 食べすぎる, 食べやすい, and 食べ始める all at once.
-new: !g.nagara !g.sugiru !g.yasui !g.hajimeru @actions @chores @cooking @actions2 @food5
+new: !g.nagara !g.sugiru !g.yasui !g.hajimeru @actions @chores @cooking @actions2 @food5 @food7
 read: routine
 homework: Describe your morning routine in five sentences.
 immerse: Shadow a short line from a show ten times.
 @day Polite Japanese | 敬語
 note: Keigo has two directions. Respectful language raises the other person, and humble language lowers yourself. Don't use either about yourself the wrong way round. At this level, aim to recognise it, and keep using です and ます yourself, which is fine.
 note: You'll hear this all the time in shops and on trains: いらっしゃいませ, お客様, and 少々お待ちください. You don't need to copy it.
-new: !g.keigo !g.kenjou @keigo @hotel @keigo2
+new: !g.keigo !g.kenjou @keigo @hotel @keigo2 @hotel3
 chat: office1
 homework: Listen for one keigo word, and write down where you heard it.
 immerse: Watch one scene set in a shop or office, and listen for 〜ます and お〜.
@@ -465,7 +465,7 @@ homework: Label your door with 入 and 出, for fun.
 immerse: Find 入口 and 出口 in a photo of a Japanese station.
 @day Time and description in kanji | 時と形の漢字
 note: Seasons and colours are everywhere in Japanese writing. Look out for them in the names of shows, songs, and people.
-new: @k12 @k14 @k15 @adj5
+new: @k12 @k14 @k15 @adj5 @adj8
 homework: Write today's season and weather in kanji.
 immerse: Find one of today's kanji in a song or show title.
 exam: N4 | N4 Mastery Exam | 4
@@ -474,7 +474,7 @@ exam: N4 | N4 Mastery Exam | 4
 @day Becoming and deciding | 変化と決定
 note: Welcome to N3. From here, the course is less about new forms and more about nuance: how sure you are, who decided, and how you feel about it. Expect longer sentences, and more words you'll first meet in real Japanese.
 note: ことにする is a decision you made. ことになる is one made for you, and Japanese often uses it even for your own choices, because it sounds less pushy.
-new: !g.younaru !g.younisuru !g.kotoninaru !g.kotonisuru @n3change @home2
+new: !g.younaru !g.younisuru !g.kotoninaru !g.kotonisuru @n3change @home2 @home5
 read: n3move
 homework: Write three habits you're working on with 〜ようにしています.
 immerse: In a show, listen for ことになった when a character shares news.
@@ -499,7 +499,7 @@ immerse: Read the headlines of a Japanese news site, such as NHK News Web Easy.
 material: The press
 @day About, for, and as | 関係
 note: These work like prepositions and turn up all through written Japanese. Learn them as whole chunks: について, にとって, として, and に対して.
-new: !g.nitsuite !g.nitotte !g.toshite !g.nitaishite @n3society @world
+new: !g.nitsuite !g.nitotte !g.toshite !g.nitaishite @n3society @world @countries2
 homework: Write what Japanese means to you, with にとって.
 immerse: Find について in the title of a YouTube video or article.
 material: My culture
@@ -511,7 +511,7 @@ homework: Write one thing you're grateful for with おかげで, and one complai
 immerse: Listen for おかげさまで, a polite reply to "how have you been?"
 @day Even and not only | 強調
 note: さえ is stronger than も. It marks the case you'd least expect: 子供でさえ知っている, even a child knows.
-new: !g.temo !g.sae !g.dakedenaku !g.bakari @n3even
+new: !g.temo !g.sae !g.dakedenaku !g.bakari @n3even @n3adv
 homework: Write three sentences about your week with ばかり.
 immerse: Listen for ばかり when a parent complains in a show.
 @day Should and can't really | 義務と遠慮
@@ -528,7 +528,7 @@ homework: Write three "the more ..., the more ..." sentences about learning Japa
 immerse: Compare prices on a Japanese shopping site, and describe them with ほど.
 @day Feelings and memories | 気持ちと思い出
 note: たがる is for other people's wishes, because Japanese doesn't state what's in someone else's head as fact. For yourself, keep using たい.
-new: !g.tagaru !g.kigasuru !g.furi !g.mono @n3feel @feel2
+new: !g.tagaru !g.kigasuru !g.furi !g.mono @n3feel @feel2 @feel4
 homework: Write about a childhood memory with 〜たものです.
 immerse: Listen to a song about the past, and listen for 懐かしい.
 material: Positive feelings
@@ -547,7 +547,7 @@ immerse: Listen for ちゃった in any anime episode.
 @day Work Japanese | 仕事の日本語
 note: Offices run on set phrases. かしこまりました is a more formal 分かりました, and 申し訳ありません is a more formal すみません. You'll hear them in every shop, too.
 note: Business keigo takes years even for Japanese people, and new staff get training in it. Recognising it matters far more than producing it perfectly.
-new: @n3work @work3 @work4
+new: @n3work @work3 @work4 @work5
 chat: n3office
 homework: Introduce yourself as you would on a first day at work.
 immerse: Watch a scene from a drama set in an office.

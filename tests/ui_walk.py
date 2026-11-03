@@ -134,7 +134,7 @@ fail += not ok
 shutil.rmtree(root, ignore_errors=True)
 # Your own words on the TV: find 猫 in the dictionary, add it, and it must be saved
 root = tempfile.mkdtemp()
-subprocess.run([os.path.join(ROOT, "dist", "YomiGoHTPC.exe"), "--root", root, "--script", "w2;ow2;ow2;tMine;w1;sw2;rrw1;ow2;dw1;ow2;dw1;ow2;rrrrw8;ow2;RRw2;tneko;w1;sw2;xw2;"], timeout=60)
+subprocess.run([os.path.join(ROOT, "dist", "YomiGoHTPC.exe"), "--root", root, "--script", "w2;ow2;ow2;tMine;w1;sw2;rrw1;ow2;dw1;ow2;dw1;ow2;rrrrw8;ow2;Rw2;tneko;w1;sw2;xw2;"], timeout=60)
 text = open(os.path.join(root, "Mine.sav"), encoding="utf-8").read() if os.path.exists(os.path.join(root, "Mine.sav")) else ""
 ok = "\t猫\tねこ\t" in text
 print("adding from the dictionary", "OK" if ok else "FAILED")

@@ -24,7 +24,7 @@ Complete means implemented and tested as described. **Partial** says what's miss
 | Weekly tournaments, skill trees | Not started | Not started | Not started | n/a |
 | Homework with a check | Complete | Complete | Complete | n/a |
 | Progressive Japanese labels | Partial: navigation and buttons | Partial | Partial | n/a |
-| Media picks and links | Complete | Complete | Complete | n/a |
+| Media picks | Complete | Complete | Complete | n/a |
 | Own Material folder | Complete | Complete | Not started | n/a |
 | Genki practice setting | Complete | Complete | Complete | n/a |
 | Listening, dictation, shadowing | Partial: never heard on a real voice | Partial: as Desktop | Partial: not run on a device | n/a |

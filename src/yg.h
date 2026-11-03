@@ -9,7 +9,6 @@ typedef struct { const char *id, *name; int stars, day; } YgExam;
 typedef struct { const char *say, *romaji, *en; int nwant; const char *const *want; const char *hint, *want_ro; } YgTurn;
 typedef struct { const char *title, *ja, *who; int nturns; const YgTurn *turns; } YgChat;
 typedef struct { int stage, is_new; const char *type, *title, *ja; int year; const char *task; } YgMedia;
-typedef struct { const char *cat, *name, *url, *desc; } YgRes;
 typedef struct { const char *who, *word, *reading, *en, *sent; } YgPronoun; /* who it's for: m men, w women, b anyone who says ぼく */
 typedef struct { const char *a, *b; } YgPair;
 typedef struct { const char *title, *ja, *jp, *en; int nq; const char *const *q; } YgRead;

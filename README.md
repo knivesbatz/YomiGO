@@ -87,6 +87,6 @@ Some things haven't been tried on real hardware yet, including controllers, CRT 
 - [Everyday immersion tips](docs/IMMERSION_GUIDE.md)
 - [How to build it, and how to help](CONTRIBUTING.md)
 - [Report a problem](https://github.com/knivesbatz/YomiGO/issues/new/choose)
-- [Credits and licences](NOTICE.md)
+- [Credits and licences](NOTICE.md): code under GPL-3.0-or-later, course content under CC BY-SA 4.0
 
 <p align="center"><img src="assets/brand/logo.png" alt="YomiGo logo" width="72"></p>
