@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.14.0
+
+- 165 more words, from 844 to 1,009 word cards, each with an example sentence, in 22 classes across the course. Chosen from the most frequent words in real learning material that the course didn't teach yet
+- Counters for books, small animals, flat things, and months (冊, 匹, 枚, ヶ月), countries and Tokyo, restaurant and izakaya words, shopping and paying (カード, ユーロ, ドル), getting around town (側, 降りる, 中心), and the house
+- Everyday verbs: 住む, 生きる, 降る, 違う, 間違える, 受ける, 込む, 気をつける, 出かける, and more
+- Describing and reasons: 美しい, 素晴らしい, 優しい, 正しい, 大変, 暇, 楽, 不便, なぜなら, ため
+- How people talk about people: 彼ら, 人々, 皆さん, 君, ちゃん, お客様, and why お前 and ばか are rude
+- On the lesson card, a meaning that needs two lines no longer runs into the example sentence on the TV
+- Existing saves pick up the new words in their reviews, ten a day
+
 ## 0.13.0
 
 - 119 more words, from 725 to 844 word cards, each with an example sentence: cooking, sweets, travel, money, rules and signs, the home, the body, and more verbs such as 呼ぶ, 始まる, 見せる, and 頑張る

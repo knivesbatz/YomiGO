@@ -174,7 +174,7 @@ def load_cards():
         id_, disp, kana, ro, en = r[:5]
         got, want = romaji_to_kana(ro, table), to_hira(kana)
         if len(r) > 5 and r[5] == "p":
-            want = want.replace("は", "わ")
+            want = want.replace("は", "わ").replace("を", "お").replace("へ", "え")
         if got != want: die(f"words.tsv {id_}: romaji {ro} gives {got}, kana says {want}")
         c = {"id": "v."+id_, "t": "w", "f": disp, "r": kana, "ro": ro, "en": en, "n": ""}
         if len(r) > 7 and r[6]: # an example sentence, and its English

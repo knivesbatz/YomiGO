@@ -637,14 +637,13 @@ static void scr_teach(void) {
                 if (!rom && profile_stage(&P) < 4) text(CX + 10 + text_w(c->reading) + 16, cy, c->romaji, C_DIM);
                 cy += LH;
             }
-            wrap(CX + 10, cy, CW - 20 - room, c->en, C_INK, LH, 0, 2);
-            cy += LH;
+            { int n = wrap(CX + 10, cy, CW - 20 - room, c->en, C_INK, LH, 0, 2); cy += LH * (n < 2 ? n : 2); } /* a long meaning can take two lines */
             /* on the TV the stroke box ends about here, so the note takes the full width and stops above the buttons */
             if (*c->note) wrap(CX + 10, cy + 2, HTPC ? CW - 20 : CW - 20 - room, c->note, C_DIM, LH, 0, HTPC ? (FBY_BTN - 4 - cy) / LH : 0);
             /* a word comes with a sentence people actually say, so it's learnt as a phrase */
             if (c->type == 'w' && *c->sentence && !rom) {
                 cy += HTPC ? 4 : LH + 8; /* the TV has no line to spare above it */
-                cy += LH * wrap(CX + 10, cy, CW - 20, c->sentence, C_ACC, LH, 0, HTPC ? 1 : 2);
+                { int n = wrap(CX + 10, cy, CW - 20, c->sentence, C_ACC, LH, 0, HTPC ? 1 : 2); cy += LH * (n < (HTPC ? 1 : 2) ? n : (HTPC ? 1 : 2)); }
                 if (cy + LH <= FBY_BTN - 6) wrap(CX + 10, cy, CW - 20, c->trans, C_DIM, LH, 0, HTPC ? 1 : 2);
             }
         }

@@ -970,3 +970,191 @@ senaka	背中	せなか	senaka	back (of the body)		背中が痛いです。	My b
 mune	胸	むね	mune	chest		胸がドキドキします。	My heart is pounding.
 hiza	膝	ひざ	hiza	knee		走ると膝が痛くなります。	My knees hurt when I run.
 yaseru	痩せる	やせる	yaseru	to lose weight		少し痩せましたね。	You've lost a bit of weight.
+#counters3
+satsu	冊	さつ	satsu	counter for books		本を二冊買いました。	I bought two books.
+hiki	匹	ひき	hiki	counter for small animals		家に猫が三匹います。	We have three cats at home.
+mai	枚	まい	mai	counter for flat things		切手を五枚ください。	Five stamps, please.
+kagetsu	ヶ月	かげつ	kagetsu	months (how long)		日本に三ヶ月います。	I'm in Japan for three months.
+ban2	番	ばん	ban	number (in order), turn		次は私の番です。	It's my turn next.
+#days3
+youbi	曜日	ようび	youbi	day of the week		今日は何曜日ですか。	What day is it today?
+#body4
+tsume	爪	つめ	tsume	nail (finger, toe)		爪が長いです。	My nails are long.
+hada	肌	はだ	hada	skin		冬は肌が乾きます。	My skin gets dry in winter.
+se	背	せ	se	height; back		弟は背が伸びましたね。	Your little brother has grown taller!
+#school3
+itaria	イタリア	イタリア	itaria	Italy		イタリアに行きたいです。	I want to go to Italy.
+supein	スペイン	スペイン	supein	Spain		スペインの料理が好きです。	I like Spanish food.
+furansu	フランス	フランス	furansu	France		フランスのパンはおいしいです。	French bread is delicious.
+doitsu	ドイツ	ドイツ	doitsu	Germany		この車はドイツのです。	This car is German.
+amerika	アメリカ	アメリカ	amerika	America, the USA		アメリカから来ました。	I'm from America.
+igirisu	イギリス	イギリス	igirisu	Britain, the UK		イギリスは雨がよく降ります。	It rains a lot in Britain.
+roshia	ロシア	ロシア	roshia	Russia		ロシアはとても大きい国です。	Russia is a very big country.
+indo	インド	インド	indo	India		インドのカレーは辛いです。	Indian curry is spicy.
+mekishiko	メキシコ	メキシコ	mekishiko	Mexico		メキシコは暑いですか。	Is Mexico hot?
+yooroppa	ヨーロッパ	ヨーロッパ	yooroppa	Europe		夏にヨーロッパを旅行します。	I'm travelling around Europe in the summer.
+toukyou	東京	とうきょう	toukyou	Tokyo		東京は人が多いです。	Tokyo is crowded.
+doushi	動詞	どうし	doushi	verb		「食べる」は動詞です。	"Taberu" is a verb.
+gakki	学期	がっき	gakki	school term, semester		新しい学期が始まりました。	The new term has started.
+#house3
+apaato	アパート	アパート	apaato	flat, apartment		駅の近くにアパートがあります。	There's a flat near the station.
+sofa	ソファ	ソファ	sofa	sofa		ソファの上に猫がいます。	There's a cat on the sofa.
+kabe	壁	かべ	kabe	wall		壁に時計があります。	There's a clock on the wall.
+oku	奥	おく	oku	the back, inside		トイレは店の奥にあります。	The toilet is at the back of the shop.
+biru	ビル	ビル	biru	building (tall)		あの高いビルは新しいです。	That tall building is new.
+basuruumu	バスルーム	バスルーム	basuruumu	bathroom		バスルームは二階にあります。	The bathroom is upstairs.
+#family4
+mei	姪	めい	mei	niece (your own)		姪は五歳です。	My niece is five.
+kaasan	母さん	かあさん	kaasan	Mum (calling your mother)		母さん、ご飯はまだ？	Mum, is dinner ready yet?
+kareshi	彼氏	かれし	kareshi	boyfriend		姉の彼氏はアメリカ人です。	My sister's boyfriend is American.
+chan	ちゃん	ちゃん	chan	-chan (for kids, close friends)		ゆいちゃんは何歳？	How old are you, Yui?
+kimi	君	きみ	kimi	you (casual: friends, juniors)		君の名前は？	What's your name?
+omocha	おもちゃ	おもちゃ	omocha	toy		子供のおもちゃを買いました。	I bought a toy for my child.
+#animals
+saru	猿	さる	saru	monkey		山に猿がいますよ。	There are monkeys in the mountains!
+usagi	兎	うさぎ	usagi	rabbit		このうさぎ、かわいいですね。	This rabbit is cute, isn't it.
+kame	亀	かめ	kame	tortoise, turtle		亀はゆっくり歩きますね。	Tortoises walk slowly, don't they.
+hato	鳩	はと	hato	pigeon, dove		公園に鳩がたくさんいますね。	There are lots of pigeons in the park.
+uchuu	宇宙	うちゅう	uchuu	space, the universe		いつか宇宙に行きたいですね。	I'd love to go to space one day.
+#shop4
+kaado	カード	カード	kaado	card (a credit card)		カードで払えますか。	Can I pay by card?
+yuuro	ユーロ	ユーロ	yuuro	euro		これは何ユーロですか。	How many euros is this?
+doru	ドル	ドル	doru	dollar		一ドルは何円ですか。	How many yen is a dollar?
+pen	ペン	ペン	pen	pen		ペンを貸してください。	Please lend me a pen.
+boorupen	ボールペン	ボールペン	boorupen	ballpoint pen		黒いボールペンを三本買いました。	I bought three black ballpoint pens.
+naifu	ナイフ	ナイフ	naifu	knife		このナイフはよく切れます。	This knife cuts well.
+setto	セット	セット	setto	set		このセットは安いですね。	This set is cheap, isn't it.
+jaketto	ジャケット	ジャケット	jaketto	jacket		この青いジャケットはいくらですか。	How much is this blue jacket?
+saabisu	サービス	サービス	saabisu	service; something free		この店はサービスがいいです。	This shop has good service.
+koukoku	広告	こうこく	koukoku	advert		新聞の広告を見て来ました。	I came after seeing the ad in the paper.
+haitatsu	配達	はいたつ	haitatsu	delivery		配達は明日になります。	Delivery will be tomorrow.
+osu	押す	おす	osu	to push, to press		このボタンを押してください。	Please press this button.
+#food4
+piza	ピザ	ピザ	piza	pizza		ピザを二枚注文しました。	We ordered two pizzas.
+wain	ワイン	ワイン	wain	wine		赤ワインをお願いします。	Red wine, please.
+orenji	オレンジ	オレンジ	orenji	orange		オレンジジュースはありますか。	Do you have orange juice?
+chokoreeto	チョコレート	チョコレート	chokoreeto	chocolate		食後にチョコレートを食べました。	I had chocolate after the meal.
+suteeki	ステーキ	ステーキ	suteeki	steak		ステーキはよく焼いてください。	Steak well done, please.
+ranchi	ランチ	ランチ	ranchi	lunch, a lunch set		このランチは千円です。	This lunch set is 1,000 yen.
+supuun	スプーン	スプーン	supuun	spoon		スプーンをもらえますか。	Could I have a spoon?
+sara	皿	さら	sara	plate, dish		お皿をもう一枚ください。	One more plate, please.
+bin	瓶	びん	bin	bottle (glass)		瓶のビールはありますか。	Do you have bottled beer?
+chuushoku	昼食	ちゅうしょく	chuushoku	lunch (formal)		昼食は十二時からです。	Lunch is from twelve.
+izakaya	居酒屋	いざかや	izakaya	izakaya, a Japanese pub		金曜日は友達と居酒屋に行きます。	On Fridays I go to an izakaya with friends.
+shiifuudo	シーフード	シーフード	shiifuudo	seafood		シーフードのパスタにします。	I'll have the seafood pasta.
+baa	バー	バー	baa	bar		ホテルのバーで飲みました。	We had drinks at the hotel bar.
+#town2
+gawa	側	がわ	gawa	side, as in 右側 (the right side)		駅は道の右側にあります。	The station is on the right side of the road.
+jimusho	事務所	じむしょ	jimusho	office		事務所は三階です。	The office is on the third floor.
+tsuuro	通路	つうろ	tsuuro	aisle, passage		通路側の席をお願いします。	An aisle seat, please.
+sentaa	センター	センター	sentaa	centre (a building)		ショッピングセンターはあそこです。	The shopping centre is over there.
+toshi	都市	とし	toshi	city		大阪は大きい都市です。	Osaka is a big city.
+chuushin	中心	ちゅうしん	chuushin	centre, middle		ホテルは町の中心にあります。	The hotel is in the centre of town.
+oriru	降りる	おりる	oriru	to get off (a train, a bus)		次の駅で降りてください。	Please get off at the next station.
+#plain4
+ikiru	生きる	いきる	ikiru	to live, to be alive		祖母は百歳まで生きた。	My grandmother lived to a hundred.
+sumu	住む	すむ	sumu	to live (somewhere)		どこに住んでる？	Where do you live?
+kakeru	掛ける	かける	kakeru	to hang; to make (a call)		あとで電話をかけるね。	I'll call you later.
+mieru	見える	みえる	mieru	to be visible, can see		ここから海が見える。	You can see the sea from here.
+manabu	学ぶ	まなぶ	manabu	to learn, to study		日本で日本語を学びたい。	I want to learn Japanese in Japan.
+furu	降る	ふる	furu	to fall (rain, snow)		明日は雨が降るかな。	I wonder if it'll rain tomorrow.
+chigau	違う	ちがう	chigau	to be different; to be wrong		それは違うよ。	That's not right.
+hiku	引く	ひく	hiku	to pull; to catch (a cold)		風邪を引いた。	I've caught a cold.
+tasu	足す	たす	tasu	to add		塩を少し足して。	Add a little salt.
+#rules3
+suu	吸う	すう	suu	to breathe in; to smoke		ここでたばこを吸ってはいけません。	You can't smoke here.
+kinkyuu	緊急	きんきゅう	kinkyuu	emergency		緊急のときは、このドアを使ってもいいです。	In an emergency you may use this door.
+#people4
+karera	彼ら	かれら	karera	they, them		彼らはもう帰ったと思います。	I think they've already gone home.
+hitobito	人々	ひとびと	hitobito	people (in general)		この町の人々はとても親切だと思う。	I think the people in this town are really kind.
+mina	皆	みな	mina	everyone (a little formal)		皆さん、おはようございます。	Good morning, everyone.
+omae	お前	おまえ	omae	you (rough; rude to most people)		「お前」は失礼だと思う人が多いです。	Many people think お前 is rude.
+baka	馬鹿	ばか	baka	idiot, stupid (rude)		人に「ばか」と言ってはいけません。	Don't call people "baka".
+donna	どんな	どんな	donna	what kind of		どんな映画が好きですか。	What kind of films do you like?
+#hobbies3
+haiku	俳句	はいく	haiku	haiku		俳句を作ることができます。	I can write haiku.
+bando	バンド	バンド	bando	band		友達とバンドをやっています。	I'm in a band with friends.
+oto	音	おと	oto	sound, noise		隣の部屋から音が聞こえる。	I can hear a noise from next door.
+booru	ボール	ボール	booru	ball		犬はボールで遊ぶのが好きです。	The dog loves playing with a ball.
+basukettobooru	バスケットボール	バスケットボール	basukettobooru	basketball		弟はバスケットボールが上手です。	My little brother is good at basketball.
+jimu	ジム	ジム	jimu	gym		週に三回ジムに行きます。	I go to the gym three times a week.
+orinpikku	オリンピック	オリンピック	orinpikku	the Olympics		オリンピックを見るのが楽しみです。	I'm looking forward to watching the Olympics.
+#trip2
+tsuaa	ツアー	ツアー	tsuaa	tour		京都のツアーに参加するつもりです。	I'm planning to join a Kyoto tour.
+biichi	ビーチ	ビーチ	biichi	beach		週末はビーチでゆっくりする予定です。	I'm planning to relax at the beach at the weekend.
+kyanpu	キャンプ	キャンプ	kyanpu	camping		夏休みに山でキャンプをしよう。	Let's go camping in the mountains this summer.
+kyuuka	休暇	きゅうか	kyuuka	holiday, time off work		来月一週間の休暇を取ります。	I'm taking a week off next month.
+gorufu	ゴルフ	ゴルフ	gorufu	golf		父は日曜日にゴルフをする予定です。	Dad is playing golf on Sunday.
+saafin	サーフィン	サーフィン	saafin	surfing		サーフィンを習うつもりです。	I'm going to learn to surf.
+shoppingu	ショッピング	ショッピング	shoppingu	shopping (for fun)		明日は友達とショッピングに行くつもりです。	I'm going shopping with a friend tomorrow.
+dekakeru	出かける	でかける	dekakeru	to go out		雨なので、今日は出かけないつもりです。	It's raining, so I'm not going out today.
+fujisan	富士山	ふじさん	fujisan	Mount Fuji		いつか富士山に登ろうと思っています。	I'm thinking of climbing Mount Fuji someday.
+shiro	城	しろ	shiro	castle		大阪城を見に行こう。	Let's go and see Osaka Castle.
+#adj6
+utsukushii	美しい	うつくしい	utsukushii	beautiful		この海は世界で一番美しいと思います。	I think this sea is the most beautiful in the world.
+subarashii	素晴らしい	すばらしい	subarashii	wonderful		昨日のコンサートは素晴らしかったです。	Yesterday's concert was wonderful.
+hikui	低い	ひくい	hikui	low; short (a person)		兄は私より背が低いです。	My older brother is shorter than me.
+segatakai	背が高い	せがたかい	se ga takai	tall (a person)		弟は家族で一番背が高いです。	My little brother is the tallest in the family.
+ookina	大きな	おおきな	ookina	big (before a noun)		駅の前に大きな公園があります。	There's a big park in front of the station.
+yasashii2	優しい	やさしい	yasashii	kind, gentle		母は父より優しいです。	Mum is kinder than Dad.
+tadashii	正しい	ただしい	tadashii	right, correct		どちらの答えが正しいですか。	Which answer is right?
+#feel3
+fuben	不便	ふべん	fuben	inconvenient		駅から遠いので、不便です。	It's far from the station, so it's inconvenient.
+daiji	大事	だいじ	daiji	important, precious		大事な話があるので、電話しました。	I called because I have something important to tell you.
+taihen	大変	たいへん	taihen	tough, hard; very		仕事が多いので、今週は大変です。	I've got a lot of work, so this week is tough.
+raku	楽	らく	raku	easy, comfortable		電車のほうが楽なので、電車で行きます。	The train is easier, so I'll go by train.
+hen	変	へん	hen	strange, odd		この牛乳は変な味なので、飲まないで。	This milk tastes funny, so don't drink it.
+katte	勝手	かって	katte	selfish; as you please		勝手に私のパソコンを使わないでください。	Don't use my computer without asking.
+hima	暇	ひま	hima	free (time), not busy		暇なとき、何をしますか。	What do you do when you're free?
+nazenara	なぜなら	なぜなら	nazenara	because (starting the reason)		今日は休みます。なぜなら、熱があるからです。	I'm taking today off, because I have a temperature.
+tame	ため	ため	tame	for, for the sake of		これは子供のための本です。	This is a book for children.
+#actions2
+wareru	割れる	われる	wareru	to break (glass, plates)		このコップは割れやすいです。	This glass breaks easily.
+okoru	起こる	おこる	okoru	to happen		駅で事故が起こりました。	There was an accident at the station.
+machigaeru	間違える	まちがえる	machigaeru	to make a mistake, to get wrong		急ぎすぎて、名前を間違えました。	I rushed too much and got the name wrong.
+ukeru	受ける	うける	ukeru	to take (a test); to receive		来週、日本語の試験を受けます。	I'm taking a Japanese exam next week.
+komu	込む	こむ	komu	to be crowded		朝の電車はとても込んでいます。	The morning trains are really crowded.
+ataru	当たる	あたる	ataru	to hit; to win (a prize)		宝くじが当たりました！	I won the lottery!
+mawaru	回る	まわる	mawaru	to go round, to turn		子供たちが公園を走り回っています。	The kids are running around the park.
+sakebu	叫ぶ	さけぶ	sakebu	to shout, to scream		急に誰かが叫び始めました。	Suddenly someone started shouting.
+okonau	行う	おこなう	okonau	to hold, to carry out (formal)		会議は三時から行います。	The meeting will be held from three.
+otozureru	訪れる	おとずれる	otozureru	to visit (a place)		毎年たくさんの人が京都を訪れます。	Lots of people visit Kyoto every year.
+kiotsukeru	気をつける	きをつける	ki o tsukeru	to be careful	p	道が滑りやすいので、気をつけて。	The road is slippery, so be careful.
+#food5
+piiman	ピーマン	ピーマン	piiman	green pepper		子供はピーマンが嫌いなことが多いです。	Kids often dislike green peppers.
+mikan	蜜柑	みかん	mikan	mandarin orange		冬はこたつでみかんを食べます。	In winter we eat mandarins at the kotatsu.
+mochi	餅	もち	mochi	rice cake		お正月にお餅を焼きます。	We grill rice cakes at New Year.
+ebi	海老	えび	ebi	shrimp, prawn		えびを洗ってから焼きます。	Wash the prawns, then grill them.
+nama	生	なま	nama	raw; draft (beer)		この肉は生で食べないでください。	Don't eat this meat raw.
+toosuto	トースト	トースト	toosuto	toast		朝はトーストを食べながらニュースを見ます。	In the morning I watch the news while eating toast.
+miruku	ミルク	ミルク	miruku	milk (in coffee and tea)		コーヒーにミルクを入れすぎました。	I put too much milk in my coffee.
+senzai	洗剤	せんざい	senzai	detergent, washing-up liquid		洗剤がなくなりました。	We've run out of detergent.
+#keigo2
+kyaku	客	きゃく	kyaku	guest, customer		お客さんがいらっしゃいました。	A guest has arrived.
+sama	様	さま	sama	Mr or Ms (very polite), as in お客様		田中様、こちらへどうぞ。	Mr Tanaka, this way please.
+chekkuin	チェックイン	チェックイン	chekkuin	check-in		チェックインは三時からでございます。	Check-in is from three o'clock.
+#time5
+kako	過去	かこ	kako	the past		過去のことは忘れよう。	Let's forget the past.
+genzai	現在	げんざい	genzai	now, at present (formal)		現在、会議中です。	We're in a meeting at the moment.
+sakuya	昨夜	さくや	sakuya	last night (formal)		昨夜、地震がありました。	There was an earthquake last night.
+ato	後	あと	ato	after, later		食べたばかりなので、後で行きます。	I've just eaten, so I'll go later.
+owari	終わり	おわり	owari	end		映画の終わりがよかった。	The ending of the film was good.
+inai	以内	いない	inai	within		一時間以内に戻ります。	I'll be back within an hour.
+yaku2	約	やく	yaku	about, around		駅まで約十分です。	It's about ten minutes to the station.
+#much
+mottomo	最も	もっとも	mottomo	most (formal)		富士山は日本で最も高い山です。	Mount Fuji is the highest mountain in Japan.
+ooku	多く	おおく	ooku	many, much; most of		多くの人がスマホを持っています。	Many people have a smartphone.
+subete	全て	すべて	subete	all, everything		宿題は全て終わりました。	I've finished all my homework.
+hoka	他	ほか	hoka	other, else		他に質問はありますか。	Any other questions?
+ika	以下	いか	ika	or less, under		六歳以下は無料です。	Children six and under are free.
+nanimo	何も	なにも	nanimo	nothing (with a negative)		朝から何も食べていません。	I haven't eaten anything since the morning.
+sorera	それら	それら	sorera	those (things)		それらは全部私の本です。	Those are all my books.
+#work4
+konpyuuta	コンピュータ	コンピュータ	konpyuuta	computer		コンピュータが動きません。	My computer isn't working.
+fairu	ファイル	ファイル	fairu	file		ファイルをメールで送ります。	I'll send the file by email.
+risuto	リスト	リスト	risuto	list		やることのリストを作りました。	I made a to-do list.
+shuuri	修理	しゅうり	shuuri	repair		コピー機は今修理中です。	The copier is being repaired.
+jouken	条件	じょうけん	jouken	condition, terms		この仕事の条件はいいですね。	The terms of this job are good.
+boshuu	募集	ぼしゅう	boshuu	recruiting, a call for applicants		アルバイトを募集しています。	We're looking for part-timers.
+shinbun	新聞	しんぶん	shinbun	newspaper		毎朝電車で新聞を読みます。	I read the paper on the train every morning.
+keitaidenwa	携帯電話	けいたいでんわ	keitai denwa	mobile phone		会議中は携帯電話を切ってください。	Please turn off your mobile during meetings.
