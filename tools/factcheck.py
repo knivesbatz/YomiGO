@@ -41,14 +41,16 @@ PLAIN = {"分かります": ("分かる", "わかる"), "分かりません": ("
          "聞きます": ("聞く", "きく"), "書きます": ("書く", "かく"), "話します": ("話す", "はなす"), "買います": ("買う", "かう"), "します": ("する", "する"),
          "あります": ("ある", "ある"), "います": ("いる", "いる"),
          "乗ります": ("乗る", "のる"), "運転します": ("運転", "うんてん"), "着ます": ("着る", "きる"), "履きます": ("履く", "はく"),
-         "遊びます": ("遊ぶ", "あそぶ"), "踊ります": ("踊る", "おどる"), "飼います": ("飼う", "かう")}
+         "遊びます": ("遊ぶ", "あそぶ"), "踊ります": ("踊る", "おどる"), "飼います": ("飼う", "かう"),
+         "洗います": ("洗う", "あらう"), "探します": ("探す", "さがす"), "笑います": ("笑う", "わらう"), "捨てます": ("捨てる", "すてる"),
+         "出かけます": ("出かける", "でかける"), "持ちます": ("持つ", "もつ"), "助けます": ("助ける", "たすける"), "似合います": ("似合う", "にあう")}
 # Read by a person: each is right, and only worded differently from JMdict, or a kanji's meaning rather than a word's
 REVIEWED = {"v.suru", "v.jouzu", "j.tsukuru", "j.tsukau", "j.motsu", "j.hairu", "j.aruku", "j.ooi", "j.iu", "j.shiru", "j.kangaeru", "j.oshieru", "v.shimasu", "v.arimasu", "v.itadakimasu", "v.gochisousama", "v.desu", "v.ichi", "v.heta", "v.mono", "v.manga", "v.suki", "v.imasu", "v.hitotsu", "v.eeto", "v.hontou",
             "j.ichi", "j.iku", "j.kuru", "j.taberu", "j.miru", "j.kaku", "j.hanasu", "j.den", "j.takai",
             # N3, checked by hand in 0.8
             "j.yuu2", "v.totsuzen", "v.omoide", "j.kimeru", "j.kanarazu", "j.ushinau", "j.mamoru", "j.kotowaru", "j.nokoru", "j.shiraberu", "j.tsutaeru",
             # 0.11: 降ります has two readings (降りる, 降る); set phrases that aren't headwords as written; meanings in other words
-            "v.orimasu", "v.furimasu", "v.otsukaresama", "v.ohashi", "v.sounanda", "v.majide", "v.daisuki", "v.shusshin", "v.yasai", "v.tashikani", "v.mattaku", "v.untenshimasu"}
+            "v.orimasu", "v.furimasu", "v.otsukaresama", "v.ohashi", "v.sounanda", "v.majide", "v.daisuki", "v.shusshin", "v.yasai", "v.tashikani", "v.mattaku", "v.untenshimasu", "v.anzen"}
 missing, mismatch, meaning, okc = [], [], [], 0
 for c in C["cards"]:
     if c["day"] < 0 or c["t"] not in "wj": continue

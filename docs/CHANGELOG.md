@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.12.0
+
+- 117 more words, from 608 to 725 word cards, each with a natural example sentence, in 20 classes across the course
+- Everyday gaps filled: だれ, たくさん, 欲しい, 前, 中, 後ろ, 隣, 外, 今朝, 先週, みんな, どうして, なんで, スマホ, ラーメン, and more
+- Each class's examples use what that class teaches: plans with つもり, the doctor class with たら, gifts with あげる and くれる, and others
+- New topics: jobs, the hotel desk, health and feeling ill, household chores, outings, and family beyond parents and siblings
+- Existing saves pick up the new words in their reviews, ten a day
+
 ## 0.11.0
 
 - 166 new words, from 443 to 608 word cards, each with a natural example sentence and its translation, shown on the lesson card. On the PC and TV, Y speaks the sentence
