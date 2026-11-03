@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.10.0
+
+- Genki II practice: lessons 13 to 23, in the 3rd edition's order, practised with YomiGo's own N4 and N3 cards. Switch books with the Genki I / Genki II button, or L and R on the TV
+- The TV's Genki list fits on screen, in two columns of six
+- Shorter Genki topic lines, so none is cut off on the PC
+
 ## 0.9.0
 
 - Talk: chat freely in Japanese with Sakura, a conversation partner that runs on your PC. She follows your level and today's lesson, and each reply comes with an English translation and a check of what you wrote. On the PC and the TV, from the Grammar Gate on

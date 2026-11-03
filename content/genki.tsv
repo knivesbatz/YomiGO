@@ -1,13 +1,24 @@
 # lesson	topics, in YomiGo's own words, following the order of Genki 3rd edition	YomiGo cards to practise
-1	Saying X is Y, asking questions, linking nouns with の, numbers	!g.desu !g.ka !g.no @intro @num1 @num2 @people
-2	This and that, here and there, also, is not, prices	!g.kore !g.mo !g.janai @things !v.hyaku !v.sen !v.man !v.ikura !v.en
+1	X is Y, questions, の, and numbers	!g.desu !g.ka !g.no @intro @num1 @num2 @people
+2	This and that, also, is not, and prices	!g.kore !g.mo !g.janai @things !v.hyaku !v.sen !v.man !v.ikura !v.en
 3	Polite verbs, を, で, and に, how often	!g.masu !g.masen !g.wo !g.de !g.ni @verbs1 @verbs2 !v.mainichi
 4	What exists and where, past tense	!g.ga !g.nipos !g.mashita !g.masendeshita @exist @days
 5	Both kinds of adjective, liking things, let's do	!g.iadj !g.naadj !g.kunai !g.mashou @adj1 @adj2
 6	Requests, and giving reasons	!g.tekudasai !g.kudasai !g.kara !g.made
-7	What you are doing now, family and people, counting people	!g.teiru @family @people !v.hitori !v.futari !v.sannin !v.kazoku
-8	Plain forms, saying what you think, please don't	!g.plain !g.nai !g.tomou !g.toiu !g.naide @plain1
+7	Doing now, family, and counting people	!g.teiru @family @people !v.hitori !v.futari !v.sannin !v.kazoku
+8	Plain forms, I think, and please don't	!g.plain !g.nai !g.tomou !g.toiu !g.naide @plain1
 9	Plain past, already and not yet	!g.ta !g.nakatta !g.mou @experience
 10	Comparing, plans, and becoming	!g.yori !g.ichiban !g.tsumori @compare @plans
 11	Wanting, doing things like, past experience	!g.tai !g.tari !g.takoto !v.ryokou !v.nihon
 12	Reasons, too much, advice, and must	!g.node !g.sugiru !g.houga !g.nakereba @must
+13	Can do, looks like, if it's that, and how often	!g.potential !g.koto !g.sou !g.nara @can
+14	Might, giving and receiving, and counters	!g.kamo !g.ageru !g.kureru !g.morau @give @counters
+15	Let's do, planning to, and doing things ahead	!g.you !g.teoku @plans
+16	Doing favours for people, and when	!g.temorau !g.toki @give
+17	I hear, if and when, don't have to, and seems	!g.souhear !g.tara !g.nakutemo !g.mitai @n3news
+18	Ending up doing, while doing, and whenever	!g.teshimau !g.chau !g.to !g.nagara @n3done
+19	Respectful verbs, and should be	!g.keigo !g.hazu @keigo
+20	Humble speech, ないで, かどうか, and やすい	!g.kenjou !g.sasete !g.zuni !g.kadouka !g.yasui
+21	Things that happen to you, and while	!g.passive !g.aidani @passive
+22	Making and letting, if, even though, and like	!g.causative !g.ba !g.noni !g.youda
+23	Being made to do, even if, deciding to, and until	!g.causpass !g.temo !g.kotonisuru !g.made

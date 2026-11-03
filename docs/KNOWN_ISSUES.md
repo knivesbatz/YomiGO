@@ -33,6 +33,7 @@
 - Saves don't sync on their own. Copy them by hand.
 - Firefox rejects Reader through Install Add-on From File, and removes a temporary install on restart, until Mozilla signs it. Someone has reported an error using it there. The exact message is still needed, as Firefox isn't on the build PC.
 - The pronoun notes and examples haven't had a native speaker's review yet, like the N4 and N3 grammar, readings, and conversations.
+- Genki practice uses only YomiGo's own cards, and some Genki points have none yet, such as 〜てみる, 〜てある, 〜方, ほしい, 〜し, and 〜ばよかった. Those lessons practise the points YomiGo does teach.
 - Stroke order is shown, but there's no handwriting check. Youon cards such as きゃ don't show it.
 
 ## Security limits

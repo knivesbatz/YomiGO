@@ -1751,20 +1751,28 @@ static void scr_first(void) {
     footer("Choose", 0);
 #endif
 }
+/* page 0 is Genki I (lessons 1 to 12), page 1 is Genki II (13 to 23) */
 static void scr_genki(void) {
-    int i, y = CY + LH + 2, h = HTPC ? 17 : 30, w = HTPC ? 44 : 100, n = plat_scan_material();
-    chrome("Genki practice", 0);
-    text(CX, CY, "By lesson, using YomiGo's own cards.", C_DIM);
+    int i, k = 0, y0 = CY + LH + 2, h = HTPC ? 17 : 26, w = HTPC ? 44 : 100, n = plat_scan_material(), book = page != 0;
+    chrome(book ? "Genki II practice" : "Genki I practice", 0);
+    text(CX, CY, HTPC ? "L and R: the other book" : "By lesson, in the 3rd edition's order, using YomiGo's own cards.", C_DIM);
+    if (IN.pressed & (A_L | A_R)) { page = !book; ui_reset_focus(); return; }
     for (i = 0; i < YG_NGENKI; i++) {
-        char b[16];
+        char b[16]; int x = CX, y;
+        if ((YG_GENKI[i].lesson > 12) != book) continue;
+        /* the TV keeps two columns of six, so a whole book fits */
+        if (HTPC) { x += (k / 6) * (w + 4); y = y0 + (k % 6) * (h + 1); } else y = y0 + k * (h + 2);
+        k++;
         ys_fmt(b, sizeof b, "L%d", YG_GENKI[i].lesson, 0);
-        if (button(CX, y, w, h, b)) { quiz_genki(&Z, i); start_quiz(QM_PRACTICE); return; }
-        if (!HTPC || ui_focused()) wrap(CX + w + 6, HTPC ? CY + LH + 2 : y + (h - 16) / 2, CW - w - 6, YG_GENKI[i].topics, C_DIM, LH, 0, HTPC ? 5 : 1);
-        y += h + (HTPC ? 1 : 2);
+        if (button(x, y, w, h, b)) { quiz_genki(&Z, i); start_quiz(QM_PRACTICE); return; }
+        if (!HTPC) wrap(CX + w + 6, y + (h - 16) / 2, CW - w - 6, YG_GENKI[i].topics, C_DIM, LH, 0, 1);
+        else if (ui_focused()) wrap(CX + 2 * (w + 4) + 4, y0, CW - 2 * (w + 4) - 4, YG_GENKI[i].topics, C_DIM, LH, 0, 6);
     }
-    if (!HTPC) wrap(CX, y + 4, CW, "Follows the order of the 3rd edition. Lessons with no YomiGo cards yet arrive with the N4 update.", C_DIM, 18, 0, 2);
+#if !HTPC
+    if (button(CX + CW - 120, FBY_BTN, 120, 28, book ? "Genki I" : "Genki II")) { page = !book; ui_reset_focus(); return; }
+#endif
     for (i = 0; i < n; i++) if (ys_contains_ci(plat_material(i), "genki")) {
-        if (button(HTPC ? CX + w + 6 : CX, FBY_BTN, HTPC ? 170 : 170, 28, "Open my Genki file")) plat_open(plat_material_full(i));
+        if (button(HTPC ? CX + 2 * (w + 4) + 4 : CX, FBY_BTN, 170, 28, "Open my Genki file")) plat_open(plat_material_full(i));
         break;
     }
     if (IN.pressed & A_BACK) go(S_CARDS);
