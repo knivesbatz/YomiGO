@@ -57,9 +57,12 @@ void plat_clip_set(const char *utf8);
 int  plat_clip_seq(void);                      /* changes whenever the clipboard does */
 int  plat_clip_image(const char *name);        /* saves a copied picture as a BMP; 0 if there isn't one */
 int  plat_ocr_start(const char *in, const char *out);
-int  plat_ocr_poll(void);
-int  plat_ocr_present(void);                   /* YomiGoOCR.exe is beside the program */
-void plat_fetch_helpers(void);                 /* asks the signed updater to fetch it */                      /* -1 nothing running, -2 still reading, else the reader's exit code */
+int  plat_ocr_poll(void);                      /* -1 nothing running, -2 still reading, else the reader's exit code */
+#define YG_SPEECH_MODEL "models\\ggml-large-v3-turbo-q5_0.bin"
+int  plat_listen_start(int get_model);         /* transcribes a file the user picks, or downloads the speech model */
+int  plat_listen_poll(void);                   /* like plat_ocr_poll */
+int  plat_has(const char *name);               /* this file is beside the program, such as a helper */
+void plat_fetch_helpers(void);                 /* asks the signed updater to fetch missing helpers */
 void plat_topmost(int on);
 const char *plat_ime_comp(void);              /* what the Japanese keyboard is still composing */
 void plat_ime_field(int on, int x, int y);    /* a text box is showing, and where */

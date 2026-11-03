@@ -39,7 +39,7 @@ Complete means implemented and tested as described. **Partial** says what's miss
 | Text Reader: paste and clipboard watch | Complete | Complete | Partial: paste only | n/a |
 | Screenshot or photo OCR | Partial: tested in English only | Not offered | Partial: not run on a phone | n/a |
 | Vertical manga text, game hooking | Not started | Not started | Not started | n/a |
-| Audio transcription | Not started | Not started | Not started | n/a |
+| Audio transcription | Complete | Not offered | Not started | n/a |
 | Automatic sync | Not started | Not started | Not started | Not started |
 
 ## How things are tested

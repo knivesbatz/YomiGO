@@ -85,9 +85,10 @@ static void flash(const char *m) { flash_msg = m; flash_t = 40; plat_sound(0); }
 static void flash_add(int r) { flash(r > 0 ? "Added!" : r == 0 ? "Already added" : "Deck is full"); }
 static int my_sel, my_confirm, add_step;
 static int q_said = -1, sh_i, sh_n, sh_said;
-#define TX_MAX 30
+#define TX_MAX 400 /* room for an episode's transcript */
 static char tx_lines[TX_MAX][256];
-static int tx_n, tx_sel, tx_pos, tx_len, tx_res[8], tx_nres, tx_watch, tx_seq, tx_top, tx_ocr;
+static int tx_n, tx_sel, tx_pos, tx_len, tx_res[8], tx_nres, tx_watch, tx_seq, tx_top, tx_ocr, tx_page;
+static int tx_listen, tx_ask; /* 1 transcribing, 2 downloading the speech model; tx_ask: the download was explained */
 static const char *tx_msg = "";
 /* New Japanese lines go on top. Anything without Japanese, or the same as the newest line, is ignored. */
 static int tx_add(const char *t) {
@@ -106,20 +107,36 @@ static int tx_add(const char *t) {
         for (i = (tx_n < TX_MAX ? tx_n : TX_MAX - 1); i > 0; i--) ys_cpy(tx_lines[i], tx_lines[i - 1], 256);
         ys_cpy(tx_lines[0], l, 256);
         if (tx_n < TX_MAX) tx_n++;
-        tx_sel = 0; tx_pos = 0; tx_nres = 0; tx_len = 0; added++;
+        tx_sel = 0; tx_page = 0; tx_pos = 0; tx_nres = 0; tx_len = 0; added++;
     }
     return added;
 }
 static void tx_poll(void) {
     static char clip[8192];
-    int s;
+    int s, code;
     if (tx_watch) {
         s = plat_clip_seq();
         if (s != tx_seq) { tx_seq = s; plat_clip_get(clip, sizeof clip); tx_add(clip); }
     }
-    if (tx_ocr) {
-        int code = plat_ocr_poll();
-        if (code == -2) return;
+    if (tx_listen && (code = plat_listen_poll()) != -2) {
+        static char out[262144], done[160];
+        int get = tx_listen == 2, n;
+        tx_listen = 0;
+        if (get) tx_msg = code == 0 ? "The speech model is ready. Press Transcribe and pick a file." : "The download failed or didn't check out, so nothing was kept. Try again later.";
+        else if (code == 0 || code == 8) {
+            n = plat_read("listen_out.txt", out, sizeof out - 1);
+            out[n > 0 ? n : 0] = 0;
+            ys_fmt(done, sizeof done, code == 0 ? "Done: %d lines. Japanese subtitles are saved beside the file, as .ja.srt." : "Done: %d lines. A subtitle file was already beside it, so it was left alone.", tx_add(out), 0);
+            tx_msg = done;
+        }
+        else if (code == 2) tx_msg = "The speech model didn't load. Close some programs and try again.";
+        else if (code == 3) tx_msg = "Couldn't get the sound out of that file. MP3, M4A, WAV, MP4 and MKV work.";
+        else if (code == 4 || code == (int)0xC000001D) tx_msg = "Transcribing needs a processor with AVX2, from about 2013 or later.";
+        else if (code == 6) tx_msg = "No speech found in that file.";
+        else if (code == 7) tx_msg = "";
+        else tx_msg = "Transcribing needs 64-bit Windows 10 or later.";
+    }
+    if (tx_ocr && (code = plat_ocr_poll()) != -2) {
         tx_ocr = 0;
         if (code == 0) { static char out[16384]; int n = plat_read("ocr_out.txt", out, sizeof out - 1); if (n > 0) { out[n] = 0; tx_msg = tx_add(out) ? "" : "No Japanese text found in that picture."; } else tx_msg = "No text found in that picture."; }
         else if (code == 2) tx_msg = "Windows has no Japanese text recognition. Add Japanese under Settings > Time & language > Language & region, then check its optical character recognition is installed.";
@@ -1089,30 +1106,39 @@ static void scr_cards(void) {
 
 /* ---- text reader: text from games, the clipboard, or a screenshot; click a word to look it up ---- */
 static void scr_text(void) {
-    int y = CY, bw = HTPC ? (CW - 4) / 2 : (CW - 12) / 4, i, rows = HTPC ? 2 : 4, nres = HTPC ? 2 : 3;
+    int y = CY, bw = HTPC ? (CW - 4) / 2 : (CW - 16) / 5, i, rows = HTPC ? 2 : 4, nres = HTPC ? 2 : 3, pages = (tx_n + rows - 1) / rows;
     tx_poll();
+    if (pages > 1 && (IN.pressed & (A_L | A_R))) { tx_page = (tx_page + (IN.pressed & A_R ? 1 : pages - 1)) % pages; tx_sel = tx_page * rows; tx_pos = 0; tx_nres = 0; tx_len = 0; }
     chrome(L("Text Reader", "テキスト", 3), 0);
     if (button(CX, y, bw, 22, "Paste")) { static char clip[8192]; plat_clip_get(clip, sizeof clip); tx_msg = tx_add(clip) ? "" : "There's no Japanese text on the clipboard."; }
     if (button(CX + bw + 4, y, bw, 22, tx_watch ? "Watch: On" : "Watch: Off")) { tx_watch = !tx_watch; tx_seq = plat_clip_seq(); tx_msg = tx_watch ? "Japanese copied by any program now appears here." : ""; }
 #if !HTPC
     if (button(CX + 2 * (bw + 4), y, bw, 22, tx_ocr ? "Reading..." : "Screenshot") && !tx_ocr) {
-        if (!plat_ocr_present() && plat_can_update()) { plat_fetch_helpers(); tx_msg = "Downloading the screenshot reader. Try again in a minute."; }
+        if (!plat_has("YomiGoOCR.exe") && plat_can_update()) { plat_fetch_helpers(); tx_msg = "Downloading the screenshot reader. Try again in a minute."; }
         else if (!plat_clip_image("ocr_in.bmp")) tx_msg = "First take a screenshot with Win+Shift+S, then press this.";
         else if (!plat_ocr_start("ocr_in.bmp", "ocr_out.txt")) tx_msg = "Couldn't start the text reader. It needs YomiGoOCR.exe, beside YomiGo, and Windows 10 or later.";
         else { tx_ocr = 1; tx_msg = "Reading the screenshot..."; }
     }
-    if (button(CX + 3 * (bw + 4), y, bw, 22, tx_top ? "On top: On" : "On top: Off")) { tx_top = !tx_top; plat_topmost(tx_top); }
+    { static char lbl[32]; int get = !plat_has(YG_SPEECH_MODEL);
+      if (tx_listen) { char b[8]; int n = plat_read("listen_pct.txt", b, 7), v = 0, k; for (k = 0; k < n && b[k] >= '0' && b[k] <= '9'; k++) v = v * 10 + b[k] - '0'; ys_fmt(lbl, sizeof lbl, "Working %d%%", v, 0); }
+      if (button(CX + 3 * (bw + 4), y, bw, 22, tx_listen ? lbl : "Transcribe") && !tx_listen) {
+        if (!plat_has("YomiGoListen.exe") && plat_can_update()) { plat_fetch_helpers(); tx_msg = "Downloading the transcriber. Try again in a minute."; }
+        else if (get && !tx_ask) { tx_ask = 1; tx_msg = "Transcribing needs a 574 MB speech model, downloaded once from Hugging Face and checked before use. Press Transcribe again to get it."; }
+        else if (!plat_listen_start(get)) tx_msg = "Couldn't start the transcriber. It needs YomiGoListen.exe, beside YomiGo, and 64-bit Windows 10 or later.";
+        else { tx_listen = get ? 2 : 1; tx_msg = get ? "Downloading the speech model..." : "Pick a file. Long videos take a while: keep studying, and the lines show up here when it's done."; }
+      } }
+    if (button(CX + 4 * (bw + 4), y, bw, 22, tx_top ? "On top: On" : "On top: Off")) { tx_top = !tx_top; plat_topmost(tx_top); }
 #endif
     y += 28;
     if (!tx_n) {
-        wrap(CX, y, CW, *tx_msg ? tx_msg : (HTPC ? "Copy Japanese from any program, then press Paste, or turn on Watch." : "Copy Japanese from a game or web page, or take a screenshot with Win+Shift+S. Then press Paste or Screenshot. With Watch on, text copied by a text hooker such as Textractor shows up by itself."), C_DIM, LH, 0, 0);
+        wrap(CX, y, CW, *tx_msg ? tx_msg : (HTPC ? "Copy Japanese from any program, then press Paste, or turn on Watch." : "Copy Japanese from a game or web page, or take a screenshot with Win+Shift+S. Then press Paste or Screenshot. With Watch on, text copied by a text hooker such as Textractor shows up by itself. Transcribe writes down what's said in an audio or video file."), C_DIM, LH, 0, 0);
 #if HTPC
         if (IN.pressed & A_BACK) go(S_HOME);
         footer("OK", "Menu");
 #endif
         return;
     }
-    for (i = 0; i < tx_n && i < rows; i++) {
+    for (i = tx_page * rows; i < tx_n && i < (tx_page + 1) * rows; i++) {
         int h = LH, hit = ui_hit(CX, y, CW, h);
         if (i == tx_sel) fill(CX, y, CW, h, HTPC ? C_PANEL : 0xF8D4DC);
         wrap(CX + 4, y + 1, CW - 8, tx_lines[i], i == tx_sel ? C_INK : C_DIM, LH, 0, 1);
@@ -1157,10 +1183,13 @@ static void scr_text(void) {
 #endif
         y += LH + 2;
     }
-    if (*tx_msg && !HTPC) wrap(CX, FBY_BTN + 6, CW, tx_msg, C_DIM, LH, 0, 1);
-#if HTPC
+#if !HTPC
+    if (pages > 1) { char b[32]; ys_fmt(b, sizeof b, "Page %d/%d", tx_page + 1, pages);
+      if (button(CX + CW - 100, FBY_BTN, 100, 28, b)) { tx_page = (tx_page + 1) % pages; tx_sel = tx_page * rows; tx_pos = 0; tx_nres = 0; tx_len = 0; } }
+    if (*tx_msg) wrap(CX, FBY_BTN - LH + 6, pages > 1 ? CW - 108 : CW, tx_msg, C_DIM, LH, 0, 2);
+#else
     if (IN.pressed & A_BACK) go(S_HOME);
-    { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Pick"); prompt_btn(&x, FBH - SAFE - 17, 2, "Add"); prompt_btn(&x, FBH - SAFE - 17, 1, "Menu"); }
+    { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Pick"); prompt_btn(&x, FBH - SAFE - 17, 2, "Add"); prompt_btn(&x, FBH - SAFE - 17, 1, "Menu"); if (pages > 1) prompt_btn(&x, FBH - SAFE - 17, 5, "More"); }
 #endif
 }
 

@@ -38,6 +38,9 @@ On the PC, **Text** in the side menu reads Japanese and lets you click any word 
 - **From the screen:** press Win+Shift+S, select some Japanese, then press **Screenshot**. Windows needs Japanese installed under Settings > Time & language > Language & region, including its optical character recognition. This uses Windows 10 or later, and `YomiGoOCR.exe` beside YomiGo.
 - **From games:** run a text hooker such as Textractor, set it to copy text to the clipboard, and turn on **Watch**. New lines appear as the game shows them. **On top** keeps YomiGo above the game.
 - **From anywhere:** copy Japanese, then press **Paste**.
+- **From audio and video:** press **Transcribe** and pick a file, such as an MP3, M4A, WAV, MP4, or MKV. YomiGo writes down the Japanese in it, then shows the lines here. It also saves Japanese subtitles beside the file as `name.ja.srt`, unless one is already there. VLC, mpv, and most players load them by themselves.
+
+The first time, Transcribe asks before downloading its speech model: 574 MB from Hugging Face, checked against a fixed fingerprint, and kept in `models` beside YomiGo. Everything runs on your PC, and nothing is uploaded. It needs 64-bit Windows 10 or 11, a processor from about 2013 or later, and `YomiGoListen.exe` beside YomiGo. Expect it to take about half as long as the file plays, or longer on a slower PC. You can keep studying while it works.
 
 ## Android
 

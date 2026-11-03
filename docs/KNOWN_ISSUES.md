@@ -12,11 +12,14 @@
 
 - **Japanese OCR:** the build PC has only English OCR, so screenshot reading has been tested end to end in English. Japanese uses the same code with a different language.
 - **Android photo reading:** built by CI, never run on a phone.
+- **Transcription:** tested on Japanese lesson recordings and an English video. It hasn't been tried on anime or films, where music and overlapping voices make mistakes more likely.
 
 ## Limits in this version
 
 - Windows OCR is made for horizontal text, so vertical manga text often comes out poorly. A manga-specific reader is on the roadmap.
 - Text appears from games only through a text hooker that copies to the clipboard. YomiGo doesn't hook games itself.
+- Transcription runs on the processor only, at a little under twice the speed the file plays on the build PC. Over music or silence, Whisper sometimes writes lines no one said, such as a thank-you for watching. Check a line by ear before you learn from it.
+- Transcription is on the PC app only. The TV app shows text you copy, but has no file picker, and the phone app doesn't transcribe.
 
 - The course ends at N4. Later levels are on the [roadmap](ROADMAP.md).
 - The entrance exam tests reading only, not listening, typing, or speaking.

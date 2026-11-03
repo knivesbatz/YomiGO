@@ -32,4 +32,6 @@
 
 **Repo name.** `knivesbatz/YomiGO` already existed, and GitHub names ignore case, so `yomigo` resolves to it.
 
+**Transcription with whisper.cpp, in its own 64-bit helper.** The main program stays Windows 95 safe. `YomiGoListen.exe` decodes files with Windows' own Media Foundation, so MP4 and M4A work without bundling FFmpeg, and shows the file picker itself, so YomiGo never handles a Unicode path. The model comes from Hugging Face at a fixed revision and is checked against its SHA-256, instead of being uploaded to every release. Large-v3-turbo was chosen over smaller models because they make far more mistakes in Japanese, and a learner can't tell.
+
 **GitHub releases here.** An older rule against builds on GitHub applies to the owner's game project. YomiGo's updater needs them.

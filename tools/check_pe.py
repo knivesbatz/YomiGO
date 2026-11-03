@@ -4,7 +4,7 @@ import struct, sys
 
 WIN95 = {
     "KERNEL32.dll": """CloseHandle CopyFileA CreateDirectoryA CreateFileA CreateProcessA DeleteFileA ExitProcess FindClose FindFirstFileA
-        FindNextFileA FlushFileBuffers GetCommandLineA GetCurrentProcessId GetFileAttributesA GetLocalTime GetModuleFileNameA GetModuleHandleA GetProcAddress
+        FindNextFileA FlushFileBuffers GetCommandLineA GetCurrentProcessId GetFileAttributesA WaitForSingleObject GetLocalTime GetModuleFileNameA GetModuleHandleA GetProcAddress
         GetExitCodeProcess GetTickCount GetVersion GlobalAlloc GlobalLock GlobalSize GlobalUnlock LoadLibraryA MoveFileA ReadFile Sleep WriteFile""",
     "USER32.dll": """AdjustWindowRect BeginPaint CloseClipboard CreateWindowExA DefWindowProcA DestroyWindow DispatchMessageA EmptyClipboard EndPaint FillRect GetClipboardData GetDC
         GetMessageA GetSystemMetrics LoadCursorA OpenClipboard PostQuitMessage RegisterClassA ReleaseCapture ReleaseDC SetCapture SetClipboardData SetTimer SetWindowPos ShowCursor TranslateMessage""",

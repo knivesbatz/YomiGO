@@ -14,6 +14,11 @@ YomiGo isn't affiliated with or endorsed by Nintendo, The Japan Times (Genki), t
 - **Windows:** the text reader uses the OCR built into Windows 10 and 11. No model ships with YomiGo.
 - **Android:** reading photos uses Google's [ML Kit text recognition](https://developers.google.com/ml-kit/vision/text-recognition/android), bundled in the app, under [ML Kit's terms](https://developers.google.com/ml-kit/terms). It runs on the phone.
 
+## Transcription
+
+- **Engine:** [whisper.cpp](https://github.com/ggml-org/whisper.cpp) by Georgi Gerganov and contributors, MIT licence, built into `YomiGoListen.exe` from the pinned copy in `third_party/whisper.cpp`.
+- **Model:** OpenAI's [Whisper](https://github.com/openai/whisper) large-v3-turbo, MIT licence, in the [ggml version](https://huggingface.co/ggerganov/whisper.cpp) hosted on Hugging Face. It's downloaded on first use, not shipped with YomiGo.
+
 ## Dictionary and stroke data
 
 `content/dict/` keeps its own licences, and they differ from the rest of the project:

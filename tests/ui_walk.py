@@ -62,6 +62,19 @@ subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--scr
 print("screenshot through YomiGo:", "OK" if os.path.exists(os.path.join(root, "ocr_out.txt")) and "OCR check 42" in open(os.path.join(root, "ocr_out.txt"), encoding="utf-8").read() else "FAILED")
 fail += not (os.path.exists(os.path.join(root, "ocr_out.txt")) and "OCR check 42" in open(os.path.join(root, "ocr_out.txt"), encoding="utf-8").read())
 shutil.rmtree(root, ignore_errors=True)
+# Transcribing a file through YomiGo, in English as the build PC has no Japanese voice. It needs the speech model, which the app downloads on first use.
+if os.path.exists(os.path.join(ROOT, "dist", "models", "ggml-large-v3-turbo-q5_0.bin")):
+    root = tempfile.mkdtemp()
+    wav = os.path.join(root, "talk.wav")
+    subprocess.run(["powershell", "-NoProfile", "-Command", "Add-Type -AssemblyName System.Speech; $s = New-Object System.Speech.Synthesis.SpeechSynthesizer; $s.SetOutputToWaveFile('%s'); $s.Speak('Practice makes perfect.'); $s.Dispose()" % wav], check=True)
+    subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--script", "w2;ow2;ow2;tEar;w1;ow2;dw1;ow2;dw1;ow2;lluw1;ow2;A" + wav.replace("\\", "/") + " en;rrrw1;ow1;W;"], timeout=600)
+    out = open(os.path.join(root, "listen_out.txt"), encoding="utf-8").read() if os.path.exists(os.path.join(root, "listen_out.txt")) else ""
+    ok = "practice makes perfect" in out.lower() and os.path.exists(os.path.join(root, "talk.en.srt"))
+    print("transcribing through YomiGo, with subtitles beside the file:", "OK" if ok else "FAILED", repr(out.strip()))
+    fail += not ok
+    shutil.rmtree(root, ignore_errors=True)
+else:
+    print("transcribing: SKIPPED, no speech model in dist\\models")
 # Your own words on the TV: find 猫 in the dictionary, add it, and it must be saved
 root = tempfile.mkdtemp()
 subprocess.run([os.path.join(ROOT, "dist", "YomiGoHTPC.exe"), "--root", root, "--script", "w2;ow2;ow2;tMine;w1;sw2;dw1;ow2;dw1;ow2;rrrrw8;ow2;RRRw2;tneko;w1;sw2;xw2;"], timeout=60)

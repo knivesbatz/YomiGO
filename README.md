@@ -75,7 +75,8 @@ YomiGo is in its early days. The course currently runs from zero to **N4**, the 
 | A dictionary of about 22,000 common words | Larger dictionaries |
 | Your own flashcards, from the dictionary or the browser | Vertical manga text, and direct game hooking |
 | A Text Reader for screenshots, photos, and game text | |
-| Listening, dictation, and shadowing | Transcription of your own audio |
+| Transcription of your own audio and video, with Japanese subtitles | Transcription on Android |
+| Listening, dictation, and shadowing | |
 | Updates that ask first | Automatic sync between devices |
 
 Some things haven't been tried on real hardware yet, including controllers, CRT TVs, Windows 95, and Android phones. See [what's been tested](docs/COMPATIBILITY.md) and [known issues](docs/KNOWN_ISSUES.md), or the full [roadmap](docs/ROADMAP.md).

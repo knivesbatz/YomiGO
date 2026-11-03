@@ -138,6 +138,8 @@ static char *next_arg(char **pp, char *out, int cap) {
     *pp = p;
     return out;
 }
+#define YG_NHELPERS 2
+static const char *const helpers[YG_NHELPERS] = {"YomiGoOCR.exe", "YomiGoListen.exe"};
 static int fetch_verified(const char *tag, const char *asset, const char *dest) {
     char path[512]; DWORD a = 0, b = 0; char *data, *sig; int ok;
     wsprintfA(path, "/" YG_REPO "/releases/download/v%s/%s", tag, asset);
@@ -163,17 +165,20 @@ void yg_entry(void) {
         d = read_all(f, &a); g = read_all(s, &b);
         ExitProcess(d && g && verify((BYTE *)d, a, (BYTE *)g, b) ? 0 : 1);
     }
-    /* Fetches helpers an older updater didn't know about, such as the screenshot reader */
+    /* Fetches helpers an older updater didn't know about, such as the screenshot reader and the transcriber */
     if (!lstrcmpA(target, "--helpers")) {
-        static char ocr[MAX_PATH], ocrnew[MAX_PATH], path2[128];
+        static char h[MAX_PATH], hnew[MAX_PATH], path2[128]; int code = 0;
         quiet = 1;
         wsprintfA(path2, "/repos/" YG_REPO "/releases/latest");
         json = http_get("api.github.com", path2, &len);
         if (!json || !find_tag(json, tag, 32)) ExitProcess(3);
-        wsprintfA(ocr, "%s\\YomiGoOCR.exe", dir); wsprintfA(ocrnew, "%s\\YomiGoOCR.exe.new", dir);
-        if (GetFileAttributesA(ocr) != INVALID_FILE_ATTRIBUTES) ExitProcess(0);
-        if (!fetch_verified(tag, "YomiGoOCR.exe", ocrnew)) { DeleteFileA(ocrnew); ExitProcess(4); }
-        ExitProcess(MoveFileA(ocrnew, ocr) ? 0 : 5);
+        for (i = 0; i < YG_NHELPERS; i++) {
+            wsprintfA(h, "%s\\%s", dir, helpers[i]); wsprintfA(hnew, "%s\\%s.new", dir, helpers[i]);
+            if (GetFileAttributesA(h) != INVALID_FILE_ATTRIBUTES) continue;
+            if (!fetch_verified(tag, helpers[i], hnew)) { DeleteFileA(hnew); code = 4; }
+            else if (!MoveFileA(hnew, h)) code = 5;
+        }
+        ExitProcess(code);
     }
     if (!lstrcmpA(target, "--swap")) {
         static char t[MAX_PATH], n[MAX_PATH];
@@ -209,10 +214,10 @@ void yg_entry(void) {
     if (!swap_in(full, fresh)) { DeleteFileA(fresh); quiet = 0; say("Couldn't replace the program, so the old version is still in place."); ExitProcess(5); }
     /* A running exe can be renamed, so the updater can refresh itself too. If this fails, the old updater still works. */
     if (fetch_verified(tag, "YomiGoUpdate.exe", freshme)) { if (!swap_in(me, freshme)) DeleteFileA(freshme); }
-    /* The text reader's helper comes along too; YomiGo works without it */
-    { static char ocr[MAX_PATH], ocrnew[MAX_PATH];
-      wsprintfA(ocr, "%s\\YomiGoOCR.exe", dir); wsprintfA(ocrnew, "%s\\YomiGoOCR.exe.new", dir);
-      if (fetch_verified(tag, "YomiGoOCR.exe", ocrnew)) { if (!swap_in(ocr, ocrnew)) DeleteFileA(ocrnew); } }
+    /* The text reader's helpers come along too; YomiGo works without them */
+    for (i = 0; i < YG_NHELPERS; i++) { static char h[MAX_PATH], hnew[MAX_PATH];
+      wsprintfA(h, "%s\\%s", dir, helpers[i]); wsprintfA(hnew, "%s\\%s.new", dir, helpers[i]);
+      if (fetch_verified(tag, helpers[i], hnew)) { if (!swap_in(h, hnew)) DeleteFileA(hnew); } }
     if (!assume_yes) ShellExecuteA(0, 0, full, 0, dir, SW_SHOWNORMAL);
     ExitProcess(0);
 }

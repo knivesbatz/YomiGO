@@ -110,7 +110,7 @@ static int from_wide(const WCHAR *w, char *u, int cap) {
 /* Clipboard. 9x has no Unicode clipboard, so it carries plain ASCII there. */
 static char test_clip[4096];
 static int test_seq, test_img;
-static char test_img_path[MAX_PATH];
+static char test_img_path[MAX_PATH], test_audio[MAX_PATH];
 int plat_clip_get(char *out, int cap) {
     HANDLE h; int n = 0;
     out[0] = 0;
@@ -177,40 +177,57 @@ int plat_clip_image(const char *name) {
     CloseClipboard();
     return ok;
 }
-static HANDLE ocr_proc;
-int plat_ocr_start(const char *in, const char *out) {
-    char cmd[MAX_PATH * 3]; STARTUPINFOA si; PROCESS_INFORMATION pi; int i;
-    if (ocr_proc || !is_nt) return 0;
+static HANDLE ocr_proc, listen_proc;
+/* Starts a helper beside the program, with no console window */
+static HANDLE run_hidden(char *cmd) {
+    STARTUPINFOA si; PROCESS_INFORMATION pi; int i;
     for (i = 0; i < (int)sizeof si; i++) ((char *)&si)[i] = 0;
     si.cb = sizeof si;
-    ys_cpy(cmd, "\"", sizeof cmd); ys_cat(cmd, dir, sizeof cmd); ys_cat(cmd, "\\YomiGoOCR.exe\" \"", sizeof cmd);
-    ys_cat(cmd, root, sizeof cmd); ys_cat(cmd, "\\", sizeof cmd); ys_cat(cmd, in, sizeof cmd); ys_cat(cmd, "\" \"", sizeof cmd);
-    ys_cat(cmd, root, sizeof cmd); ys_cat(cmd, "\\", sizeof cmd); ys_cat(cmd, out, sizeof cmd); ys_cat(cmd, "\"", sizeof cmd);
-    if (test_img) ys_cat(cmd, " en", sizeof cmd); /* tests read English, as the build PC has no Japanese OCR */
     if (!CreateProcessA(0, cmd, 0, 0, FALSE, 0x08000000 /* CREATE_NO_WINDOW */, 0, dir, &si, &pi)) return 0;
     CloseHandle(pi.hThread);
-    ocr_proc = pi.hProcess;
-    return 1;
+    return pi.hProcess;
 }
-int plat_ocr_poll(void) {
+static int proc_poll(HANDLE *h) {
     DWORD code = 0;
-    if (!ocr_proc) return -1;
-    if (!GetExitCodeProcess(ocr_proc, &code) || code == 259 /* STILL_ACTIVE */) return -2;
-    CloseHandle(ocr_proc); ocr_proc = 0;
+    if (!*h) return -1;
+    if (!GetExitCodeProcess(*h, &code) || code == 259 /* STILL_ACTIVE */) return -2;
+    CloseHandle(*h); *h = 0;
     return (int)code;
 }
-int plat_ocr_present(void) {
+static void cmd_exe(char *cmd, int cap, const char *exe) { ys_cpy(cmd, "\"", cap); ys_cat(cmd, dir, cap); ys_cat(cmd, "\\", cap); ys_cat(cmd, exe, cap); ys_cat(cmd, "\"", cap); }
+static void cmd_path(char *cmd, int cap, const char *base, const char *name) { ys_cat(cmd, " \"", cap); ys_cat(cmd, base, cap); ys_cat(cmd, "\\", cap); ys_cat(cmd, name, cap); ys_cat(cmd, "\"", cap); }
+int plat_ocr_start(const char *in, const char *out) {
+    char cmd[MAX_PATH * 3];
+    if (ocr_proc || !is_nt) return 0;
+    cmd_exe(cmd, sizeof cmd, "YomiGoOCR.exe"); cmd_path(cmd, sizeof cmd, root, in); cmd_path(cmd, sizeof cmd, root, out);
+    if (test_img) ys_cat(cmd, " en", sizeof cmd); /* tests read English, as the build PC has no Japanese OCR */
+    return (ocr_proc = run_hidden(cmd)) != 0;
+}
+int plat_ocr_poll(void) { return proc_poll(&ocr_proc); }
+/* The transcriber is 64-bit and asks for the file itself, so this program never handles a Unicode path */
+int plat_listen_start(int get_model) {
+    char cmd[MAX_PATH * 5], models[MAX_PATH];
+    if (listen_proc || !is_nt) return 0;
+    ys_cpy(models, dir, MAX_PATH); ys_cat(models, "\\models", MAX_PATH); CreateDirectoryA(models, 0);
+    cmd_exe(cmd, sizeof cmd, "YomiGoListen.exe");
+    if (get_model) ys_cat(cmd, " --get", sizeof cmd);
+    cmd_path(cmd, sizeof cmd, dir, YG_SPEECH_MODEL);
+    if (!get_model) cmd_path(cmd, sizeof cmd, root, "listen_out.txt");
+    cmd_path(cmd, sizeof cmd, root, "listen_pct.txt");
+    if (!get_model && *test_audio) { ys_cat(cmd, " ", sizeof cmd); ys_cat(cmd, test_audio, sizeof cmd); } /* a test gives the file and language itself */
+    return (listen_proc = run_hidden(cmd)) != 0;
+}
+int plat_listen_poll(void) { return proc_poll(&listen_proc); }
+int plat_has(const char *name) {
     char p[MAX_PATH];
-    ys_cpy(p, dir, MAX_PATH); ys_cat(p, "\\YomiGoOCR.exe", MAX_PATH);
+    ys_cpy(p, dir, MAX_PATH); ys_cat(p, "\\", MAX_PATH); ys_cat(p, name, MAX_PATH);
     return GetFileAttributesA(p) != 0xFFFFFFFF;
 }
 void plat_fetch_helpers(void) {
-    char cmd[MAX_PATH * 2]; STARTUPINFOA si; PROCESS_INFORMATION pi; int i;
+    char cmd[MAX_PATH * 2]; HANDLE h;
     if (headless || !plat_can_update()) return;
-    for (i = 0; i < (int)sizeof si; i++) ((char *)&si)[i] = 0;
-    si.cb = sizeof si;
-    ys_cpy(cmd, "\"", sizeof cmd); ys_cat(cmd, dir, sizeof cmd); ys_cat(cmd, "\\YomiGoUpdate.exe\" --helpers", sizeof cmd);
-    if (CreateProcessA(0, cmd, 0, 0, FALSE, 0x08000000, 0, dir, &si, &pi)) { CloseHandle(pi.hProcess); CloseHandle(pi.hThread); }
+    cmd_exe(cmd, sizeof cmd, "YomiGoUpdate.exe"); ys_cat(cmd, " --helpers", sizeof cmd);
+    if ((h = run_hidden(cmd)) != 0) CloseHandle(h);
 }
 void plat_topmost(int on) { if (wnd && !headless) SetWindowPos(wnd, on ? HWND_TOPMOST : HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE); }
 int plat_open(const char *u) {
@@ -730,7 +747,7 @@ static void run_script(const char *s) {
     step(0, 0, 0, 0);
     while (*s) {
         char c = *s++; int n = 0;
-        if (c == 't' || c == 'w' || c == 'p' || c == 'k' || c == 'K' || c == 'I' || c == 'M') { while (*s && *s != ';' && n < 127) buf[n++] = *s++; buf[n] = 0; if (*s) s++; unescape(buf); }
+        if (c == 't' || c == 'w' || c == 'p' || c == 'k' || c == 'K' || c == 'I' || c == 'A' || c == 'M') { while (*s && *s != ';' && n < 127) buf[n++] = *s++; buf[n] = 0; if (*s) s++; unescape(buf); }
         switch (c) {
         case 'u': step(A_UP, 0, 0, 0); break; case 'd': step(A_DOWN, 0, 0, 0); break;
         case 'l': step(A_LEFT, 0, 0, 0); break; case 'r': step(A_RIGHT, 0, 0, 0); break;
@@ -750,7 +767,9 @@ static void run_script(const char *s) {
         case 'M': { /* a mouse click at x,y on the app's own screen */
             int x = ys_atoi(buf), y = 0; const char *q = buf; while (*q && *q != ',') q++; if (*q) y = ys_atoi(q + 1);
             step(0, 0, 0, 0); IN.mx = x; IN.my = y; IN.mclick = 1; IN.mdown = 0; app_frame(); break; }
-        case 'W': { int k = 0; while (plat_ocr_poll() == -2 && k++ < 300) Sleep(50); step(0, 0, 0, 0); break; } /* wait for the reader */
+        case 'A': ys_cpy(test_audio, buf, sizeof test_audio); break; /* the transcriber's file and language, as its arguments */
+        /* wait for the helpers, leaving their results for the screens to collect */
+        case 'W': if (ocr_proc) WaitForSingleObject(ocr_proc, 30000); if (listen_proc) WaitForSingleObject(listen_proc, 600000); step(0, 0, 0, 0); break;
         case 'G': { /* play on until the course is complete, or give up after a very long time */
             int k = 200000;
             while (!app_test_done() && k-- > 0) { step(0, 0, 0, 0); app_test_auto(); app_frame(); }

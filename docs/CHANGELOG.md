@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.0
+
+- Transcribe: in the Text Reader, pick an audio or video file, and YomiGo writes down the Japanese in it, on your PC. Click any word to look it up and add it, like any other text
+- Japanese subtitles are saved beside the file as name.ja.srt, which players such as VLC and mpv load by themselves
+- The speech model (Whisper large-v3-turbo, 574 MB) downloads once, the first time, and is checked against a fixed SHA-256 before use
+- The Text Reader keeps up to 400 lines, with Page (or PgUp and PgDn) to move through them. Before, only the newest few could be picked
+- Needs 64-bit Windows 10 or 11 and a processor with AVX2, from about 2013 on
+
 ## 0.6.1
 
 - Updating from 0.5.0 inside the app now also fetches the screenshot reader, signed like everything else

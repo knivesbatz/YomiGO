@@ -16,7 +16,7 @@ def run(*a, **k):
 run("cmd", "/c", os.path.join(ROOT, "build.bat"))
 run(sys.executable, "tests/ui_walk.py")
 run("node", "--test", "tests/test_core.mjs")
-exes = ["YomiGo.exe", "YomiGoHTPC.exe", "YomiGoUpdate.exe", "YomiGoOCR.exe"]
+exes = ["YomiGo.exe", "YomiGoHTPC.exe", "YomiGoUpdate.exe", "YomiGoOCR.exe", "YomiGoListen.exe"]
 run("node", "tools/release_keys.mjs", "sign", *[os.path.join("dist", e) for e in exes])
 # The updater proves here that it accepts what was just signed, and refuses a damaged copy
 upd = os.path.join(DIST, "YomiGoUpdate.exe")

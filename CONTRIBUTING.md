@@ -4,9 +4,10 @@ YomiGo is a family project, but bug reports are welcome.
 
 ## Build it
 
-You need Visual Studio with C++ tools, Python 3 with Pillow, and Node 18 or later.
+You need Visual Studio with C++ tools, CMake, Python 3 with Pillow, and Node 18 or later. The transcriber builds whisper.cpp from a submodule, once.
 
 ```bat
+git submodule update --init
 build.bat
 python tests\ui_walk.py
 node --test tests\test_core.mjs
