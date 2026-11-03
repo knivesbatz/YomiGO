@@ -26,6 +26,7 @@ No app alone can make someone fluent. Fluency also takes thousands of hours of r
 
 ## Done
 
+- **0.19:** every N5 and N4 kanji, with stroke order and memory hooks
 - **0.18:** sync over home Wi-Fi, and a tidier phone app
 - **0.17:** effects for right answers, and exams you can't look things up in
 - **0.16:** 196 more words, including skipped N5 basics; romaji in the dictionary

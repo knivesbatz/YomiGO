@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.19.0
+
+- 117 new kanji, from 159 to 276 kanji cards: every N5 and N4 kanji now has a card. Each has its readings, its meaning, an original memory hook, and stroke order drawn one stroke at a time
+- They're taught in the classes about the same things: 肉, 魚, and 茶 with the restaurant, 病 and 院 with health, 買 and 売 with shopping, 東 西 南 北 with directions, and so on
+- The full fact-check is back: every word and kanji, 1,698 of them, agrees with JMdict and KanjiVG, with nothing left to review
+- Existing saves pick up the new kanji in their reviews, ten a day
+
 ## 0.18.0
 
 - Sync over home Wi-Fi: open Settings > Sync on the PC or TV, then Settings > Sync with your PC on the phone, and enter the address and code the PC shows. The PC merges the two copies and both keep the result: each card keeps the copy with more reviews, progress and counters take the higher, your own words are joined, and settings come from the device used last. No account and no internet; the PC listens only while its Sync screen is open, and three wrong codes close it. Windows asks once to allow YomiGo on private networks
