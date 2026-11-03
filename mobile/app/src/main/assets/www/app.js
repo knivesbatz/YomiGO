@@ -99,6 +99,24 @@ function myWords() {
     P.my.map((m, i) => h("div", { cls: "card" }, h("strong", { lang: "ja" }, m.word), m.reading !== m.word ? h("span", { cls: "dim", lang: "ja" }, "  " + m.reading) : "", h("div", null, m.gloss), m.sent ? h("div", { cls: "dim", lang: "ja" }, m.sent) : "",
       btn("Delete", () => { if (confirm(`Delete ${m.word}? You can't undo this.`)) { P.my.splice(i, 1); store.save(); myWords(); } }))));
 }
+// Text reader: pasted text, or a photo read on the phone. Tap a character to look up the word starting there.
+let readerLines = [];
+globalThis.ygOcr = (text) => { readerLines = [...text.split(/\r?\n/).map((l) => l.trim()).filter((l) => /[\u3040-\u30ff\u3400-\u9fff]/.test(l)), ...readerLines].slice(0, 30); textReader(text ? (readerLines.length ? "" : "No Japanese found in that picture.") : "Couldn't read that picture."); };
+function textReader(msg) {
+  setNav(4);
+  const area = h("textarea", { rows: 3, "aria-label": "Japanese text", placeholder: "Paste Japanese here", lang: "ja" }), out = h("div"), note = h("p", { cls: "dim", role: "status" }, msg || "");
+  const ensure = (then) => { if (globalThis.YG_DICT_TEXT) return then(); const s = document.createElement("script"); s.src = "dict.js"; s.onload = () => { Y.dictLoad(YG_DICT_TEXT); then(); }; document.head.append(s); };
+  const pick = (line, i) => ensure(() => {
+    const hits = Y.dictLookup(line.slice(i)).slice(0, 4);
+    out.replaceChildren(...(hits.length ? hits.map(({ card }) => { const add = btn("Add to my words", () => { add.textContent = addedMsg(Y.myAdd(P, card.f, card.r, card.en, line, Y.today())); add.disabled = true; store.save(); });
+      return h("div", { cls: "card" }, h("strong", { lang: "ja" }, card.f), card.r !== card.f ? h("span", { cls: "dim", lang: "ja" }, "  " + card.r) : "", h("div", null, card.en), add); }) : [h("p", { cls: "dim" }, "No match there.")]));
+  });
+  const lines = readerLines.map((line) => h("div", { cls: "card", lang: "ja", style: "font-size:22px;line-height:1.7" }, [...line].map((ch, i) => { const s = h("span", { role: "button", tabindex: "0" }, ch); s.addEventListener("click", () => pick(line, line.indexOf(ch) === i ? i : [...line].slice(0, i).join("").length)); return s; })));
+  show(h("h1", null, L("Text Reader", "テキスト", 3)), h("p", { cls: "dim" }, "Paste Japanese, or read it from a photo of a page or screen. Then tap a character to look up the word that starts there."),
+    area, btn("Add this text", () => { readerLines = [...area.value.split(/\r?\n/).filter((l) => l.trim()), ...readerLines].slice(0, 30); textReader(); }, "main"),
+    Bridge && Bridge.ocrPick ? btn("📷 Read from a photo", () => { note.textContent = "Reading..."; Bridge.ocrPick(); }) : "",
+    note, out, lines, readerLines.length ? btn("Clear", () => { readerLines = []; textReader(); }) : "");
+}
 function genki() {
   setNav(1);
   show(h("h1", null, "Genki practice"), h("p", { cls: "dim" }, "By lesson, using YomiGo's own cards. Follows the order of the 3rd edition. Lessons with no YomiGo cards yet arrive with the N4 update."),
@@ -353,6 +371,7 @@ function library() {
   const search = () => { if (q.value) ensure(() => { const rows = Y.dictSearch(q.value, 20); out.replaceChildren(...(rows.length ? rows.map((r) => { const add = btn("Add to my words", () => { add.textContent = addedMsg(Y.myAdd(P, r.word, r.reading, r.gloss, "", Y.today())); add.disabled = true; store.save(); }); return h("div", { cls: "card" }, h("strong", { lang: "ja" }, r.word || r.reading), r.word ? h("span", { cls: "dim", lang: "ja" }, "  " + r.reading) : "", h("div", null, r.gloss), add); }) : [h("p", { cls: "dim" }, "Nothing found. Try the plain form of the word.")])); }); };
   q.addEventListener("keydown", (e) => { if (e.key === "Enter") search(); });
   show(h("h1", null, L("Library", "本だな", 5)),
+    btn("📝 " + L("Text Reader", "テキスト", 3), () => textReader(), "main"),
     h("h2", null, "Dictionary"), q, btn("Search", search, "main"), out, h("p", { cls: "dim" }, "About 22,000 common words from JMdict by EDRDG, CC BY-SA 4.0."),
     h("h2", null, "Study Guide"), C.guide.map((g) => { const d = h("details", { cls: "card" }, h("summary", null, h("strong", null, g.title))); g.body.split("\n").forEach((p) => d.append(h("p", null, p))); return d; }),
     h("h2", null, "Released after 2020"), era(true), h("h2", null, "Released before 1999"), era(false), h("p", { cls: "dim" }, "Difficulty is YomiGo's own judgement. Check your local services for availability."),

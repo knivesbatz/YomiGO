@@ -27,6 +27,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.japanese.JapaneseTextRecognizerOptions;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -44,6 +48,7 @@ public class MainActivity extends Activity {
     private static final String ACTION_INSTALL = "com.senkosoft.yomigo.INSTALL_STATUS";
     private WebView web;
     private TextToSpeech tts;
+    private static final int PICK_IMAGE = 7;
     private volatile boolean ttsJapanese;
     private SpeechRecognizer recognizer;
     private final Handler main = new Handler(Looper.getMainLooper());
@@ -116,6 +121,21 @@ public class MainActivity extends Activity {
         recognizer.startListening(i);
     }
 
+    /** Text recognition runs on the phone; the picture isn't uploaded anywhere. */
+    @Override protected void onActivityResult(int code, int result, Intent data) {
+        super.onActivityResult(code, result, data);
+        if (code != PICK_IMAGE) return;
+        if (result != RESULT_OK || data == null || data.getData() == null) { ocrDone(""); return; }
+        try {
+            InputImage image = InputImage.fromFilePath(this, data.getData());
+            TextRecognition.getClient(new JapaneseTextRecognizerOptions.Builder().build()).process(image)
+                .addOnSuccessListener(t -> ocrDone(t.getText()))
+                .addOnFailureListener(e -> ocrDone(""));
+        } catch (Exception e) { ocrDone(""); }
+    }
+
+    private void ocrDone(String text) { main.post(() -> web.evaluateJavascript("ygOcr(" + JSONObject.quote(text) + ")", null)); }
+
     @Override public void onRequestPermissionsResult(int code, String[] p, int[] r) {
         if (r.length > 0 && r[0] == PackageManager.PERMISSION_GRANTED) listenNow(); else heard("");
     }
@@ -124,6 +144,9 @@ public class MainActivity extends Activity {
         @JavascriptInterface public String version() { return BuildConfig.VERSION_NAME; }
         @JavascriptInterface public void speak(String t) { if (tts != null) tts.speak(t, TextToSpeech.QUEUE_FLUSH, null, "yg"); }
         @JavascriptInterface public boolean hasVoice() { return ttsJapanese; }
+        @JavascriptInterface public void ocrPick() {
+            main.post(() -> startActivityForResult(new Intent(Intent.ACTION_GET_CONTENT).setType("image/*").addCategory(Intent.CATEGORY_OPENABLE), PICK_IMAGE));
+        }
         @JavascriptInterface public void installVoice() {
             main.post(() -> {
                 try { startActivity(new Intent(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA)); }

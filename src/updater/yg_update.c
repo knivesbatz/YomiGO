@@ -197,6 +197,10 @@ void yg_entry(void) {
     if (!swap_in(full, fresh)) { DeleteFileA(fresh); quiet = 0; say("Couldn't replace the program, so the old version is still in place."); ExitProcess(5); }
     /* A running exe can be renamed, so the updater can refresh itself too. If this fails, the old updater still works. */
     if (fetch_verified(tag, "YomiGoUpdate.exe", freshme)) { if (!swap_in(me, freshme)) DeleteFileA(freshme); }
+    /* The text reader's helper comes along too; YomiGo works without it */
+    { static char ocr[MAX_PATH], ocrnew[MAX_PATH];
+      wsprintfA(ocr, "%s\\YomiGoOCR.exe", dir); wsprintfA(ocrnew, "%s\\YomiGoOCR.exe.new", dir);
+      if (fetch_verified(tag, "YomiGoOCR.exe", ocrnew)) { if (!swap_in(ocr, ocrnew)) DeleteFileA(ocrnew); } }
     if (!assume_yes) ShellExecuteA(0, 0, full, 0, dir, SW_SHOWNORMAL);
     ExitProcess(0);
 }

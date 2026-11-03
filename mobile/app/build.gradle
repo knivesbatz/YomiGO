@@ -37,3 +37,8 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 }
+
+dependencies {
+    // Reads Japanese text in photos, on the phone, with the model built into the app
+    implementation 'com.google.mlkit:text-recognition-japanese:16.0.1'
+}

@@ -36,7 +36,9 @@ Complete means implemented and tested as described. **Partial** says what's miss
 | Dictionary | Complete | Complete | Complete | Complete, not yet in a real browser install |
 | Sentence capture, Anki export | n/a | n/a | n/a | Complete, not yet in a real browser install |
 | Furigana on pages | n/a | n/a | n/a | Not started |
-| OCR, manga reading, game text | Not started | Not started | Not started | n/a |
+| Text Reader: paste and clipboard watch | Complete | Complete | Partial: paste only | n/a |
+| Screenshot or photo OCR | Partial: tested in English only | Not offered | Partial: not run on a phone | n/a |
+| Vertical manga text, game hooking | Not started | Not started | Not started | n/a |
 | Audio transcription | Not started | Not started | Not started | n/a |
 | Automatic sync | Not started | Not started | Not started | Not started |
 

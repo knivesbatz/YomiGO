@@ -77,6 +77,11 @@ int main(void) {
         CHECK(hit, "dict %s doesn't find the cat", qs[k]); }
       got = dict_search("コーヒー", r, 9); CHECK(got > 0, "dict katakana"); dict_row(r[0], w, rd, g, 128); CHECK(!strcmp(rd, "コーヒー"), "katakana first hit %s", rd);
       CHECK(dict_search("zzqqxx", r, 9) == 0, "nonsense finds nothing"); CHECK(dict_search("", r, 9) == 0, "empty finds nothing"); }
+    /* Finding words in a line, with endings undone: the same cases as the JS core */
+    for (i = 0; i < (int)(sizeof LOOKUP / sizeof LOOKUP[0]); i++) { int r[8], len, m, got = lookup_at(LOOKUP[i].text, 0, r, 8, &len), hit = 0; char w[128], rd[128], g[128];
+        for (m = 0; m < got; m++) { dict_row(r[m], w, rd, g, 128); if (!strcmp(w, LOOKUP[i].word) || (!*w && !strcmp(rd, LOOKUP[i].word))) hit = 1; }
+        CHECK(hit, "lookup %s should find %s (%d results)", LOOKUP[i].text, LOOKUP[i].word, got); CHECK(len > 0, "lookup %s length", LOOKUP[i].text); }
+    { int r[8], len; const char *t = "今日は猫を見た"; CHECK(lookup_at(t, 9, r, 8, &len) > 0 && len == 1, "a word mid-line"); CHECK(lookup_at("zz", 0, r, 8, &len) == 0, "nothing for latin"); }
     /* Listening: something to hear on every class that teaches something, with a real answer */
     for (i = 0; i < YG_NDAYS; i++) { int k, c; ShadowLine sl[4]; int ns = shadow_lines(i, sl, 4);
         quiz_listen(&z, i, 34);

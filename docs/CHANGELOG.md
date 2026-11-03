@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0
+
+- Text Reader: paste Japanese, watch the clipboard for game text, or read a screenshot. Then pick any character to look up the word starting there, and add it to My words with its sentence
+- Screenshots are read with the OCR built into Windows 10 and 11, by the new YomiGoOCR.exe
+- Android: read text from a photo, on the phone, with ML Kit
+- Lookups now undo common endings on Windows too, as Reader always has
+- Katakana words are now found from their own spelling in the browser and on Android
+
 ## 0.5.0
 
 - New class step: hear a word or sentence and pick its meaning, type what you hear, then repeat lines out loud

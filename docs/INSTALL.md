@@ -31,6 +31,14 @@ Xbox pads use XInput. DualShock 4, USB N64 pads, and other DirectInput pads work
 
 On an N64 layout: A selects, B goes back, Start confirms, Z means I don't know, C-Up speaks, and L, R, C-Left, and C-Right change tabs. **Settings > Buttons** also shows N64, Xbox, or PlayStation prompts on any pad.
 
+### Text Reader
+
+On the PC, **Text** in the side menu reads Japanese and lets you click any word to look it up and add it to My words, with its sentence.
+
+- **From the screen:** press Win+Shift+S, select some Japanese, then press **Screenshot**. Windows needs Japanese installed under Settings > Time & language > Language & region, including its optical character recognition. This uses Windows 10 or later, and `YomiGoOCR.exe` beside YomiGo.
+- **From games:** run a text hooker such as Textractor, set it to copy text to the clipboard, and turn on **Watch**. New lines appear as the game shows them. **On top** keeps YomiGo above the game.
+- **From anywhere:** copy Japanese, then press **Paste**.
+
 ## Android
 
 1. On your phone, download `YomiGo.apk` from the latest release.

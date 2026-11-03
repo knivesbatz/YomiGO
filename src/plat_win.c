@@ -109,6 +109,8 @@ static int from_wide(const WCHAR *w, char *u, int cap) {
 }
 /* Clipboard. 9x has no Unicode clipboard, so it carries plain ASCII there. */
 static char test_clip[4096];
+static int test_seq, test_img;
+static char test_img_path[MAX_PATH];
 int plat_clip_get(char *out, int cap) {
     HANDLE h; int n = 0;
     out[0] = 0;
@@ -144,6 +146,60 @@ void plat_clip_set(const char *u) {
         CloseClipboard();
     }
 }
+int plat_clip_seq(void) {
+    typedef DWORD (WINAPI *GCSN)(void);
+    static GCSN f; static int tried, poll;
+    if (headless) return test_seq;
+    if (!tried) { tried = 1; f = (GCSN)GetProcAddress(GetModuleHandleA("user32.dll"), "GetClipboardSequenceNumber"); }
+    if (f) return (int)f();
+    return ++poll / 15; /* older Windows: look again about twice a second */
+}
+/* A copied picture is a DIB: add the file header, and it's a BMP the reader can open */
+int plat_clip_image(const char *name) {
+    char p[MAX_PATH]; HANDLE h; int ok = 0;
+    path_of(p, name);
+    if (headless) return test_img && CopyFileA(test_img_path, p, FALSE);
+    if (!OpenClipboard(wnd)) return 0;
+    h = GetClipboardData(CF_DIB);
+    if (h) {
+        BITMAPINFOHEADER *bi = (BITMAPINFOHEADER *)GlobalLock(h);
+        if (bi) {
+            DWORD size = (DWORD)GlobalSize(h), colors = bi->biClrUsed, put;
+            BITMAPFILEHEADER fh; HANDLE f;
+            if (!colors && bi->biBitCount <= 8) colors = 1u << bi->biBitCount;
+            fh.bfType = 0x4D42; fh.bfSize = sizeof fh + size; fh.bfReserved1 = fh.bfReserved2 = 0;
+            fh.bfOffBits = sizeof fh + bi->biSize + colors * 4 + (bi->biCompression == BI_BITFIELDS && bi->biSize == 40 ? 12 : 0);
+            f = CreateFileA(p, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, 0, 0);
+            if (f != INVALID_HANDLE_VALUE) { ok = WriteFile(f, &fh, sizeof fh, &put, 0) && WriteFile(f, bi, size, &put, 0); CloseHandle(f); }
+            GlobalUnlock(h);
+        }
+    }
+    CloseClipboard();
+    return ok;
+}
+static HANDLE ocr_proc;
+int plat_ocr_start(const char *in, const char *out) {
+    char cmd[MAX_PATH * 3]; STARTUPINFOA si; PROCESS_INFORMATION pi; int i;
+    if (ocr_proc || !is_nt) return 0;
+    for (i = 0; i < (int)sizeof si; i++) ((char *)&si)[i] = 0;
+    si.cb = sizeof si;
+    ys_cpy(cmd, "\"", sizeof cmd); ys_cat(cmd, dir, sizeof cmd); ys_cat(cmd, "\\YomiGoOCR.exe\" \"", sizeof cmd);
+    ys_cat(cmd, root, sizeof cmd); ys_cat(cmd, "\\", sizeof cmd); ys_cat(cmd, in, sizeof cmd); ys_cat(cmd, "\" \"", sizeof cmd);
+    ys_cat(cmd, root, sizeof cmd); ys_cat(cmd, "\\", sizeof cmd); ys_cat(cmd, out, sizeof cmd); ys_cat(cmd, "\"", sizeof cmd);
+    if (test_img) ys_cat(cmd, " en", sizeof cmd); /* tests read English, as the build PC has no Japanese OCR */
+    if (!CreateProcessA(0, cmd, 0, 0, FALSE, 0x08000000 /* CREATE_NO_WINDOW */, 0, dir, &si, &pi)) return 0;
+    CloseHandle(pi.hThread);
+    ocr_proc = pi.hProcess;
+    return 1;
+}
+int plat_ocr_poll(void) {
+    DWORD code = 0;
+    if (!ocr_proc) return -1;
+    if (!GetExitCodeProcess(ocr_proc, &code) || code == 259 /* STILL_ACTIVE */) return -2;
+    CloseHandle(ocr_proc); ocr_proc = 0;
+    return (int)code;
+}
+void plat_topmost(int on) { if (wnd && !headless) SetWindowPos(wnd, on ? HWND_TOPMOST : HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE); }
 int plat_open(const char *u) {
     if (headless) return 1;
     if (is_nt) {
@@ -661,7 +717,7 @@ static void run_script(const char *s) {
     step(0, 0, 0, 0);
     while (*s) {
         char c = *s++; int n = 0;
-        if (c == 't' || c == 'w' || c == 'p' || c == 'k') { while (*s && *s != ';' && n < 127) buf[n++] = *s++; buf[n] = 0; if (*s) s++; unescape(buf); }
+        if (c == 't' || c == 'w' || c == 'p' || c == 'k' || c == 'K' || c == 'I' || c == 'M') { while (*s && *s != ';' && n < 127) buf[n++] = *s++; buf[n] = 0; if (*s) s++; unescape(buf); }
         switch (c) {
         case 'u': step(A_UP, 0, 0, 0); break; case 'd': step(A_DOWN, 0, 0, 0); break;
         case 'l': step(A_LEFT, 0, 0, 0); break; case 'r': step(A_RIGHT, 0, 0, 0); break;
@@ -676,6 +732,12 @@ static void run_script(const char *s) {
         case 'w': { int k = ys_atoi(buf); while (k-- > 0) step(0, 0, 0, 0); break; }
         case 'p': step(0, 0, 0, 0); write_bmp(buf); break;
         case 'k': ys_cpy(ime_comp, buf, sizeof ime_comp); break; /* as if the keyboard were composing this */
+        case 'K': ys_cpy(test_clip, buf, sizeof test_clip); test_seq++; break; /* another program copied this */
+        case 'I': ys_cpy(test_img_path, buf, sizeof test_img_path); test_img = 1; break; /* a picture is on the clipboard */
+        case 'M': { /* a mouse click at x,y on the app's own screen */
+            int x = ys_atoi(buf), y = 0; const char *q = buf; while (*q && *q != ',') q++; if (*q) y = ys_atoi(q + 1);
+            step(0, 0, 0, 0); IN.mx = x; IN.my = y; IN.mclick = 1; IN.mdown = 0; app_frame(); break; }
+        case 'W': { int k = 0; while (plat_ocr_poll() == -2 && k++ < 300) Sleep(50); step(0, 0, 0, 0); break; } /* wait for the reader */
         case 'G': { /* play on until the course is complete, or give up after a very long time */
             int k = 200000;
             while (!app_test_done() && k-- > 0) { step(0, 0, 0, 0); app_test_auto(); app_frame(); }

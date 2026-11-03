@@ -263,7 +263,7 @@
     dictRows = text.split("\n").filter(Boolean).map((l) => { const [word, reading, hira, gloss] = l.split("\t"); return { word, reading, key: hira || reading, gloss }; });
     dictIndex = new Map();
     const put = (k, row) => { if (!k) return; const a = dictIndex.get(k); if (a) a.push(row); else dictIndex.set(k, [row]); };
-    for (const r of dictRows) { put(r.word, r); put(r.key, r); }
+    for (const r of dictRows) { put(r.word, r); put(r.key, r); if (r.reading !== r.key) put(r.reading, r); } // katakana words are found as written
     return dictRows.length;
   }
   const glossTier = (g, q, tier) => {

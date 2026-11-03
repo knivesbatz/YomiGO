@@ -73,7 +73,8 @@ YomiGo is in its early days. The course currently runs from zero to **N4**, the 
 | 70 classes, 8 exams, flashcards, and graded reading | N3 through N1, and beyond |
 | Scripted conversations | AI conversation partners |
 | A dictionary of about 22,000 common words | Larger dictionaries |
-| Your own flashcards, from the dictionary or the browser | Picture-to-text (OCR) for manga and games |
+| Your own flashcards, from the dictionary or the browser | Vertical manga text, and direct game hooking |
+| A Text Reader for screenshots, photos, and game text | |
 | Listening, dictation, and shadowing | Transcription of your own audio |
 | Updates that ask first | Automatic sync between devices |
 

@@ -36,6 +36,32 @@ for exe in ("YomiGo.exe", "YomiGoHTPC.exe"):
 # The real Windows speech call, in silence. It needs some voice installed, and CI may not have one.
 r = subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--speak-test", "1"], timeout=60)
 print("speech call, silent", "OK" if r.returncode == 0 else "no voice or failed: not counted", r.returncode)
+# Text Reader: Japanese copied by another program appears, a click looks a word up, and Add keeps the line as the sentence
+from PIL import Image, ImageDraw, ImageFont
+root = tempfile.mkdtemp()
+esc = lambda s: "".join("\\u%04x" % ord(c) for c in s)
+line = "今日は猫を見た"
+# the rail's Text button is the sixth: from Start class, left twice reaches Settings, then up once
+script = "w2;ow2;ow2;tText;w1;ow2;dw1;ow2;dw1;ow2;lluw1;ow2;ow2;K" + esc(line) + ";w2;"
+# then click 猫, the fourth character, and the first result's Add button
+subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--script", script.replace(";ow2;ow2;K", ";ow2;K") + "ow2;M172,113;w1;M590,183;w1;"], timeout=60)
+text = open(os.path.join(root, "Text.sav"), encoding="utf-8").read() if os.path.exists(os.path.join(root, "Text.sav")) else ""
+ok = "\t猫\tねこ\t" in text and ("\t" + line) in text
+print("text reader: a pasted line, a clicked word, and Add keep the whole line as its sentence:", "OK" if ok else "FAILED")
+fail += not ok
+shutil.rmtree(root, ignore_errors=True)
+# A screenshot through the OCR helper, in English because the build PC has no Japanese OCR. Its lines need Japanese to show, so only the reader's own output is checked.
+root = tempfile.mkdtemp()
+im = Image.new("RGB", (640, 120), "white"); ImageDraw.Draw(im).text((20, 30), "OCR check 42", fill="black", font=ImageFont.truetype("C:/Windows/Fonts/arial.ttf", 40))
+img = os.path.join(root, "shot.bmp"); im.save(img)
+r = subprocess.run([os.path.join(ROOT, "dist", "YomiGoOCR.exe"), img, os.path.join(root, "out.txt"), "en"], timeout=120)
+got = open(os.path.join(root, "out.txt"), encoding="utf-8").read().strip() if r.returncode == 0 else ""
+print("screenshot reader", "OK" if got == "OCR check 42" else "FAILED", repr(got), r.returncode)
+fail += got != "OCR check 42"
+subprocess.run([os.path.join(ROOT, "dist", "YomiGo.exe"), "--root", root, "--script", "w2;ow2;ow2;tOcr;w1;ow2;dw1;ow2;dw1;ow2;lluw1;ow2;I" + img.replace("\\", "/") + ";rrw1;ow1;W;pocr;"], timeout=120)
+print("screenshot through YomiGo:", "OK" if os.path.exists(os.path.join(root, "ocr_out.txt")) and "OCR check 42" in open(os.path.join(root, "ocr_out.txt"), encoding="utf-8").read() else "FAILED")
+fail += not (os.path.exists(os.path.join(root, "ocr_out.txt")) and "OCR check 42" in open(os.path.join(root, "ocr_out.txt"), encoding="utf-8").read())
+shutil.rmtree(root, ignore_errors=True)
 # Your own words on the TV: find 猫 in the dictionary, add it, and it must be saved
 root = tempfile.mkdtemp()
 subprocess.run([os.path.join(ROOT, "dist", "YomiGoHTPC.exe"), "--root", root, "--script", "w2;ow2;ow2;tMine;w1;sw2;dw1;ow2;dw1;ow2;rrrrw8;ow2;RRRw2;tneko;w1;sw2;xw2;"], timeout=60)

@@ -109,6 +109,10 @@ test("listening has something real to hear on every class", () => {
     for (const l of Y.shadowLines(i)) { assert.ok(l.jp && l.en); assert.ok(!l.jp.includes("＿")); }
   });
 });
+test("finding words in a line matches the C core", () => {
+  Y.dictLoad(fs.readFileSync(new URL("extension/dict.tsv", root), "utf8"));
+  for (const [text, word] of V.lookup) assert.ok(Y.dictLookup(text).some((h) => h.card.f === word), text + " -> " + word);
+});
 test("lookup finds words and undoes polite endings", () => {
   assert.equal(Y.lookup("猫がいます")[0].card.id, "v.neko");
   assert.ok(Y.lookup("食べました").some((h) => h.card.id === "v.tabemasu"));

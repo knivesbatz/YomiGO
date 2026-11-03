@@ -10,7 +10,13 @@
 - **Android:** speech input, text-to-speech, and self-update haven't run on a phone.
 - **Reader:** not yet loaded as a real extension in Chrome or Firefox.
 
+- **Japanese OCR:** the build PC has only English OCR, so screenshot reading has been tested end to end in English. Japanese uses the same code with a different language.
+- **Android photo reading:** built by CI, never run on a phone.
+
 ## Limits in this version
+
+- Windows OCR is made for horizontal text, so vertical manga text often comes out poorly. A manga-specific reader is on the roadmap.
+- Text appears from games only through a text hooker that copies to the clipboard. YomiGo doesn't hook games itself.
 
 - The course ends at N4. Later levels are on the [roadmap](ROADMAP.md).
 - The entrance exam tests reading only, not listening, typing, or speaking.

@@ -9,6 +9,11 @@ YomiGo's source code and course content are © SENKOSOFT, all rights reserved. T
 
 YomiGo isn't affiliated with or endorsed by Nintendo, The Japan Times (Genki), the JLPT organisers, Duolingo, WaniKani, Anki, Quizlet, or any other product it mentions. Names are used only to describe compatibility or inspiration.
 
+## Text recognition
+
+- **Windows:** the text reader uses the OCR built into Windows 10 and 11. No model ships with YomiGo.
+- **Android:** reading photos uses Google's [ML Kit text recognition](https://developers.google.com/ml-kit/vision/text-recognition/android), bundled in the app, under [ML Kit's terms](https://developers.google.com/ml-kit/terms). It runs on the phone.
+
 ## Dictionary and stroke data
 
 `content/dict/` keeps its own licences, and they differ from the rest of the project:

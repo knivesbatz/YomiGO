@@ -190,6 +190,91 @@ int dict_search(const char *q, int *out, int max) {
     }
     return n;
 }
+/* ---- finding the word at a point in a line ---- */
+static int dhash[65536];   /* dictionary offset + 1, keyed by spelling, reading, and hiragana reading */
+static unsigned fnv(const char *s, int n) { unsigned h = 2166136261u; int i; for (i = 0; i < n; i++) h = (h ^ (unsigned char)s[i]) * 16777619u; return h; }
+static void dput(const char *s, int n, int off) { unsigned h = fnv(s, n) & 65535; if (!n) return; while (dhash[h]) h = (h + 1) & 65535; dhash[h] = off + 1; }
+static void dict_index(void) {
+    static int built; int at = 0;
+    if (built) return;
+    built = 1;
+    while (at < YG_DICT_LEN) {
+        int w = field_end(at), r = field_end(w + 1), h = field_end(r + 1), g = field_end(h + 1);
+        dput(DSTR(at), w - at, at); dput(DSTR(w + 1), r - w - 1, at); dput(DSTR(r + 1), h - r - 1, at);
+        at = g + 1;
+    }
+}
+static int fields_match(int off, const char *s, int n) {
+    int w = field_end(off), r = field_end(w + 1), h = field_end(r + 1);
+    return (w - off == n && !ys_ncmp(DSTR(off), s, n)) || (r - w - 1 == n && !ys_ncmp(DSTR(w + 1), s, n)) || (h - r - 1 == n && !ys_ncmp(DSTR(r + 1), s, n));
+}
+static int dfind(const char *s, int n, int *out, int got, int max) {
+    unsigned h = fnv(s, n) & 65535;
+    while (dhash[h] && got < max) {
+        int off = dhash[h] - 1, d, dup = 0;
+        if (fields_match(off, s, n)) { for (d = 0; d < got; d++) if (out[d] == off) dup = 1; if (!dup) out[got++] = off; }
+        h = (h + 1) & 65535;
+    }
+    return got;
+}
+/* The same rules as deinflect in shared/core.js, checked by the same test cases */
+static int ends(const char *s, int n, const char *e) { int k = ys_len(e); return n > k && !ys_ncmp(s + n - k, e, k); }
+static void cand(char c[][64], int *nc, const char *s, int stem, const char *add) {
+    if (*nc >= 24 || stem + ys_len(add) >= 63) return;
+    { int i; for (i = 0; i < stem; i++) c[*nc][i] = s[i]; ys_cpy(c[*nc] + stem, add, 64 - stem); }
+    (*nc)++;
+}
+static int deinflect(const char *s, int n, char c[][64]) {
+    static const char *const pol[] = {"ませんでした", "ましょう", "ました", "ません", "ます", "たいです", "たくない", "たい"};
+    static const char *const neg[] = {"なかった", "ないです", "ない"};
+    static const char *const gi[][2] = {{"い", "う"}, {"き", "く"}, {"ぎ", "ぐ"}, {"し", "す"}, {"ち", "つ"}, {"に", "ぬ"}, {"び", "ぶ"}, {"み", "む"}, {"り", "る"}};
+    static const char *const ga[][2] = {{"わ", "う"}, {"か", "く"}, {"が", "ぐ"}, {"さ", "す"}, {"た", "つ"}, {"な", "ぬ"}, {"ば", "ぶ"}, {"ま", "む"}, {"ら", "る"}};
+    static const char *const te[][2] = {{"って", "う"}, {"って", "つ"}, {"って", "る"}, {"った", "う"}, {"った", "つ"}, {"った", "る"}, {"んで", "む"}, {"んで", "ぶ"}, {"んで", "ぬ"},
+        {"んだ", "む"}, {"んだ", "ぶ"}, {"んだ", "ぬ"}, {"いて", "く"}, {"いた", "く"}, {"いで", "ぐ"}, {"いだ", "ぐ"}, {"して", "す"}, {"した", "す"}, {"て", "る"}, {"た", "る"},
+        {"くない", "い"}, {"かった", "い"}, {"くて", "い"}, {"く", "い"}};
+    int nc = 0, i, k;
+    /* irregular ones first, so they aren't buried under words that merely sound alike */
+    for (i = 0; i < 8; i++) { int e = ys_len(pol[i]); if (n == 3 + e && !ys_ncmp(s + 3, pol[i], e)) { if (!ys_ncmp(s, "し", 3)) cand(c, &nc, s, 0, "する"); if (!ys_ncmp(s, "き", 3)) cand(c, &nc, s, 0, "くる"); } }
+    if (n == 6 && (!ys_ncmp(s, "して", 6) || !ys_ncmp(s, "した", 6))) cand(c, &nc, s, 0, "する");
+    if (n == 6 && (!ys_ncmp(s, "きて", 6) || !ys_ncmp(s, "きた", 6))) cand(c, &nc, s, 0, "くる");
+    if ((ends(s, n, "って") || ends(s, n, "った")) && n >= 9 && (!ys_ncmp(s + n - 9, "行", 3) || !ys_ncmp(s + n - 9, "い", 3))) cand(c, &nc, s, n - 6, "く");
+    for (i = 0; i < 8; i++) if (ends(s, n, pol[i])) {
+        int stem = n - ys_len(pol[i]);
+        cand(c, &nc, s, stem, "る");
+        for (k = 0; k < 9; k++) if (stem >= 3 && !ys_ncmp(s + stem - 3, gi[k][0], 3)) cand(c, &nc, s, stem - 3, gi[k][1]);
+    }
+    for (i = 0; i < 3; i++) if (ends(s, n, neg[i])) {
+        int stem = n - ys_len(neg[i]);
+        cand(c, &nc, s, stem, "る");
+        for (k = 0; k < 9; k++) if (stem >= 3 && !ys_ncmp(s + stem - 3, ga[k][0], 3)) cand(c, &nc, s, stem - 3, ga[k][1]);
+    }
+    for (i = 0; i < 24; i++) if (ends(s, n, te[i][0])) cand(c, &nc, s, n - ys_len(te[i][0]), te[i][1]);
+    return nc;
+}
+static void kata_to_hira(const char *s, char *o, int cap) {
+    int n = 0, c;
+    while ((c = utf8_next(&s)) != 0 && n < cap - 4) { if (c >= 0x30A1 && c <= 0x30F6) c -= 0x60; n += utf8_put(c, o + n); }
+    o[n] = 0;
+}
+int lookup_at(const char *line, int at, int *out, int max, int *len) {
+    static char cands[24][64]; char sub[64], h[64]; int ends_[12], nch = 0, got = 0, l;
+    const char *p = line + at;
+    dict_index();
+    *len = 0;
+    while (*p && nch < 12) { utf8_next(&p); ends_[nch++] = (int)(p - (line + at)); }
+    for (l = nch; l > 0 && got < max; l--) {
+        int n = ends_[l - 1], i, nc, before = got;
+        if (n >= 63) continue;
+        ys_cpy(sub, line + at, n + 1);
+        got = dfind(sub, n, out, got, max);
+        kata_to_hira(sub, h, sizeof h); got = dfind(h, ys_len(h), out, got, max);
+        nc = deinflect(sub, n, cands);
+        for (i = 0; i < nc; i++) got = dfind(cands[i], ys_len(cands[i]), out, got, max);
+        if (got > before && !*len) *len = l;
+    }
+    return got;
+}
+
 void dict_row(int off, char *word, char *reading, char *gloss, int cap) {
     int w = field_end(off), r = field_end(w + 1), h = field_end(r + 1), g = field_end(h + 1), n;
     n = w - off < cap - 1 ? w - off : cap - 1; { int i; for (i = 0; i < n; i++) word[i] = DSTR(off)[i]; word[n] = 0; }

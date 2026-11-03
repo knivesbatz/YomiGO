@@ -54,7 +54,7 @@
 #define FBY_BTN (FBH - FOOT - 38)
 #endif
 
-typedef enum { S_SPLASH, S_PROFILES, S_NAME, S_PLACE_INTRO, S_PLACE_RESULT, S_HOME, S_CLASS, S_TEACH, S_QUIZ, S_RESULT, S_CHAT, S_TASK, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS, S_BIND, S_FIRST, S_GENKI, S_TYPING, S_READ, S_MYWORDS, S_MYADD, S_SHADOW } Screen;
+typedef enum { S_SPLASH, S_PROFILES, S_NAME, S_PLACE_INTRO, S_PLACE_RESULT, S_HOME, S_CLASS, S_TEACH, S_QUIZ, S_RESULT, S_CHAT, S_TASK, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS, S_BIND, S_FIRST, S_GENKI, S_TYPING, S_READ, S_MYWORDS, S_MYADD, S_SHADOW, S_TEXT } Screen;
 typedef enum { QM_WARMUP, QM_DRILL, QM_DAILY, QM_HW, QM_REVIEW, QM_EXAM, QM_PLACE, QM_PRACTICE, QM_LISTEN } QuizMode;
 
 static Screen scr = S_SPLASH;
@@ -85,6 +85,49 @@ static void flash(const char *m) { flash_msg = m; flash_t = 40; plat_sound(0); }
 static void flash_add(int r) { flash(r > 0 ? "Added!" : r == 0 ? "Already added" : "Deck is full"); }
 static int my_sel, my_confirm, add_step;
 static int q_said = -1, sh_i, sh_n, sh_said;
+#define TX_MAX 30
+static char tx_lines[TX_MAX][256];
+static int tx_n, tx_sel, tx_pos, tx_len, tx_res[8], tx_nres, tx_watch, tx_seq, tx_top, tx_ocr;
+static const char *tx_msg = "";
+/* New Japanese lines go on top. Anything without Japanese, or the same as the newest line, is ignored. */
+static int tx_add(const char *t) {
+    int added = 0;
+    while (*t) {
+        char l[256]; int n = 0, jp = 0, i, cut = 0;
+        while (*t && *t != '\n' && *t != '\r') { if (n < 250) l[n++] = *t; else cut = 1; t++; }
+        if (cut) { /* a long line is cut, but never in the middle of a character */
+            while (n > 0 && ((unsigned char)l[n - 1] & 0xC0) == 0x80) n--;
+            if (n > 0) n--;
+        }
+        l[n] = 0;
+        while (*t == '\n' || *t == '\r') t++;
+        for (i = 0; i < n; i++) if ((unsigned char)l[i] >= 0xE3) jp = 1;
+        if (!jp || (tx_n && !ys_cmp(tx_lines[0], l))) continue;
+        for (i = (tx_n < TX_MAX ? tx_n : TX_MAX - 1); i > 0; i--) ys_cpy(tx_lines[i], tx_lines[i - 1], 256);
+        ys_cpy(tx_lines[0], l, 256);
+        if (tx_n < TX_MAX) tx_n++;
+        tx_sel = 0; tx_pos = 0; tx_nres = 0; tx_len = 0; added++;
+    }
+    return added;
+}
+static void tx_poll(void) {
+    static char clip[8192];
+    int s;
+    if (tx_watch) {
+        s = plat_clip_seq();
+        if (s != tx_seq) { tx_seq = s; plat_clip_get(clip, sizeof clip); tx_add(clip); }
+    }
+    if (tx_ocr) {
+        int code = plat_ocr_poll();
+        if (code == -2) return;
+        tx_ocr = 0;
+        if (code == 0) { static char out[16384]; int n = plat_read("ocr_out.txt", out, sizeof out - 1); if (n > 0) { out[n] = 0; tx_msg = tx_add(out) ? "" : "No Japanese text found in that picture."; } else tx_msg = "No text found in that picture."; }
+        else if (code == 2) tx_msg = "Windows has no Japanese text recognition. Add Japanese under Settings > Time & language > Language & region, then check its optical character recognition is installed.";
+        else if (code == 4) tx_msg = "That picture is too large to read. Try a smaller part of the screen.";
+        else if (code == 3) tx_msg = "Couldn't read that picture.";
+        else tx_msg = "Reading pictures needs Windows 10 or later.";
+    }
+}
 static ShadowLine sh_lines[4];
 static char add_word[128], add_reading[128];
 static const char *copy_src;
@@ -190,7 +233,8 @@ static void sakura(int x, int y, int s) {
 #if !HTPC
 static const struct { const char *en, *ja; int st; Screen s; } NAV[] = {
     {"Today", "きょう", 2, S_HOME}, {"Flashcards", "カード", 3, S_CARDS}, {"Exams", "しけん", 2, S_EXAMS},
-    {"Quest", "クエスト", 3, S_QUEST}, {"Library", "本だな", 5, S_LIBRARY}, {"Settings", "せってい", 2, S_SETTINGS}};
+    {"Quest", "クエスト", 3, S_QUEST}, {"Library", "本だな", 5, S_LIBRARY}, {"Text", "テキスト", 3, S_TEXT}, {"Settings", "せってい", 2, S_SETTINGS}};
+#define NNAV 7
 static void chrome(const char *title, const char *sub) {
     int i;
     washi(0, 0, FBW, FBH, C_BG, 0xEADFCC);
@@ -216,9 +260,9 @@ static void chrome(const char *title, const char *sub) {
 /* Drawn last so the main content gets focus first. Only on main pages: a class has no side doors. */
 static void rail(void) {
     int i, main_page = 0;
-    for (i = 0; i < 6; i++) if (scr == NAV[i].s) main_page = 1;
+    for (i = 0; i < NNAV; i++) if (scr == NAV[i].s) main_page = 1;
     if (!have_profile || !main_page) return;
-    for (i = 0; i < 6; i++) {
+    for (i = 0; i < NNAV; i++) {
         int y = HEAD + 10 + i * 42, cur = scr == NAV[i].s, hit;
         hit = ui_hit(4, y, RAIL - 8, 36);
         if (cur) bevel(4, y, RAIL - 8, 36, 0xFFF7EE, C_BG, C_LO);
@@ -364,10 +408,10 @@ static void scr_home(void) {
     profile_touch_day(&P, today);
 #if HTPC
     {
-        static const char *const items_en[] = {"Today's Class", "Flashcards", "Exams", "Quest", "Library", "Options"};
-        static const char *const items_ja[] = {"きょうのクラス", "カード", "しけん", "クエスト", "本だな", "せってい"};
-        static const int from[] = {2, 3, 2, 3, 5, 2};
-        static const Screen dest[] = {S_CLASS, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_SETTINGS};
+        static const char *const items_en[] = {"Today's Class", "Flashcards", "Exams", "Quest", "Library", "Text Reader", "Options"};
+        static const char *const items_ja[] = {"きょうのクラス", "カード", "しけん", "クエスト", "本だな", "テキスト", "せってい"};
+        static const int from[] = {2, 3, 2, 3, 5, 3, 2};
+        static const Screen dest[] = {S_CLASS, S_CARDS, S_EXAMS, S_QUEST, S_LIBRARY, S_TEXT, S_SETTINGS};
         static int sel; static int slide;
         int s = SAFE, i;
         gradient(0, 0, FBW, FBH, 0x1B0F40, 0x8A2A5A);
@@ -379,11 +423,11 @@ static void scr_home(void) {
         ys_fmt(b, sizeof b, "XP %d  Streak %d", P.xp, P.streak);
         text(FBW - s - 2 - text_w(b), s + 6, b, C_INK);
         text(s + 2, s + 32, rank_name(profile_rank(&P), profile_stage(&P) >= 3 && !P.force_en), C_PINK);
-        if (IN.pressed & (A_LEFT)) { sel = (sel + 5) % 6; slide = -40; plat_sound(0); }
-        if (IN.pressed & (A_RIGHT)) { sel = (sel + 1) % 6; slide = 40; plat_sound(0); }
+        if (IN.pressed & (A_LEFT)) { sel = (sel + 6) % 7; slide = -40; plat_sound(0); }
+        if (IN.pressed & (A_RIGHT)) { sel = (sel + 1) % 7; slide = 40; plat_sound(0); }
         slide = slide * 3 / 4;
         for (i = -2; i <= 2; i++) {
-            int k = (sel + i + 6) % 6, x = FBW / 2 + i * 122 + slide - 58, y = 166 + (i < 0 ? -i : i) * 6, w = 116, h = 40 - (i < 0 ? -i : i) * 4;
+            int k = (sel + i + 7) % 7, x = FBW / 2 + i * 122 + slide - 58, y = 166 + (i < 0 ? -i : i) * 6, w = 116, h = 40 - (i < 0 ? -i : i) * 4;
             const char *lab = L(items_en[k], items_ja[k], from[k]);
             fill(x, y, w, h, i == 0 ? C_ACC : C_PANEL);
             frame(x, y, w, h, i == 0 ? 0xFFF0C0 : C_HI);
@@ -1043,6 +1087,82 @@ static void scr_cards(void) {
 #endif
 }
 
+/* ---- text reader: text from games, the clipboard, or a screenshot; click a word to look it up ---- */
+static void scr_text(void) {
+    int y = CY, bw = HTPC ? (CW - 4) / 2 : (CW - 12) / 4, i, rows = HTPC ? 2 : 4, nres = HTPC ? 2 : 3;
+    tx_poll();
+    chrome(L("Text Reader", "テキスト", 3), 0);
+    if (button(CX, y, bw, 22, "Paste")) { static char clip[8192]; plat_clip_get(clip, sizeof clip); tx_msg = tx_add(clip) ? "" : "There's no Japanese text on the clipboard."; }
+    if (button(CX + bw + 4, y, bw, 22, tx_watch ? "Watch: On" : "Watch: Off")) { tx_watch = !tx_watch; tx_seq = plat_clip_seq(); tx_msg = tx_watch ? "Japanese copied by any program now appears here." : ""; }
+#if !HTPC
+    if (button(CX + 2 * (bw + 4), y, bw, 22, tx_ocr ? "Reading..." : "Screenshot") && !tx_ocr) {
+        if (!plat_clip_image("ocr_in.bmp")) tx_msg = "First take a screenshot with Win+Shift+S, then press this.";
+        else if (!plat_ocr_start("ocr_in.bmp", "ocr_out.txt")) tx_msg = "Couldn't start the text reader. It needs YomiGoOCR.exe, beside YomiGo, and Windows 10 or later.";
+        else { tx_ocr = 1; tx_msg = "Reading the screenshot..."; }
+    }
+    if (button(CX + 3 * (bw + 4), y, bw, 22, tx_top ? "On top: On" : "On top: Off")) { tx_top = !tx_top; plat_topmost(tx_top); }
+#endif
+    y += 28;
+    if (!tx_n) {
+        wrap(CX, y, CW, *tx_msg ? tx_msg : (HTPC ? "Copy Japanese from any program, then press Paste, or turn on Watch." : "Copy Japanese from a game or web page, or take a screenshot with Win+Shift+S. Then press Paste or Screenshot. With Watch on, text copied by a text hooker such as Textractor shows up by itself."), C_DIM, LH, 0, 0);
+#if HTPC
+        if (IN.pressed & A_BACK) go(S_HOME);
+        footer("OK", "Menu");
+#endif
+        return;
+    }
+    for (i = 0; i < tx_n && i < rows; i++) {
+        int h = LH, hit = ui_hit(CX, y, CW, h);
+        if (i == tx_sel) fill(CX, y, CW, h, HTPC ? C_PANEL : 0xF8D4DC);
+        wrap(CX + 4, y + 1, CW - 8, tx_lines[i], i == tx_sel ? C_INK : C_DIM, LH, 0, 1);
+        if (hit) { tx_sel = i; tx_pos = 0; tx_nres = 0; tx_len = 0; }
+        y += h + 1;
+    }
+    y += 6;
+    /* The chosen line, one character at a time, so any word can be picked */
+    {
+        const char *s = tx_lines[tx_sel], *p = s; int x = CX, c, lines = 0;
+        copy_src = s;
+        panel(CX, y - 2, CW, (HTPC ? 2 : 3) * LH + 4);
+        while (*p && lines < (HTPC ? 2 : 3)) {
+            const char *start = p; int w, at = (int)(p - s), hit, in_word;
+            c = utf8_next(&p);
+            { char one[8]; int k = utf8_put(c, one); one[k] = 0; w = text_w(one);
+              if (x + w > CX + CW - 4) { x = CX; y += LH; lines++; if (lines >= (HTPC ? 2 : 3)) break; }
+              hit = ui_hit(x, y, w, LH);
+              in_word = tx_len && at >= tx_pos && (int)(start - s) < tx_pos + 3 * tx_len && at >= tx_pos;
+              if (in_word) { const char *q = s + tx_pos; int k2; for (k2 = 0; k2 < tx_len && *q; k2++) utf8_next(&q); in_word = start < q; }
+              if (in_word) fill(x, y, w, LH - 2, C_PINK);
+              if (ui_focused()) fill(x, y + LH - 3, w, 2, C_ACC);
+              text(x, y, one, C_INK);
+              if (hit) { tx_pos = at; tx_nres = lookup_at(s, at, tx_res, 8, &tx_len); }
+              x += w; }
+        }
+        y += LH + 8;
+        if (!HTPC && lines < 2) y += (2 - lines) * LH;
+    }
+    if (!tx_nres) wrap(CX, y, CW, tx_len || !tx_pos ? (HTPC ? "Pick a character to look it up." : "Click a character, or move to it and press Enter, to look up the word starting there.") : "No match there.", C_DIM, LH, 0, 2);
+    for (i = 0; i < tx_nres && i < nres; i++) {
+        static char w[120], rd[120], g[120]; char row[300];
+        dict_row(tx_res[i], w, rd, g, 120);
+        ys_cpy(row, *w ? w : rd, sizeof row);
+        if (*w) { ys_cat(row, " ", sizeof row); ys_cat(row, rd, sizeof row); }
+        ys_cat(row, "  ", sizeof row); ys_cat(row, g, sizeof row);
+        wrap(CX, y, CW - (HTPC ? 0 : 50), row, i ? C_INK : C_ACC, LH, 0, 1);
+#if !HTPC
+        if (button(CX + CW - 46, y, 44, 20, "Add")) { flash_add(my_add(&P, w, rd, g, tx_lines[tx_sel], plat_today())); save_profile(); }
+#else
+        if (i == 0 && (IN.pressed & A_X)) { flash_add(my_add(&P, w, rd, g, tx_lines[tx_sel], plat_today())); save_profile(); }
+#endif
+        y += LH + 2;
+    }
+    if (*tx_msg && !HTPC) wrap(CX, FBY_BTN + 6, CW, tx_msg, C_DIM, LH, 0, 1);
+#if HTPC
+    if (IN.pressed & A_BACK) go(S_HOME);
+    { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "Pick"); prompt_btn(&x, FBH - SAFE - 17, 2, "Add"); prompt_btn(&x, FBH - SAFE - 17, 1, "Menu"); }
+#endif
+}
+
 /* ---- your own words ---- */
 static void scr_mywords(void) {
     int per = HTPC ? 6 : 11, h = HTPC ? 19 : 24, y = CY + LH, i, bw = (CW - 16) / 5, total = (P.nmy + per - 1) / per;
@@ -1504,6 +1624,7 @@ void app_frame(void) {
     anim++;
     copy_src = 0;
     field_on = 0;
+    if (scr != S_TEXT) tx_poll(); /* watching the clipboard carries on behind other screens */
     switch (scr) {
     case S_SPLASH: scr_splash(); break;
     case S_PROFILES: scr_profiles(); break;
@@ -1533,6 +1654,7 @@ void app_frame(void) {
     case S_MYWORDS: scr_mywords(); break;
     case S_MYADD: scr_myadd(); break;
     case S_SHADOW: scr_shadow(); break;
+    case S_TEXT: scr_text(); break;
     case S_GENKI: scr_genki(); break;
     }
 #if !HTPC
