@@ -426,7 +426,7 @@ int profile_load_text(Profile *p, const char *text, int len) {
           else if (!ys_cmp(k, "pace")) p->pace = x < 1 ? 1 : x > 3 ? 3 : x;
           else if (!ys_cmp(k, "en")) p->force_en = x;
           else if (!ys_cmp(k, "genki")) p->genki = x != 0;
-          else if (!ys_cmp(k, "gender")) p->gender = x >= 0 && x <= 3 ? x : 0;
+          else if (!ys_cmp(k, "gender")) p->gender = x >= 0 && x <= 4 ? x : 0;
           else if (!ys_cmp(k, "reviews")) p->reviews = x;
           else if (!ys_cmp(k, "perfects")) p->perfects = x;
           else if (!ys_cmp(k, "chats")) p->chats = x;

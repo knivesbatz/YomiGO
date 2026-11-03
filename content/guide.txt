@@ -32,7 +32,7 @@ YomiGo Reader does this in your browser, and exports to Anki.
 Words you've met in something you care about stick far better than words from a list.
 @ Saying I, you, he and she
 わたし (私) works for everyone, in any situation. わたくし is more formal still, for work and speeches.
-Casually, many men and boys say ぼく (僕), and おれ (俺) with friends, which sounds rough. Many women and girls say あたし.
+Casually, many men and boys say ぼく (僕), and おれ (俺) with friends, which sounds rough. Many women and girls say あたし. Some women and some nonbinary people say ぼく too.
 Japanese leaves out "I" once it's clear, so you'll say it far less than in English.
 "You" is mostly left out too. あなた can sound distant or cold, so use the person's name with さん: 田中さんは学生ですか。
 きみ and おまえ are casual, and can sound rude to someone you don't know well.

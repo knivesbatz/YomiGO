@@ -348,7 +348,7 @@ def load_res():
 def load_pronouns():
     out = []
     for _, r in tsv("pronouns.tsv"):
-        if len(r) != 5 or r[0] not in ("m", "w"): die(f"pronouns.tsv: bad row {r}")
+        if len(r) != 5 or not r[0] or set(r[0]) - set("mwb"): die(f"pronouns.tsv: bad row {r}")
         if not all("\u3041" <= ch <= "\u309f" for ch in r[2]): die(f"pronouns.tsv: the reading {r[2]} isn't hiragana")
         if r[1] not in r[4]: die(f"pronouns.tsv: the example doesn't use {r[1]}")
         out.append({"who": r[0], "word": r[1], "reading": r[2], "en": r[3], "sent": r[4]})
@@ -425,7 +425,7 @@ def write_c(cards, stages, days, exams, chats, media, res, table, subs, genki, g
     for m in media: w.append("{%d,%d,%s,%s,%s,%d,%s}," % (m["stage"], m["era"] == "new", cstr(m["type"]), cstr(m["title"]), cstr(m["ja"]), m["year"], cstr(m["task"])))
     w.append("};")
     w.append("static const YgPronoun YG_PRONOUNS[]={")
-    for p in pronouns: w.append("{'%s',%s,%s,%s,%s}," % (p["who"], cstr(p["word"]), cstr(p["reading"]), cstr(p["en"]), cstr(p["sent"])))
+    for p in pronouns: w.append("{%s,%s,%s,%s,%s}," % (cstr(p["who"]), cstr(p["word"]), cstr(p["reading"]), cstr(p["en"]), cstr(p["sent"])))
     w.append("};")
     w.append("static const YgRes YG_RES[]={")
     for r in res: w.append("{%s,%s,%s,%s}," % (cstr(r["cat"]), cstr(r["name"]), cstr(r["url"]), cstr(r["desc"])))

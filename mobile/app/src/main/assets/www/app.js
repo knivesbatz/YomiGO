@@ -80,17 +80,17 @@ function profiles() {
       }, "main")));
 }
 // Who's learning picks the casual words for "I" added to My words. わたし is in the course for everyone.
-const GENDER = ["Not asked", "Woman", "Man", "Rather not say"];
+const GENDER = ["Not asked", "Woman", "Man", "Rather not say", "Says ぼく"];
 function askSpeaker(next) {
   setNav(-1);
   const pick = (g) => () => {
-    const who = g === 1 ? "w" : g === 2 ? "m" : "";
+    const who = g === 1 ? "w" : g === 2 ? "m" : g === 4 ? "b" : "";
     P.gender = g;
-    C.pronouns.filter((p) => p.who === who).forEach((p) => Y.myAdd(P, p.word, p.reading, p.en, p.sent, Y.today()));
+    C.pronouns.filter((p) => who && p.who.includes(who)).forEach((p) => Y.myAdd(P, p.word, p.reading, p.en, p.sent, Y.today()));
     store.save(); next();
   };
-  show(h("h1", null, "Who's learning?"), h("div", { cls: "card" }, "Japanese has several words for \"I\". わたし suits everyone, and the course teaches it. Casually, men often say ぼく or おれ, and women あたし. Your answer adds the ones that fit you to My words. You can change it in Settings."),
-    btn("A woman", pick(1), "main"), btn("A man", pick(2)), btn("Rather not say", pick(3)));
+  show(h("h1", null, "Who's learning?"), h("div", { cls: "card" }, "Japanese has several words for \"I\". わたし suits everyone, and the course teaches it. Casually, many men say ぼく or おれ, and many women あたし. Some people of any gender say ぼく. Your answer adds the ones that fit you to My words. You can change it in Settings."),
+    btn("A woman", pick(1), "main"), btn("A man", pick(2)), btn("Rather not say", pick(3)), btn("I use ぼく", pick(4)));
 }
 function askGenki() {
   setNav(-1);

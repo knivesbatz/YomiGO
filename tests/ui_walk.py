@@ -77,12 +77,13 @@ if os.path.exists(os.path.join(ROOT, "dist", "models", "ggml-large-v3-turbo-q5_0
 else:
     print("transcribing: SKIPPED, no speech model in dist\\models")
 # Who's learning: a man gets ぼく and おれ in My words, on the PC; a woman gets あたし on the TV
-for exe, keys, want in (("YomiGo.exe", "w1;ow2;dw1;ow2;", ["ぼく", "おれ"]), ("YomiGoHTPC.exe", "w1;sw2;ow2;", ["あたし"])):
+for exe, keys, want, gender in (("YomiGo.exe", "w1;ow2;dw1;ow2;", ["ぼく", "おれ"], 2), ("YomiGoHTPC.exe", "w1;sw2;ow2;", ["あたし"], 1),
+                                ("YomiGo.exe", "w1;ow2;dddw1;ow2;", ["ぼく"], 4), ("YomiGoHTPC.exe", "w1;sw2;rrrw1;ow2;", ["ぼく"], 4)):
     root = tempfile.mkdtemp()
     subprocess.run([os.path.join(ROOT, "dist", exe), "--root", root, "--script", "w2;ow2;ow2;tWho;" + keys], timeout=60)
     save = open(os.path.join(root, "Who.sav"), encoding="utf-8").read()
     mine = [l.split("\t")[2] for l in save.splitlines() if l.startswith("my ")]
-    ok = mine == want and ("gender=2" if want[0] == "ぼく" else "gender=1") in save
+    ok = mine == want and f"gender={gender}" in save
     print("who's learning on", exe, "OK" if ok else "FAILED", mine)
     fail += not ok
     shutil.rmtree(root, ignore_errors=True)

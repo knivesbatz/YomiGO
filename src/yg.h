@@ -10,7 +10,7 @@ typedef struct { const char *say, *romaji, *en; int nwant; const char *const *wa
 typedef struct { const char *title, *ja, *who; int nturns; const YgTurn *turns; } YgChat;
 typedef struct { int stage, is_new; const char *type, *title, *ja; int year; const char *task; } YgMedia;
 typedef struct { const char *cat, *name, *url, *desc; } YgRes;
-typedef struct { char who; const char *word, *reading, *en, *sent; } YgPronoun; /* who: 'm' man, 'w' woman */
+typedef struct { const char *who, *word, *reading, *en, *sent; } YgPronoun; /* who it's for: m men, w women, b anyone who says ぼく */
 typedef struct { const char *a, *b; } YgPair;
 typedef struct { const char *title, *ja, *jp, *en; int nq; const char *const *q; } YgRead;
 typedef struct { int lesson; const char *topics; int ncards; const short *cards; } YgGenki;
@@ -37,7 +37,7 @@ typedef struct {
     int pace;               /* classes allowed per real day: 1, 2 or 3 */
     int force_en;           /* keep English labels even after immersion starts */
     int genki;              /* offer practice by Genki lesson */
-    int gender;             /* 0 not asked yet, 1 woman, 2 man, 3 rather not say: picks the casual words for "I" */
+    int gender;             /* 0 not asked yet, 1 woman, 2 man, 3 rather not say, 4 says ぼく: picks the casual words for "I" */
     int reviews, perfects, chats, homeworks, reads, listens;
     unsigned char exam_score[YG_NEXAMS];
     unsigned int ach;

@@ -86,7 +86,7 @@ static void flash_add(int r) { flash(r > 0 ? "Added!" : r == 0 ? "Already added"
 static int my_sel, my_confirm, add_step;
 static Screen sp_next; /* where the who's-learning question returns to */
 static int ls_day = -1, ls_test; /* the day optional speaking was last done; the test player asks for it once a day */
-static const char *const gender_name[] = {"Not asked", "Woman", "Man", "Rather not say"};
+static const char *const gender_name[] = {"Not asked", "Woman", "Man", "Rather not say", "Says ぼく"};
 static int q_said = -1, sh_i, sh_n, sh_said;
 #define TX_MAX 400 /* room for an episode's transcript */
 static char tx_lines[TX_MAX][256];
@@ -255,6 +255,8 @@ static const struct { const char *en, *ja; int st; Screen s; } NAV[] = {
     {"Today", "きょう", 2, S_HOME}, {"Flashcards", "カード", 3, S_CARDS}, {"Exams", "しけん", 2, S_EXAMS},
     {"Quest", "クエスト", 3, S_QUEST}, {"Library", "本だな", 5, S_LIBRARY}, {"Text", "テキスト", 3, S_TEXT}, {"Talk", "かいわ", 3, S_TALK}, {"Settings", "せってい", 2, S_SETTINGS}};
 #define NNAV 8
+/* A way back on screens without the side menu, at the top right. Call it last, so it never takes focus first. Esc does the same. */
+static int back_btn(void) { return button(FBW - 92, 8, 80, 24, L("Back", "もどる", 2)) || (IN.pressed & A_BACK); }
 static void chrome(const char *title, const char *sub) {
     int i;
     washi(0, 0, FBW, FBH, C_BG, 0xEADFCC);
@@ -322,6 +324,7 @@ static void torii(int cx, int cy, int size, int spin) {
         }
     }
 }
+static int back_btn(void) { return (IN.pressed & A_BACK) != 0; } /* B, shown in the footer */
 static void chrome(const char *title, const char *sub) {
     int s = SAFE;
     gradient(0, 0, FBW, FBH, 0x24103F, 0x4A1A4A);
@@ -510,10 +513,10 @@ static void scr_class(void) {
         text(CX + 8, CY + 8, YG_EXAMS[gate].name, C_ACC);
         wrap(CX + 8, CY + 8 + LH, CW - 16, "Pass this trial with 80% to open the next class. You can retake it as often as you need.", C_INK, LH, 0, 0);
         if (button(CX + CW / 2 - 80, FBY_BTN, 160, 28, L("Challenge", "ちょうせん", 2))) { exam_id = gate; quiz_exam(&Z, gate); start_quiz(QM_EXAM); return; }
-        if (IN.pressed & A_BACK) go(S_HOME);
 #if HTPC
         footer("Challenge", "Menu");
 #endif
+        if (back_btn()) go(S_HOME);
         return;
     }
     if (P.day >= YG_NDAYS) { go(S_HOME); return; }
@@ -883,7 +886,7 @@ static void scr_quiz(void) {
     else { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "OK"); prompt_btn(&x, FBH - SAFE - 17, 2, "Don't know"); if (hearing) prompt_btn(&x, FBH - SAFE - 17, 3, "Again"); }
 #endif
     /* Leaving a lesson quiz is fine: the class resumes at this step */
-    if (qm != QM_EXAM && qm != QM_PLACE && ((!HTPC && (IN.pressed & A_BACK)) || (HTPC && (IN.pressed & A_START) && q->kind != Q_TYPE))) go(S_HOME);
+    if (qm != QM_EXAM && qm != QM_PLACE && ((!HTPC && back_btn()) || (HTPC && (IN.pressed & A_START) && q->kind != Q_TYPE))) go(S_HOME);
 }
 
 /* ---- conversation ---- */
@@ -946,6 +949,7 @@ static void scr_chat(void) {
     if (button(CX + 124, FBY_BTN, 130, 28, L("I don't know", "わかりません", 3))) { chat_fail = 3; input[0] = 0; }
     if (plat_has_tts() && *t->say && button(CX, FBY_BTN, 120, 28, L("Hear it", "聞く", 5))) plat_speak(t->say);
     clip_buttons(CX + CW - 230, CY + 124);
+    if (back_btn()) { go(S_CLASS); return; } /* the conversation starts again next time */
 #endif
 }
 
@@ -1017,8 +1021,9 @@ static void scr_shadow(void) {
     if (button(CX + CW - 120, FBY_BTN, 120, 28, "I said it")) { if (++sh_i >= sh_n) { ls_day = P.day; go(S_CLASS); return; } ui_reset_focus(); return; }
     if (button(CX, FBY_BTN, 110, 28, L("Hear again", "もう一度", 5)) || (IN.pressed & A_Y)) plat_speak(l->jp);
 #if HTPC
-    { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "OK"); prompt_btn(&x, FBH - SAFE - 17, 3, "Again"); }
+    { int x = SAFE + 2; prompt_btn(&x, FBH - SAFE - 17, 0, "OK"); prompt_btn(&x, FBH - SAFE - 17, 3, "Again"); prompt_btn(&x, FBH - SAFE - 17, 1, "Back"); }
 #endif
+    if (back_btn()) go(S_CLASS);
 }
 
 /* ---- reading: a short passage, then questions about it ---- */
@@ -1076,8 +1081,9 @@ static void scr_read(void) {
         }
     }
 #if HTPC
-    footer("OK", 0);
+    footer("OK", "Back");
 #endif
+    if (back_btn()) go(S_CLASS); /* the reading waits at this step */
 }
 
 /* ---- homework and immersion ---- */
@@ -1108,8 +1114,9 @@ static void scr_task(void) {
         }
     }
 #if HTPC
-    footer("Confirm", 0);
+    footer("Confirm", "Back");
 #endif
+    if (back_btn()) go(S_CLASS);
 }
 
 /* ---- flashcards ---- */
@@ -1262,7 +1269,7 @@ static void scr_mywords(void) {
         else my_confirm = 1;
     }
     if (total > 1 && button(CX + 4 * (bw + 4), FBY_BTN, bw, 28, "Page")) { page = (page + 1) % total; my_sel = page * per; }
-    if (IN.pressed & A_BACK) { my_confirm = 0; go(S_CARDS); return; }
+    if (back_btn()) { my_confirm = 0; go(S_CARDS); return; }
 #if HTPC
     footer("OK", "Back");
 #endif
@@ -1482,7 +1489,7 @@ static void scr_settings(void) {
 #if HTPC
     { static const char *const modes[] = {"Pad: Auto", "Pad: N64", "Pad: Xbox", "Pad: PlayStation"};
       if (button(CX, y, w / 2 - 2, bh, modes[pad_mode()])) pad_set_mode((pad_mode() + 1) % 4); }
-    ys_cpy(b, "I: ", sizeof b); ys_cat(b, P.gender == 1 ? "Woman" : P.gender == 2 ? "Man" : "Not said", sizeof b);
+    ys_cpy(b, "I: ", sizeof b); ys_cat(b, P.gender == 1 ? "Woman" : P.gender == 2 ? "Man" : P.gender == 4 ? "ぼく" : "Not said", sizeof b);
     if (button(CX + w / 2 + 2, y, w / 2 - 2, bh, b)) { sp_next = S_SETTINGS; go(S_SPEAKER); return; }
     y += step;
     if (button(CX, y, w / 2 - 2, bh, crt_mode() ? "TV: CRT / RF" : "TV: Flat")) crt_set(!crt_mode());
@@ -1726,26 +1733,29 @@ static void scr_talk(void) {
 
 /* ---- who's learning: picks the casual words for "I" added to My words ---- */
 static void scr_speaker(void) {
-    static const char *const who[] = {"A woman", "A man", HTPC ? "Not saying" : "Rather not say"};
-    int i, g = 0, bw = HTPC ? (CW - 8) / 3 : CW;
+    /* in gender order: 1 woman, 2 man, 3 rather not say, 4 anyone who says ぼく */
+    static const char *const who[] = {"A woman", "A man", HTPC ? "Not said" : "Rather not say", HTPC ? "ぼく" : "I use ぼく"};
+    int i, g = 0, bw = HTPC ? (CW - 12) / 4 : CW;
     chrome("Who's learning?", 0);
     panel(CX, CY, CW, HTPC ? 126 : 110);
-    wrap(CX + 8, CY + 4, CW - 16, "Japanese has several words for \"I\". わたし suits everyone, and the course teaches it. Casually, men often say ぼく or おれ, and women あたし. Your answer adds the ones that fit you to My words. You can change it in Settings.", C_INK, LH, 0, 0);
-    for (i = 0; i < 3; i++)
-        if (HTPC ? button(CX + i * (bw + 4), FBY_BTN, bw, 28, who[i]) : button(CX, FBY_BTN - (2 - i) * 36, CW, 28, who[i])) g = i + 1;
+    wrap(CX + 8, CY + 4, CW - 16, HTPC ? "Japanese has several words for \"I\". わたし suits everyone, and the course teaches it. Casually, many men say ぼく or おれ, and many women あたし. Some people of any gender say ぼく. This adds the ones that fit you to My words." : "Japanese has several words for \"I\". わたし suits everyone, and the course teaches it. Casually, many men say ぼく or おれ, and many women あたし. Some people of any gender say ぼく. Your answer adds the ones that fit you to My words. You can change it in Settings.", C_INK, LH, 0, 0);
+    for (i = 0; i < 4; i++)
+        if (HTPC ? button(CX + i * (bw + 4), FBY_BTN, bw, 28, who[i]) : button(CX, FBY_BTN - (3 - i) * 36, CW, 28, who[i])) g = i + 1;
     if (g) {
-        char want = g == 1 ? 'w' : g == 2 ? 'm' : 0; int n = 0;
+        char want = g == 1 ? 'w' : g == 2 ? 'm' : g == 4 ? 'b' : 0; int n = 0, k;
         P.gender = g;
         for (i = 0; i < YG_NPRONOUNS; i++)
-            if (YG_PRONOUNS[i].who == want && my_add(&P, YG_PRONOUNS[i].word, YG_PRONOUNS[i].reading, YG_PRONOUNS[i].en, YG_PRONOUNS[i].sent, plat_today()) > 0) n++;
+            for (k = 0; want && YG_PRONOUNS[i].who[k]; k++)
+                if (YG_PRONOUNS[i].who[k] == want && my_add(&P, YG_PRONOUNS[i].word, YG_PRONOUNS[i].reading, YG_PRONOUNS[i].en, YG_PRONOUNS[i].sent, plat_today()) > 0) n++;
         save_profile();
         if (n) flash("Added to My words");
         go(sp_next);
         return;
     }
 #if HTPC
-    footer("Choose", 0);
+    footer("Choose", sp_next == S_SETTINGS ? "Back" : 0);
 #endif
+    if (sp_next == S_SETTINGS && back_btn()) go(S_SETTINGS); /* a new learner has to answer */
 }
 static void scr_first(void) {
     chrome("Do you study with Genki?", 0);
@@ -1781,10 +1791,10 @@ static void scr_genki(void) {
         if (button(HTPC ? CX + 2 * (w + 4) + 4 : CX, FBY_BTN, 170, 28, "Open my Genki file")) plat_open(plat_material_full(i));
         break;
     }
-    if (IN.pressed & A_BACK) go(S_CARDS);
 #if HTPC
     footer("Practice", "Back");
 #endif
+    if (back_btn()) go(S_CARDS);
 }
 static void scr_place_intro(void) {
     chrome("Entrance Exam", 0);
