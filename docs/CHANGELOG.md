@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.21.1
+
+- Fixes updates from 0.21.0 onwards: the updater now closes the new Windows app properly before swapping in a newer version. 0.20 updates straight to this version
+
 ## 0.21.0
 
 A new YomiGo for Windows, a new look everywhere, and a new icon.

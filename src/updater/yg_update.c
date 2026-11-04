@@ -140,8 +140,14 @@ static char *next_arg(char **pp, char *out, int cap) {
     return out;
 }
 #define YG_NHELPERS 3
-/* Asks every window of the program being updated to close, so it can finish saving */
-static BOOL CALLBACK close_pid(HWND w, LPARAM want) { DWORD owner = 0; GetWindowThreadProcessId(w, &owner); if (owner == (DWORD)want) PostMessageA(w, WM_CLOSE, 0, 0); return TRUE; }
+/* Asks the program being updated to close, so it can finish saving. Only its main window: the Rust app also owns
+   an internal event window, and closing that one hangs it. "YomiGoWnd" is the C app before 0.21. */
+static BOOL CALLBACK close_pid(HWND w, LPARAM want) {
+    DWORD owner = 0; char cls[32];
+    GetWindowThreadProcessId(w, &owner);
+    if (owner == (DWORD)want && GetClassNameA(w, cls, sizeof cls) && (!lstrcmpA(cls, "Tauri Window") || !lstrcmpA(cls, "YomiGoWnd"))) PostMessageA(w, WM_CLOSE, 0, 0);
+    return TRUE;
+}
 static const char *const helpers[YG_NHELPERS] = {"YomiGoOCR.exe", "YomiGoListen.exe", "YomiGoTalk.exe"};
 static int fetch_verified(const char *tag, const char *asset, const char *dest) {
     char path[512]; DWORD a = 0, b = 0; char *data, *sig; int ok;
