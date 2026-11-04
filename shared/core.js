@@ -63,6 +63,19 @@
     const tail = (s) => s.slice(0, -1) + sound(s.slice(-1)), w = normKana(want);
     return a === w || (!!romaji && a === normKana(romaji)) || (a.length > 1 && w.length > 1 && tail(a) === tail(w));
   }
+  // The Windows and phone Japanese keyboards turn "nn" into ん and drop the next n, so "gomennasai" comes out ごめんあさい.
+  // That's the keyboard, not the learner: when putting the n back makes it right, it counts, and the screen explains.
+  function imeSlip(input, want, romaji) {
+    const a = normKana(input), fixed = a.replace(/ん([あいうえお])/g, (m, v) => "ん" + "なにぬねの"["あいうえお".indexOf(v)]);
+    return fixed !== a && answerOk(fixed, want, romaji);
+  }
+  // Missing days ends a streak, and costs XP: 50 for each missed day, up to 300. Charged once, when YomiGo next opens.
+  function streakCheck(p, t) {
+    if (!p.streak || !p.last || t - p.last <= 1 || p.broke >= p.last) return null;
+    const missed = t - p.last - 1, lost = p.streak, xp = Math.min(p.xp, Math.min(300, 50 * missed));
+    p.xp -= xp; p.streak = 0; p.broke = t;
+    return { missed, lost, xp };
+  }
   const sound = (s) => s.replace(/は/g, "わ").replace(/を/g, "お").replace(/へ/g, "え");
   function chatOk(input, turn) {
     const a = sound(normKana(input));
@@ -88,8 +101,8 @@
 
   // Save file: the same text format as the Windows builds, so a save moves between devices
   const MY_MAX = 2000;
-  const newProfile = (name) => ({ name, xp: 0, streak: 0, best: 0, last: 0, today: 0, placed: 0, day: 0, step: 0, pace: 1, en: 0, genki: 0, gender: 0, reviews: 0, perfects: 0, chats: 0, hw: 0, ach: 0, reads: 0, listens: 0, exams: {}, cards: {}, my: [] });
-  const NUMS = ["xp", "streak", "best", "last", "today", "placed", "day", "step", "pace", "en", "genki", "gender", "reviews", "perfects", "chats", "hw", "ach", "reads", "listens"];
+  const newProfile = (name) => ({ name, xp: 0, streak: 0, best: 0, last: 0, today: 0, placed: 0, day: 0, step: 0, pace: 1, en: 0, genki: 0, gender: 0, reviews: 0, perfects: 0, chats: 0, hw: 0, ach: 0, reads: 0, listens: 0, broke: 0, exams: {}, cards: {}, my: [] });
+  const NUMS = ["xp", "streak", "best", "last", "today", "placed", "day", "step", "pace", "en", "genki", "gender", "reviews", "perfects", "chats", "hw", "ach", "reads", "listens", "broke"];
   function saveText(p) {
     let t = "YOMIGO-SAVE 1\nname=" + p.name + "\n";
     for (const k of NUMS) t += k + "=" + p[k] + "\n";
@@ -149,7 +162,9 @@
     else if (o.last === p.last && o.today > p.today) p.today = o.today;
     if (o.gender && (newer || !p.gender)) p.gender = o.gender;
     if (o.day > p.day || (o.day === p.day && o.step > p.step)) { p.day = o.day; p.step = o.step; }
-    for (const k of ["xp", "streak", "best", "last", "placed", "reviews", "perfects", "chats", "hw", "reads", "listens"]) p[k] = Math.max(p[k], o[k]);
+    // A streak belongs to the copy used last, so one device can't bring back a streak the other has already lost
+    if (o.last > p.last) p.streak = o.streak; else if (o.last === p.last) p.streak = Math.max(p.streak, o.streak);
+    for (const k of ["xp", "best", "last", "placed", "reviews", "perfects", "chats", "hw", "reads", "listens", "broke"]) p[k] = Math.max(p[k], o[k]);
     p.ach |= o.ach;
     for (const e in o.exams) p.exams[e] = Math.max(p.exams[e] || 0, o.exams[e]);
     for (const id in o.cards) if (!p.cards[id] || further(o.cards[id], p.cards[id])) p.cards[id] = { ...o.cards[id] };
@@ -412,5 +427,5 @@
     return hits.slice(0, 6);
   }
 
-  root.YG = { merge, normKana, kanaRomaji, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, catchUp, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, myAdd, myImport, myExport, makeQMy, quizListen, shadowLines, lookup, byId, PASS };
+  root.YG = { imeSlip, streakCheck, merge, normKana, kanaRomaji, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, catchUp, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, myAdd, myImport, myExport, makeQMy, quizListen, shadowLines, lookup, byId, PASS };
 })(globalThis);

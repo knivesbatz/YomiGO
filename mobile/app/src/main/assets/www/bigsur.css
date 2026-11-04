@@ -260,3 +260,117 @@ dialog.fallback { position: fixed; inset: 0; z-index: 300; margin: auto; height:
 .mac .combo { top: 64px; right: 20px; border-radius: 6px; padding: 3px 9px; font-size: 12px; box-shadow: none; }
 .mac .cheer { font-size: 40px; }
 .mac .xp-float { font-size: 14px; }
+
+/* ---- flair: things arrive, slide and glint, briefly. Reduced motion turns all of it off (see style.css). ---- */
+.mac .view-in > * { animation: rise-in 420ms cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--i, 0) * 45ms); }
+.mac .view-in .list > .item { animation: rise-in 380ms cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(80ms + var(--i, 0) * 45ms + var(--j, 0) * 28ms); }
+@keyframes rise-in { from { opacity: 0; transform: translateY(10px) scale(.985); } }
+.mac #toolbar > * { animation: fade 260ms var(--ease); }
+/* the sidebar's selection glides to the new place */
+.desk nav { position: relative; }
+.desk .nav-sel { position: absolute; left: 10px; right: 10px; border-radius: 6px; background: var(--sel); transition: top 280ms cubic-bezier(.3, 1.3, .5, 1); pointer-events: none; }
+.desk .tab[aria-current="page"] { background: transparent; }
+.desk .tab { position: relative; }
+.desk .tab .ico { transition: transform 200ms var(--ease); }
+.desk .tab:hover .ico { transform: scale(1.12) !important; }
+.desk .tab[aria-current="page"] .ico { animation: icon-pop 360ms cubic-bezier(.3, 1.5, .5, 1); }
+@keyframes icon-pop { 40% { transform: scale(1.3) rotate(-6deg); } }
+@media (max-width: 600px) { .desk .nav-sel { left: 8px; right: 8px; } }
+/* today's class: petals drifting down behind it, and a glint across its button */
+.class-hero { position: relative; overflow: hidden; }
+.class-hero > *:not(.drift) { position: relative; z-index: 1; }
+.drift { position: absolute; top: -24px; z-index: 0; color: var(--accent-2); opacity: .55; font-size: 18px; pointer-events: none; animation: drift 9s linear infinite; }
+.drift.l1 { left: 62%; } .drift.l2 { left: 80%; font-size: 13px; animation-duration: 12s; animation-delay: -4s; } .drift.l3 { left: 90%; font-size: 22px; animation-duration: 10s; animation-delay: -7s; }
+@keyframes drift { 0% { transform: translate(0, 0) rotate(0); } 50% { transform: translate(-30px, 120px) rotate(160deg); } 100% { transform: translate(10px, 260px) rotate(330deg); opacity: 0; } }
+.mac .hero .btn.primary { position: relative; overflow: hidden; }
+.mac .hero .btn.primary::after { content: ""; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .45), transparent); animation: sheen 3.6s ease-in-out infinite 1s; }
+@keyframes sheen { 0%, 70% { left: -60%; } 100% { left: 130%; } }
+.mac .btn.primary:hover { filter: brightness(1.06); box-shadow: 0 0 0 .5px rgba(0, 0, 0, .1), 0 4px 14px -4px var(--accent); }
+.mac .btn:not(.icon):not(.plain):not(.quiet):active { transform: scale(.97); transition: transform 80ms; }
+/* a streak flame that flickers, and a star that glints */
+.mac .chip.fire svg { animation: flicker 1.8s ease-in-out infinite; transform-origin: 50% 90%; }
+@keyframes flicker { 0%, 100% { transform: scale(1) rotate(0); } 25% { transform: scale(1.08, .94) rotate(-4deg); } 50% { transform: scale(.95, 1.07) rotate(3deg); } 75% { transform: scale(1.04) rotate(-2deg); } }
+.mac .chip.star svg { animation: glint 4s ease-in-out infinite; }
+@keyframes glint { 0%, 80%, 100% { transform: rotate(0) scale(1); } 88% { transform: rotate(72deg) scale(1.25); } }
+/* progress shimmers as it fills */
+.mac .progress i { position: relative; overflow: hidden; }
+.mac .progress i::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .55), transparent); transform: translateX(-100%); animation: shimmer 2.2s ease-in-out infinite; }
+@keyframes shimmer { 60%, 100% { transform: translateX(100%); } }
+/* answers pop in one by one, and a right one glows */
+.mac .choices .btn { animation: rise-in 360ms cubic-bezier(.2, .9, .3, 1.2) both; }
+.mac .choices .btn:nth-child(2) { animation-delay: 50ms; } .mac .choices .btn:nth-child(3) { animation-delay: 100ms; } .mac .choices .btn:nth-child(4) { animation-delay: 150ms; }
+.mac .choices .btn.right { animation: right-glow 900ms ease-out; }
+@keyframes right-glow { 0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, .6); transform: scale(1); } 30% { transform: scale(1.04); } 100% { box-shadow: 0 0 0 16px rgba(40, 167, 69, 0); transform: scale(1); } }
+.mac .mark.good { animation: stamp 420ms cubic-bezier(.3, 1.5, .5, 1); }
+/* boxes you can press lift a little under the pointer */
+.mac button.item .ic { transition: transform 200ms var(--ease); }
+.mac button.item:hover .ic { transform: scale(1.1) rotate(-4deg); }
+.desk .card.hero { transition: box-shadow 220ms var(--ease), transform 220ms var(--ease); }
+.desk .card.hero:hover { box-shadow: inset 0 0 0 .5px var(--box-line), 0 8px 24px -12px rgba(0, 0, 0, .25); }
+/* the listening countdown */
+.countdown { text-align: center; padding: 12px 0 4px; }
+.countdown span { display: grid; place-items: center; width: 72px; height: 72px; margin: 0 auto 6px; border-radius: 50%; font: 700 30px var(--font-display); color: var(--accent); box-shadow: inset 0 0 0 3px var(--accent); animation: cd-ring 5s linear both; }
+.countdown span.tick { animation: cd-ring 5s linear both, cd-tick 300ms cubic-bezier(.3, 1.5, .5, 1); }
+@keyframes cd-tick { 40% { transform: scale(1.18); } }
+@keyframes cd-ring { from { box-shadow: inset 0 0 0 3px var(--accent); } to { box-shadow: inset 0 0 0 3px var(--accent-soft); } }
+.tv .countdown span { width: 14vh; height: 14vh; font-size: 7vh; }
+
+/* ---- a lost streak ---- */
+.lost .lost-flame { display: grid; place-items: center; width: 96px; height: 96px; margin: 0 auto 12px; border-radius: 50%; background: var(--fill); }
+.lost .lost-flame svg { width: 56px; height: 56px; color: #ff6a00; animation: snuff 1.6s cubic-bezier(.4, 0, .6, 1) forwards; transform-origin: 50% 90%; }
+@keyframes snuff { 0% { transform: scale(1); color: #ff6a00; } 20% { transform: scale(1.15, .9); } 45% { transform: scale(.8, 1.1) rotate(-6deg); color: #ff9f0a; } 100% { transform: scale(.55) translateY(12px); color: var(--ink-3); opacity: .7; } }
+.lost h1 { margin-top: 8px; }
+.wilt { position: fixed; pointer-events: none; z-index: 99; }
+
+/* ===================================================================================================================
+   Classic: the look of YomiGo before 0.21. Dot-matrix type, square panels, plum and cream, hard shadows. Settings > Look.
+   =================================================================================================================== */
+@font-face { font-family: "DotGothic16"; src: url("fonts/DotGothic16-Regular.ttf") format("truetype"); font-display: swap; }
+html.retro.retro.retro {
+  --font: "DotGothic16", monospace; --font-display: "DotGothic16", monospace; --font-jp: "DotGothic16", monospace; --mono: "DotGothic16", monospace;
+  --win: #f7efe0; --bg: #f7efe0; --side: #4a1a2e; --side-ink: #f7efe0; --sel: #c2436b; --hover: rgba(122, 31, 56, .08);
+  --surface: #fffaf0; --raised: #fffaf0; --ink: #4a1a2e; --ink-2: #7a4a5e; --ink-3: #a98a96; --line: #4a1a2e; --box-line: #4a1a2e;
+  --fill: #eadfcc; --fill-2: #e2d2b8; --fill-3: #c9b79a; --accent: #c2436b; --accent-hover: #a8335a; --accent-soft: #f9c3d2; --accent-2: #f9c3d2; --ring-c: #ffc24a;
+  --good: #2e7d4f; --good-soft: #cfe8d6; --bad: #b3242c; --bad-soft: #f6cfcf; --gold: #b07a00; --ctrl: #fffaf0; --material: #fffaf0; --glass: #f7efe0;
+  --ctrl-sh: 3px 3px 0 #4a1a2e; --sh-pop: 4px 4px 0 #4a1a2e; --ease: steps(4, end); --spring: steps(4, end);
+  color-scheme: light;
+}
+html.retro body { background: var(--bg) repeating-conic-gradient(rgba(122, 31, 56, .045) 0 25%, transparent 0 50%) 0 0 / 4px 4px; -webkit-font-smoothing: none; font-smooth: never; letter-spacing: 0; }
+html.retro *, html.retro *::before, html.retro *::after { border-radius: 0 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+html.retro h1, html.retro h2, html.retro h3, html.retro .big, html.retro .stat, html.retro strong { font-weight: 400; }
+html.retro .card, html.retro .list { background: var(--surface); box-shadow: none; border: 2px solid var(--ink); }
+html.retro .card.hero { box-shadow: 4px 4px 0 var(--ink); }
+html.retro .item + .item::before { border-top: 1px dashed var(--ink-3); }
+html.retro .btn { background: var(--ctrl); color: var(--ink); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); font-weight: 400; transition: none; }
+html.retro .btn:active { transform: translate(3px, 3px); box-shadow: none; filter: none; }
+html.retro .btn.primary { background: var(--accent); color: #f7efe0; }
+html.retro .btn.plain, html.retro .btn.quiet, html.retro .btn.icon { border: 0; box-shadow: none; background: none; }
+html.retro .btn.right, html.retro .choices .btn.right { background: var(--good); color: #f7efe0; animation: none; }
+html.retro .btn.wrong, html.retro .choices .btn.wrong { background: var(--bad); color: #f7efe0; }
+html.retro .choices .btn { background: var(--ctrl); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); font-weight: 400; }
+html.retro input, html.retro textarea { background: #fffaf0; border: 2px solid var(--ink); box-shadow: inset 2px 2px 0 var(--fill-3); }
+html.retro input:focus, html.retro textarea:focus { box-shadow: inset 2px 2px 0 var(--fill-3), 0 0 0 3px var(--ring-c) !important; }
+html.retro .seg { background: var(--fill); border: 2px solid var(--ink); } html.retro .seg .thumb { background: var(--accent); box-shadow: none; } html.retro .seg button[aria-checked="true"] { color: #f7efe0; }
+html.retro .switch { background: var(--fill-3); border: 2px solid var(--ink); } html.retro .switch::after { background: #f7efe0; box-shadow: none; border: 2px solid var(--ink); top: 1px; left: 1px; width: 16px; height: 16px; }
+html.retro .switch[aria-checked="true"] { background: var(--accent); }
+html.retro .progress { height: 10px; background: var(--fill); border: 2px solid var(--ink); } html.retro .progress i { background: repeating-linear-gradient(90deg, var(--accent) 0 6px, #e05a85 6px 8px); }
+html.retro .progress i::after { display: none; }
+html.retro nav { background: var(--side) repeating-conic-gradient(rgba(0, 0, 0, .12) 0 25%, transparent 0 50%) 0 0 / 4px 4px !important; color: #f7efe0; border-color: var(--ink); }
+html.retro .tab { color: #f9c3d2; } html.retro .tab .ico { color: #f9c3d2 !important; }
+html.retro .tab[aria-current="page"] { color: #fff; } html.retro .nav-sel { background: var(--accent); }
+html.retro .nav-h { color: #f9c3d2 !important; opacity: .8; }
+html.retro nav .who { color: #f9c3d2; }
+html.retro #toolbar { background: var(--accent) !important; color: #f7efe0; box-shadow: 0 2px 0 var(--ink) !important; }
+html.retro #toolbar .sub, html.retro #toolbar .count, html.retro #toolbar .btn.icon { color: #fff; opacity: .9; }
+html.retro #toolbar .progress { border-color: #f7efe0; background: var(--ink); }
+html.retro .toast { background: #fffaf0; color: var(--ink); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+html.retro dialog.sheet { background: #fffaf0; border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); }
+html.retro .badge { border: 1px solid currentColor; }
+html.retro .msg.them { background: #fffaf0; border: 2px solid var(--ink); } html.retro .msg.you { background: var(--accent); color: #f7efe0; border: 2px solid var(--ink); }
+html.retro .goal { background: var(--fill); border: 2px solid var(--ink); } html.retro .goal.met { background: var(--good-soft); }
+html.retro .goal-dots i { box-shadow: inset 0 0 0 2px var(--ink); } html.retro .goal-dots i.on { background: var(--good); }
+html.retro .ring .fill { stroke: var(--accent); stroke-linecap: butt; } html.retro .ring .track { stroke: var(--fill-2); }
+html.retro canvas.strokes { border: 2px solid var(--ink); }
+html.retro .drift { color: var(--accent); opacity: .35; }
+html.retro .view-in > *, html.retro .view-in .list > .item { animation-timing-function: steps(5, end); }
+html.retro .hero .btn.primary::after { display: none; }

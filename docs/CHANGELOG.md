@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.22.0
+
+- **YomiGo for Mac.** Download `YomiGo-macOS.dmg` from the release, open it, and drag YomiGo to Applications. One app for Apple silicon and Intel Macs, on macOS 11 Big Sur and later. It has the real macOS window buttons, the system font, and the same course, flashcards, exams, dictionary, Text Reader with paste and clipboard watch, Material folder, backups and Wi-Fi sync with the phone
+- On a Mac, YomiGo tells you when a newer version is out, and Check for updates opens the download page. Talk with Sakura, screenshot reading and transcription use Windows programs, so the Mac doesn't have them yet
+- Saves on a Mac are kept in your user folder, under Library > Application Support > YomiGo > saves
+- **Missed answers show their romaji too,** under the Japanese, for typed answers and multiple choice: こんにちは, konnichiwa
+- **New sounds:** soft bubble pops and glassy taps with a crisp click on every press, and right answers that climb a Japanese pentatonic scale on a kalimba-like tone
+- **Japanese always comes with its reading:** romaji over the Japanese in Sensei's notes and card notes, like furigana, and the hiragana and romaji under example sentences, shadowing lines and conversation lines. Turn it off with **Settings > Romaji help**
+- **Today's goal** on the home screen: a dot for each class your pace asks for, ticked as you finish them, and green once the day is done. The class results show it too
+- **Listening questions wait five seconds,** with a countdown, before the choices appear, so you answer from what you heard
+- **Breaking a streak costs XP:** 50 for each day missed, up to 300, shown once when you come back, with the flame going out
+- **The Japanese keyboard's lost n is forgiven:** typing gomennasai with the Windows or phone Japanese keyboard gives ごめんあさい, because "nn" makes ん. YomiGo now counts that as right and explains how to type it
+- **More life in the interface:** pages and lists arrive in a quick cascade, the sidebar's selection glides, numbers count up, today's class has drifting petals and a glinting button, the streak flame flickers, progress bars shimmer, and answers pop in
+- **Classic look:** Settings > Look > Classic brings back the pixel style of the versions before 0.21, with its dot-matrix type
+- **The Windows app has a normal title bar again,** with minimise, maximise and close
+- **Settings shows Genki practice's state:** when it's on, a Ready mark, how many lessons and cards it holds, and how many of them are already in your deck
+
 ## 0.21.1
 
 - Fixes updates from 0.21.0 onwards: the updater now closes the new Windows app properly before swapping in a newer version. 0.20 updates straight to this version

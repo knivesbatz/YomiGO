@@ -9,8 +9,9 @@ These were chosen so YomiGo can take in as much open knowledge as possible. Most
 
 | Part | Licence | Notes |
 |---|---|---|
+| DotGothic16 font, by Fontworks | SIL OFL 1.1 | The Classic look's type. See `mobile/app/src/main/assets/www/fonts/DotGothic16-OFL.txt` |
 | Inter font, by Rasmus Andersson | SIL OFL 1.1 | The interface type. See `mobile/app/src/main/assets/www/fonts/Inter-OFL.txt` |
-| Tauri and its Rust crates | MIT or Apache-2.0 | The Windows app's window and web view. Each crate's licence is in its source on crates.io |
+| Tauri and its Rust crates | MIT or Apache-2.0 | The Windows and Mac apps' window and web view. Each crate's licence is in its source on crates.io |
 | Source code | GPL-3.0-or-later | `src/`, `desktop/`, `shared/`, `mobile/`, `extension/`, `tools/`, `tests/` |
 | Course text, memory hooks, conversations | CC BY-SA 4.0 | Written for YomiGo. Facts such as readings and meanings aren't owned by anyone, but the wording here is |
 

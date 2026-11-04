@@ -40,6 +40,21 @@ test("two devices' saves merge as on the PC", () => {
   assert.equal(m.cards["h.a"].reps, 3); assert.ok(m.cards["h.i"]); assert.equal(m.exams.S0, 85);
   assert.equal(m.my.length, 2); assert.equal(m.my[0].reps, 2);
 });
+test("a keyboard that eats an n isn't a wrong answer, and a broken streak costs XP once", () => {
+  assert.ok(Y.imeSlip("ごめんあさい", "ごめんなさい", "gomen nasai"));
+  assert.ok(!Y.imeSlip("ごめさい", "ごめんなさい", "gomen nasai"));
+  assert.ok(!Y.imeSlip("ごめんなさい", "ごめんなさい"), "a right answer isn't a slip");
+  const p = Y.newProfile("Maya"); p.xp = 500; p.streak = 6; p.last = 100;
+  assert.equal(Y.streakCheck(p, 101), null, "yesterday keeps it");
+  assert.deepEqual(Y.streakCheck(p, 103), { missed: 2, lost: 6, xp: 100 });
+  assert.equal(p.xp, 400); assert.equal(p.streak, 0);
+  assert.equal(Y.streakCheck(p, 104), null, "charged once");
+  const q = Y.newProfile("Maya"); q.streak = 3; q.last = 10; q.xp = 20;
+  assert.equal(Y.streakCheck(q, 30).xp, 20, "never below zero");
+  const a = Y.newProfile("M"), b = Y.newProfile("M"); a.streak = 0; a.last = 50; b.streak = 9; b.last = 40;
+  assert.equal(Y.merge(a, b).streak, 0, "the older device can't restore a lost streak");
+  assert.equal(Y.loadText(Y.saveText(p)).broke, 103);
+});
 test("chat replies are all reachable", () => {
   for (const c of Object.values(C.chats)) for (const t of c.turns) for (const w of t.want) assert.ok(Y.chatOk(w, t), w);
   const t = C.chats.eat1.turns[0];

@@ -21,6 +21,7 @@
 | Use it on | Download | Open it with |
 |---|---|---|
 | Windows PC | `YomiGo-Windows.zip` | `YomiGo.exe` |
+| Mac | `YomiGo-macOS.dmg` | Drag YomiGo to Applications. See the [install guide](docs/INSTALL.md#mac) for the first opening |
 | TV, with a controller | `YomiGo-Windows.zip` | `YomiGoHTPC.exe` |
 | Android phone | `YomiGo.apk` | Tap it to install |
 | Chrome or Firefox | `YomiGoReader.zip` | See the [install guide](docs/INSTALL.md#browser-extension) |
@@ -79,7 +80,7 @@ YomiGo is in its early days. The course currently runs from zero to **N3**, the 
 | Listening, dictation, and shadowing | |
 | Updates, and Wi-Fi sync between your phone and PC | Sync over the internet |
 
-Some things haven't been tried on real hardware yet, including controllers, CRT TVs, and Android phones. The Windows app needs Windows 10 or 11. See [what's been tested](docs/COMPATIBILITY.md) and [known issues](docs/KNOWN_ISSUES.md), or the full [roadmap](docs/ROADMAP.md).
+Some things haven't been tried on real hardware yet, including controllers, CRT TVs, and Android phones. The Windows app needs Windows 10 or 11, and the Mac app macOS 11 Big Sur or later. See [what's been tested](docs/COMPATIBILITY.md) and [known issues](docs/KNOWN_ISSUES.md), or the full [roadmap](docs/ROADMAP.md).
 
 ## More
 

@@ -64,24 +64,38 @@ const UI = (() => {
     g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t + len);
     o.connect(g).connect(actx.destination); o.start(t); o.stop(t + len + 0.02);
   }
-  const note = (at, f, vol = 0.2, len = 0.45) => { tone(at, f, vol, len); tone(at, f * 2, vol / 3, len / 3); tone(at, f * 2.75, vol / 5, len / 5); };
-  const S = [523, 587, 659, 784, 880, 1047, 1175, 1319, 1568, 1760];
+  // Soft and round, like the Mac's Pop, Tink and Glass: sine waves only. A bubble is a quick upward pitch slide;
+  // a kalimba note is a sine with a faint inharmonic shimmer; a tink is a short glassy ring.
+  const bubble = (at, f, vol, len = 0.07) => tone(at, f, vol, len, "sine", f * 1.9);
+  const kalimba = (at, f, vol = 0.18, len = 0.6) => { tone(at, f, vol, len); tone(at, f * 5.4, vol / 9, len / 6); tone(at, f * 2, vol / 7, len / 3); };
+  const tink = (at, f, vol = 0.06, len = 0.25) => { tone(at, f, vol, len); tone(at, f * 2.76, vol / 3, len / 2); };
+  // The yo scale, a Japanese pentatonic (D E G A B), so runs of right answers climb like a folk tune
+  const S = [587, 659, 784, 880, 988, 1175, 1319, 1568, 1760, 1976];
+  // A click: a few milliseconds of filtered noise, the tick of a key or a switch, over which the bubbles sit
+  let noise = null;
+  function click(at, freq, vol, len = 0.012) {
+    if (!noise) { noise = actx.createBuffer(1, actx.sampleRate / 10, actx.sampleRate); const d = noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+    const t = actx.currentTime + at, s = actx.createBufferSource(), f = actx.createBiquadFilter(), g = actx.createGain();
+    s.buffer = noise; f.type = "bandpass"; f.frequency.value = freq; f.Q.value = 1.4;
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+    s.connect(f).connect(g).connect(actx.destination); s.start(t); s.stop(t + len + 0.01);
+  }
   const SFX = {
-    tap: () => tone(0, 1900, 0.035, 0.03, "triangle"),
-    move: () => tone(0, 1250, 0.05, 0.035, "triangle"),
-    select: () => { tone(0, 880, 0.08, 0.06, "triangle"); tone(0.04, 1320, 0.07, 0.08, "triangle"); },
-    back: () => { tone(0, 990, 0.07, 0.06, "triangle"); tone(0.045, 660, 0.07, 0.08, "triangle"); },
-    edge: () => tone(0, 180, 0.12, 0.07, "sine", 120),
-    nav: () => { tone(0, 740, 0.06, 0.07); tone(0.035, 1110, 0.05, 0.09); },
-    on: () => { tone(0, 700, 0.07, 0.05, "triangle"); tone(0.04, 1050, 0.07, 0.07, "triangle"); },
-    off: () => { tone(0, 1050, 0.06, 0.05, "triangle"); tone(0.04, 700, 0.06, 0.07, "triangle"); },
-    sheet: () => tone(0, 420, 0.1, 0.12, "sine", 840),
-    error: () => { tone(0, 300, 0.12, 0.09, "square"); tone(0.1, 240, 0.1, 0.12, "square"); },
-    ok: () => { note(0, S[combo]); note(0.07, S[combo + 2]); combo = Math.min(combo + 1, 7); },
-    bad: () => { note(0, 330, 0.2, 0.3); note(0.11, 262, 0.2, 0.35); },
-    done: () => [784, 988, 1175, 1568].forEach((f, i) => note(i * 0.08, f, 0.2, i === 3 ? 0.9 : 0.4)),
-    ace: () => { [523, 659, 784, 1047].forEach((f, i) => note(i * 0.07, f)); [1047, 1319, 1568].forEach((f, i) => { note(0.3, f, 0.14, 1.2); note(0.3 + i * 0.1, f * 2, 0.06, 0.3); }); },
-    coin: () => { tone(0, 1568, 0.07, 0.06, "square"); tone(0.06, 2093, 0.07, 0.18, "square"); },
+    tap: () => { click(0, 3200, 0.22); bubble(0.002, 1100, 0.035, 0.03); },
+    move: () => { click(0, 2600, 0.18, 0.01); bubble(0.002, 760, 0.04, 0.03); },
+    select: () => { click(0, 3400, 0.24); bubble(0.004, 700, 0.07, 0.06); bubble(0.05, 1050, 0.06); },
+    back: () => { click(0, 2200, 0.2); tone(0.003, 1000, 0.06, 0.07, "sine", 560); },
+    edge: () => { click(0, 900, 0.22, 0.02); tone(0, 260, 0.08, 0.08, "sine", 180); },
+    nav: () => { click(0, 4200, 0.16, 0.008); tink(0.004, 1760, 0.045, 0.2); },
+    on: () => { click(0, 3600, 0.26, 0.01); click(0.03, 2400, 0.12, 0.008); bubble(0.004, 900, 0.06, 0.05); },
+    off: () => { click(0, 2400, 0.24, 0.01); click(0.028, 3200, 0.1, 0.008); tone(0.004, 1100, 0.055, 0.05, "sine", 620); },
+    sheet: () => tone(0, 380, 0.12, 0.11, "sine", 880),
+    error: () => { tone(0, 330, 0.12, 0.12, "sine", 260); tone(0.11, 262, 0.1, 0.16, "sine", 210); },
+    ok: () => { kalimba(0, S[combo]); kalimba(0.07, S[combo + 2], 0.14); combo = Math.min(combo + 1, 7); },
+    bad: () => { tone(0, 392, 0.14, 0.18, "sine", 330); tone(0.12, 294, 0.14, 0.26, "sine", 247); },
+    done: () => [587, 784, 880, 1175].forEach((f, i) => kalimba(i * 0.085, f, 0.16, i === 3 ? 1.1 : 0.5)),
+    ace: () => { [587, 659, 784, 988, 1175].forEach((f, i) => kalimba(i * 0.065, f, 0.15)); [1976, 2349, 2637].forEach((f, i) => tink(0.36 + i * 0.09, f, 0.05, 0.9)); },
+    coin: () => tink(0, 2349, 0.035, 0.12),
   };
   function sfx(kind) {
     if (kind !== "ok") { if (kind !== "tap" && kind !== "move" && kind !== "coin") combo = 0; }
@@ -106,12 +120,13 @@ const UI = (() => {
   }
   // A grouped list. Rows: { label, value, on, icon, sub, control, lang }
   function list(header, rows, footer) {
-    const box = h("div", { cls: "list" }, rows.filter(Boolean).map((r) => {
+    const box = h("div", { cls: "list" }, rows.filter(Boolean).map((r, j) => {
       const inner = [r.icon ? h("span", { cls: "ic", style: r.tint ? `background:${r.tint}` : null }, icon(r.icon)) : null,
         h("span", { cls: "lbl" }, h("span", { lang: r.lang }, r.label), r.sub ? h("div", { cls: "dim small" }, r.sub) : null),
         r.value !== undefined ? h("span", { cls: "val" }, r.value) : null, r.control || null, r.on && !r.control ? icon("chev", "chev") : null];
       const el = r.on && !r.control ? h("button", { cls: "item", type: "button", on: r.on }, inner) : h("div", { cls: "item" }, inner);
       if (r.menu) el.addEventListener("contextmenu", (e) => menu(e, r.menu));
+      el.style.setProperty("--j", Math.min(j, 12)); // rows arrive one after another
       return el;
     }));
     return [header ? h("div", { cls: "list-h" }, header) : null, box, footer ? h("div", { cls: "list-f" }, footer) : null].filter(Boolean);
@@ -206,10 +221,10 @@ const UI = (() => {
     if (!calm.matches) for (let i = 0; i < 44; i++) setTimeout(() => fly(Math.random() * innerWidth, -30, [{ transform: "translate(0,0)" }, { transform: `translate(${(Math.random() - 0.5) * 140}px,${innerHeight + 60}px) rotate(${Math.random() * 720}deg)` }], "✿", "#f2b6c4", 2400 + Math.random() * 800), i * 45);
   }
   // Numbers that count up, for XP on a result screen
-  function countUp(el, to, ms = 900) {
+  function countUp(el, to, ms = 900, quiet) {
     if (calm.matches || to <= 0) { el.textContent = to; return; }
     const t0 = performance.now(); let last = -1;
-    const step = (t) => { const k = Math.min(1, (t - t0) / ms), v = Math.round(to * (1 - Math.pow(1 - k, 3))); if (v !== last) { el.textContent = v; if (v % 4 === 0 && v) sfx("coin"); last = v; } if (k < 1) requestAnimationFrame(step); };
+    const step = (t) => { const k = Math.min(1, (t - t0) / ms), v = Math.round(to * (1 - Math.pow(1 - k, 3))); if (v !== last) { el.textContent = v; if (!quiet && v % 4 === 0 && v) sfx("coin"); last = v; } if (k < 1) requestAnimationFrame(step); };
     requestAnimationFrame(step);
   }
 

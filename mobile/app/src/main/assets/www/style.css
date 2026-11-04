@@ -46,6 +46,7 @@
 
 /* ---- base ---- */
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: var(--text)/1.47 var(--font); letter-spacing: -.01em; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 [lang="ja"] { font-family: var(--font-jp); letter-spacing: 0; }
@@ -203,6 +204,7 @@ input.big-in { font-size: 22px; min-height: 60px; text-align: center; font-weigh
 .feedback { text-align: center; margin-top: var(--s4); }
 .feedback strong { font-size: 18px; }
 .answer { font-size: 22px; font-weight: 600; margin-top: var(--s2); }
+.answer .romaji { font-size: 16px; font-weight: 500; color: var(--accent); letter-spacing: .02em; }
 .note { background: var(--accent-soft); border-radius: var(--r-l); padding: var(--s4); margin: var(--s3) 0; }
 .jp-read { font-size: 22px; line-height: 1.9; }
 .reader-line { font-size: 24px; line-height: 1.8; cursor: text; }
@@ -331,3 +333,23 @@ dialog.sheet h3 { font-size: 19px; margin-bottom: var(--s2); }
 .key { height: 7.6vh; border: 0; border-radius: 1.8vh; background: var(--fill-2); color: var(--ink); font: 600 3.4vh var(--font); cursor: pointer; }
 .key.wide { grid-column: span 3; font-size: 2.8vh; } .key.go { background: var(--accent); color: #fff; }
 .tv.osk-open main { padding-bottom: 50vh; }
+
+/* romaji over Japanese in explanations, like furigana */
+.ro-text { line-height: 2.1; }
+.ro-text ruby { ruby-position: over; }
+.ro-text rt { font-size: .58em; font-family: var(--font); color: var(--accent); letter-spacing: .02em; font-weight: 500; opacity: .9; }
+.romaji-line { color: var(--accent); font-size: .92em; margin: 2px 0 4px; letter-spacing: .01em; }
+
+/* today's goal */
+.goal { display: flex; align-items: center; gap: 14px; padding: 12px 16px; margin: -6px 0 16px; border-radius: 12px; background: var(--fill); }
+.goal.met { background: var(--good-soft); }
+.goal.met strong { color: var(--good); }
+.goal.compact { margin: 0 0 12px; padding: 8px 12px; background: none; }
+.goal-dots { display: flex; gap: 6px; flex: none; }
+.goal-dots i { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; box-shadow: inset 0 0 0 2px var(--fill-3); color: #fff; }
+.goal-dots i.on { background: var(--good); box-shadow: none; animation: stamp 420ms cubic-bezier(.3, 1.5, .5, 1) both; }
+.goal-dots i:nth-child(2).on { animation-delay: 90ms; } .goal-dots i:nth-child(3).on { animation-delay: 180ms; }
+.goal-dots svg { width: 14px; height: 14px; stroke-width: 3; }
+.tv .goal.compact { display: inline-flex; margin: 0 0 0 1vh; padding: .4vh 1.4vh; } .tv .goal-dots i { width: 3vh; height: 3vh; } .tv .goal-dots svg { width: 2vh; height: 2vh; }
+.kana-line { color: var(--ink-2); font-size: 1.05em; margin-top: 2px; }
+.msg.you .kana-line, .msg.you .romaji-line { color: rgba(255, 255, 255, .85); }

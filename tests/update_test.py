@@ -30,7 +30,7 @@ try:
     print(f"ok: {OLD} updated itself to {latest}")
 
     # 2. the new updater closes a running new app (off screen, test saves) and swaps it
-    env = dict(os.environ, WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS="--disable-features=CalculateNativeWinOcclusion")
+    env = dict(os.environ, WEBVIEW2_USER_DATA_FOLDER=os.path.join(work, "webview"), WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS="--disable-features=CalculateNativeWinOcclusion")
     p = subprocess.Popen([os.path.join(app, "YomiGo.exe"), "--root", os.path.join(work, "tsaves")], env=env)
     time.sleep(4)
     assert p.poll() is None, "the new app didn't start"

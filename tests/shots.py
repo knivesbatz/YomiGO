@@ -50,7 +50,8 @@ def shot(name, js, size="1180x760", tv=False, wait=4.5, theme=None):
     pre = f"try{{localStorage.setItem('yg.theme','{theme or 'light'}');localStorage.setItem('yg.mute','1')}}catch(e){{}}; applyTheme();"
     if name.startswith("phone"): pre += "root.classList.remove('desk','no-side');"  # the phone layout, drawn by the same page
     io.open(os.path.join(root, "go.js"), "w", encoding="utf-8").write(pre + js)
-    env = dict(os.environ, WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS="--disable-features=CalculateNativeWinOcclusion --disable-backgrounding-occluded-windows")
+    # Its own web profile, so a test's settings (theme, sounds, look) never touch the learner's real app
+    env = dict(os.environ, WEBVIEW2_USER_DATA_FOLDER=os.path.join(root, "webview"), WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS="--disable-features=CalculateNativeWinOcclusion --disable-backgrounding-occluded-windows")
     args = [EXE, "--root", root, "--eval", os.path.join(root, "go.js"), "--size", size] + (["--tv"] if tv else [])
     p = subprocess.Popen(args, env=env)
     try:
@@ -58,7 +59,8 @@ def shot(name, js, size="1180x760", tv=False, wait=4.5, theme=None):
         hs = windows_of(p.pid)
         if not hs: raise SystemExit("no window for " + name)
         r = wt.RECT(); u32.GetWindowRect(hs[0], ctypes.byref(r))
-        assert r.right < 0 or r.left > u32.GetSystemMetrics(0), f"test window on screen at {r.left},{r.top}"
+        # On a real PC the window must stay out of sight; CI machines have no one watching and place it at 0,0
+        if not os.environ.get("CI"): assert r.right < 0 or r.left > u32.GetSystemMetrics(0), f"test window on screen at {r.left},{r.top}"
         grab(hs[0], os.path.join(OUT, name + ".png"))
         print("shot", name)
     finally:
@@ -71,6 +73,13 @@ SHOTS = {
     "home-dark": OPEN,
     "cards": OPEN + "setTimeout(()=>cards(),300);",
     "quiz": OPEN + "setTimeout(()=>{runStep()},300);setTimeout(()=>{const b=document.querySelector('.choices .btn');if(b)b.click();},900);",
+    "missed": OPEN + "setTimeout(()=>runQuiz([Y.makeQ(Y.byId['v.konnichiwa'],2,true),Y.makeQ(Y.byId['v.konnichiwa'],1,false)],'Practice',()=>{}),300);setTimeout(()=>[...document.querySelectorAll('.btn.quiet')].pop().click(),900);",
+    "listen": OPEN + "setTimeout(()=>{const q=Y.makeQ(Y.byId['v.konnichiwa'],0,false);q.say='こんにちは';runQuiz([q],'Listening',()=>{})},300);",
+    "notes": OPEN + "setTimeout(()=>{P.day=C.days.findIndex(d=>d.notes.some(n=>n.includes('すみません')));teach(C.days[P.day].notes.findIndex(n=>n.includes('すみません')))},300);",
+    "shadow": OPEN + "setTimeout(()=>{P.day=C.days.findIndex(d=>d.new.some(id=>Y.byId[id].f==='倍'));const l=Y.shadowLines(P.day);shadow(l,l.findIndex(x=>x.jp==='倍'))},300);",
+    "goal": OPEN + "setTimeout(()=>{P.gate=0;P.exams={};for(const e of C.exams)P.exams[e.id]=90;P.pace=2;P.last=Y.today();P.today=1;home()},300);",
+    "classic": "try{localStorage.setItem('yg.look','classic')}catch(e){};applyTheme();" + OPEN,
+    "lost": "Host.store.write('Hana', Host.store.text('Hana').replace('last=0','last=' + (Y.today() - 3)));" + OPEN,
     "teach": OPEN + "setTimeout(()=>teach(4),300);",
     "settings": OPEN + "setTimeout(()=>settings(),300);",
     "library": OPEN + "setTimeout(()=>library(),300);",

@@ -19,9 +19,9 @@
 
 ## Limits in this version
 
+- **Mac:** built by CI on GitHub's Macs, but never opened on a real Mac. It isn't notarised by Apple, so the first opening needs the steps in the [install guide](INSTALL.md#mac). Talk, screenshot reading and transcription aren't on the Mac, and updates are downloaded by hand.
+
 - The Big Sur look uses Inter in place of Apple's SF Pro, which may only be used on Apple systems, and YomiGo's own icons in place of SF Symbols.
-- On Windows 11 a hairline in the system accent colour can show along the top edge of the window, from how Windows draws frameless windows.
-- The PC window has no buttons in its corner. Drag it by the toolbar, double-click the toolbar to zoom, right-click it to minimise or close, or press Alt+F4.
 - The TV's on-screen keyboard types romaji, which answers turn into kana as usual.
 
 - Windows OCR is made for horizontal text, so vertical manga text often comes out poorly. A manga-specific reader is on the roadmap.

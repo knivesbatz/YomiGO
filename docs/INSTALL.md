@@ -1,5 +1,23 @@
 # Installing YomiGo
 
+## Mac
+
+1. Download `YomiGo-macOS.dmg` from the [latest release](https://github.com/knivesbatz/YomiGO/releases/latest), open it, and drag **YomiGo** to **Applications**. It runs on Apple silicon and Intel Macs, on macOS 11 Big Sur or later.
+2. The first time, macOS checks who made it. YomiGo isn't registered with Apple, so open it like this once:
+   - **macOS 11 to 14:** in Applications, Control-click YomiGo, choose **Open**, then **Open** again.
+   - **macOS 15 and later:** open YomiGo, close the warning, then go to **System Settings > Privacy & Security** and choose **Open Anyway** next to YomiGo.
+   - If macOS says the app is damaged, open Terminal and run `xattr -cr /Applications/YomiGo.app`, then open it again. Nothing is wrong with it: that removes the download mark macOS adds.
+
+Saves are kept in `~/Library/Application Support/YomiGo/saves`. Your own study files can go in a folder named `YomiGO/Material` in your home folder; they show under **Library > Material**.
+
+**Keyboard:** ⌘1 to ⌘7 open each place, ⌘F the dictionary, ⌘, Settings, and Esc goes back.
+
+**Listening:** add a Japanese voice in **System Preferences > Accessibility > Spoken Content > System Voice > Manage Voices**, such as Kyoko, then restart YomiGo.
+
+**Updates:** YomiGo tells you when a new version is out. **Settings > Check for updates** opens the download page; install it the same way, replacing the old app.
+
+**Not on the Mac yet:** Talk with Sakura, reading screenshots, and transcription. They use Windows programs.
+
 ## Windows: Desktop and HTPC
 
 1. Download `YomiGo-Windows.zip` and unzip it anywhere you can write to, such as `C:\YomiGO\App`. Avoid `Program Files`, since saves are kept beside the program.
@@ -10,8 +28,6 @@ YomiGo for Windows needs Windows 10 or 11. It uses the Edge WebView2 runtime, wh
 Saves go in a `saves` folder beside the program. Keep your own study files in a folder called `Material`, either beside the program or one level up, or at `C:\YomiGO\Material`. They're listed under **Library > Material**, and an immersion task offers a matching file.
 
 **Keyboard:** Ctrl+1 to Ctrl+8 open each place in the sidebar, Ctrl+F the dictionary, and Ctrl+, Settings. Esc goes back. In a quiz, 1 to 4 pick an answer and Enter goes on. Right-click a dictionary result, one of your words, or a Text Reader line for more. In the TV app, the arrows move, Enter chooses, Esc or Backspace goes back, and Page Up and Page Down flip between places.
-
-**The window:** drag it by the toolbar at the top, double-click the toolbar to zoom it, and right-click the toolbar to minimise or close it. Alt+F4 also closes it.
 
 **Listening:** to hear Japanese on Windows, add a Japanese voice under Settings > Time & language > Speech, then restart YomiGo. Without one, classes skip listening. **Settings > Japanese voice** shows whether YomiGo found it. On Android, the same setting opens your phone's voice download page.
 

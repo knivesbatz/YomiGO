@@ -152,7 +152,7 @@ const TV = (() => {
       : tile(d.ja, over ? "Today's class is done" : `${P.step ? "Continue" : "Start"} · Class ${P.day + 1} of ${C.days.length}`, "home", "linear-gradient(150deg,#ff5c8d,#b0234f)", over ? cards : runStep, UI.ring(P.step, 10, `${P.step * 10}%`), true);
     const clk = h("span", { cls: "clock" }, clock()), timer = setInterval(() => { clk.textContent = clock(); }, 10000);
     onLeave(() => clearInterval(timer));
-    show(h("div", { cls: "hub-top" }, h("span", { cls: "avatar" }, P.name[0].toUpperCase()), h("div", null, h("div", { cls: "name" }, P.name), h("div", { cls: "chips", style: "margin:4px 0 0" }, h("span", { cls: "chip fire" }, icon("flame"), P.streak), h("span", { cls: "chip star" }, icon("star"), `${P.xp} XP`), h("span", { cls: "chip rank", lang: "ja" }, rankName()))), clk),
+    show(h("div", { cls: "hub-top" }, h("span", { cls: "avatar" }, P.name[0].toUpperCase()), h("div", null, h("div", { cls: "name" }, P.name), h("div", { cls: "chips", style: "margin:4px 0 0" }, h("span", { cls: "chip fire" }, icon("flame"), P.streak), h("span", { cls: "chip star" }, icon("star"), `${P.xp} XP`), h("span", { cls: "chip rank", lang: "ja" }, rankName()), goalBox(true))), clk),
       h("div", { cls: "tiles" }, first,
         tile(L("Flashcards", "カード", 3), due ? `${due} due` : "All caught up", "cards", "linear-gradient(150deg,#ff9f0a,#c25e00)", cards, h("div", { cls: "num" }, due)),
         tile(L("Exams", "しけん", 2), "Gates on the road", "exam", "linear-gradient(150deg,#5e5ce6,#2f2c9e)", exams),

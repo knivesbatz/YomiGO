@@ -10,6 +10,45 @@ let leaving = [];     // clean-up for the screen being left: timers, listeners
 let leaveHook = null; // set while an exam question is open
 const store = { save() { if (P) Host.store.write(P.name, Y.saveText(P)); }, load: (n) => Y.loadText(Host.store.text(n)) };
 const L = (en, ja, from) => (P && !P.en && Y.stageOf(P) >= from ? ja : en);
+// Romaji help: Japanese inside explanations gets its romaji above it, like furigana, so nothing is unreadable.
+// A run that is a card says it as the card does (こんにちは: konnichiwa); kanji are read from the cards that spell them.
+const romajiHelp = () => { try { return localStorage.getItem("yg.romaji") !== "0"; } catch { return true; } };
+let words = null;
+const PUNCT = { "、": ",", "。": ".", "！": "!", "？": "?", "・": " ", "「": "", "」": "" };
+const PARTICLE = { "は": "wa", "を": "o", "へ": "e", "が": "ga", "に": "ni", "で": "de", "と": "to", "も": "mo", "の": "no", "か": "ka", "ね": "ne", "よ": "yo" };
+// Splits a run into the course's own words, longest first, and reads each as its card does; particles between words
+// are read as spoken (は wa, を o, へ e). Anything left over is read kana by kana. "" if a kanji can't be read.
+function readTokens(run) {
+  words = words || C.cards.filter((c) => c.f && c.ro && c.t !== "g" && (c.f.length > 1 || /[㐀-鿿]/.test(c.f)) && !/[^぀-ヿ㐀-鿿々ー]/.test(c.f)).sort((a, b) => b.f.length - a.f.length || (a.t === "w" ? -1 : 1));
+  const out = []; let loose = ""; // [kana, romaji] per word
+  const flush = () => { if (loose) { out.push([loose, Y.kanaRomaji(loose)]); loose = ""; } };
+  for (let i = 0; i < run.length;) {
+    const w = words.find((c) => run.startsWith(c.f, i));
+    if (w) { flush(); out.push([w.r, w.ro]); i += w.f.length; continue; }
+    if (PUNCT[run[i]] !== undefined) { flush(); if (out.length) { out[out.length - 1][0] += run[i]; out[out.length - 1][1] += PUNCT[run[i]]; } i++; continue; }
+    if (PARTICLE[run[i]] && (out.length || loose)) { flush(); out.push([run[i], PARTICLE[run[i]]]); i++; continue; }
+    if (/[㐀-鿿々]/.test(run[i])) return null;
+    loose += run[i++];
+  }
+  flush();
+  return out;
+}
+const romajiOf = (run) => { const t = readTokens(run); return t ? t.map((x) => x[1]).join(" ") : ""; };
+const kanaOf = (run) => { const t = readTokens(run); return t ? t.map((x) => x[0]).join("") : ""; };
+// Under a line of Japanese: its hiragana when it has kanji, then its romaji. Romaji help in Settings turns the romaji off.
+function readingOf(jp, ro) {
+  const kana = /[㐀-鿿々]/.test(jp) ? kanaOf(jp) : "", r = ro || romajiOf(jp);
+  return [kana ? h("div", { cls: "kana-line", lang: "ja" }, kana) : null, r && r !== jp && romajiHelp() ? h("div", { cls: "romaji-line" }, r) : null];
+}
+function withRomaji(text) {
+  if (!romajiHelp()) return text;
+  return text.split(/([぀-ヿ㐀-鿿々ー〜]+)/).map((part, i) => {
+    if (!(i % 2)) return part;
+    const ro = romajiOf(part);
+    return ro && ro !== part ? h("ruby", { lang: "ja" }, part, h("rt", { lang: "en" }, ro)) : h("span", { lang: "ja" }, part);
+  });
+}
+const slipTip = () => toast("Your Japanese keyboard turned nn into ん and ate an n, so it counts. Next time type n three times, as in gomennnasai, or turn the Japanese keyboard off: YomiGo turns romaji into kana itself.");
 const hear = (t, label) => btn([icon("speaker"), label || L("Hear it", "聞く", 5)], () => Host.speak(t), "plain");
 
 function show(...kids) {
@@ -18,8 +57,11 @@ function show(...kids) {
   const all = kids.flat(Infinity).filter((k) => k !== null && k !== undefined && k !== false && k !== "");
   // In the Big Sur look the page title sits in the toolbar
   if (root.classList.contains("mac")) { const i = all.findIndex((k) => k.classList && (k.classList.contains("head") || k.classList.contains("bar-top"))); toolbar.replaceChildren(...(i >= 0 ? all.splice(i, 1) : [])); }
+  all.forEach((k, i) => k.style && k.style.setProperty("--i", Math.min(i, 10)));
   app.replaceChildren(...all);
   app.classList.remove("view-in"); void app.offsetWidth; app.classList.add("view-in");
+  // Numbers marked data-count roll up from zero as the page arrives
+  app.querySelectorAll("[data-count]").forEach((el) => UI.countUp(el, +el.dataset.count, 700, true));
   app.scrollTop = 0; window.scrollTo(0, 0); toolbar.classList.remove("scrolled");
   document.dispatchEvent(new Event("yg:show"));
 }
@@ -57,11 +99,19 @@ function setNav(cur) {
   nav.classList.toggle("hide", flow || !P);
   back = cur === "home" || !P ? null : home;
   if (!P || flow) return;
-  nav.replaceChildren(h("div", { cls: "brand" }, "Yomi", h("b", null, "Go"), h("span", { lang: "ja", cls: "dim small" }, " 読みGo")),
+  const sel = h("div", { cls: "nav-sel", "aria-hidden": "true" });
+  nav.replaceChildren(sel, h("div", { cls: "brand" }, "Yomi", h("b", null, "Go"), h("span", { lang: "ja", cls: "dim small" }, " 読みGo")),
     ...TABS.flatMap((t, i) => [GROUP[t[4]] ? h("div", { cls: "nav-h" }, GROUP[t[4]]) : null, h("button", { cls: "tab", type: "button", "data-quiet": "1", "aria-current": t[4] === cur ? "page" : null, title: `${t[0]}${Host.desktop && i < 9 ? `  (${Host.mac ? "⌘" : "Ctrl+"}${i + 1})` : ""}`,
       on: () => { if (t[4] !== cur) sfx("nav"); t[3](); } }, icon(t[4]), h("span", null, L(t[0], t[1], t[2])))].filter(Boolean)),
     h("div", { cls: "who" }, h("span", { cls: "avatar", "aria-hidden": "true" }, P.name[0].toUpperCase()), P.name));
+  const on = nav.querySelector('[aria-current="page"]');
+  if (on && on.offsetHeight) {
+    sel.style.cssText = `top:${navSelTop ?? on.offsetTop}px;height:${on.offsetHeight}px`;
+    requestAnimationFrame(() => { sel.style.top = on.offsetTop + "px"; });
+    navSelTop = on.offsetTop;
+  }
 }
+let navSelTop = null;
 document.addEventListener("keydown", (e) => {
   if (Host.tv) return; // the TV has its own keys
   if (e.key === "Escape" && !document.querySelector("dialog[open]")) {
@@ -94,9 +144,25 @@ function profiles() {
   show(h("div", { cls: "prompt welcome" }, h("img", { src: "icon.png", alt: "", width: 96, height: 96 }), h("h1", null, "Welcome to YomiGo"), h("div", { cls: "dim", lang: "ja" }, "読みGo ・ にほんごを、まいにち")),
     names.length ? list("Continue as", names.map((n) => ({ label: n, icon: "person", on: () => {
       P = store.load(n); if (!P) return toast("That save couldn't be read.", "bad");
-      sfx("select"); if (Y.catchUp(P, Y.today())) store.save(); P.placed || P.day ? home() : placeIntro();
+      sfx("select"); if (Y.catchUp(P, Y.today())) store.save();
+      const next = P.placed || P.day ? home : placeIntro, hit = Y.streakCheck(P, Y.today());
+      if (hit) { store.save(); return streakLost(hit, next); }
+      next();
     } }))) : null,
     h("div", { cls: "card" }, h("h3", null, names.length ? "New learner" : "Welcome! What's your name?"), name, h("p", { cls: "dim small" }, "Letters A-Z and numbers for now."), btn("Start", start, "primary")));
+}
+// Missing days ends the streak and costs XP. The flame goes out, the XP drains away, and the only way on is a new streak.
+function streakLost(hit, next) {
+  setNav(""); back = next; UI.endRun(); sfx("bad"); setTimeout(() => sfx("error"), 380); UI.buzz([80, 60, 80, 60, 160]);
+  const xp = h("span", null, "0");
+  show(h("div", { cls: "prompt lost" }, h("div", { cls: "lost-flame", "aria-hidden": "true" }, icon("flame")),
+      h("h1", null, `Your ${hit.lost}-day streak is over`),
+      h("p", { cls: "dim" }, `You missed ${hit.missed} day${hit.missed === 1 ? "" : "s"}.`)),
+    hit.xp ? h("div", { cls: "card", style: "text-align:center" }, h("div", { cls: "eyebrow" }, "Penalty"), h("div", { cls: "stat bad" }, "−", xp, " XP")) : null,
+    h("div", { cls: "card" }, "Every missed day costs 50 XP, up to 300. Streaks come back one class at a time: do today's class to light a new one."),
+    btn("Start a new streak", next, "primary"));
+  if (hit.xp) UI.countUp(xp, hit.xp, 1200, true);
+  if (!UI.calm.matches) for (let i = 0; i < 14; i++) setTimeout(() => { const s = h("span", { cls: "petal wilt", "aria-hidden": "true" }, "✿"); s.style.cssText = `left:${Math.random() * innerWidth}px;top:-20px;color:#8e8e93;font-size:${12 + Math.random() * 10}px`; document.body.append(s); s.animate([{ transform: "translate(0,0) rotate(0)", opacity: .9 }, { transform: `translate(${(Math.random() - .5) * 60}px,${innerHeight * .9}px) rotate(${Math.random() * 90}deg)`, opacity: 0 }], { duration: 3200 + Math.random() * 1500, easing: "ease-in" }).onfinish = () => s.remove(); }, i * 120);
 }
 // Who's learning picks the casual words for "I" added to My words. わたし is in the course for everyone.
 const GENDER = ["Not asked", "Woman", "Man", "Rather not say", "Says ぼく"];
@@ -138,6 +204,15 @@ function placement(section, passed) {
 // ---- today ----
 const RANKS = [["Newcomer", "入門者"], ["White Sash", "白帯"], ["Road Walker", "道を行く者"], ["Scribe", "書記"], ["Castle Guard", "城の守り"], ["Gatekeeper", "門番"], ["Kanji Knight", "漢字の騎士"], ["N5 Champion", "N5王者"], ["N4 Champion", "N4王者"], ["N3 Champion", "N3王者"]];
 const rankName = () => RANKS[Y.rankOf(P)][Y.stageOf(P) >= 3 && !P.en ? 1 : 0];
+// Today's goal: the classes done today against the pace chosen in Settings, one dot each, green once it's met
+const doneToday = () => (P.last === Y.today() ? P.today : 0);
+function goalBox(compact) {
+  const done = doneToday(), met = done >= P.pace, n = P.pace;
+  return h("div", { cls: "goal" + (met ? " met" : "") + (compact ? " compact" : ""), role: "status", "aria-label": `Today's goal: ${Math.min(done, n)} of ${n} classes${met ? ", done" : ""}` },
+    h("div", { cls: "goal-dots", "aria-hidden": "true" }, Array.from({ length: n }, (_, i) => h("i", { cls: i < done ? "on" : "" }, i < done ? icon("check") : null))),
+    h("div", null, h("strong", null, met ? L("Today's goal done", "きょうの目標クリア", 5) : `${L("Today's goal", "きょうの目標", 5)}: ${done} of ${n} ${n === 1 ? "class" : "classes"}`),
+      compact ? null : h("div", { cls: "dim small" }, met ? (done > n ? `${done} classes today. Extra review and immersion are always welcome.` : "Come back tomorrow to keep your streak. Review and immerse as much as you like.") : `${n - done} more to go today. Your pace is ${n} a day, set in Settings.`)));
+}
 const greeting = () => { const hr = new Date().getHours(); return hr < 5 ? "Up late" : hr < 12 ? "Good morning" : hr < 18 ? "Good afternoon" : "Good evening"; };
 function home() {
   if (!P.gender) return askSpeaker(home); // saves from before 0.7.1 are asked once
@@ -147,16 +222,16 @@ function home() {
   if (P.last !== t) P.today = 0;
   const parts = [head(L("Today", "きょう", 2), `${greeting()}, ${P.name}`),
     h("div", { cls: "chips" }, h("span", { cls: "chip fire", title: "Day streak" }, icon("flame"), `${P.streak} day${P.streak === 1 ? "" : "s"}`),
-      h("span", { cls: "chip star", title: "Experience" }, icon("star"), `${P.xp} XP`), h("span", { cls: "chip rank", lang: "ja" }, rankName()))];
+      h("span", { cls: "chip star", title: "Experience" }, icon("star"), h("span", { "data-count": P.xp }, "0"), " XP"), h("span", { cls: "chip rank", lang: "ja" }, rankName())), P.day < C.days.length ? goalBox() : null];
   if (gate >= 0) parts.push(h("div", { cls: "card hero" }, h("span", { cls: "badge bad" }, "Required to continue"), h("h2", null, C.exams[gate].name), h("p", { cls: "dim" }, "Pass with 80%. Retake it as often as you need."), btn(L("Take the exam", "しけん", 2), () => startExam(gate), "primary")));
   else if (P.day >= C.days.length) parts.push(h("div", { cls: "card hero" }, h("h2", { cls: "good" }, "Course complete!"), h("p", null, "More words, then N2, arrive in future updates. Keep reviewing, and read and listen to real Japanese every day.")));
   else {
     const d = C.days[P.day], over = P.today >= P.pace && P.last === t;
-    parts.push(h("div", { cls: "card hero" }, h("div", { cls: "row" }, h("div", null, h("div", { cls: "eyebrow" }, `${C.stages[d.stage].name} · Class ${P.day + 1} of ${C.days.length}`),
+    parts.push(h("div", { cls: "card hero class-hero" }, ["l1", "l2", "l3"].map((c) => h("span", { cls: "drift " + c, "aria-hidden": "true" }, "✿")), h("div", { cls: "row" }, h("div", null, h("div", { cls: "eyebrow" }, `${C.stages[d.stage].name} · Class ${P.day + 1} of ${C.days.length}`),
         h("div", { cls: "big", lang: "ja", style: "margin-top:8px" }, d.ja), h("div", { cls: "dim" }, d.title)), ring(P.step, 10, `${P.step * 10}%`)),
       over ? h("p", { cls: "good" }, "Today's class is done. Rest, review, or immerse.") : btn(P.step ? L("Continue class", "つづける", 2) : L("Start class", "はじめる", 2), () => { sfx("select"); runStep(); }, "primary")));
     parts.push(h("div", { cls: "grid2" },
-      h("div", { cls: "card" }, h("div", { cls: "eyebrow" }, L("Flashcards due", "カード", 3)), h("div", { cls: "stat " + (due ? "acc" : "good") }, due), due ? btn(L("Review now", "ふくしゅう", 2), cards, "sm") : h("div", { cls: "dim small" }, "All caught up")),
+      h("div", { cls: "card" }, h("div", { cls: "eyebrow" }, L("Flashcards due", "カード", 3)), h("div", { cls: "stat " + (due ? "acc" : "good"), "data-count": due }, "0"), due ? btn(L("Review now", "ふくしゅう", 2), cards, "sm") : h("div", { cls: "dim small" }, "All caught up")),
       h("div", { cls: "card" }, h("div", { cls: "eyebrow" }, L("Today's immersion", "イマージョン", 3)), h("p", { cls: "small" }, d.imm))));
   }
   show(parts);
@@ -192,7 +267,8 @@ function runStep() {
     case 9: return task(d.imm, L("Immersion", "イマージョン", 3), L("I'll do it today", "やります！", 2), nextStep, d.mat);
     default:
       Y.learnDay(P, P.day, Y.today()); Y.completeDay(P, Y.today()); store.save();
-      result("Class complete!", `Streak: ${P.streak} day(s). Your new cards are in the flashcard deck.`, 2, home, 100);
+      if (doneToday() === P.pace) toast(L("Today's goal done!", "きょうの目標クリア！", 5), "good");
+      result("Class complete!", [goalBox(true), h("p", null, `Streak: ${P.streak} day(s). Your new cards are in the flashcard deck.`)], 2, home, 100);
   }
 }
 function nextStep() { P.step++; store.save(); runStep(); }
@@ -205,7 +281,7 @@ function shadow(lines, i) {
   setNav("");
   show(topBar(L("Shadowing", "シャドーイング", 3), `${i + 1} / ${lines.length}`, stepBar(), home),
     h("p", { cls: "dim" }, "Listen, then say it out loud, copying the rhythm and tone. Do it as many times as you like."),
-    h("div", { cls: "card" }, h("div", { lang: "ja", cls: "jp-read" }, l.jp), l.ro && Y.stageOf(P) < 4 ? h("div", { cls: "dim" }, l.ro) : "", h("div", null, l.en), hear(l.jp)),
+    h("div", { cls: "card" }, h("div", { lang: "ja", cls: "jp-read" }, l.jp), readingOf(l.jp, l.ro), h("div", null, l.en), hear(l.jp)),
     Host.canListen() ? btn([icon("mic"), L("Try it", "話す", 5)], () => Host.listen((heard) => { fb.textContent = !heard ? "Didn't catch that. Try again." : (Y.answerOk(heard, l.jp, l.ro) ? "It heard what you were aiming for: " : "It heard: ") + heard + ". This only checks the words, not your accent."; })) : "", fb,
     btn("I said it", () => shadow(lines, i + 1), "primary"));
   Host.speak(l.jp);
@@ -270,18 +346,18 @@ function teach(page) {
   const d = C.days[P.day], total = d.notes.length + d.new.length, rom = Y.romajiMode(P.day);
   setNav(""); back = page > 0 ? () => teach(page - 1) : home;
   let body;
-  if (page < d.notes.length) body = [h("div", { cls: "eyebrow acc" }, L("Sensei's notes", "せんせいのノート", 3)), h("p", { style: "font-size:18px" }, d.notes[page])];
+  if (page < d.notes.length) body = [h("div", { cls: "eyebrow acc" }, L("Sensei's notes", "せんせいのノート", 3)), h("p", { style: "font-size:18px", cls: "ro-text" }, withRomaji(d.notes[page]))];
   else {
     const c = Y.byId[d.new[page - d.notes.length]];
     body = [h("div", { cls: "big acc", lang: "ja" }, rom && c.t === "w" ? c.ro : c.f)];
     if ("hkj".includes(c.t)) body.push(strokeBox(c.f));
-    if (c.t === "g") body.push(h("p", null, c.en), h("p", { cls: "dim" }, c.n), h("div", { cls: "note" }, h("div", { lang: "ja" }, c.s.replace("＿", c.r)), h("div", { cls: "dim small" }, c.tr)));
+    if (c.t === "g") body.push(h("p", { cls: "ro-text" }, withRomaji(c.en)), h("p", { cls: "dim ro-text" }, withRomaji(c.n)), h("div", { cls: "note" }, h("div", { lang: "ja" }, c.s.replace("＿", c.r)), romajiHelp() && romajiOf(c.s.replace("＿", c.r)) ? h("div", { cls: "romaji-line" }, romajiOf(c.s.replace("＿", c.r))) : null, h("div", { cls: "dim small" }, c.tr)));
     else {
-      if (!"hk".includes(c.t)) body.push(h("div", { lang: "ja", style: "font-size:20px" }, rom ? c.r : c.f !== c.r ? c.r : ""), !rom && Y.stageOf(P) < 4 ? h("div", { cls: "dim" }, c.ro) : null);
+      if (!"hk".includes(c.t)) body.push(h("div", { lang: "ja", style: "font-size:20px" }, rom ? c.r : c.f !== c.r ? c.r : ""), !rom && (Y.stageOf(P) < 4 || romajiHelp()) ? h("div", { cls: "romaji-line" }, c.ro) : null);
       body.push(h("p", { style: "font-size:18px" }, c.en));
-      if (c.n) body.push(h("p", { cls: "dim" }, c.n));
+      if (c.n) body.push(h("p", { cls: "dim ro-text" }, withRomaji(c.n)));
       // a word comes with a sentence people actually say, so it's learnt as a phrase
-      if (c.t === "w" && c.s && !rom) body.push(h("div", { cls: "note" }, h("div", { lang: "ja" }, c.s), h("div", { cls: "dim small" }, c.tr)));
+      if (c.t === "w" && c.s && !rom) body.push(h("div", { cls: "note" }, h("div", { lang: "ja" }, c.s), romajiHelp() && romajiOf(c.s) ? h("div", { cls: "romaji-line" }, romajiOf(c.s)) : null, h("div", { cls: "dim small" }, c.tr)));
     }
     body.push(hear(c.t === "g" ? c.s.replace("＿", c.r) : c.r));
   }
@@ -297,7 +373,8 @@ function typing(words, i, rep, bad) {
   inp.addEventListener("input", () => { pre.textContent = Y.normKana(inp.value); });
   const submit = () => {
     if (!inp.value) return inp.focus();
-    const ok = Y.answerOk(inp.value, c.r, c.ro);
+    const slip = !Y.answerOk(inp.value, c.r, c.ro) && Y.imeSlip(inp.value, c.r, c.ro), ok = slip || Y.answerOk(inp.value, c.r, c.ro);
+    if (slip) slipTip();
     ok ? UI.cheerRight(inp) : UI.cheerMiss();
     if (!ok) return typing(words, i, rep, true);
     if (rep + 1 < REPS) return typing(words, i, rep + 1, false);
@@ -313,6 +390,15 @@ function typing(words, i, rep, bad) {
   inp.focus();
 }
 
+// The right answer after a miss, in Japanese and in romaji, so it can be read at any stage
+const JP = /[぀-ヿ㐀-鿿]/, KANA_ONLY = /^[぀-ヿー・\s]+$/;
+function answerOf(q) {
+  const opts = q.kind === "type" ? [q.want, q.want2].filter(Boolean) : [q.answer];
+  const ja = opts.find((x) => JP.test(x)) || "", latin = opts.find((x) => !JP.test(x)) || "";
+  // the card's own romaji first: it spells particles as said, こんにちは as konnichiwa
+  const ro = latin || (ja && (ja === q.card.f || ja === q.card.r) && q.card.ro ? q.card.ro : KANA_ONLY.test(ja) ? Y.kanaRomaji(ja) : "");
+  return h("div", { cls: "answer" }, ja ? h("div", { lang: "ja" }, ja) : null, ro ? h("div", { cls: ja ? "romaji" : "" }, ro) : null);
+}
 function runQuiz(qs, title, done, opt = {}) {
   let i = 0, right = 0; const total0 = qs.length;
   setNav("");
@@ -325,6 +411,8 @@ function runQuiz(qs, title, done, opt = {}) {
     let idk = false, left = false, dontKnow = null, answered = false;
     const after = (ok) => {
       answered = true; leaveHook = null;
+      // answering early (I don't know, or leaving an exam) ends a listening countdown and shows the choices
+      area.querySelectorAll(".countdown").forEach((c) => c.remove()); area.querySelectorAll(".choices[hidden]").forEach((g) => { g.hidden = false; });
       if (dontKnow) dontKnow.remove();
       ok ? UI.cheerRight(fb, opt.xpEach) : idk ? (UI.endRun(), sfx("off")) : UI.cheerMiss();
       if (ok) { if (!opt.seenWrong?.has(i)) right++; } else if (opt.requeue && qs.length < 60) qs.push(q);
@@ -333,19 +421,33 @@ function runQuiz(qs, title, done, opt = {}) {
       const next = btn(L("Next", "つぎ", 2), () => { i++; step(); }, "primary", { "data-quiet": "1" });
       fb.replaceChildren(idk ? "" : h("div", { cls: "mark " + (ok ? "good" : "bad"), "aria-hidden": "true", lang: "ja" }, ok ? "○" : "×"),
         h("strong", { cls: ok ? "good" : idk ? "dim" : "bad" }, ok ? L("Correct!", "正解！", 5) : idk ? "That's okay. Here's the answer." : left ? "You left YomiGo during the exam, so this one counts as wrong." : L("Not quite.", "ちがいます", 3)),
-        q.kind === "type" && !ok ? h("div", { cls: "answer", lang: "ja" }, q.want) : "", !ok && q.card.n ? h("p", { cls: "dim" }, q.card.n) : "", next);
+        !ok ? answerOf(q) : "", !ok && q.card.n ? h("p", { cls: "dim ro-text" }, withRomaji(q.card.n)) : "", next);
       next.focus({ preventScroll: true }); fb.scrollIntoView({ behavior: UI.calm.matches ? "auto" : "smooth", block: "nearest" });
     };
     if (q.kind === "choice") {
       const buttons = q.choices.map((c, k) => btn(c, () => { buttons.forEach((x) => { x.disabled = true; if (x.textContent === q.answer) x.classList.add("right"); }); if (c !== q.answer) buttons.find((x) => x.textContent === c).classList.add("wrong"); after(c === q.answer); }, "", { lang: "ja", "data-quiet": "1", "data-key": k + 1 }));
-      area.append(h("div", { cls: "choices" }, buttons));
+      const grid = h("div", { cls: "choices" }, buttons);
+      area.append(grid);
+      // Listening: five seconds to hear it before the choices appear, so the answer comes from the ear, not the options
+      if (q.say) {
+        let n = 5;
+        const num = h("span", { "aria-hidden": "true" }, n), cd = h("div", { cls: "countdown", role: "timer", "aria-label": "Choices in 5 seconds" }, num, h("div", { cls: "dim small" }, L("Listen first", "まず聞いて", 5)));
+        grid.hidden = true; area.prepend(cd);
+        const t = setInterval(() => {
+          if (answered) return clearInterval(t);
+          if (--n > 0) { num.textContent = n; num.classList.remove("tick"); void num.offsetWidth; num.classList.add("tick"); sfx("move"); return; }
+          clearInterval(t); cd.remove(); grid.hidden = false; sfx("select");
+          if (Host.tv) buttons[0].focus();
+        }, 1000);
+        onLeave(() => clearInterval(t));
+      }
       // 1 to 4 pick an answer from the keyboard
-      const keys = (e) => { if (!answered && buttons[0].isConnected && /^[1-9]$/.test(e.key) && buttons[+e.key - 1] && !(e.target.tagName === "INPUT")) buttons[+e.key - 1].click(); };
+      const keys = (e) => { if (!answered && buttons[0].isConnected && !grid.hidden && /^[1-9]$/.test(e.key) && buttons[+e.key - 1] && !(e.target.tagName === "INPUT")) buttons[+e.key - 1].click(); };
       document.addEventListener("keydown", keys); onLeave(() => document.removeEventListener("keydown", keys));
     } else {
       const inp = field({ "aria-label": "Your answer", lang: "ja", placeholder: "Type here", cls: "big-in", enterkeyhint: "done" }), pre = h("div", { cls: "preview", lang: "ja" });
       inp.addEventListener("input", () => { pre.textContent = Y.normKana(inp.value); });
-      const check = btn(L("Check", "チェック", 3), () => { if (!inp.value.trim()) return inp.focus(); check.disabled = true; inp.disabled = true; after(Y.answerOk(inp.value, q.want, q.want2)); }, "primary", { "data-quiet": "1" });
+      const check = btn(L("Check", "チェック", 3), () => { if (!inp.value.trim()) return inp.focus(); check.disabled = true; inp.disabled = true; const slip = !Y.answerOk(inp.value, q.want, q.want2) && Y.imeSlip(inp.value, q.want, q.want2); if (slip) slipTip(); after(slip || Y.answerOk(inp.value, q.want, q.want2)); }, "primary", { "data-quiet": "1" });
       inp.addEventListener("keydown", (e) => { if (e.key === "Enter" && !check.disabled) check.click(); });
       area.append(inp, pre, check);
       q.focus = inp;
@@ -382,7 +484,7 @@ function chat(id, turn, fails, log = []) {
   setNav("");
   show(topBar(c.ja, c.title, stepBar(), home),
     h("div", { cls: "chat" }, log.map((m) => m.you ? h("div", { cls: "msg you", lang: "ja" }, h("div", { cls: "who" }, "You"), m.you) : h("div", { cls: "msg them", lang: "ja" }, h("div", { cls: "who" }, c.who), m.them)),
-      t.say ? h("div", { cls: "msg them" }, h("div", { cls: "who", lang: "ja" }, c.who), h("div", { lang: "ja", style: "font-size:19px" }, rom ? t.ro : t.say), rom || stage < 4 ? h("div", { cls: "dim small", lang: "ja" }, rom ? t.say : t.ro) : "",
+      t.say ? h("div", { cls: "msg them" }, h("div", { cls: "who", lang: "ja" }, c.who), h("div", { lang: "ja", style: "font-size:19px" }, rom ? t.ro : t.say), rom ? h("div", { cls: "dim small", lang: "ja" }, t.say) : readingOf(t.say, t.ro),
         stage < 5 || fails ? h("div", { cls: "en" }, t.en) : "", iconBtn("speaker", "Hear it", () => Host.speak(t.say), "quiet")) : h("p", { cls: "dim", style: "text-align:center" }, "You speak first.")),
     fails ? h("div", { cls: "note" }, h("strong", { cls: "bad" }, L("Not quite. Hint: ", "ヒント: ", 3)), t.hint, fails >= 3 ? h("div", { cls: "acc", lang: "ja" }, "Try: " + (rom ? t.wantRo : t.want[0])) : "") : "",
     h("div", { cls: "composer" }, inp, iconBtn("send", L("Say it", "言う", 5), () => send(inp.value), "primary")), pre,
@@ -397,7 +499,7 @@ function cards() {
   setNav("cards");
   const t = Y.today(), due = Y.dueCount(P, t), all = [...Object.values(P.cards), ...P.my];
   show(head(L("Flashcards", "カード", 3), `${all.length} cards in your deck`),
-    h("div", { cls: "card hero", style: "text-align:center" }, h("div", { cls: "stat " + (due ? "acc" : "good"), style: "font-size:64px" }, due), h("div", null, due === 1 ? "card due" : "cards due"),
+    h("div", { cls: "card hero", style: "text-align:center" }, h("div", { cls: "stat " + (due ? "acc" : "good"), style: "font-size:64px", "data-count": due }, "0"), h("div", null, due === 1 ? "card due" : "cards due"),
       h("p", { cls: "dim small" }, `Struggling with ${all.filter((c) => c.lapses).length}. Right answers come back later, wrong ones tomorrow. Only due cards earn XP.`),
       due ? btn(L("Review", "ふくしゅう", 2), () => runQuiz(Y.quizReview(P, t, 30), "Flashcards", (r, n) => { store.save(); result("Review done", `${r} of ${n} correct. Cards you missed will come back soon.`, r === n ? 2 : r * 2 >= n, home, r * 2); },
         { xpEach: 2, onAnswer: (q, ok) => { Y.srsGrade(q.my || P.cards[q.card.id], ok ? 2 : 0, Y.today()); P.reviews++; if (ok) P.xp += 2; store.save(); } }), "primary") : h("p", { cls: "good" }, "All caught up. Nice!")),
@@ -456,7 +558,7 @@ function exams() {
 function quest() {
   setNav("quest");
   const r = Y.rankOf(P), ja = Y.stageOf(P) >= 3 && !P.en ? 1 : 0;
-  const stat = (n, label) => h("div", { cls: "card tight", style: "text-align:center;margin:0" }, h("div", { cls: "stat" }, n), h("div", { cls: "dim small" }, label));
+  const stat = (n, label) => h("div", { cls: "card tight", style: "text-align:center;margin:0" }, h("div", { cls: "stat", "data-count": n }, "0"), h("div", { cls: "dim small" }, label));
   show(head(L("Quest", "クエスト", 3), "Your road so far"),
     h("div", { cls: "card hero" }, h("div", { cls: "row" }, h("div", null, h("div", { cls: "eyebrow" }, "Rank"), h("div", { cls: "big acc", lang: ja ? "ja" : null }, RANKS[r][ja]),
       r + 1 < RANKS.length ? h("div", { cls: "dim" }, "Next: " + RANKS[r + 1][ja]) : h("div", { cls: "good" }, "The highest rank!")), ring(r, RANKS.length - 1, `${r}/${RANKS.length - 1}`))),
@@ -690,20 +792,31 @@ async function syncHost() {
 
 // ---- settings ----
 const theme = () => { try { return localStorage.getItem("yg.theme") || "system"; } catch { return "system"; } };
+const look = () => { try { return localStorage.getItem("yg.look") || "modern"; } catch { return "modern"; } };
 function applyTheme(animate) {
   const t = theme();
+  root.classList.toggle("retro", look() === "classic");
   if (animate) { root.classList.add("theming"); setTimeout(() => root.classList.remove("theming"), 320); }
   if (t === "system") delete root.dataset.theme; else root.dataset.theme = t;
 }
 function settings() {
   setNav("settings");
   const area = h("textarea", { rows: 4, "aria-label": "Save text", placeholder: "Paste a YomiGo save here" });
+  // Whether Genki practice is on, what it holds, and how much of it is already in this learner's deck
+  const gIds = [...new Set(C.genki.flatMap((g) => g.cards))], gMine = gIds.filter((id) => P.cards[id]).length;
+  const genkiNote = h("span"), genkiBadge = h("span", { cls: "badge good", title: "Genki practice is ready" }, "✓ Ready");
+  const genkiShow = () => {
+    genkiNote.textContent = P.genki ? `${C.genki.length} lessons and ${gIds.length} cards ready in Flashcards. ${gMine} of them are already in your deck.` : "Practice sorted by Genki lesson, using YomiGo's own cards";
+    genkiBadge.hidden = !P.genki;
+  };
+  genkiShow();
   const stamp = () => { const d = new Date(); return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`; };
   show(head(L("Settings", "せってい", 2)),
     list("Learning", [
       { label: "Pace", sub: ["Gentle: one class a day", "Steady: two a day", "Sprint: three a day"][P.pace - 1], control: segmented(["1", "2", "3"], P.pace - 1, "Classes a day", (i) => { P.pace = i + 1; store.save(); settings(); }) },
       { label: "Labels in Japanese", sub: "Menus switch to Japanese as you learn", control: toggle(!P.en, "Labels in Japanese", (v) => { P.en = v ? 0 : 1; store.save(); setNav("settings"); }) },
-      { label: "Genki practice", control: toggle(P.genki, "Genki practice", (v) => { P.genki = v ? 1 : 0; store.save(); }) },
+      { label: "Romaji help", sub: "Romaji above the Japanese in notes and examples", control: toggle(romajiHelp(), "Romaji help", (v) => { try { localStorage.setItem("yg.romaji", v ? "1" : "0"); } catch {} }) },
+      { label: "Genki practice", sub: genkiNote, value: genkiBadge, control: toggle(P.genki, "Genki practice", (v) => { P.genki = v ? 1 : 0; store.save(); genkiShow(); }) },
       { label: "Who's learning", value: GENDER[P.gender], on: () => askSpeaker(settings) }]),
     list("Sound and look", [
       { label: "Sounds", control: toggle(!UI.muted(), "Sounds", (v) => { try { localStorage.setItem("yg.mute", v ? "0" : "1"); } catch {} if (v) sfx("done"); }) },
@@ -721,7 +834,8 @@ function settings() {
       "Speech feedback checks what the recogniser heard. It can't confirm native-like pronunciation."),
     h("div", { cls: "list-h" }, "Move a save between devices"),
     h("div", { cls: "card" }, area, h("div", { cls: "btn-row" }, btn("Show my save", () => { area.value = Y.saveText(P); area.select(); }),
-      btn("Load the save above", async () => { const p = Y.loadText(area.value); if (!p) return toast("That isn't a YomiGo save.", "bad"); if (await sheet(`Replace ${p.name}'s progress?`, "The save on this device is overwritten.", [{ label: "Replace", cls: "danger" }]) === 0) { P = p; store.save(); home(); } }))));
+      btn("Load the save above", async () => { const p = Y.loadText(area.value); if (!p) return toast("That isn't a YomiGo save.", "bad"); if (await sheet(`Replace ${p.name}'s progress?`, "The save on this device is overwritten.", [{ label: "Replace", cls: "danger" }]) === 0) { P = p; store.save(); home(); } }))),
+    list("Look", [{ label: "Style", sub: "Classic brings back the pixel look of the first versions", control: segmented(["Big Sur", "Classic"], look() === "classic" ? 1 : 0, "Style", (i) => { try { localStorage.setItem("yg.look", i ? "classic" : "modern"); } catch {} applyTheme(true); }) }]));
 }
 
 applyTheme();
@@ -738,11 +852,10 @@ function chrome() {
   }
   const W = __TAURI__.window.getCurrentWindow();
   // The toolbar and the sidebar's empty space move the window; a double-click zooms it, as on a Mac.
-  // There are no window buttons: right-click there for Minimise, Zoom and Close, or use Alt+F4 and the taskbar.
   const bare = (e) => !e.target.closest("button, input, textarea, label, a, [role=button], .seg, .switch, .tab");
   const drag = (e) => { if (e.button || !bare(e)) return; e.preventDefault(); e.detail === 2 ? W.toggleMaximize() : W.startDragging(); };
-  const winMenu = (e) => { if (bare(e)) UI.menu(e, [["Minimise", () => W.minimize()], ["Zoom", () => W.toggleMaximize()], "-", ["Close", () => W.close(), "Alt+F4"]]); };
-  for (const el of [toolbar, nav]) { el.addEventListener("mousedown", drag); if (!Host.mac) el.addEventListener("contextmenu", winMenu); }
+  // Windows has its own title bar again, so only the Mac, whose title bar is drawn over the page, drags by the toolbar
+  if (Host.mac) for (const el of [toolbar, nav]) el.addEventListener("mousedown", drag);
   addEventListener("focus", () => root.classList.remove("inactive")); addEventListener("blur", () => root.classList.add("inactive"));
   // Right-click shows YomiGo's own menus; the browser's own menu would give the web page away
   document.addEventListener("contextmenu", (e) => { if (!e.defaultPrevented && !e.target.closest("input, textarea")) e.preventDefault(); });
