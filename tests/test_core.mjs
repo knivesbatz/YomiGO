@@ -29,6 +29,17 @@ test("save round trip, and damaged files", () => {
   assert.equal(d.day, C.days.length); assert.equal(d.pace, 3); assert.equal(d.step, 0);
   assert.equal(d.cards["h.a"].ivl, 3650); assert.equal(d.cards.nope, undefined);
 });
+test("two devices' saves merge as on the PC", () => {
+  const a = Y.newProfile("Maya"), b = Y.newProfile("Maya");
+  a.xp = 50; a.last = 10; a.pace = 1; a.day = 3; a.cards["h.a"] = { reps: 1, ivl: 1, lapses: 0, ease: 2500, due: 11 };
+  b.xp = 20; b.last = 12; b.pace = 3; b.day = 5; b.step = 2; b.cards["h.a"] = { reps: 3, ivl: 6, lapses: 1, ease: 2300, due: 18 }; b.cards["h.i"] = Y.srsNew(12);
+  b.exams.S0 = 85; a.my.push({ word: "猫", reading: "ねこ", gloss: "cat", sent: "", reps: 0, ivl: 0, lapses: 0, ease: 2500, due: 1 });
+  b.my.push({ word: "猫", reading: "ねこ", gloss: "cat", sent: "", reps: 2, ivl: 3, lapses: 0, ease: 2500, due: 9 }, { word: "犬", reading: "いぬ", gloss: "dog", sent: "", reps: 0, ivl: 0, lapses: 0, ease: 2500, due: 1 });
+  const m = Y.merge(a, b);
+  assert.equal(m.xp, 50); assert.equal(m.pace, 3); assert.equal(m.day, 5); assert.equal(m.step, 2); assert.equal(m.last, 12);
+  assert.equal(m.cards["h.a"].reps, 3); assert.ok(m.cards["h.i"]); assert.equal(m.exams.S0, 85);
+  assert.equal(m.my.length, 2); assert.equal(m.my[0].reps, 2);
+});
 test("chat replies are all reachable", () => {
   for (const c of Object.values(C.chats)) for (const t of c.turns) for (const w of t.want) assert.ok(Y.chatOk(w, t), w);
   const t = C.chats.eat1.turns[0];

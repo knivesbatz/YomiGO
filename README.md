@@ -70,16 +70,16 @@ YomiGo is in its early days. The course currently runs from zero to **N3**, the 
 
 | Works now | Coming later |
 |---|---|
-| 85 classes, 9 exams, flashcards, and graded reading | N2 and N1, and beyond |
+| 124 classes, 9 exams, flashcards, and graded reading | N2 and N1, and beyond |
 | Scripted conversations, and free conversation with a partner on your PC | Free conversation on the phone |
 | A dictionary of about 22,000 common words | Larger dictionaries |
 | Your own flashcards, from the dictionary or the browser | Vertical manga text, and direct game hooking |
 | A Text Reader for screenshots, photos, and game text | |
 | Transcription of your own audio and video, with Japanese subtitles | Transcription on Android |
 | Listening, dictation, and shadowing | |
-| Updates that ask first | Automatic sync between devices |
+| Updates, and Wi-Fi sync between your phone and PC | Sync over the internet |
 
-Some things haven't been tried on real hardware yet, including controllers, CRT TVs, Windows 95, and Android phones. See [what's been tested](docs/COMPATIBILITY.md) and [known issues](docs/KNOWN_ISSUES.md), or the full [roadmap](docs/ROADMAP.md).
+Some things haven't been tried on real hardware yet, including controllers, CRT TVs, and Android phones. The Windows app needs Windows 10 or 11. See [what's been tested](docs/COMPATIBILITY.md) and [known issues](docs/KNOWN_ISSUES.md), or the full [roadmap](docs/ROADMAP.md).
 
 ## More
 

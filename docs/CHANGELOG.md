@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.21.0
+
+A new YomiGo for Windows, a new look everywhere, and a new icon.
+
+- **YomiGo for Windows is rebuilt in Rust**, around the same screens as the phone app, so both get every new feature at once. Everything the PC app did still works: Talk with Sakura, the Text Reader with paste, clipboard watch, screenshots and transcription, keep on top, your Material folder, backups, Wi-Fi sync with the phone, and updates. Your saves are the same files in the same place, so there's nothing to move
+- **The look of macOS Big Sur**, on the PC and the phone. A Finder-style sidebar on the PC, with the page title in the toolbar. System Preferences-style settings with switches and segmented controls. Messages-style bubbles in conversations. Notification-style banners. Small centred alerts with the app icon. Light and dark, or follow the system
+- **Right-click menus** on dictionary results, your own words, and Text Reader lines: add, copy, hear, or remove
+- **Keyboard shortcuts:** Ctrl+1 to Ctrl+8 for each place, Ctrl+F for the dictionary, Ctrl+, for Settings, Esc to go back, and 1 to 4 to pick an answer
+- **More reward:** a combo counter for answers in a row, XP that floats up from right answers, XP that counts up on the results screen, and a short sound for every press, switch and page. On Android, a small buzz for right and wrong answers
+- **Android:** the back gesture now steps back inside YomiGo instead of closing it, and the icon is a proper adaptive icon
+- **The TV app works like a game console's menu:** a row of big tiles with today's class first, round buttons for Settings, Sync and switching learner, a cursor that glows and bounces, its own sounds for moving, choosing and going back, A and B prompts along the bottom, and L and R to flip between places. Typing uses an on-screen keyboard. Set up any controller under Settings, switch the prompts to ✕ and ○, change the stick deadzone, or turn on CRT margins. It scales to the screen, from 640×480 up
+- **A new icon and logo** in the Big Sur style: a study card with 読 and a sakura blossom
+- The PC window has no title bar buttons. Drag it by the toolbar, double-click the toolbar to zoom, and right-click it to minimise or close. Alt+F4 works too
+- **Windows 95, 98, ME, 2000, XP, Vista, 7 and 8 are no longer supported.** YomiGo for Windows now needs Windows 10 or 11, and the Edge WebView2 runtime that comes with them
+
 ## 0.20.0
 
 - No class teaches more than 25 new cards now. Classes that had grown to 40 to 66 are split into parts, such as At a restaurant, part 2, each with its own review, practice, typing, quiz, and homework. The course grows from 85 to 124 classes, and the same cards are taught in the same order

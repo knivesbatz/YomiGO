@@ -31,3 +31,6 @@ extension/core.js
 extension/dict.tsv
 mobile/app/src/main/assets/www/dict.js
 mobile/app/src/main/assets/www/strokes.js
+# Rust build output
+desktop/target/
+desktop/gen/

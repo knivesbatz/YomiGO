@@ -1,16 +1,16 @@
 # Decision log
 
-**One Windows program, from Windows 95 to 11.** Written in C with no C runtime, using only functions Windows 95 has. Anything newer is looked up while running. Modern frameworks such as .NET, Electron, and Qt can't reach 95.
+**Windows is Rust around the shared web UI (since 0.21).** Until 0.20 the PC and TV apps were C that ran back to Windows 95, with their own pixel UI. Keeping two UIs meant every feature was built twice, and the pixel look couldn't be modern. Now Tauri hosts the same screens as the phone in Edge WebView2, and Rust does what a page can't: saves beside the program, the clipboard, the helper programs, the Material folder, and Wi-Fi sync. The cost is Windows 10 or later.
 
-**Draws its own type.** DotGothic16 is baked into 1-bit 16px glyphs inside the program, so Japanese renders identically on an English Windows 95 with no Japanese fonts. It matches the look of 90s dot-matrix Japanese screen fonts, and its OFL licence allows bundling.
+**The macOS Big Sur design language, on the PC and the phone.** Chosen by the owner as a precise target: unified toolbars, a Finder-style sidebar, System Preferences boxes, Big Sur controls, notification banners and alerts, short quiet motion. Inter stands in for SF Pro and YomiGo draws its own SF Symbols-style icons, because Apple's fonts and symbols may only be used on Apple systems. The TV keeps a game-console look instead, made for a pad and a sofa.
 
 **Updates live in a separate program.** `YomiGoUpdate.exe` needs Windows 7 or later for modern TLS, and keeping it separate leaves the main programs loadable on 95. Older Windows updates by hand, instead of weakening security.
 
 **Windows' own crypto for signatures.** Releases are signed with RSA-3072 and SHA-256, and checked with CryptoAPI. No hand-written cryptography. The private key is on the owner's PC only, so CI can't sign Windows builds.
 
-**Desktop and HTPC share one source.** Same flow and same logic, built twice, with different chrome, layout, resolution, and input. The TV app is 320×240 with hard pixels and its own carousel, following the N64 launcher's approach: native low resolution, stretched to fill, title-safe margin, and a CRT mode that holds white below peak. It uses none of the launcher's code or any Nintendo art.
+**One program for the PC and the TV.** Named `YomiGoHTPC.exe`, or started with `--tv`, it opens full screen in TV mode: big tiles, a cursor that moves to whatever is most in line, then nearest, then top-left, a sound for each kind of action, and answers in about a fifth of a second, following Nintendo's published Switch UI principles without using any of its art or sounds. Sizes follow the screen height, so 480-line CRTs and 1080p TVs both work.
 
-**Two small cores, not one.** C for Windows, JavaScript for Mobile and Reader. They share content and a save format, and both run `tests/vectors.json`. A single core would mean an embedded runtime that couldn't reach Windows 95.
+**One JavaScript core.** The C core went with the C apps, so `shared/core.js` is the only one. Sync's merge moved into it.
 
 **Android is a thin Java shell around a web UI.** The web UI needs little native code and can be tested in any browser. Java keeps the build free of extra plugins.
 

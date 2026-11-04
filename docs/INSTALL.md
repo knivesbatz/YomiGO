@@ -3,40 +3,43 @@
 ## Windows: Desktop and HTPC
 
 1. Download `YomiGo-Windows.zip` and unzip it anywhere you can write to, such as `C:\YomiGO\App`. Avoid `Program Files`, since saves are kept beside the program.
-2. Run `YomiGo.exe` for the PC, or `YomiGoHTPC.exe` for the TV.
+2. Run `YomiGo.exe` for the PC, or `YomiGoHTPC.exe` for the TV. They're the same program; the TV name opens it full screen with the TV menu.
 
-Saves go in a `saves` folder beside the program. Keep your own study files in a folder called `Material`, either beside the program or one level up, or at `C:\YomiGO\Material`. New files are announced on the home screen.
+YomiGo for Windows needs Windows 10 or 11. It uses the Edge WebView2 runtime, which both already have.
 
-**Keyboard:** arrows move, Enter selects, Esc goes back. Ctrl+C copies and Ctrl+V pastes. On the TV app, Space means Start, and F3 means I don't know.
+Saves go in a `saves` folder beside the program. Keep your own study files in a folder called `Material`, either beside the program or one level up, or at `C:\YomiGO\Material`. They're listed under **Library > Material**, and an immersion task offers a matching file.
+
+**Keyboard:** Ctrl+1 to Ctrl+8 open each place in the sidebar, Ctrl+F the dictionary, and Ctrl+, Settings. Esc goes back. In a quiz, 1 to 4 pick an answer and Enter goes on. Right-click a dictionary result, one of your words, or a Text Reader line for more. In the TV app, the arrows move, Enter chooses, Esc or Backspace goes back, and Page Up and Page Down flip between places.
+
+**The window:** drag it by the toolbar at the top, double-click the toolbar to zoom it, and right-click the toolbar to minimise or close it. Alt+F4 also closes it.
 
 **Listening:** to hear Japanese on Windows, add a Japanese voice under Settings > Time & language > Speech, then restart YomiGo. Without one, classes skip listening. **Settings > Japanese voice** shows whether YomiGo found it. On Android, the same setting opens your phone's voice download page.
 
-**Typing Japanese:** answer boxes convert romaji to kana for you. On Windows NT and later you can also use the Windows Japanese keyboard: Settings > Time & language > Language & region > Add a language > Japanese. Switch to it with Win+Space and press Alt+` for hiragana. Text you're composing shows underlined in the answer box. Press Enter to finish it, then Enter again to submit. Learner names need English letters for now.
+**Typing Japanese:** answer boxes convert romaji to kana for you. You can also use the Windows Japanese keyboard: Settings > Time & language > Language & region > Add a language > Japanese. Switch to it with Win+Space. On the TV, an on-screen keyboard opens when you choose an answer box; it types romaji. Learner names need English letters for now.
 
 ### Updates
 
-YomiGo checks once a day on Windows 7 and later, and always asks first. Updates come from this project's GitHub releases, and each file's signature is checked before it's used. The old program is kept as `.old`, and put back if the swap fails.
+YomiGo checks each time it starts. Updates come from this project's GitHub releases, and each file's signature is checked before it's used. The old program is kept as `.old`, and put back if the swap fails.
 
-Older Windows can't make modern secure connections, so update by hand: download on another PC, then copy the files over.
 
 ### TV and CRT
 
-Turn on **Settings > Display: CRT / RF TV** for a tube TV. It moves everything inside the visible picture, and holds white below peak so it doesn't bloom.
+Turn on **Settings > CRT or RF screen** for a tube TV. It moves everything well inside the visible picture. The TV app sizes itself to the screen's height, so 640×480 works.
 
 Software can't produce an RF signal. To reach an RF or composite TV you need hardware: an HDMI to composite converter, or a graphics card with analog output, followed by an RF modulator for RF-only sets. Set Windows to the lowest resolution your converter accepts.
 
 ### Controllers
 
-Xbox pads use XInput. DualShock 4, USB N64 pads, and other DirectInput pads work through the Windows joystick API, and need to appear in Windows' Game Controllers panel. The USB N64 pad `0E6D:111D` is detected and set up for you. For another N64 replica, choose **Settings > Buttons: N64**, then use Rebind pad if any button is wrong.
+The TV app reads any pad Windows sees. The d-pad or left stick moves, A chooses, B goes back, Start finishes typing, and L and R flip between places. The USB N64 pad `0E6D:111D` is set up for you, with C-Left and C-Right as L and R too.
 
-On an N64 layout: A selects, B goes back, Start confirms, Z means I don't know, C-Up speaks, and L, R, C-Left, and C-Right change tabs. **Settings > Buttons** also shows N64, Xbox, or PlayStation prompts on any pad.
+For any other pad, choose **Settings > Set up controller** and press each button when asked. **Button labels** switches the prompts to ✕ and ○, and **Stick deadzone** helps a stick that drifts.
 
 ### Text Reader
 
-On the PC, **Text** in the side menu reads Japanese and lets you click any word to look it up and add it to My words, with its sentence.
+On the PC, **Reader** in the sidebar reads Japanese and lets you click any word to look it up and add it to My words, with its sentence.
 
 - **From the screen:** press Win+Shift+S, select some Japanese, then press **Screenshot**. Windows needs Japanese installed under Settings > Time & language > Language & region, including its optical character recognition. This uses Windows 10 or later, and `YomiGoOCR.exe` beside YomiGo.
-- **From games:** run a text hooker such as Textractor, set it to copy text to the clipboard, and turn on **Watch**. New lines appear as the game shows them. **On top** keeps YomiGo above the game.
+- **From games:** run a text hooker such as Textractor, set it to copy text to the clipboard, and turn on **Watch clipboard**. New lines appear as the game shows them. **Keep on top** keeps YomiGo above the game.
 - **From anywhere:** copy Japanese, then press **Paste**.
 - **From audio and video:** press **Transcribe** and pick a file, such as an MP3, M4A, WAV, or MP4. Other files, such as MKV, work when Windows can play their sound. YomiGo writes down the Japanese in it, then shows the lines here. It also saves Japanese subtitles beside the file as `name.ja.srt`, unless one is already there. VLC, mpv, and most players load them by themselves.
 

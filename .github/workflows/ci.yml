@@ -19,11 +19,11 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: "20" }
       - run: pip install pillow
-      - name: Build, core tests, Windows 95 import check
+      - name: Build, and the Rust tests
         shell: cmd
         run: build.bat
-      - name: Play the whole course on both Windows builds
-        run: python tests/ui_walk.py
+      - name: The app draws its home, a quiz and the TV home
+        run: python tests/shots.py dist/YomiGo.exe build/shots home quiz tv-home
       - name: JS core tests
         run: node --test tests/test_core.mjs
       - uses: actions/upload-artifact@v4

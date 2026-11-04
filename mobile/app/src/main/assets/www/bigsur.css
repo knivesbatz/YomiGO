@@ -1,0 +1,258 @@
+/* ===================================================================================================================
+   YomiGo in the macOS Big Sur design language, on Windows (.desk) and on the phone. The TV keeps its own console look.
+   Inter stands in for SF Pro, which may only be used on Apple systems. Icons are YomiGo's own, drawn SF Symbols-style.
+   Tokens first; components below only use tokens, so light and dark are just two sets of values.
+   =================================================================================================================== */
+@font-face { font-family: "Inter"; src: url("fonts/InterVariable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+.mac {
+  --font: "SF Pro Text", "Inter", -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", sans-serif;
+  --font-display: "SF Pro Display", "Inter", -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", sans-serif;
+  --mono: "SF Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --win: #ffffff; --side: #ececec; --side-ink: rgba(0, 0, 0, .85); --sel: rgba(0, 0, 0, .1); --hover: rgba(0, 0, 0, .05);
+  --bg: #ffffff; --surface: rgba(0, 0, 0, .028); --raised: #ffffff;
+  --ink: rgba(0, 0, 0, .85); --ink-2: rgba(0, 0, 0, .5); --ink-3: rgba(0, 0, 0, .26); --line: rgba(0, 0, 0, .1); --box-line: rgba(0, 0, 0, .07);
+  --fill: rgba(0, 0, 0, .05); --fill-2: rgba(0, 0, 0, .09); --fill-3: rgba(0, 0, 0, .16);
+  --accent: #f74f9e; --accent-hover: #f13d92; --accent-ink: #fff; --accent-soft: rgba(247, 79, 158, .14); --accent-2: #fa8cc0; --ring-c: rgba(247, 79, 158, .45);
+  --good: #28a745; --good-soft: rgba(40, 167, 69, .12); --bad: #ff3b30; --bad-soft: rgba(255, 59, 48, .1); --gold: #d99a00;
+  --ctrl: #ffffff; --ctrl-sh: 0 0 0 .5px rgba(0, 0, 0, .14), 0 .5px 1.5px rgba(0, 0, 0, .14);
+  --material: rgba(246, 246, 246, .8); --scrim: rgba(0, 0, 0, .18); --glass: rgba(250, 250, 250, .8);
+  --sh-pop: 0 0 0 .5px rgba(0, 0, 0, .12), 0 10px 32px rgba(0, 0, 0, .18), 0 2px 6px rgba(0, 0, 0, .08);
+  --ease: cubic-bezier(.25, .1, .25, 1); --spring: cubic-bezier(.25, .1, .25, 1); --t1: 100ms; --t2: 180ms; --t3: 260ms;
+  --text: 13px; --small: 11px; --title: 22px; --big: 40px; --side-w: 220px; --ctl-h: 28px; --tab-h: 50px;
+  color-scheme: light;
+}
+.mac[data-theme="dark"] { color-scheme: dark; }
+@media (prefers-color-scheme: dark) { .mac:not([data-theme="light"]) { color-scheme: dark; } }
+.mac[data-theme="dark"] {
+  --win: #1e1e1e; --side: #2a2a2a; --side-ink: rgba(255, 255, 255, .85); --sel: rgba(255, 255, 255, .1); --hover: rgba(255, 255, 255, .05);
+  --bg: #1e1e1e; --surface: rgba(255, 255, 255, .04); --raised: #2c2c2e;
+  --ink: rgba(255, 255, 255, .85); --ink-2: rgba(255, 255, 255, .55); --ink-3: rgba(255, 255, 255, .25); --line: rgba(255, 255, 255, .1); --box-line: rgba(255, 255, 255, .06);
+  --fill: rgba(255, 255, 255, .08); --fill-2: rgba(255, 255, 255, .12); --fill-3: rgba(255, 255, 255, .2);
+  --accent: #ff5aa8; --accent-hover: #ff6fb4; --accent-soft: rgba(255, 90, 168, .18); --accent-2: #ff9ccb; --ring-c: rgba(255, 90, 168, .5);
+  --good: #32d74b; --good-soft: rgba(50, 215, 75, .14); --bad: #ff453a; --bad-soft: rgba(255, 69, 58, .14); --gold: #ffd60a;
+  --ctrl: rgba(255, 255, 255, .16); --ctrl-sh: 0 0 0 .5px rgba(0, 0, 0, .4), inset 0 .5px 0 rgba(255, 255, 255, .12), 0 1px 1px rgba(0, 0, 0, .2);
+  --material: rgba(40, 40, 40, .8); --scrim: rgba(0, 0, 0, .35); --glass: rgba(30, 30, 30, .8);
+  --sh-pop: 0 0 0 .5px rgba(0, 0, 0, .6), inset 0 0 0 .5px rgba(255, 255, 255, .1), 0 10px 32px rgba(0, 0, 0, .45);
+}
+@media (prefers-color-scheme: dark) { .mac:not([data-theme="light"]) {
+  --win: #1e1e1e; --side: #2a2a2a; --side-ink: rgba(255, 255, 255, .85); --sel: rgba(255, 255, 255, .1); --hover: rgba(255, 255, 255, .05);
+  --bg: #1e1e1e; --surface: rgba(255, 255, 255, .04); --raised: #2c2c2e;
+  --ink: rgba(255, 255, 255, .85); --ink-2: rgba(255, 255, 255, .55); --ink-3: rgba(255, 255, 255, .25); --line: rgba(255, 255, 255, .1); --box-line: rgba(255, 255, 255, .06);
+  --fill: rgba(255, 255, 255, .08); --fill-2: rgba(255, 255, 255, .12); --fill-3: rgba(255, 255, 255, .2);
+  --accent: #ff5aa8; --accent-hover: #ff6fb4; --accent-soft: rgba(255, 90, 168, .18); --accent-2: #ff9ccb; --ring-c: rgba(255, 90, 168, .5);
+  --good: #32d74b; --good-soft: rgba(50, 215, 75, .14); --bad: #ff453a; --bad-soft: rgba(255, 69, 58, .14); --gold: #ffd60a;
+  --ctrl: rgba(255, 255, 255, .16); --ctrl-sh: 0 0 0 .5px rgba(0, 0, 0, .4), inset 0 .5px 0 rgba(255, 255, 255, .12), 0 1px 1px rgba(0, 0, 0, .2);
+  --material: rgba(40, 40, 40, .8); --scrim: rgba(0, 0, 0, .35); --glass: rgba(30, 30, 30, .8);
+  --sh-pop: 0 0 0 .5px rgba(0, 0, 0, .6), inset 0 0 0 .5px rgba(255, 255, 255, .1), 0 10px 32px rgba(0, 0, 0, .45);
+} }
+/* Touch screens get the same look at finger size */
+@media (pointer: coarse) { .mac { --text: 15px; --small: 12px; --title: 26px; --ctl-h: 40px; } }
+.mac.theming, .mac.theming * { transition: background-color 260ms var(--ease), color 260ms var(--ease), border-color 260ms var(--ease), box-shadow 260ms var(--ease) !important; }
+
+/* ---- type ---- */
+.mac body { background: var(--win); font: var(--text)/1.38 var(--font); letter-spacing: -.003em; font-optical-sizing: auto; }
+.mac h1 { font-size: var(--title); font-weight: 700; letter-spacing: -.012em; }
+.mac h2 { font-size: calc(var(--text) + 0px); font-weight: 600; letter-spacing: 0; margin: 20px 0 8px; }
+.mac h3 { font-size: var(--text); font-weight: 600; }
+.mac .big { font-size: var(--big); font-weight: 600; }
+.mac .prompt .big { font-size: 48px; }
+.mac .dim.small, .mac .small { font-size: var(--small); }
+.mac .eyebrow { font-size: var(--small); font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--ink-2); }
+
+/* ---- toolbar: the page title lives here, as in Big Sur's unified toolbars ---- */
+#toolbar { display: none; }
+.mac #toolbar { display: flex; align-items: center; gap: 12px; flex: none; height: 52px; padding: 0 16px 0 20px; background: var(--win); box-shadow: 0 .5px 0 transparent; transition: box-shadow var(--t2); z-index: 15; }
+.mac #toolbar.scrolled { box-shadow: 0 .5px 0 var(--line); }
+.mac #toolbar:empty { box-shadow: none; }
+.mac #toolbar > * { flex: 1; min-width: 0; margin: 0; }
+.mac #toolbar .head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.mac #toolbar .head > div:first-child { min-width: 0; }
+.mac #toolbar .head h1 { font: 700 15px/1.2 var(--font-display); letter-spacing: -.005em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mac #toolbar .head .sub { font-size: 11px; color: var(--ink-2); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mac #toolbar .bar-top { position: static; display: flex; align-items: center; gap: 12px; margin: 0; padding: 0; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.mac #toolbar .bar-top .title { font: 700 15px var(--font-display); flex: 0 1 auto; }
+.mac #toolbar .bar-top .progress { flex: 0 1 220px; margin: 0 0 0 auto; }
+.mac #toolbar .chips { margin: 0; flex-wrap: nowrap; }
+.mac .head { margin-bottom: 16px; }
+
+/* ---- the Windows app: a Big Sur window ---- */
+.desk, .desk body { height: 100%; overflow: hidden; }
+.desk body { user-select: none; -webkit-user-select: none; cursor: default; }
+.desk input, .desk textarea, .desk .card, .desk p, .desk .msg, .desk .reader-line { user-select: text; -webkit-user-select: text; }
+.desk .shell { display: grid; grid-template-columns: var(--side-w) 1fr; height: 100vh; transition: grid-template-columns var(--t3) var(--ease); }
+.desk.no-side .shell { grid-template-columns: 0 1fr; }
+.desk .pane { position: relative; display: flex; flex-direction: column; min-width: 0; height: 100vh; background: var(--win); box-shadow: -.5px 0 0 var(--line); }
+.desk main { flex: 1; overflow: auto; max-width: none; width: 100%; margin: 0; padding: 20px max(28px, calc((100% - 680px) / 2)) 40px; }
+.desk main.flow { padding-bottom: 40px; }
+.desk ::-webkit-scrollbar { width: 14px; height: 14px; }
+.desk ::-webkit-scrollbar-thumb { background: var(--fill-3); border-radius: 7px; border: 4px solid transparent; background-clip: padding-box; }
+.desk ::-webkit-scrollbar-thumb:hover { background-color: var(--ink-3); }
+.desk ::-webkit-scrollbar-track { background: transparent; }
+/* sidebar, as in Finder and Music */
+.desk nav { position: relative; inset: auto; height: 100vh; flex-direction: column; gap: 1px; padding: 16px 10px 10px; overflow: hidden auto; background: var(--side); border: 0; backdrop-filter: none; -webkit-backdrop-filter: none; transform: none; display: flex; }
+.desk nav.hide { opacity: 1; transform: none; pointer-events: none; }
+.desk nav .brand { display: none; }
+.desk .nav-h { display: block; padding: 12px 10px 4px; font-size: 11px; font-weight: 700; color: rgba(127, 127, 127, .9); }
+.desk .nav-h:first-of-type { padding-top: 4px; }
+.desk .tab { flex: none; height: 28px; flex-direction: row; justify-content: flex-start; gap: 8px; padding: 0 10px; border-radius: 6px; font: 400 13px var(--font); color: var(--side-ink); transition: background-color var(--t2) var(--ease); }
+.desk .tab .ico { width: 17px; height: 17px; color: var(--accent); transform: none !important; stroke-width: 1.9; }
+.desk .tab:hover { background: transparent; }
+.desk .tab[aria-current="page"] { background: var(--sel); color: var(--side-ink); font-weight: 500; }
+.desk .tab:active { background: var(--fill-2); }
+.desk nav .who { display: flex; margin-top: auto; padding: 8px 10px 4px; gap: 8px; align-items: center; font-size: 12px; color: var(--ink-2); }
+.desk nav .who .avatar { width: 22px; height: 22px; font-size: 11px; }
+.desk.no-side nav { padding-left: 0; padding-right: 0; }
+/* A small screen, such as 640 by 480, keeps the labels in a narrower sidebar; only a very narrow window drops to icons */
+@media (max-width: 800px) { .desk { --side-w: 172px; } .desk main { padding: 16px 20px 32px; } }
+@media (max-width: 600px) { .desk { --side-w: 150px; } .desk nav { padding: 12px 8px 8px; } .desk .tab { padding: 0 8px; } .desk main { padding: 14px 16px 28px; } .desk #toolbar { padding: 0 12px 0 16px; height: 46px; } }
+@media (max-width: 420px) {
+  .desk:not(.no-side) .shell { grid-template-columns: 56px 1fr; }
+  .desk nav .tab span, .desk .nav-h, .desk nav .who span:last-child { display: none; }
+  .desk .tab { justify-content: center; padding: 0; }
+}
+
+/* ---- the phone: the same language, at finger size, with a tab bar ---- */
+.mac:not(.desk) .pane { display: block; }
+.mac:not(.desk) #toolbar { position: sticky; top: 0; height: calc(48px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 12px 0 16px; background: var(--glass); backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%); }
+.mac:not(.desk) #toolbar .head h1, .mac:not(.desk) #toolbar .bar-top .title { font-size: 17px; }
+.mac:not(.desk) #toolbar .head .sub { font-size: 12px; }
+.mac:not(.desk) #toolbar .chips { display: none; }
+.mac:not(.desk) main { padding: 16px 16px calc(var(--tab-h) + 28px + env(safe-area-inset-bottom)); }
+.mac:not(.desk) main.flow { padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
+.mac:not(.desk) nav { background: var(--glass); border-top: .5px solid var(--line); backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%); }
+.mac:not(.desk) .tab { height: var(--tab-h); font: 500 10px var(--font); color: var(--ink-2); }
+.mac:not(.desk) .tab .ico { width: 24px; height: 24px; }
+.mac:not(.desk) .tab[aria-current="page"] { color: var(--accent); }
+
+/* ---- boxes instead of floating cards, as in System Preferences ---- */
+.mac .card { background: var(--surface); border-radius: 10px; padding: 16px 18px; box-shadow: inset 0 0 0 .5px var(--box-line); margin-bottom: 12px; }
+.mac .card.hero { padding: 20px 22px; }
+.mac .card.hero::after { display: none; }
+.mac .card.tight { padding: 10px 14px; }
+.mac .list { background: var(--surface); border-radius: 10px; box-shadow: inset 0 0 0 .5px var(--box-line); margin-bottom: 16px; }
+.mac .list-h { font-size: var(--text); font-weight: 600; color: var(--ink); text-transform: none; letter-spacing: 0; margin: 18px 2px 6px; }
+.mac .list-f { font-size: var(--small); margin: -10px 2px 16px; }
+.mac .item { min-height: 36px; padding: 7px 12px; gap: 10px; }
+@media (pointer: coarse) { .mac .item { min-height: 48px; } }
+.mac .item + .item::before { left: 12px; right: 12px; border-top: .5px solid var(--line); }
+.mac button.item:hover { background: var(--hover); } .mac button.item:active { background: var(--fill-2); }
+.mac .item .ic { width: 22px; height: 22px; border-radius: 6px; } .mac .item .ic svg { width: 14px; height: 14px; }
+.mac .item .chev { width: 6px; height: 10px; }
+
+/* ---- push buttons ---- */
+.mac .btn { width: auto; min-height: var(--ctl-h); height: var(--ctl-h); padding: 0 16px; margin: 12px 8px 0 0; border-radius: 6px; background: var(--ctrl); color: var(--ink); font: 400 var(--text) var(--font); box-shadow: var(--ctrl-sh); transition: background-color var(--t1), filter var(--t1); }
+.mac .btn:hover { background: var(--ctrl); }
+.mac .btn { white-space: nowrap; } .mac .btn > svg { width: 16px; height: 16px; flex: none; }
+.mac .btn:active { transform: none; filter: brightness(.94); }
+.mac .btn.primary { background: linear-gradient(var(--accent-2) -60%, var(--accent)); color: #fff; box-shadow: 0 0 0 .5px rgba(0, 0, 0, .1), 0 .5px 1.5px rgba(0, 0, 0, .2); }
+.mac .btn.plain { background: none; box-shadow: none; color: var(--accent); padding: 0 8px; }
+.mac .btn.plain:hover { background: var(--hover); }
+.mac .btn.quiet { background: none; box-shadow: none; color: var(--ink-2); padding: 0 8px; }
+.mac .btn.quiet:hover { background: var(--hover); color: var(--ink); }
+.mac .btn.sm { height: 22px; min-height: 22px; padding: 0 10px; border-radius: 5px; font-size: 12px; margin: 0; }
+@media (pointer: coarse) { .mac .btn { border-radius: 9px; padding: 0 18px; } .mac .btn.sm { height: 32px; min-height: 32px; font-size: 14px; border-radius: 7px; } }
+.mac .btn.icon { width: 28px; height: 28px; min-height: 28px; padding: 0; border-radius: 6px; background: none; box-shadow: none; color: var(--ink-2); margin: 0; }
+@media (pointer: coarse) { .mac .btn.icon { width: 40px; height: 40px; } }
+.mac .btn.icon:hover { background: var(--hover); color: var(--ink); }
+.mac .btn.icon svg { width: 17px; height: 17px; }
+.mac .btn.icon.primary { color: var(--accent); }
+.mac .btn.right { background: var(--good); color: #fff; box-shadow: none; animation: none; }
+.mac .btn.wrong { background: var(--bad); color: #fff; box-shadow: none; animation: shake 300ms var(--ease); }
+.mac .btn-row { gap: 0; flex-wrap: wrap; } .mac .btn-row > .btn { flex: none; }
+.mac .choices { gap: 10px; }
+.mac .choices .btn { width: 100%; height: auto; min-height: 56px; margin: 0; padding: 10px 14px; font-size: 20px; font-weight: 500; border-radius: 10px; background: var(--ctrl); box-shadow: var(--ctrl-sh); justify-content: center; position: relative; }
+.mac .choices .btn:hover:not(:disabled) { transform: none; box-shadow: var(--ctrl-sh); filter: brightness(.98); }
+.desk .choices .btn::before { content: attr(data-key); position: absolute; left: 10px; top: 7px; font: 500 10px var(--mono); color: var(--ink-3); }
+.mac .choices .btn.right { background: var(--good); color: #fff; box-shadow: none; } .mac .choices .btn.wrong { background: var(--bad); color: #fff; box-shadow: none; }
+.mac .feedback { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.mac .feedback .btn { margin: 10px 0 0; min-width: 120px; }
+.mac .choices .btn.right::before, .mac .choices .btn.wrong::before { color: rgba(255, 255, 255, .7); }
+.mac :focus-visible { outline: none; box-shadow: 0 0 0 3.5px var(--ring-c) !important; }
+
+/* ---- fields ---- */
+.mac input, .mac textarea { min-height: var(--ctl-h); padding: 4px 8px; margin-top: 8px; border: 0; border-radius: 6px; background: var(--ctrl); font-size: var(--text); box-shadow: 0 0 0 .5px rgba(0, 0, 0, .2), inset 0 .5px 1px rgba(0, 0, 0, .06); }
+@media (pointer: coarse) { .mac input, .mac textarea { font-size: 16px; border-radius: 9px; padding: 6px 12px; } }
+.mac[data-theme="dark"] input, .mac[data-theme="dark"] textarea { background: rgba(255, 255, 255, .06); box-shadow: 0 0 0 .5px rgba(255, 255, 255, .14), inset 0 .5px 0 rgba(0, 0, 0, .3); }
+.mac input:focus, .mac textarea:focus { background: var(--ctrl); box-shadow: 0 0 0 3.5px var(--ring-c), 0 0 0 .5px var(--accent) !important; }
+.mac input[type="search"] { padding-left: 26px; border-radius: 7px; background: var(--fill) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23888' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='4.5'/%3E%3Cpath d='M10.5 10.5 14 14'/%3E%3C/svg%3E") no-repeat 8px 50% / 13px; box-shadow: none; }
+.mac input.big-in { min-height: 44px; font-size: 20px; font-weight: 500; }
+.mac .field-row { gap: 8px; } .mac .field-row .btn { margin: 8px 0 0; }
+.mac .preview { font-weight: 500; }
+
+/* ---- segmented controls and switches ---- */
+.mac .seg { padding: 2px; border-radius: 7px; background: var(--fill); width: max-content; max-width: 100%; }
+.mac .seg button { padding: 2px 14px; font-size: var(--text); font-weight: 400; border-radius: 5px; line-height: 18px; }
+@media (pointer: coarse) { .mac .seg button { padding: 6px 14px; } }
+.mac .seg .thumb { border-radius: 5px; background: var(--raised); box-shadow: 0 0 0 .5px rgba(0, 0, 0, .1), 0 1px 2px rgba(0, 0, 0, .14); }
+.mac[data-theme="dark"] .seg .thumb { background: #636366; }
+@media (prefers-color-scheme: dark) { .mac:not([data-theme="light"]) .seg .thumb { background: #636366; } }
+.mac .switch { width: 38px; height: 22px; border-radius: 11px; background: var(--fill-2); box-shadow: inset 0 0 0 .5px rgba(0, 0, 0, .08); }
+.mac .switch::after { top: 1px; left: 1px; width: 20px; height: 20px; box-shadow: 0 0 0 .5px rgba(0, 0, 0, .1), 0 1px 2px rgba(0, 0, 0, .25); }
+.mac .switch[aria-checked="true"] { background: var(--accent); }
+.mac .switch[aria-checked="true"]::after { transform: translateX(16px); }
+
+/* ---- stats, badges, progress ---- */
+.mac .chips { gap: 18px; margin: 0 0 18px; }
+.mac .chip { padding: 0; background: none; box-shadow: none; font-size: var(--text); font-weight: 500; gap: 5px; }
+.mac .chip svg { width: 14px; height: 14px; }
+.mac .stat { font: 600 28px/1.15 var(--font-display); }
+.mac .badge { font-size: 11px; font-weight: 500; padding: 1px 7px; border-radius: 4px; }
+.mac .progress { height: 5px; border-radius: 3px; background: var(--fill-2); }
+.mac .progress i { background: var(--accent); }
+.mac .ring { width: 64px; height: 64px; } .mac .ring circle { stroke-width: 6; } .mac .ring-wrap span { font-size: 12px; font-weight: 600; }
+.mac .note { border-radius: 8px; padding: 10px 12px; }
+.mac .empty { padding: 56px 24px; } .mac .empty svg { width: 44px; height: 44px; } .mac .empty h3 { font-size: 15px; }
+.mac .empty .btn { margin-top: 16px; }
+.mac .mark { font-size: 54px; animation: fade var(--t3) var(--ease); }
+.mac canvas.strokes { width: 112px; height: 112px; border-radius: 10px; box-shadow: inset 0 0 0 .5px var(--box-line); }
+.mac details.card summary { font-weight: 600; } .mac details.card summary::after { font-size: 16px; }
+.mac details.card[open] > *:not(summary) { animation: fade var(--t3) var(--ease); }
+.mac .avatar { background: linear-gradient(180deg, #a8a8ad, #86868b); }
+
+/* ---- Messages-style bubbles ---- */
+.mac .msg { border-radius: 18px; padding: 7px 12px; font-size: calc(var(--text) + 1px); max-width: 75%; animation: fade var(--t3) var(--ease); }
+.mac .msg.them { background: var(--fill-2); box-shadow: none; border-bottom-left-radius: 18px; }
+.mac .msg.you { background: var(--accent); border-bottom-right-radius: 18px; }
+.mac .msg .who { font-size: 11px; font-weight: 500; color: var(--ink-2); }
+.mac .msg.you .who { color: rgba(255, 255, 255, .75); }
+.mac .composer { border-radius: 0; padding: 10px 0 14px; background: var(--material); backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%); box-shadow: 0 -.5px 0 var(--line); }
+.desk .composer { bottom: 0; margin: 0 -28px -40px; padding: 10px 28px 14px; }
+.mac .composer input { border-radius: 14px; margin: 0; }
+
+/* ---- Notification Center banners ---- */
+.mac #toasts { left: auto; right: 14px; top: calc(14px + env(safe-area-inset-top)); bottom: auto; transform: none; align-items: stretch; width: min(344px, calc(100vw - 28px)); }
+.mac .toast { display: grid; grid-template-columns: 32px 1fr; column-gap: 10px; align-items: center; padding: 10px 14px 11px; border-radius: 13px; background: var(--material); color: var(--ink); font-size: 13px; font-weight: 400;
+  backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%); box-shadow: var(--sh-pop); animation: banner-in 420ms cubic-bezier(.2, .9, .3, 1); pointer-events: auto; }
+.mac .toast .app { grid-row: span 2; width: 32px; height: 32px; }
+.mac .toast b { font-weight: 600; display: flex; justify-content: space-between; } .mac .toast b small { font-weight: 400; color: var(--ink-2); }
+.mac .toast > svg { display: none; }
+.mac .toast.out { animation: banner-out 260ms var(--ease) forwards; }
+@keyframes banner-in { from { opacity: 0; transform: translateX(calc(100% + 20px)); } }
+@keyframes banner-out { to { opacity: 0; transform: translateX(calc(100% + 20px)); } }
+
+/* ---- alerts: small, centred, with the app icon ---- */
+.mac dialog.sheet { width: 260px; margin: auto; padding: 20px 16px 16px; border-radius: 12px; text-align: center; background: var(--material); backdrop-filter: blur(40px) saturate(180%); -webkit-backdrop-filter: blur(40px) saturate(180%); box-shadow: var(--sh-pop); animation: alert-in 200ms var(--ease); }
+.mac dialog.sheet::before { content: ""; display: block; width: 64px; height: 64px; margin: 0 auto 10px; background: url("icon.png") center / contain no-repeat; border-radius: 0; }
+.mac dialog.sheet::backdrop { background: rgba(0, 0, 0, .08); backdrop-filter: none; }
+.mac dialog.sheet h3 { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.mac dialog.sheet p { font-size: 11px; margin: 0 0 14px; }
+.mac dialog.sheet .acts { display: flex; flex-direction: row-reverse; gap: 8px; }
+.mac dialog.sheet .acts.stack { flex-direction: column; }
+.mac dialog.sheet .btn { flex: 1; margin: 0; padding: 0 8px; }
+.mac dialog.sheet .btn.danger { color: var(--bad); }
+@media (pointer: coarse) { .mac dialog.sheet { width: 280px; } .mac dialog.sheet h3 { font-size: 17px; } .mac dialog.sheet p { font-size: 13px; } }
+@keyframes alert-in { from { opacity: 0; transform: scale(.96); } }
+
+/* ---- context menus ---- */
+.menu { position: fixed; z-index: 200; min-width: 190px; padding: 5px; border-radius: 7px; background: var(--material, rgba(246, 246, 246, .9)); backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%); box-shadow: var(--sh-pop, 0 10px 30px rgba(0, 0, 0, .25)); animation: fade 120ms var(--ease); font: 13px var(--font); color: var(--ink); }
+.menu button { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 24px; height: 22px; padding: 0 10px; border: 0; border-radius: 4px; background: none; font: inherit; color: inherit; text-align: left; cursor: default; }
+.menu button:hover, .menu button:focus { background: var(--accent); color: #fff; outline: none; }
+.menu button kbd { font: inherit; color: var(--ink-3); } .menu button:hover kbd { color: rgba(255, 255, 255, .8); }
+.menu hr { border: 0; border-top: .5px solid var(--line); margin: 5px 10px; }
+
+/* ---- motion: quiet and short ---- */
+.mac .view-in { animation: mac-in 200ms var(--ease); }
+@keyframes mac-in { from { opacity: 0; transform: translateY(4px); } }
+.mac .combo { top: 64px; right: 20px; border-radius: 6px; padding: 3px 9px; font-size: 12px; box-shadow: none; }
+.mac .cheer { font-size: 40px; }
+.mac .xp-float { font-size: 14px; }

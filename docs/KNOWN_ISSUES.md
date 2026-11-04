@@ -2,14 +2,13 @@
 
 ## Not tested on real hardware or software
 
-- **Windows 95 and 98:** never run. See [compatibility](COMPATIBILITY.md).
-- **Controllers:** the TV app detects a connected Xbox-style pad and shows its prompts, but no one has played with a pad yet, or tried DirectInput, N64 pads, rebinding, or reconnecting. The N64 layouts come from the launcher, and haven't been run with a real N64 pad in YomiGo.
+- **Controllers:** the TV app reads pads through the browser engine's gamepad support. It was driven with the arrow keys and Enter on the build PC; no real pad, N64 adapter or rebinding has been tried yet.
+- **Sounds, banners and the new look on a phone:** the phone layout was checked through the Windows app at phone width. The APK is built by CI and hasn't run on a phone.
+- **Japanese keyboard on Windows:** typing goes through the web engine's own text input now. It hasn't been tried with a Japanese keyboard installed.
 - **CRT and RF:** not viewed on a real tube.
-- **Windows Japanese keyboard:** the code is new. It's been tested with simulated keyboard messages only, because the build PC has no Japanese keyboard installed.
 - **Windows speech:** this PC has no Japanese voice, so speech has never been heard.
 - **Sync:** tested between YomiGo on this PC and the phone app in a browser on the same PC. It hasn't run between a real phone and a PC over Wi-Fi yet.
 - **Leaving during an exam:** on the phone this relies on Android telling the app it's hidden, which hasn't been tried on a phone yet.
-- **Chimes:** made by YomiGo itself and checked for level, but never heard through the program's own speakers on this PC, or on Windows 95 or 98 sound cards.
 - **Automatic updates:** the swap and restart are the same as Check for updates, but the start-up path first runs for real when 0.14 comes out.
 - **Android:** speech input, text-to-speech, and self-update haven't run on a phone.
 - **Reader:** not yet loaded as a real extension in Chrome or Firefox.
@@ -19,6 +18,11 @@
 - **Transcription:** tested on Japanese lesson recordings and an English video. MKV files haven't been tried, and depend on which sound formats Windows has. It hasn't been tried on anime or films, where music and overlapping voices make mistakes more likely.
 
 ## Limits in this version
+
+- The Big Sur look uses Inter in place of Apple's SF Pro, which may only be used on Apple systems, and YomiGo's own icons in place of SF Symbols.
+- On Windows 11 a hairline in the system accent colour can show along the top edge of the window, from how Windows draws frameless windows.
+- The PC window has no buttons in its corner. Drag it by the toolbar, double-click the toolbar to zoom, right-click it to minimise or close, or press Alt+F4.
+- The TV's on-screen keyboard types romaji, which answers turn into kana as usual.
 
 - Windows OCR is made for horizontal text, so vertical manga text often comes out poorly. A manga-specific reader is on the roadmap.
 - Text appears from games only through a text hooker that copies to the clipboard. YomiGo doesn't hook games itself.

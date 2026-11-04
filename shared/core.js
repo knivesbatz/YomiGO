@@ -139,6 +139,27 @@
     return p.name ? p : null;
   }
 
+  // Two copies of one learner, from two devices, become one, as profile_merge does on the PC: each card keeps the copy
+  // with more reviews behind it, progress and counters take the higher, own words are joined, settings follow the copy used last.
+  const further = (a, b) => a.reps + a.lapses > b.reps + b.lapses || (a.reps + a.lapses === b.reps + b.lapses && a.due > b.due);
+  const SRS = ["reps", "ivl", "lapses", "ease", "due"];
+  function merge(p, o) {
+    const newer = o.last > p.last;
+    if (newer) for (const k of ["pace", "en", "genki", "today"]) p[k] = o[k];
+    else if (o.last === p.last && o.today > p.today) p.today = o.today;
+    if (o.gender && (newer || !p.gender)) p.gender = o.gender;
+    if (o.day > p.day || (o.day === p.day && o.step > p.step)) { p.day = o.day; p.step = o.step; }
+    for (const k of ["xp", "streak", "best", "last", "placed", "reviews", "perfects", "chats", "hw", "reads", "listens"]) p[k] = Math.max(p[k], o[k]);
+    p.ach |= o.ach;
+    for (const e in o.exams) p.exams[e] = Math.max(p.exams[e] || 0, o.exams[e]);
+    for (const id in o.cards) if (!p.cards[id] || further(o.cards[id], p.cards[id])) p.cards[id] = { ...o.cards[id] };
+    for (const m of o.my) {
+      const q = p.my.find((x) => x.word === m.word && x.reading === m.reading);
+      if (q) { if (further(m, q)) for (const k of SRS) q[k] = m[k]; } else if (p.my.length < MY_MAX) p.my.push({ ...m });
+    }
+    return p;
+  }
+
   const PASS = 80;
   const today = () => { const n = new Date(); let y = n.getFullYear(), m = n.getMonth() + 1; const d = n.getDate(); if (m <= 2) { y--; m += 12; }
     return 365 * y + Math.trunc(y / 4) - Math.trunc(y / 100) + Math.trunc(y / 400) + Math.trunc((153 * (m - 3) + 2) / 5) + d; };
@@ -391,5 +412,5 @@
     return hits.slice(0, 6);
   }
 
-  root.YG = { normKana, kanaRomaji, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, catchUp, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, myAdd, myImport, myExport, makeQMy, quizListen, shadowLines, lookup, byId, PASS };
+  root.YG = { merge, normKana, kanaRomaji, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, catchUp, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, myAdd, myImport, myExport, makeQMy, quizListen, shadowLines, lookup, byId, PASS };
 })(globalThis);

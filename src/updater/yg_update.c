@@ -140,6 +140,8 @@ static char *next_arg(char **pp, char *out, int cap) {
     return out;
 }
 #define YG_NHELPERS 3
+/* Asks every window of the program being updated to close, so it can finish saving */
+static BOOL CALLBACK close_pid(HWND w, LPARAM want) { DWORD owner = 0; GetWindowThreadProcessId(w, &owner); if (owner == (DWORD)want) PostMessageA(w, WM_CLOSE, 0, 0); return TRUE; }
 static const char *const helpers[YG_NHELPERS] = {"YomiGoOCR.exe", "YomiGoListen.exe", "YomiGoTalk.exe"};
 static int fetch_verified(const char *tag, const char *asset, const char *dest) {
     char path[512]; DWORD a = 0, b = 0; char *data, *sig; int ok;
@@ -213,7 +215,7 @@ void yg_entry(void) {
     got[YG_NHELPERS] = fetch_verified(tag, "YomiGoUpdate.exe", freshme);
     for (i = 0; i < YG_NHELPERS; i++) { wsprintfA(hnew, "%s\\%s.new", dir, helpers[i]); got[i] = fetch_verified(tag, helpers[i], hnew); }
     /* Ask the program to close, so it can finish saving */
-    { HWND w = 0; while ((w = FindWindowExA(0, w, "YomiGoWnd", 0)) != 0) { DWORD owner = 0; GetWindowThreadProcessId(w, &owner); { DWORD want = 0; const char *p = pid; while (*p >= '0' && *p <= '9') want = want * 10 + (DWORD)(*p++ - '0'); if (owner == want) PostMessageA(w, WM_CLOSE, 0, 0); } } }
+    { DWORD want = 0; const char *p = pid; while (*p >= '0' && *p <= '9') want = want * 10 + (DWORD)(*p++ - '0'); EnumWindows(close_pid, (LPARAM)want); }
     { DWORD want = 0; const char *p = pid; while (*p >= '0' && *p <= '9') want = want * 10 + (DWORD)(*p++ - '0');
       parent = OpenProcess(SYNCHRONIZE, FALSE, want);
       if (parent) { WaitForSingleObject(parent, 15000); CloseHandle(parent); } }

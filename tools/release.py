@@ -14,7 +14,8 @@ def run(*a, **k):
     subprocess.run(a, check=True, cwd=ROOT, **k)
 
 run("cmd", "/c", os.path.join(ROOT, "build.bat"))
-run(sys.executable, "tests/ui_walk.py")
+# The real program, started off screen: the home, a quiz and the TV home must all draw
+run(sys.executable, "tests/shots.py", os.path.join(DIST, "YomiGo.exe"), os.path.join(ROOT, "build", "shots"), "home", "quiz", "tv-home")
 run("node", "--test", "tests/test_core.mjs")
 exes = ["YomiGo.exe", "YomiGoHTPC.exe", "YomiGoUpdate.exe", "YomiGoOCR.exe", "YomiGoListen.exe", "YomiGoTalk.exe"]
 run("node", "tools/release_keys.mjs", "sign", *[os.path.join("dist", e) for e in exes])
@@ -28,7 +29,7 @@ zip_win = os.path.join(DIST, "YomiGo-Windows.zip")
 with zipfile.ZipFile(zip_win, "w", zipfile.ZIP_DEFLATED) as z:
     for e in exes: z.write(os.path.join(DIST, e), e)
     z.write(os.path.join(ROOT, "docs", "INSTALL.md"), "INSTALL.md")
-    z.write(os.path.join(ROOT, "assets", "fonts", "DotGothic16-OFL.txt"), "DotGothic16-OFL.txt")
+    z.write(os.path.join(ROOT, "mobile", "app", "src", "main", "assets", "www", "fonts", "Inter-OFL.txt"), "Inter-OFL.txt")
 zip_ext = os.path.join(DIST, "YomiGoReader.zip")
 shutil.make_archive(zip_ext[:-4], "zip", os.path.join(ROOT, "extension"))
 

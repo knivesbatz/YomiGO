@@ -47,7 +47,7 @@ Complete means implemented and tested as described. **Partial** says what's miss
 
 ## How things are tested
 
-- `tests/test_core.c` and `tests/test_core.mjs`: scheduling, kana conversion, damaged saves, every question, and every conversation reply.
-- `tests/ui_walk.py`: plays all 47 classes, all exams, and all conversations through the real screens of both Windows builds.
+- `tests/test_core.mjs`: scheduling, kana conversion, damaged saves, sync merging, a walk through the whole course, every question, and every conversation reply.
+- `cargo test` in `desktop/`: learner names can't escape the save folder, saves swap in keeping a backup, and sync reads a whole request.
+- `tests/shots.py`: starts the real Windows program off screen with a test save, drives it, and captures its screens. Release and CI fail if the home, a quiz, or the TV home doesn't draw.
 - Mobile's UI was walked through the whole course in a browser at phone width.
-- `tools/check_pe.py`: fails the build if a Windows program imports something Windows 95 lacks.
