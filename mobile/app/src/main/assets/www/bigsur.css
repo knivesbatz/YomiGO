@@ -361,7 +361,7 @@ html.retro .tab[aria-current="page"] { color: #fff; } html.retro .nav-sel { back
 html.retro .nav-h { color: #f9c3d2 !important; opacity: .8; }
 html.retro nav .who { color: #f9c3d2; }
 html.retro #toolbar { background: var(--accent) !important; color: #f7efe0; box-shadow: 0 2px 0 var(--ink) !important; }
-html.retro #toolbar .sub, html.retro #toolbar .count, html.retro #toolbar .btn.icon { color: #fff; opacity: .9; }
+html.retro #toolbar .sub, html.retro #toolbar .count { color: #fff; opacity: .9; }
 html.retro #toolbar .progress { border-color: #f7efe0; background: var(--ink); }
 html.retro .toast { background: #fffaf0; color: var(--ink); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); }
 html.retro dialog.sheet { background: #fffaf0; border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); }
@@ -394,3 +394,31 @@ html.retro .hero .btn.primary::after { display: none; }
 html.retro .titlebar { background: var(--side) repeating-conic-gradient(rgba(0, 0, 0, .12) 0 25%, transparent 0 50%) 0 0 / 4px 4px; box-shadow: 0 2px 0 var(--ink); }
 html.retro .titlebar-name { color: #f7efe0; font-weight: 400; }
 html.retro .lights button { border-radius: 0 !important; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .5); }
+
+/* ---- Classic: Windows 98 buttons. Grey, bevelled, pressed in when held; the default button has a black outline ---- */
+html.retro {
+  --b98-up: inset -1px -1px #0a0a0a, inset 1px 1px #ffffff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+  --b98-down: inset -1px -1px #ffffff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+}
+html.retro .btn, html.retro .btn.plain, html.retro .btn.quiet, html.retro .choices .btn, html.retro .btn.sm {
+  background: #c0c0c0; color: #000; border: 0; box-shadow: var(--b98-up); padding: 0 18px; transition: none; filter: none; animation: none; transform: none; }
+html.retro .btn:hover, html.retro .choices .btn:hover:not(:disabled) { background: #c0c0c0; filter: none; box-shadow: var(--b98-up); transform: none; }
+html.retro .btn:active:not(:disabled), html.retro .choices .btn:active:not(:disabled) { box-shadow: var(--b98-down); transform: none; padding-top: 2px; padding-left: 20px; padding-right: 16px; }
+html.retro .btn.primary { background: #c0c0c0; color: #000; box-shadow: 0 0 0 1px #000, var(--b98-up); }
+html.retro .btn.primary:active:not(:disabled) { box-shadow: 0 0 0 1px #000, var(--b98-down); }
+html.retro .btn:focus-visible { outline: 1px dotted #000 !important; outline-offset: -5px; box-shadow: var(--b98-up) !important; }
+html.retro .btn.primary:focus-visible { box-shadow: 0 0 0 1px #000, var(--b98-up) !important; }
+html.retro .btn:disabled { color: #808080; text-shadow: 1px 1px 0 #fff; opacity: 1; }
+html.retro .btn.right, html.retro .choices .btn.right { background: #2e7d4f; color: #fff; text-shadow: none; box-shadow: var(--b98-up); }
+html.retro .btn.wrong, html.retro .choices .btn.wrong { background: #b3242c; color: #fff; text-shadow: none; box-shadow: var(--b98-up); }
+html.retro .btn.icon { width: 24px; height: 22px; min-height: 22px; padding: 0; color: #000; background: #c0c0c0; box-shadow: var(--b98-up); }
+html.retro .btn.icon svg { width: 14px; height: 14px; stroke-width: 2.4; }
+html.retro .btn.icon:active { box-shadow: var(--b98-down); padding: 2px 0 0 2px; }
+html.retro .hero .btn.primary::after { display: none; }
+/* the title bar's caption buttons, 98 style */
+html.retro .lights { gap: 2px; }
+html.retro .lights button { width: 18px; height: 16px; background: #c0c0c0 !important; box-shadow: var(--b98-up) !important; }
+html.retro .lights .z { margin-right: 4px; }
+html.retro .lights button:active { box-shadow: var(--b98-down) !important; }
+html.retro .lights svg { opacity: 1; stroke: #000; stroke-width: 1.6; stroke-linecap: square; width: 9px; height: 9px; }
+.lights .g-98, html.retro .lights .g-mac { display: none; } html.retro .lights .g-98 { display: inline; }

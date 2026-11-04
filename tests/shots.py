@@ -80,6 +80,7 @@ SHOTS = {
     "goal": OPEN + "setTimeout(()=>{P.gate=0;P.exams={};for(const e of C.exams)P.exams[e.id]=90;P.pace=2;P.last=Y.today();P.today=1;home()},300);",
     "classic": "try{localStorage.setItem('yg.look','classic')}catch(e){};applyTheme();" + OPEN,
     "lost": "Host.store.write('Hana', Host.store.text('Hana').replace('last=0','last=' + (Y.today() - 3)));" + OPEN,
+    "classic-quiz": "try{localStorage.setItem('yg.look','classic')}catch(e){};applyTheme();" + OPEN + "setTimeout(()=>{runStep()},300);setTimeout(()=>{const b=document.querySelector('.choices .btn');if(b)b.click();},900);",
     "teach": OPEN + "setTimeout(()=>teach(4),300);",
     "settings": OPEN + "setTimeout(()=>settings(),300);",
     "library": OPEN + "setTimeout(()=>library(),300);",
