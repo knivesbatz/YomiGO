@@ -45,9 +45,11 @@ function topBar(title, count, prog, close) {
 // ---- navigation ----
 const TABS = [["Today", "きょう", 2, () => home(), "home"], ["Cards", "カード", 3, () => cards(), "cards"], ["Exams", "しけん", 2, () => exams(), "exam"],
   ["Quest", "クエスト", 3, () => quest(), "quest"], ["Library", "本だな", 5, () => library(), "library"],
-  ...(Host.desktop ? [["Reader", "テキスト", 3, () => textReader(), "reader"], ["Talk", "かいわ", 3, () => talk(), "talk"]] : []),
+  ...(Host.desktop ? [["Reader", "テキスト", 3, () => textReader(), "reader"], ["Talk", "かいわ", 3, () => talk(), "talk"]] : []), // Talk is dropped on a Mac at start
   ["Settings", "せってい", 2, () => settings(), "settings"]];
 const GROUP = { home: "Learn", library: "Read and talk", settings: "YomiGo" };
+// Talk, screenshots and transcription use Windows helper programs, so a Mac goes without them
+const WIN_ONLY = () => Host.desktop && !Host.mac;
 function setNav(cur) {
   const flow = !cur;
   app.classList.toggle("flow", flow);
@@ -56,7 +58,7 @@ function setNav(cur) {
   back = cur === "home" || !P ? null : home;
   if (!P || flow) return;
   nav.replaceChildren(h("div", { cls: "brand" }, "Yomi", h("b", null, "Go"), h("span", { lang: "ja", cls: "dim small" }, " 読みGo")),
-    ...TABS.flatMap((t, i) => [GROUP[t[4]] ? h("div", { cls: "nav-h" }, GROUP[t[4]]) : null, h("button", { cls: "tab", type: "button", "data-quiet": "1", "aria-current": t[4] === cur ? "page" : null, title: `${t[0]}${Host.desktop && i < 9 ? `  (Ctrl+${i + 1})` : ""}`,
+    ...TABS.flatMap((t, i) => [GROUP[t[4]] ? h("div", { cls: "nav-h" }, GROUP[t[4]]) : null, h("button", { cls: "tab", type: "button", "data-quiet": "1", "aria-current": t[4] === cur ? "page" : null, title: `${t[0]}${Host.desktop && i < 9 ? `  (${Host.mac ? "⌘" : "Ctrl+"}${i + 1})` : ""}`,
       on: () => { if (t[4] !== cur) sfx("nav"); t[3](); } }, icon(t[4]), h("span", null, L(t[0], t[1], t[2])))].filter(Boolean)),
     h("div", { cls: "who" }, h("span", { cls: "avatar", "aria-hidden": "true" }, P.name[0].toUpperCase()), P.name));
 }
@@ -517,10 +519,10 @@ function textReader() {
   const tools = Host.desktop ? h("div", { cls: "chips" },
     btn("Paste", async () => { const n = addLines(await Host.call("clip_text")); n ? textReader() : toast("There's no Japanese text on the clipboard."); }, "sm"),
     h("label", { cls: "chip" }, "Watch clipboard ", toggle(watch, "Watch the clipboard", (v) => { watch = v; startWatch(); if (v) toast("Japanese copied in any program now shows up here."); })),
-    btn(busy === "ocr" ? "Reading…" : "Screenshot", readScreenshot, "sm", { title: "Take a screenshot with Win+Shift+S first", disabled: !!busy }),
-    btn(busy === "listen" ? "Working…" : "Transcribe", transcribe, "sm", { title: "Write down what's said in an audio or video file", disabled: !!busy }),
+    WIN_ONLY() ? btn(busy === "ocr" ? "Reading…" : "Screenshot", readScreenshot, "sm", { title: "Take a screenshot with Win+Shift+S first", disabled: !!busy }) : null,
+    WIN_ONLY() ? btn(busy === "listen" ? "Working…" : "Transcribe", transcribe, "sm", { title: "Write down what's said in an audio or video file", disabled: !!busy }) : null,
     h("label", { cls: "chip" }, "Keep on top ", toggle(onTop, "Keep YomiGo on top", (v) => { onTop = v; Host.call("topmost", { on: v }); }))) : null;
-  show(head(L("Text Reader", "テキスト", 3), Host.desktop ? "Copy Japanese from a game or page, or take a screenshot with Win+Shift+S." : "Paste Japanese, or read it from a photo. Then tap a character."),
+  show(head(L("Text Reader", "テキスト", 3), Host.mac ? "Copy Japanese from a game or page, then press Paste, or turn on Watch clipboard." : Host.desktop ? "Copy Japanese from a game or page, or take a screenshot with Win+Shift+S." : "Paste Japanese, or read it from a photo. Then tap a character."),
     tools, area, h("div", { cls: "btn-row" }, btn("Add this text", () => { if (addLines(area.value)) textReader(); else toast("No Japanese in that text."); }, "primary"),
       Host.ocrPick ? btn("Read a photo", () => { toast("Reading…"); Host.ocrPick(); }) : null),
     out, lines.length ? lines : empty("reader", "Nothing to read yet", Host.desktop ? "With Watch on, text copied by a text hooker such as Textractor shows up by itself. Transcribe writes down what's said in a video." : "Add some Japanese above."),
@@ -729,13 +731,18 @@ function chrome() {
   root.classList.add("mac");
   if (!Host.desktop) return;
   root.classList.add("desk");
+  if (Host.mac) {
+    // A real Mac draws its own traffic lights over the sidebar; the toolbar still moves the window
+    root.classList.add("macos");
+    const i = TABS.findIndex((t) => t[4] === "talk"); if (i >= 0) TABS.splice(i, 1);
+  }
   const W = __TAURI__.window.getCurrentWindow();
   // The toolbar and the sidebar's empty space move the window; a double-click zooms it, as on a Mac.
   // There are no window buttons: right-click there for Minimise, Zoom and Close, or use Alt+F4 and the taskbar.
   const bare = (e) => !e.target.closest("button, input, textarea, label, a, [role=button], .seg, .switch, .tab");
   const drag = (e) => { if (e.button || !bare(e)) return; e.preventDefault(); e.detail === 2 ? W.toggleMaximize() : W.startDragging(); };
   const winMenu = (e) => { if (bare(e)) UI.menu(e, [["Minimise", () => W.minimize()], ["Zoom", () => W.toggleMaximize()], "-", ["Close", () => W.close(), "Alt+F4"]]); };
-  for (const el of [toolbar, nav]) { el.addEventListener("mousedown", drag); el.addEventListener("contextmenu", winMenu); }
+  for (const el of [toolbar, nav]) { el.addEventListener("mousedown", drag); if (!Host.mac) el.addEventListener("contextmenu", winMenu); }
   addEventListener("focus", () => root.classList.remove("inactive")); addEventListener("blur", () => root.classList.add("inactive"));
   // Right-click shows YomiGo's own menus; the browser's own menu would give the web page away
   document.addEventListener("contextmenu", (e) => { if (!e.defaultPrevented && !e.target.closest("input, textarea")) e.preventDefault(); });

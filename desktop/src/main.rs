@@ -1,9 +1,8 @@
-// YomiGo for Windows: the shared web UI in a Tauri window. Rust does what a web page can't: saves beside the program,
-// the clipboard, the helper programs (OCR, transcriber, conversation partner, updater), the Material folder and Wi-Fi sync.
+// YomiGo for Windows and Mac: the shared web UI in a Tauri window. Rust does what a web page can't: saves, the clipboard,
+// the Windows helper programs (OCR, transcriber, conversation partner, updater), the Material folder and Wi-Fi sync.
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream, UdpSocket};
-use std::os::windows::process::CommandExt;
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command};
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -12,6 +11,7 @@ use std::time::Duration;
 use std::{fs, thread};
 use tauri::{Emitter, Manager};
 
+#[cfg(windows)]
 const NO_WINDOW: u32 = 0x0800_0000;
 const SPEECH_MODEL: &str = "models\\ggml-large-v3-turbo-q5_0.bin";
 const TALK_MODEL: &str = "models\\gemma-4-E4B_q4_0-it.gguf";
@@ -28,12 +28,12 @@ fn safe(name: &str) -> Result<&str, String> {
 }
 
 #[derive(serde::Serialize)]
-struct Host { version: &'static str, tv: bool, dir: String, speech_model: bool, talk_model: bool }
+struct Host { version: &'static str, os: &'static str, tv: bool, dir: String, speech_model: bool, talk_model: bool }
 
 #[tauri::command]
 fn host() -> Host {
     let p = paths();
-    Host { version: env!("CARGO_PKG_VERSION"), tv: p.tv, dir: p.dir.display().to_string(),
+    Host { version: env!("CARGO_PKG_VERSION"), os: if cfg!(target_os = "macos") { "macos" } else { "windows" }, tv: p.tv, dir: p.dir.display().to_string(),
         speech_model: p.dir.join(SPEECH_MODEL).exists(), talk_model: p.dir.join(TALK_MODEL).exists() }
 }
 
@@ -82,6 +82,7 @@ fn backup(name: String, stamp: String) -> Result<String, String> {
 }
 
 // ---- clipboard ----
+#[cfg(windows)]
 mod clip {
     use windows_sys::Win32::System::DataExchange::*;
     use windows_sys::Win32::System::Memory::{GlobalLock, GlobalSize, GlobalUnlock};
@@ -138,6 +139,14 @@ mod clip {
         }
     }
 }
+/// On a Mac, the clipboard through pbpaste. There are no screenshots to read there: the OCR helper is Windows only.
+#[cfg(not(windows))]
+mod clip {
+    pub fn text() -> String { std::process::Command::new("pbpaste").output().map(|o| String::from_utf8_lossy(&o.stdout).into_owned()).unwrap_or_default() }
+    /// macOS has no change counter here, so a hash of the text stands in for one
+    pub fn seq() -> u32 { text().bytes().fold(2166136261u32, |h, b| (h ^ b as u32).wrapping_mul(16777619)) }
+    pub fn image_bmp() -> Option<Vec<u8>> { None }
+}
 #[tauri::command] fn clip_seq() -> u32 { clip::seq() }
 #[tauri::command] fn clip_text() -> String { clip::text() }
 
@@ -145,7 +154,8 @@ mod clip {
 fn helper(exe: &str) -> Command {
     let p = paths();
     let mut c = Command::new(p.dir.join(exe));
-    c.current_dir(&p.dir).creation_flags(NO_WINDOW);
+    c.current_dir(&p.dir);
+    #[cfg(windows)] { use std::os::windows::process::CommandExt; c.creation_flags(NO_WINDOW); }
     c
 }
 fn code_of(c: std::io::Result<std::process::ExitStatus>) -> i32 { c.ok().and_then(|s| s.code()).unwrap_or(-1) }
@@ -244,7 +254,8 @@ fn scan(base: &Path, rel: &Path, depth: u32, out: &mut Vec<(String, String)>) {
 fn material_list() -> Vec<(String, String)> {
     let root = &paths().root;
     let mut out = vec![];
-    for b in [root.join("Material"), root.join("..").join("Material"), PathBuf::from("C:\\YomiGO\\Material")] {
+    let home = std::env::var_os("HOME").map(PathBuf::from).unwrap_or_default();
+    for b in [root.join("Material"), root.join("..").join("Material"), PathBuf::from("C:\\YomiGO\\Material"), home.join("YomiGO").join("Material")] {
         scan(&b, Path::new(""), 0, &mut out);
         if !out.is_empty() { break; }
     }
@@ -257,7 +268,7 @@ fn material_list() -> Vec<(String, String)> {
 fn open(target: String) -> Result<(), String> {
     let ok = target.starts_with("https://") || material_list().iter().any(|(_, full)| *full == target);
     if !ok { return Err("Not something YomiGo opens.".into()); }
-    Command::new("explorer.exe").arg(&target).spawn().map(|_| ()).map_err(|e| e.to_string())
+    Command::new(if cfg!(windows) { "explorer.exe" } else { "open" }).arg(&target).spawn().map(|_| ()).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -352,14 +363,19 @@ fn main() {
     // --root keeps a test's saves apart from the learner's; --tv starts the TV layout under any name
     let root = args.iter().position(|a| a == "--root").and_then(|i| args.get(i + 1)).map(PathBuf::from);
     let tv = exe.to_lowercase().contains("htpc") || args.iter().any(|a| a == "--tv");
-    // Saves live in a saves folder beside the program, as they always have
-    let save_dir = root.clone().unwrap_or_else(|| dir.join("saves"));
+    // Saves live in a saves folder beside the program on Windows, as they always have. A Mac app can't write inside itself,
+    // so there they go in Application Support.
+    let default_saves = if cfg!(target_os = "macos") {
+        std::env::var_os("HOME").map(PathBuf::from).unwrap_or_default().join("Library/Application Support/YomiGo/saves")
+    } else { dir.join("saves") };
+    let save_dir = root.clone().unwrap_or(default_saves);
     let _ = fs::create_dir_all(&save_dir);
     let _ = PATHS.set(Paths { root: save_dir, dir, exe, tv, test: root.is_some() });
     tauri::Builder::default()
         .setup(move |app| {
             let w = app.get_webview_window("main").expect("main window");
             // Big Sur windows have round corners and no coloured outline, so ask Windows 11 for the same
+            #[cfg(windows)]
             if let Ok(h) = w.hwnd() { unsafe {
                 use windows_sys::Win32::Graphics::Dwm::DwmSetWindowAttribute;
                 let h = h.0 as windows_sys::Win32::Foundation::HWND;
@@ -374,6 +390,7 @@ fn main() {
                 let _ = w.set_skip_taskbar(true);
                 let _ = w.show();
                 // Practically invisible and never activated, so tests run in the background; a screen capture still reads it
+                #[cfg(windows)]
                 if let Ok(h) = w.hwnd() { unsafe {
                     use windows_sys::Win32::UI::WindowsAndMessaging::*;
                     let h = h.0 as windows_sys::Win32::Foundation::HWND;

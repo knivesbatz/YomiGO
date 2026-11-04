@@ -5,13 +5,13 @@ const Host = (() => {
   const Bridge = globalThis.YomiBridge || null;
   const T = globalThis.__TAURI__ || null;
   const invoke = T ? T.core.invoke : null;
-  const H = { android: !!Bridge, desktop: !!T, tv: false, version: Bridge ? Bridge.version() : "web", info: {} };
+  const H = { android: !!Bridge, desktop: !!T, mac: false, tv: false, version: Bridge ? Bridge.version() : "web", info: {} };
   const cache = new Map(); // desktop saves, read once at start, then written through
 
   H.ready = (async () => {
     if (!T) return;
     H.info = await invoke("host");
-    H.version = H.info.version; H.tv = H.info.tv;
+    H.version = H.info.version; H.tv = H.info.tv; H.mac = H.info.os === "macos";
     for (const [n, t] of await invoke("saves")) cache.set(n, t);
   })().catch((e) => { console.error(e); });
 
@@ -54,18 +54,29 @@ const Host = (() => {
   };
   H.voiceHelp = () => {
     if (Bridge) return Bridge.installVoice();
-    UI.sheet("Add a Japanese voice", T ? "In Windows Settings, open Time & language, then Speech, and add Japanese voices. Then restart YomiGo. Classes still work without one, and skip listening." : "Listening needs a Japanese voice on this device.", []);
+    UI.sheet("Add a Japanese voice", T && H.mac ? "In System Preferences, open Accessibility, then Spoken Content. Under System Voice, choose Manage Voices and add a Japanese voice such as Kyoko. Then restart YomiGo." : T ? "In Windows Settings, open Time & language, then Speech, and add Japanese voices. Then restart YomiGo. Classes still work without one, and skip listening." : "Listening needs a Japanese voice on this device.", []);
   };
 
   H.open = (u) => { if (Bridge) Bridge.openUrl(u); else if (T) invoke("open", { target: u }).catch((e) => UI.toast(String(e), "bad")); else window.open(u, "_blank", "noopener"); };
   H.checkUpdate = async () => {
     if (Bridge) return Bridge.checkUpdate();
+    if (T && H.mac) return H.open("https://github.com/knivesbatz/YomiGO/releases/latest");
     if (T) return (await invoke("update")) ? UI.toast("Checking for updates…") : UI.toast("Updates need YomiGoUpdate.exe beside YomiGo.", "bad");
     UI.toast("Updates apply to the apps. This page is always current.");
   };
   H.ocrPick = Bridge && Bridge.ocrPick ? () => Bridge.ocrPick() : null;
 
-  // ---- Windows only ----
+  // On a Mac there's no updater program: YomiGo looks for a newer release itself and says so
+  H.ready.then(async () => {
+    if (!H.mac) return;
+    try {
+      const tag = (await (await fetch("https://api.github.com/repos/knivesbatz/YomiGO/releases/latest")).json()).tag_name.replace(/^v/, "");
+      const n = (v) => v.split(".").map(Number), a = n(tag), b = n(H.version);
+      if (a[0] > b[0] || (a[0] === b[0] && (a[1] > b[1] || (a[1] === b[1] && a[2] > b[2])))) UI.toast(`YomiGo ${tag} is out. Settings > Check for updates downloads it.`);
+    } catch {}
+  });
+
+  // ---- Windows and Mac ----
   H.call = (cmd, args) => invoke(cmd, args);
   H.on = (ev, fn) => T.event.listen(ev, (e) => fn(e.payload));
   return H;

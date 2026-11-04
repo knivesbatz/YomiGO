@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Makes YomiGo's icon, logo and banner in the macOS Big Sur icon style, and the README screenshots.
-Writes: assets/brand/{icon,logo,banner,social-preview}.png, desktop/icons/icon.{png,ico}, the web UI's icon.png,
+Writes: assets/brand/{icon,logo,banner,social-preview}.png, desktop/icons/icon.{png,ico,icns}, the web UI's icon.png,
 the extension's icon128.png, and the Android adaptive icon. usage: python tools/make_brand.py [--shots]"""
 import math, os, subprocess, sys
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageChops
@@ -154,6 +154,7 @@ def main():
     big.resize((256, 256), Image.LANCZOS).save(os.path.join(WWW, "icon.png"), optimize=True)
     big.resize((512, 512), Image.LANCZOS).save(os.path.join(ROOT, "desktop", "icons", "icon.png"))
     big.save(os.path.join(ROOT, "desktop", "icons", "icon.ico"), sizes=[(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
+    big.save(os.path.join(ROOT, "desktop", "icons", "icon.icns"))  # for the Mac app
     big.resize((128, 128), Image.LANCZOS).save(os.path.join(ROOT, "extension", "icon128.png"), optimize=True)
     banner(1280, 320, "banner.png"); banner(1280, 640, "social-preview.png")
     android(big)

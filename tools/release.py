@@ -34,5 +34,5 @@ zip_ext = os.path.join(DIST, "YomiGoReader.zip")
 shutil.make_archive(zip_ext[:-4], "zip", os.path.join(ROOT, "extension"))
 
 assets = [os.path.join("dist", n) for n in exes] + [os.path.join("dist", n + ".sig") for n in exes] + ["dist/YomiGo-Windows.zip", "dist/YomiGoReader.zip"]
-notes = "See [CHANGELOG](https://github.com/knivesbatz/YomiGO/blob/main/docs/CHANGELOG.md) and [install guide](https://github.com/knivesbatz/YomiGO/blob/main/docs/INSTALL.md). The Android APK is attached by CI within a few minutes."
+notes = "See [CHANGELOG](https://github.com/knivesbatz/YomiGO/blob/main/docs/CHANGELOG.md) and [install guide](https://github.com/knivesbatz/YomiGO/blob/main/docs/INSTALL.md). The Android APK and the Mac app are attached by CI within about fifteen minutes."
 run("gh", "release", "create", "v" + ver, *assets, "--title", "YomiGo " + ver, "--notes", notes)

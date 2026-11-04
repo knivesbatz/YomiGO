@@ -148,14 +148,15 @@ const UI = (() => {
   function sheet(title, body, actions) {
     return new Promise((done) => {
       const d = h("dialog", { cls: "sheet", "aria-label": title }, h("h3", null, title), body ? h("p", { cls: "dim" }, body) : null);
-      const close = (i) => { d.close(); d.remove(); done(i); };
+      const close = (i) => { if (d.close) d.close(); d.remove(); done(i); };
       const acts = h("div", { cls: "acts" + (actions.length > 1 ? " stack" : "") });
       actions.forEach((a, i) => acts.append(btn(a.label, () => close(i), a.cls === "danger" ? "danger" : "primary")));
       acts.append(actions.length ? btn("Cancel", () => close(-1)) : btn("OK", () => close(-1), "primary"));
       d.append(acts);
       d.addEventListener("cancel", (e) => { e.preventDefault(); close(-1); });
       d.addEventListener("click", (e) => { if (e.target === d) close(-1); });
-      document.body.append(d); d.showModal(); sfx("sheet");
+      // Big Sur's own WebKit has no <dialog>, so there it's shown as a plain layer
+      document.body.append(d); if (d.showModal) d.showModal(); else { d.setAttribute("open", ""); d.classList.add("fallback"); } sfx("sheet");
       (d.querySelector(".btn.primary, .btn") || d).focus();
     });
   }

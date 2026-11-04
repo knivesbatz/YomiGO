@@ -31,6 +31,34 @@ jobs:
           name: windows-unsigned
           path: dist/*.exe
 
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - uses: dtolnay/rust-toolchain@stable
+        with: { targets: "aarch64-apple-darwin,x86_64-apple-darwin" }
+      - run: python tools/build_content.py && python tools/gen_version.py
+      - name: Rust tests
+        working-directory: desktop
+        run: cargo test --release
+      - name: Build the Mac app, for Apple silicon and Intel, ad-hoc signed
+        working-directory: desktop
+        run: npx --yes @tauri-apps/cli@2 build --target universal-apple-darwin --bundles dmg
+      - run: cp desktop/target/universal-apple-darwin/release/bundle/dmg/*.dmg YomiGo-macOS.dmg
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          path: YomiGo-macOS.dmg
+      - name: Attach to the release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" YomiGo-macOS.dmg --clobber
+
   android:
     runs-on: ubuntu-latest
     steps:

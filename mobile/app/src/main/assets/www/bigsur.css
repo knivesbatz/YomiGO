@@ -5,8 +5,8 @@
    =================================================================================================================== */
 @font-face { font-family: "Inter"; src: url("fonts/InterVariable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
 .mac {
-  --font: "SF Pro Text", "Inter", -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", sans-serif;
-  --font-display: "SF Pro Display", "Inter", -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", sans-serif;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", "Hiragino Sans", "Yu Gothic UI", sans-serif;
   --mono: "SF Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
   --win: #ffffff; --side: #ececec; --side-ink: rgba(0, 0, 0, .85); --sel: rgba(0, 0, 0, .1); --hover: rgba(0, 0, 0, .05);
   --bg: #ffffff; --surface: rgba(0, 0, 0, .028); --raised: #ffffff;
@@ -102,6 +102,10 @@
 .desk nav .who { display: flex; margin-top: auto; padding: 8px 10px 4px; gap: 8px; align-items: center; font-size: 12px; color: var(--ink-2); }
 .desk nav .who .avatar { width: 22px; height: 22px; font-size: 11px; }
 .desk.no-side nav { padding-left: 0; padding-right: 0; }
+/* On a Mac the real traffic lights sit at the top left, over the sidebar */
+.macos nav { padding-top: 52px; }
+.macos.no-side #toolbar { padding-left: 84px; }
+dialog.fallback { position: fixed; inset: 0; z-index: 300; margin: auto; height: max-content; box-shadow: 0 0 0 100vmax rgba(0, 0, 0, .2), var(--sh-pop); }
 /* A small screen, such as 640 by 480, keeps the labels in a narrower sidebar; only a very narrow window drops to icons */
 @media (max-width: 800px) { .desk { --side-w: 172px; } .desk main { padding: 16px 20px 32px; } }
 @media (max-width: 600px) { .desk { --side-w: 150px; } .desk nav { padding: 12px 8px 8px; } .desk .tab { padding: 0 8px; } .desk main { padding: 14px 16px 28px; } .desk #toolbar { padding: 0 12px 0 16px; height: 46px; } }
