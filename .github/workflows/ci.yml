@@ -32,7 +32,8 @@ jobs:
           path: dist/*.exe
 
   macos:
-    runs-on: macos-latest
+    # Intel runners: the Apple silicon ones are often too busy to pick a job up. The app is still built for both.
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
