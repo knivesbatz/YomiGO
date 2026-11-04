@@ -267,10 +267,13 @@ fn topmost(app: tauri::AppHandle, on: bool) { if let Some(w) = app.get_webview_w
 fn run_updater(quiet: bool) -> bool {
     let p = paths();
     if p.test || !p.dir.join("YomiGoUpdate.exe").exists() { return false; }
-    let mut c = Command::new(p.dir.join("YomiGoUpdate.exe"));
-    c.current_dir(&p.dir).arg(&p.exe).arg(env!("CARGO_PKG_VERSION")).arg(std::process::id().to_string());
-    if quiet { c.arg("--auto"); }
-    c.spawn().is_ok()
+    Command::new(p.dir.join("YomiGoUpdate.exe")).current_dir(&p.dir).args(updater_args(&p.exe, std::process::id(), quiet)).spawn().is_ok()
+}
+/// What the updater is told: which program to swap, this version, and this process to close. It only accepts YomiGo.exe and YomiGoHTPC.exe.
+fn updater_args(exe: &str, pid: u32, quiet: bool) -> Vec<String> {
+    let mut a = vec![exe.to_string(), env!("CARGO_PKG_VERSION").to_string(), pid.to_string()];
+    if quiet { a.push("--auto".into()); }
+    a
 }
 #[tauri::command] fn update() -> bool { run_updater(false) }
 
@@ -418,6 +421,11 @@ mod tests {
         assert_eq!(fs::read_to_string(&p).unwrap(), "two");
         assert_eq!(fs::read_to_string(d.join("x.sav.bak")).unwrap(), "one");
         fs::remove_dir_all(&d).unwrap();
+    }
+    #[test]
+    fn start_up_asks_the_updater_to_install_without_asking() {
+        assert_eq!(updater_args("YomiGoHTPC.exe", 42, true), ["YomiGoHTPC.exe", env!("CARGO_PKG_VERSION"), "42", "--auto"]);
+        assert_eq!(updater_args("YomiGo.exe", 7, false), ["YomiGo.exe", env!("CARGO_PKG_VERSION"), "7"]);
     }
     #[test]
     fn sync_reads_a_whole_post() {

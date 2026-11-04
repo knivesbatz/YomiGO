@@ -22,7 +22,7 @@ run("node", "tools/release_keys.mjs", "sign", *[os.path.join("dist", e) for e in
 # The updater proves here that it accepts what was just signed, and refuses a damaged copy
 upd = os.path.join(DIST, "YomiGoUpdate.exe")
 good = subprocess.run([upd, "--verify", os.path.join(DIST, "YomiGo.exe"), os.path.join(DIST, "YomiGo.exe.sig")]).returncode
-bad = subprocess.run([upd, "--verify", os.path.join(DIST, "YomiGoHTPC.exe"), os.path.join(DIST, "YomiGo.exe.sig")]).returncode
+bad = subprocess.run([upd, "--verify", os.path.join(DIST, "YomiGoOCR.exe"), os.path.join(DIST, "YomiGo.exe.sig")]).returncode  # YomiGo.exe and YomiGoHTPC.exe are the same file now
 assert good == 0 and bad != 0, f"signature check failed: good={good} bad={bad}"
 
 zip_win = os.path.join(DIST, "YomiGo-Windows.zip")
