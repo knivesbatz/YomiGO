@@ -14,7 +14,7 @@
 - **The Japanese keyboard's lost n is forgiven:** typing gomennasai with the Windows or phone Japanese keyboard gives ごめんあさい, because "nn" makes ん. YomiGo now counts that as right and explains how to type it
 - **More life in the interface:** pages and lists arrive in a quick cascade, the sidebar's selection glides, numbers count up, today's class has drifting petals and a glinting button, the streak flame flickers, progress bars shimmer, and answers pop in
 - **Classic look:** Settings > Look > Classic brings back the pixel style of the versions before 0.21, with its dot-matrix type
-- **The Windows app has a normal title bar again,** with minimise, maximise and close
+- **The Windows app has a title bar again,** a clean macOS one: YomiGo in the middle, and the round minimise, zoom and close buttons on the right, where Windows keeps them. Drag it to move the window, double-click it to zoom
 - **Settings shows Genki practice's state:** when it's on, a Ready mark, how many lessons and cards it holds, and how many of them are already in your deck
 
 ## 0.21.1

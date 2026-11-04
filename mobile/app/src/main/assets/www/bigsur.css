@@ -374,3 +374,23 @@ html.retro canvas.strokes { border: 2px solid var(--ink); }
 html.retro .drift { color: var(--accent); opacity: .35; }
 html.retro .view-in > *, html.retro .view-in .list > .item { animation-timing-function: steps(5, end); }
 html.retro .hero .btn.primary::after { display: none; }
+
+/* ---- Windows: a macOS title bar, drawn by YomiGo ---- */
+.titlebar { position: relative; z-index: 70; display: flex; align-items: center; height: 28px; padding: 0 12px; background: var(--side); box-shadow: 0 .5px 0 var(--line); user-select: none; -webkit-user-select: none; }
+.titlebar-name { position: absolute; left: 0; right: 0; text-align: center; font: 600 13px var(--font); color: var(--ink-2); pointer-events: none; }
+.winbar .shell, .winbar .desk .shell, .winbar.desk .shell { height: calc(100vh - 28px); }
+.winbar.desk nav, .winbar.desk .pane { height: calc(100vh - 28px); }
+.winbar.desk nav { background: var(--side); }
+.lights { position: relative; z-index: 1; display: flex; gap: 8px; margin-left: auto; }
+/* on the right, in the order Windows uses: minimise, zoom, then close at the far right */
+.lights .m { order: 1; } .lights .z { order: 2; } .lights .c { order: 3; }
+.lights button { width: 12px; height: 12px; padding: 0; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: default; box-shadow: inset 0 0 0 .5px rgba(0, 0, 0, .2); }
+.lights .c { background: #ff5f57; } .lights .m { background: #febc2e; } .lights .z { background: #28c840; }
+.lights svg { width: 8px; height: 8px; opacity: 0; stroke: rgba(0, 0, 0, .55); stroke-width: 1.3; fill: none; stroke-linecap: round; transition: opacity 120ms; }
+.lights:hover svg { opacity: 1; }
+.lights button:active { filter: brightness(.85); }
+.inactive .lights:not(:hover) button { background: var(--fill-3); box-shadow: none; }
+.inactive .titlebar-name { color: var(--ink-3); }
+html.retro .titlebar { background: var(--side) repeating-conic-gradient(rgba(0, 0, 0, .12) 0 25%, transparent 0 50%) 0 0 / 4px 4px; box-shadow: 0 2px 0 var(--ink); }
+html.retro .titlebar-name { color: #f7efe0; font-weight: 400; }
+html.retro .lights button { border-radius: 0 !important; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .5); }

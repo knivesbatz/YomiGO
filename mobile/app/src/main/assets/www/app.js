@@ -854,8 +854,20 @@ function chrome() {
   // The toolbar and the sidebar's empty space move the window; a double-click zooms it, as on a Mac.
   const bare = (e) => !e.target.closest("button, input, textarea, label, a, [role=button], .seg, .switch, .tab");
   const drag = (e) => { if (e.button || !bare(e)) return; e.preventDefault(); e.detail === 2 ? W.toggleMaximize() : W.startDragging(); };
-  // Windows has its own title bar again, so only the Mac, whose title bar is drawn over the page, drags by the toolbar
   if (Host.mac) for (const el of [toolbar, nav]) el.addEventListener("mousedown", drag);
+  else {
+    // Windows gets a macOS title bar: the three buttons on the left, the name in the middle, the whole bar to drag
+    const glyph = (d) => { const s = document.createElementNS("http://www.w3.org/2000/svg", "svg"); s.setAttribute("viewBox", "0 0 8 8"); const q = document.createElementNS("http://www.w3.org/2000/svg", "path"); q.setAttribute("d", d); s.append(q); return s; };
+    const bar = h("div", { cls: "titlebar" },
+      h("div", { cls: "lights" },
+        h("button", { cls: "c", type: "button", "aria-label": "Close", title: "Close", "data-quiet": "1", on: () => W.close() }, glyph("M1.6 1.6l4.8 4.8M6.4 1.6 1.6 6.4")),
+        h("button", { cls: "m", type: "button", "aria-label": "Minimise", title: "Minimise", "data-quiet": "1", on: () => W.minimize() }, glyph("M1.2 4h5.6")),
+        h("button", { cls: "z", type: "button", "aria-label": "Zoom", title: "Zoom", "data-quiet": "1", on: () => W.toggleMaximize() }, glyph("M2 6V2.6L5.4 6zM6 2v3.4L2.6 2z"))),
+      h("div", { cls: "titlebar-name" }, "YomiGo"));
+    bar.addEventListener("mousedown", drag);
+    document.body.prepend(bar);
+    root.classList.add("winbar");
+  }
   addEventListener("focus", () => root.classList.remove("inactive")); addEventListener("blur", () => root.classList.add("inactive"));
   // Right-click shows YomiGo's own menus; the browser's own menu would give the web page away
   document.addEventListener("contextmenu", (e) => { if (!e.defaultPrevented && !e.target.closest("input, textarea")) e.preventDefault(); });

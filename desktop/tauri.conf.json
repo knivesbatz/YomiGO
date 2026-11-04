@@ -19,7 +19,8 @@
         "center": true,
         "visible": false,
         "focus": false,
-        "decorations": true
+        "decorations": false,
+        "shadow": true
       }
     ],
     "security": {
