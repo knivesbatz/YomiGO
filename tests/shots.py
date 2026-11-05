@@ -58,13 +58,16 @@ def shot(name, js, size="1180x760", tv=False, wait=4.5, theme=None):
     p = subprocess.Popen(args, env=env)
     try:
         time.sleep(wait)
+        pc = os.path.join(root, "pagecheck.sav")
+        for _ in range(20):  # a cold first start on a busy PC can run late; give it up to 10 s more before calling it a failure
+            if os.path.exists(pc): time.sleep(0.7); break
+            time.sleep(0.5)
         hs = windows_of(p.pid)
         if not hs: raise SystemExit("no window for " + name)
         r = wt.RECT(); u32.GetWindowRect(hs[0], ctypes.byref(r))
         # On a real PC the window must stay out of sight; CI machines have no one watching and place it at 0,0
         if not os.environ.get("CI"): assert r.right < 0 or r.left > u32.GetSystemMetrics(0), f"test window on screen at {r.left},{r.top}"
         grab(hs[0], os.path.join(OUT, name + ".png"))
-        pc = os.path.join(root, "pagecheck.sav")
         if not os.path.exists(pc): raise SystemExit(f"{name}: the page never reported back")
         if "object=1" in open(pc).read(): raise SystemExit(f"{name}: the page shows [object ...] text")
         print("shot", name)
