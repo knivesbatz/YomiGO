@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.25.1
+
+- **Find new words no longer offers words the course teaches in kana.** The dictionary files たくさん and きれい as 沢山 and 綺麗, so they were listed as new; they now show their class like any other course word
+- Find new words no longer joins two words into a katakana one, such as の and あと into ノア
+
 ## 0.25.0
 
 - **Fixed: Find new words listed verbs you already know.** A verb the course teaches as 帰ります was still offered as a new word when a text said 帰る, and 運転します didn't cover 運転. Every verb you've learned now counts in its dictionary form too

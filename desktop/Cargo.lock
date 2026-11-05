@@ -4228,7 +4228,7 @@ dependencies = [
 
 [[package]]
 name = "yomigo"
-version = "0.25.0"
+version = "0.25.1"
 dependencies = [
  "serde",
  "serde_json",

@@ -436,6 +436,8 @@
       const kana = !/[㐀-鿿]/.test(card.f), kata = /^[ァ-ヿー]+$/.test(card.f);
       // a short hiragana ending (がた as がる) is passed one character at a time, so the word after it isn't swallowed
       if (kana && !kata && [...card.f].length < 3) { i++; continue; }
+      // and hiragana that only matches a katakana word (のあと as ノア) runs across two words
+      if (kata && /^[ぁ-ゖー]+$/.test(form)) { i++; continue; }
       i += form.length;
       if (known(card)) continue;
       const k = card.f + "|" + card.r, e = out.get(k);

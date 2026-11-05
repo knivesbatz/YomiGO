@@ -631,11 +631,13 @@ let courseWord = null;
 function showMined(box) {
   courseWord = courseWord || new Map(C.cards.filter((c) => c.t === "w" || c.t === "j").flatMap((c) => [...Y.wordForms(c.f), ...Y.wordForms(c.r)].map((w) => [w, c])));
   const inMine = (c) => P.my.some((m) => m.word === c.f || (m.reading === c.r && m.word === c.r));
-  const known = (c) => { const k = courseWord.get(c.f) || (!/[㐀-鿿]/.test(c.f) && courseWord.get(c.r)); return inMine(c) || (k && !!P.cards[k.id]); };
+  // By spelling, or by reading when either side is kana: たくさん in the course covers 沢山, but 橋 doesn't cover 箸
+  const courseOf = (f, r) => { const k = courseWord.get(r); return courseWord.get(f) || (k && (!/[㐀-鿿]/.test(f) || !/[㐀-鿿]/.test(k.f)) ? k : null); };
+  const known = (c) => { const k = courseOf(c.f, c.r); return inMine(c) || (k && !!P.cards[k.id]); };
   const words = Y.mineWords(readerLines, known, 60);
   sfx(words.length ? "done" : "off");
   box.replaceChildren(...(words.length ? list(`${words.length} word${words.length === 1 ? "" : "s"} you don't know yet`, words.map((w) => {
-    const k0 = courseWord.get(w.f) || (!/[㐀-鿿]/.test(w.f) && courseWord.get(w.r)), cls = k0 ? C.days.findIndex((d) => d.new.includes(k0.id)) : -1, k = cls >= 0 ? k0 : null;
+    const k0 = courseOf(w.f, w.r), cls = k0 ? C.days.findIndex((d) => d.new.includes(k0.id)) : -1, k = cls >= 0 ? k0 : null;
     const add = btn("Add", () => { const r = Y.myAdd(P, w.f, w.r, w.gloss, w.sent, Y.today()); store.save(); toast(addedMsg(r), r > 0 ? "good" : ""); add.disabled = true; }, "sm", { "data-quiet": "1" });
     return { label: w.f, lang: "ja", sub: `${w.f !== w.r ? w.r + " · " : ""}${Y.kanaRomaji(w.r)} · ${w.gloss || ""}`, value: `×${w.n}`,
       control: k ? h("span", { cls: "badge acc", title: "The course teaches this one" }, `Class ${cls + 1}`) : add };

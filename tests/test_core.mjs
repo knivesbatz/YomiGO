@@ -67,6 +67,7 @@ test("finding new words in pasted text", () => {
   assert.ok(m.includes("きょう") && !m.includes("こんにちは"), "今日は in a sentence is today: " + m);
   assert.ok(m.includes("たくさん") && !m.includes("くさ") && !m.includes("い"), "no mis-splits: " + m);
   const v = Y.mineWords(["散歩しました。ここにあって、わかりました。"], () => false).map((x) => x.r);
+  assert.ok(!Y.mineWords(["散歩のあとで"], () => false).some((x) => x.f === "ノア"), "のあと is not ノア");
   assert.ok(!v.includes("ます") && !v.includes("あう") && v.includes("わかる"), "inflections: " + v);
 });
 test("a verb taught as ます is known in its dictionary form", () => {
