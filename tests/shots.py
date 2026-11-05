@@ -96,6 +96,7 @@ SHOTS = {
     "library-media": OPEN + "setTimeout(()=>{libTab=2;library()},300);",
     "teach": OPEN + "setTimeout(()=>teach(4),300);",
     "settings": OPEN + "setTimeout(()=>settings(),300);",
+    "settings-look": OPEN + "setTimeout(()=>{settings();setTimeout(()=>[...document.querySelectorAll('*')].filter(e=>e.scrollHeight>e.clientHeight+20).forEach(e=>e.scrollTop=e.scrollHeight),300)},300);",
     "library": OPEN + "setTimeout(()=>library(),300);",
     "quest": OPEN + "setTimeout(()=>quest(),300);",
     "phone-home": OPEN,
