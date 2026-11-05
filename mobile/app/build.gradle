@@ -2,6 +2,9 @@ plugins { id 'com.android.application' }
 
 def ver = new File(rootDir.parentFile, 'VERSION').text.trim()
 def parts = ver.split('\\.').collect { it as int }
+// versionCode comes from the version, so it rises with every release, as Android needs for an update. Each part must stay
+// under 100, or two versions could share a code.
+if (parts.size() != 3 || parts[1] > 99 || parts[2] > 99) throw new GradleException("VERSION must be major.minor.patch, minor and patch under 100: " + ver)
 
 android {
     namespace 'com.senkosoft.yomigo'
@@ -16,13 +19,14 @@ android {
     buildFeatures { buildConfig true }
     signingConfigs {
         release {
-            // Secrets arrive only through the environment. Without them the release build is left unsigned.
+            // Secrets arrive only through the environment (see CI). Without them the release build is left unsigned.
+            // The alias and key password default to YomiGo's key: alias yomigo, key password the same as the store's.
             def ks = System.getenv('YOMIGO_KEYSTORE')
             if (ks) {
                 storeFile file(ks)
                 storePassword System.getenv('YOMIGO_KEYSTORE_PASSWORD')
-                keyAlias 'yomigo'
-                keyPassword System.getenv('YOMIGO_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('YOMIGO_KEY_ALIAS') ?: 'yomigo'
+                keyPassword System.getenv('YOMIGO_KEY_PASSWORD') ?: System.getenv('YOMIGO_KEYSTORE_PASSWORD')
             }
         }
     }

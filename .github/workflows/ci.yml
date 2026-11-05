@@ -62,6 +62,11 @@ jobs:
 
   android:
     runs-on: ubuntu-latest
+    env:
+      # The public fingerprint of YomiGo's one Android signing key. Android only installs an update signed by the same key,
+      # so a release signed by anything else must never ship. Not a secret: it's in every APK.
+      YOMIGO_APK_CERT_SHA256: f3eb230909aa14f258876fe628656e1a27cef0234b83dc7429c51dd07bf44377
+      RELEASE: ${{ startsWith(github.ref, 'refs/tags/v') }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -72,19 +77,46 @@ jobs:
         with: { gradle-version: "8.10.2" }
       - run: python tools/build_content.py
       - name: Load the signing key from repository secrets
-        if: github.event_name != 'pull_request'
         env:
           KS: ${{ secrets.YOMIGO_KEYSTORE_B64 }}
+          KS_PASS: ${{ secrets.YOMIGO_KEYSTORE_PASSWORD }}
         run: |
-          echo "$KS" | base64 -d > "$RUNNER_TEMP/yomigo.jks"
-          echo "YOMIGO_KEYSTORE=$RUNNER_TEMP/yomigo.jks" >> "$GITHUB_ENV"
+          # Decoded into the runner's temp folder, never the repo. Releases must have the real key; nothing else falls back.
+          if [ -n "$KS" ] && [ -n "$KS_PASS" ]; then
+            echo "$KS" | base64 -d > "$RUNNER_TEMP/yomigo.jks"
+            echo "YOMIGO_KEYSTORE=$RUNNER_TEMP/yomigo.jks" >> "$GITHUB_ENV"
+            echo "STABLE_KEY=true" >> "$GITHUB_ENV"
+          elif [ "$RELEASE" = "true" ]; then
+            echo "::error::YOMIGO_KEYSTORE_B64 or YOMIGO_KEYSTORE_PASSWORD is missing from the repository secrets. A release can't be signed with any other key: Android would refuse it as an update."
+            exit 1
+          else
+            # Pull requests, which can't see secrets: a throwaway key, so the build is still tested. This APK must not be shipped.
+            PASS=$(openssl rand -hex 16)
+            keytool -genkeypair -keystore "$RUNNER_TEMP/throwaway.jks" -alias yomigo -keyalg RSA -keysize 2048 -validity 1 -storepass "$PASS" -keypass "$PASS" -dname "CN=YomiGo throwaway" >/dev/null
+            echo "YOMIGO_KEYSTORE=$RUNNER_TEMP/throwaway.jks" >> "$GITHUB_ENV"
+            echo "THROWAWAY_PASS=$PASS" >> "$GITHUB_ENV"
+            echo "STABLE_KEY=false" >> "$GITHUB_ENV"
+            echo "::warning::Signed with a throwaway key: this APK can't update an installed YomiGo."
+          fi
       - name: Build the APK
         working-directory: mobile
         env:
-          YOMIGO_KEYSTORE_PASSWORD: ${{ secrets.YOMIGO_KEYSTORE_PASSWORD }}
+          # the real password goes only to this step, straight from the secret
+          YOMIGO_KEYSTORE_PASSWORD: ${{ env.THROWAWAY_PASS || secrets.YOMIGO_KEYSTORE_PASSWORD }}
         run: gradle --no-daemon assembleRelease
       - run: cp mobile/app/build/outputs/apk/release/app-release.apk YomiGo.apk
+      - name: Check the signature
+        run: |
+          APKSIGNER="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)/apksigner"
+          "$APKSIGNER" verify --print-certs YomiGo.apk | tee signers.txt
+          GOT=$(grep -m1 "certificate SHA-256 digest" signers.txt | awk '{print $NF}')
+          echo "Signed by $GOT"
+          if [ "$STABLE_KEY" = "true" ] && [ "$GOT" != "$YOMIGO_APK_CERT_SHA256" ]; then
+            echo "::error::The APK is signed by $GOT, not YomiGo's key $YOMIGO_APK_CERT_SHA256. Installed copies would refuse this update."
+            exit 1
+          fi
       - uses: actions/upload-artifact@v4
+        if: env.STABLE_KEY == 'true'
         with:
           name: android
           path: YomiGo.apk

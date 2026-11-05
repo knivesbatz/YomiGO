@@ -49,5 +49,6 @@ Complete means implemented and tested as described. **Partial** says what's miss
 
 - `tests/test_core.mjs`: scheduling, kana conversion, damaged saves, sync merging, a walk through the whole course, every question, and every conversation reply.
 - `cargo test` in `desktop/`: learner names can't escape the save folder, saves swap in keeping a backup, and sync reads a whole request.
+- Android signing: CI signs every APK with YomiGo's one key from the repository secrets and fails unless `apksigner` shows its pinned certificate SHA-256. A release with the secrets missing fails instead of falling back to another key. `python tools/apk_cert.py YomiGo.apk` prints the certificate of any APK without the Android SDK.
 - `tests/shots.py`: starts the real Windows program off screen with a test save, drives it, and captures its screens. Release and CI fail if the home, a quiz, or the TV home doesn't draw.
 - Mobile's UI was walked through the whole course in a browser at phone width.
