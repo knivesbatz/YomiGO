@@ -34,3 +34,4 @@ mobile/app/src/main/assets/www/strokes.js
 # Rust build output
 desktop/target/
 desktop/gen/
+installer/gen/

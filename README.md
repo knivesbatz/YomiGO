@@ -20,9 +20,9 @@
 
 | Use it on | Download | Open it with |
 |---|---|---|
-| Windows PC | `YomiGo-Windows.zip` | `YomiGo.exe` |
+| Windows PC | `YomiGo-Setup.exe` | Open it and follow the steps |
 | Mac | `YomiGo-macOS.dmg` | Drag YomiGo to Applications. See the [install guide](docs/INSTALL.md#mac) for the first opening |
-| TV, with a controller | `YomiGo-Windows.zip` | `YomiGoHTPC.exe` |
+| TV, with a controller | `YomiGo-TV-Setup.exe` | Open it and follow the steps |
 | Android phone | `YomiGo.apk` | Tap it to install |
 | Chrome or Firefox | `YomiGoReader.zip` | See the [install guide](docs/INSTALL.md#browser-extension) |
 

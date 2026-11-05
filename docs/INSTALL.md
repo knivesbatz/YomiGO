@@ -20,8 +20,11 @@ Saves are kept in `~/Library/Application Support/YomiGo/saves`. Your own study f
 
 ## Windows: Desktop and HTPC
 
-1. Download `YomiGo-Windows.zip` and unzip it anywhere you can write to, such as `C:\YomiGO\App`. Avoid `Program Files`, since saves are kept beside the program.
-2. Run `YomiGo.exe` for the PC, or `YomiGoHTPC.exe` for the TV. They're the same program; the TV name opens it full screen with the TV menu.
+1. Download `YomiGo-Setup.exe` for the PC, or `YomiGo-TV-Setup.exe` for a TV with a controller, from the [latest release](https://github.com/knivesbatz/YomiGO/releases/latest).
+2. Open it and follow the steps. It installs for you only, with no administrator, into `%LOCALAPPDATA%\Programs\YomiGo`, with a Start menu entry and, if you like, a desktop shortcut. Install both and they share one folder and the same learners.
+3. To remove it, use **Settings > Apps**, or **Uninstall YomiGo** in its folder. Your saves stay unless you untick that.
+
+Prefer no installer? `YomiGo-Windows.zip` still works: unzip it anywhere you can write to, such as `C:\YomiGO\App`, and run `YomiGo.exe`, or `YomiGoHTPC.exe` for the TV. They're the same program; the TV name opens it full screen with the TV menu. Avoid `Program Files`, since saves are kept beside the program.
 
 YomiGo for Windows needs Windows 10 or 11. It uses the Edge WebView2 runtime, which both already have.
 

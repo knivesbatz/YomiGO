@@ -27,4 +27,11 @@ rem The text reader uses the OCR in Windows 10 and later, through C++/WinRT from
 cl /nologo /std:c++20 /EHsc /O1 /MT /utf-8 /W3 /D_CRT_SECURE_NO_WARNINGS /Fobuild\ /Fedist\YomiGoOCR.exe src\ocr\yg_ocr.cpp /link WindowsApp.lib || exit /b 1
 rem The transcriber and the conversation partner, with whisper.cpp and llama.cpp from the submodules
 call tools\build_x64.bat "%VS%" || exit /b 1
-echo Build OK: dist\YomiGo.exe dist\YomiGoHTPC.exe dist\YomiGoUpdate.exe dist\YomiGoOCR.exe dist\YomiGoListen.exe dist\YomiGoTalk.exe
+rem The installers carry everything above inside them, so they're built last. One program, two names: the name picks the app.
+set CARGO_TARGET_DIR=%ROOT%desktop\target
+cargo test --release --manifest-path installer\Cargo.toml || exit /b 1
+cargo build --release --manifest-path installer\Cargo.toml || exit /b 1
+set CARGO_TARGET_DIR=
+copy /y desktop\target\release\yomigo-setup.exe dist\YomiGo-Setup.exe >nul || exit /b 1
+copy /y desktop\target\release\yomigo-setup.exe dist\YomiGo-TV-Setup.exe >nul || exit /b 1
+echo Build OK: dist\YomiGo-Setup.exe dist\YomiGo-TV-Setup.exe dist\YomiGo.exe dist\YomiGoHTPC.exe dist\YomiGoUpdate.exe dist\YomiGoOCR.exe dist\YomiGoListen.exe dist\YomiGoTalk.exe
