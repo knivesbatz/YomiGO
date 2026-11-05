@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.26.0
+
+- **The entrance exam listens, too.** From the words section on, two questions in each section are heard rather than read: YomiGo says the word, gives you a few seconds to listen, then shows the choices. A learner who reads well but can't follow spoken Japanese no longer skips past the classes that train the ear. Without a Japanese voice on the device the exam stays reading-only, as before
+- ありがとう, the casual thank-you, joins ありがとうございます in the greetings class
+
 ## 0.25.1
 
 - **Find new words no longer offers words the course teaches in kana.** The dictionary files たくさん and きれい as 沢山 and 綺麗, so they were listed as new; they now show their class like any other course word

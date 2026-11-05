@@ -30,7 +30,7 @@
 - Transcription is on the PC app only. The TV app shows text you copy, but has no file picker, and the phone app doesn't transcribe.
 
 - The course ends at N3. Later levels are on the [roadmap](ROADMAP.md). The entrance exam can place a learner at N4 Road or N3 Bridge, but not past the start of either: someone halfway through N3 still starts at its first class.
-- The entrance exam tests reading only, not listening, typing, or speaking.
+- The entrance exam tests reading, and listening when the device has a Japanese voice. It doesn't test typing or speaking.
 - Sakura, in Talk, is a small model running on your PC. Her Japanese is usually natural, but her checks miss some mistakes, sometimes flag a right sentence, and can explain a fix wrongly. That's why they say Maybe better. Trust the class notes over her when they disagree.
 - Talk opens at the Grammar Gate, because the model writes poor beginner-only Japanese. It isn't on the phone, and the TV shows only her newest reply.
 - The class conversations are scripted and accept set replies, so a correct but unexpected reply can fail. After three tries, the app shows an accepted answer.

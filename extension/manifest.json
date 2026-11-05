@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "YomiGo Reader",
-  "version": "0.25.1",
+  "version": "0.26.0",
   "description": "Select Japanese on any page to look it up, save it with its sentence, and export flashcards. Everything stays on your device.",
   "permissions": ["storage"],
   "action": { "default_popup": "popup.html", "default_title": "YomiGo Reader" },

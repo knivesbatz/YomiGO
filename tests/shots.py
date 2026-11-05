@@ -91,6 +91,7 @@ SHOTS = {
     "classic-quiz": "try{localStorage.setItem('yg.look','classic')}catch(e){};applyTheme();" + OPEN + "setTimeout(()=>{runStep()},300);setTimeout(()=>{const b=document.querySelector('.choices .btn');if(b)b.click();},900);",
     "mine": OPEN + "setTimeout(()=>{readerLines=['今日は天気がいいので、公園で散歩しました。','公園には桜の木がたくさんあって、とても綺麗でした。','散歩のあと、喫茶店でコーヒーを飲みました。'];textReader();setTimeout(()=>[...document.querySelectorAll('.btn.primary')].find(b=>b.textContent.includes('Find')).click(),400)},300);",
     "typing": OPEN + "setTimeout(()=>typing([Y.byId['v.konnichiwa']],0,0,false),300);",
+    "exam-listen": OPEN + "setTimeout(()=>{globalThis.YG_TEST_VOICE=1;placement(3,3)},300);",
     "library-guide": OPEN + "setTimeout(()=>{libTab=1;library()},300);",
     "library-media": OPEN + "setTimeout(()=>{libTab=2;library()},300);",
     "teach": OPEN + "setTimeout(()=>teach(4),300);",

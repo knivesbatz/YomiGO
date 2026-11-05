@@ -26,6 +26,7 @@ No app alone can make someone fluent. Fluency also takes thousands of hours of r
 
 ## Done
 
+- **0.26:** listening in the entrance exam
 - **0.25:** 86 more words, and Find new words knows the verbs you've learned in every form
 - **0.24:** the twelve months, and 75 more words
 - **0.23:** Windows installers, Find new words in any text, entrance exam up to N3

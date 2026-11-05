@@ -77,6 +77,12 @@ test("a verb taught as ます is known in its dictionary form", () => {
   assert.deepEqual(Y.wordForms("猫"), ["猫"]);
   assert.ok(!Y.wordForms("話します").includes("話"), "話す is not 話 + する");
 });
+test("the entrance exam listens only when there's a voice, and never in the kana sections", () => {
+  assert.equal(Y.placementSection(3, true).filter((q) => q.say).length, 2);
+  assert.equal(Y.placementSection(3, false).filter((q) => q.say).length, 0);
+  for (const i of [0, 1, 2]) assert.equal(Y.placementSection(i, true).filter((q) => q.say).length, 0);
+  for (const q of Y.placementSection(6, true).filter((q) => q.say)) assert.equal(q.say, q.card.r);
+});
 test("the entrance exam reaches N4 and N3", () => {
   assert.equal(Y.PLACEMENT_SECTIONS, 8);
   for (const [i, stage] of [[6, C.stages.length - 2], [7, C.stages.length - 1]]) {

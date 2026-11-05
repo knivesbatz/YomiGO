@@ -190,7 +190,7 @@ function placeIntro() {
     btn("I'm a total beginner. Start from day one.", () => { Y.place(P, 0, Y.today()); store.save(); home(); }));
 }
 function placement(section, passed) {
-  runQuiz(Y.placementSection(section), "Entrance exam", (right) => {
+  runQuiz(Y.placementSection(section, Host.canSpeak()), "Entrance exam", (right) => {
     // Stage reached for each number of sections passed: romaji, hiragana, katakana, words, grammar, kanji, N4, N3
     const map = [0, 2, 3, 4, 4, 5, 6, 7, 8], last = Y.PLACEMENT_SECTIONS - 1;
     if (right >= 4 && section < last) return placement(section + 1, section + 1);

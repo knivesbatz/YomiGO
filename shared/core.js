@@ -335,13 +335,17 @@
   // Always starts at romaji
   // Sections: romaji, hiragana, katakana, words, grammar, kanji, then N4 and N3, each a mix of that stage's words, grammar and kanji
   const PLACEMENT_SECTIONS = 8;
-  function placementSection(i) {
-    if (i >= 6) {
-      const stage = C.stages.length - (PLACEMENT_SECTIONS - i);
-      return shuffle(C.cards.filter((c) => "wgj".includes(c.t) && c.day >= 0 && C.days[c.day] && C.days[c.day].stage === stage)).slice(0, 5).map((c) => makeQ(c, 0, false));
-    }
-    const type = "whkwgj"[i];
-    return shuffle(C.cards.filter((c) => c.t === type && c.day >= 0 && (i > 0 || romajiMode(c.day)))).slice(0, 5).map((c) => makeQ(c, 0, i === 0));
+  // listen: with a Japanese voice, two word questions in each section after the kana are heard, not read
+  function placementSection(i, listen) {
+    const stage = C.stages.length - (PLACEMENT_SECTIONS - i), type = "whkwgj"[i];
+    const pick = i >= 6 ? (c) => "wgj".includes(c.t) && c.day >= 0 && C.days[c.day] && C.days[c.day].stage === stage
+      : (c) => c.t === type && c.day >= 0 && (i > 0 || romajiMode(c.day));
+    let heard = 0;
+    return shuffle(C.cards.filter(pick)).slice(0, 5).map((c) => {
+      const q = makeQ(c, 0, i === 0);
+      if (listen && i >= 3 && c.t === "w" && heard++ < 2) { q.say = c.r; q.tag = "What did you hear?"; q.sub = ""; }
+      return q;
+    });
   }
 
   // Full dictionary: lines of word, reading, hiragana, meaning. Loaded only when wanted.
