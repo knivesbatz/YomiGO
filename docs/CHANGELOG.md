@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.26.1
+
+- The main style is now called Modern in Settings, next to Classic. It looks the same, and your choice is kept
+
 ## 0.26.0
 
 - **The entrance exam listens, too.** From the words section on, two questions in each section are heard rather than read: YomiGo says the word, gives you a few seconds to listen, then shows the choices. A learner who reads well but can't follow spoken Japanese no longer skips past the classes that train the ear. Without a Japanese voice on the device the exam stays reading-only, as before

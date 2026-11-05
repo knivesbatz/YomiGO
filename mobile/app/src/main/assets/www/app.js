@@ -850,7 +850,7 @@ function settings() {
     h("div", { cls: "list-h" }, "Move a save between devices"),
     h("div", { cls: "card" }, area, h("div", { cls: "btn-row" }, btn("Show my save", () => { area.value = Y.saveText(P); area.select(); }),
       btn("Load the save above", async () => { const p = Y.loadText(area.value); if (!p) return toast("That isn't a YomiGo save.", "bad"); if (await sheet(`Replace ${p.name}'s progress?`, "The save on this device is overwritten.", [{ label: "Replace", cls: "danger" }]) === 0) { P = p; store.save(); home(); } }))),
-    list("Look", [{ label: "Style", sub: "Classic brings back the pixel look of the first versions", control: segmented(["Big Sur", "Classic"], look() === "classic" ? 1 : 0, "Style", (i) => { try { localStorage.setItem("yg.look", i ? "classic" : "modern"); } catch {} applyTheme(true); }) }]));
+    list("Look", [{ label: "Style", sub: "Classic brings back the pixel look of the first versions", control: segmented(["Modern", "Classic"], look() === "classic" ? 1 : 0, "Style", (i) => { try { localStorage.setItem("yg.look", i ? "classic" : "modern"); } catch {} applyTheme(true); }) }]));
 }
 
 applyTheme();
