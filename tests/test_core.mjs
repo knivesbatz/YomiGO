@@ -55,6 +55,28 @@ test("a keyboard that eats an n isn't a wrong answer, and a broken streak costs 
   assert.equal(Y.merge(a, b).streak, 0, "the older device can't restore a lost streak");
   assert.equal(Y.loadText(Y.saveText(p)).broke, 103);
 });
+test("finding new words in pasted text", () => {
+  const dict = fs.readFileSync(new URL("mobile/app/src/main/assets/www/dict.js", root), "utf8");
+  Y.dictLoad(JSON.parse(dict.slice(dict.indexOf("=") + 1, dict.lastIndexOf(";"))));
+  const w = Y.mineWords(["猫が好きです。", "猫は可愛い。犬もいます。"], (c) => c.f === "犬");
+  assert.equal(w[0].f, "猫"); assert.equal(w[0].n, 2); assert.equal(w[0].sent, "猫が好きです。");
+  assert.ok(w[0].gloss && /cat/.test(w[0].gloss));
+  assert.ok(!w.some((x) => x.f === "犬"), "known words are left out");
+  assert.ok(!w.some((x) => x.f === "です" || x.f === "が"), "endings and particles are left out");
+  const m = Y.mineWords(["今日は天気がいいので、木がたくさんあります。"], () => false).map((x) => x.r);
+  assert.ok(m.includes("きょう") && !m.includes("こんにちは"), "今日は in a sentence is today: " + m);
+  assert.ok(m.includes("たくさん") && !m.includes("くさ") && !m.includes("い"), "no mis-splits: " + m);
+  const v = Y.mineWords(["散歩しました。ここにあって、わかりました。"], () => false).map((x) => x.r);
+  assert.ok(!v.includes("ます") && !v.includes("あう") && v.includes("わかる"), "inflections: " + v);
+});
+test("the entrance exam reaches N4 and N3", () => {
+  assert.equal(Y.PLACEMENT_SECTIONS, 8);
+  for (const [i, stage] of [[6, C.stages.length - 2], [7, C.stages.length - 1]]) {
+    const q = Y.placementSection(i);
+    assert.equal(q.length, 5);
+    for (const x of q) assert.equal(C.days[x.card.day].stage, stage, x.card.id);
+  }
+});
 test("chat replies are all reachable", () => {
   for (const c of Object.values(C.chats)) for (const t of c.turns) for (const w of t.want) assert.ok(Y.chatOk(w, t), w);
   const t = C.chats.eat1.turns[0];

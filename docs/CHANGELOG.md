@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.23.0
+
+- **Find new words, in anything you read or watch.** In the Text Reader, press Find new words. YomiGo lists every dictionary word in the lines you've pasted, screenshotted, photographed, or transcribed from a video, that you don't know yet, most frequent first. Words the course teaches later show their class; add the others to My words in one press, with the line they came from
+- **The entrance exam goes up to N3.** After kanji come an N4 section and an N3 section, so a learner who already knows them starts at N4 Road or N3 Bridge instead of N5 Street
+- **A new Study Guide page, Use it, don't just take it in:** saying things out loud, mixing what you read and watch, treating mistakes as progress, and knowing your own language's grammar
+
 ## 0.22.0
 
 - **YomiGo for Mac.** Download `YomiGo-macOS.dmg` from the release, open it, and drag YomiGo to Applications. One app for Apple silicon and Intel Macs, on macOS 11 Big Sur and later. It has the real macOS window buttons, the system font, and the same course, flashcards, exams, dictionary, Text Reader with paste and clipboard watch, Material folder, backups and Wi-Fi sync with the phone

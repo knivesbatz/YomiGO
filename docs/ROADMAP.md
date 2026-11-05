@@ -22,10 +22,11 @@ No app alone can make someone fluent. Fluency also takes thousands of hours of r
 ## Next up
 
 1. **Next:** more words again, toward about 3,700 for N3. The course has 1,420 word cards, up from 443 in 0.10
-2. **After that:** entrance-exam sections for N4 and N3, faster transcription on the graphics card, transcription on Android, vertical manga text, direct game-text hooking, N2, N1, Beyond N1, and handwriting
+2. **After that:** faster transcription on the graphics card, transcription on Android, vertical manga text, direct game-text hooking, N2, N1, Beyond N1, and handwriting
 
 ## Done
 
+- **0.23:** Find new words in any text, entrance exam up to N3, more words
 - **0.22:** YomiGo for Mac
 - **0.21:** YomiGo for Windows rebuilt in Rust, with the macOS Big Sur look on the PC and phone, and a console-style TV app
 - **0.20:** long classes split into parts of at most 25 new cards

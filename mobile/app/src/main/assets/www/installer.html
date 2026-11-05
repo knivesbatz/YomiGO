@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en" class="mac desk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YomiGo Setup</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="bigsur.css">
+<style>
+  /* The macOS Installer: steps down the left, the page on the right, Go Back and Continue at the bottom right */
+  html, body { height: 100%; overflow: hidden; user-select: none; -webkit-user-select: none; cursor: default; }
+  body { display: flex; flex-direction: column; height: 100vh; background: var(--win); }
+  .titlebar { position: sticky; top: 0; }
+  .titlebar { flex: none; }
+  .wrap { flex: 1; display: grid; grid-template-columns: 148px 1fr; min-height: 0; }
+  .steps { margin: 0; padding: 18px 0 0 18px; list-style: none; background: var(--side); font-size: 13px; }
+  .steps li { display: flex; align-items: center; gap: 8px; height: 26px; color: var(--ink-3); }
+  .steps li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--fill-3); flex: none; transition: background 200ms; }
+  .steps li.on { color: var(--ink); font-weight: 600; } .steps li.on::before { background: var(--accent); }
+  .steps li.done { color: var(--ink-2); } .steps li.done::before { background: var(--good); }
+  .page { display: flex; flex-direction: column; min-width: 0; padding: 16px 18px 12px; }
+  .body { flex: 1; overflow: auto; animation: mac-in 220ms var(--ease); }
+  .body h2 { font-size: 15px; font-weight: 700; margin: 0 0 10px; }
+  .body p { margin: 0 0 10px; color: var(--ink); line-height: 1.45; }
+  .box { background: var(--surface); box-shadow: inset 0 0 0 .5px var(--box-line); border-radius: 8px; padding: 10px 12px; font-size: 12px; line-height: 1.5; max-height: 150px; overflow: auto; user-select: text; }
+  .acts { display: flex; justify-content: flex-end; gap: 8px; padding-top: 10px; border-top: .5px solid var(--line); }
+  .acts .btn { margin: 0; min-width: 92px; }
+  .check { display: flex; align-items: center; gap: 8px; margin: 8px 0; font-size: 13px; }
+  .check input { width: 16px; height: 16px; min-height: 0; margin: 0; accent-color: var(--accent); box-shadow: none; }
+  input.path { margin: 4px 0 10px; font-size: 12px; }
+  .done-mark { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; background: var(--good); color: #fff; margin: 10px auto 12px; animation: stamp 420ms cubic-bezier(.3, 1.5, .5, 1); }
+  .done-mark svg { width: 30px; height: 30px; }
+  .center { text-align: center; }
+  .hello { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; } .hello img { width: 64px; height: 64px; }
+  .err { color: var(--bad); font-size: 12px; min-height: 16px; }
+</style>
+</head>
+<body>
+<div class="wrap"><ol class="steps" id="steps"></ol><div class="page"><div class="body" id="body"></div><div class="err" id="err" role="alert"></div><div class="acts" id="acts"></div></div></div>
+<div id="toasts"></div>
+<script src="ui.js"></script>
+<script>
+"use strict";
+const { h, icon, btn, sfx } = UI, invoke = __TAURI__.core.invoke, W = __TAURI__.window.getCurrentWindow();
+const $ = (id) => document.getElementById(id);
+// a macOS title bar, with its buttons on the right as the Windows app has them
+(() => {
+  const glyph = (d) => { const s = document.createElementNS("http://www.w3.org/2000/svg", "svg"); s.setAttribute("viewBox", "0 0 8 8"); const q = document.createElementNS("http://www.w3.org/2000/svg", "path"); q.setAttribute("d", d); q.setAttribute("class", "g-mac"); s.append(q); return s; };
+  const bar = h("div", { cls: "titlebar" }, h("div", { cls: "lights" },
+    h("button", { cls: "c", type: "button", "aria-label": "Close", on: () => W.close() }, glyph("M1.6 1.6l4.8 4.8M6.4 1.6 1.6 6.4")),
+    h("button", { cls: "m", type: "button", "aria-label": "Minimise", on: () => W.minimize() }, glyph("M1.2 4h5.6"))), h("div", { cls: "titlebar-name", id: "title" }, "YomiGo Setup"));
+  bar.addEventListener("mousedown", (e) => { if (!e.target.closest("button")) W.startDragging(); });
+  document.body.prepend(bar);
+  addEventListener("blur", () => document.documentElement.classList.add("inactive")); addEventListener("focus", () => document.documentElement.classList.remove("inactive"));
+  document.addEventListener("contextmenu", (e) => { if (!e.target.closest("input")) e.preventDefault(); });
+})();
+
+let I = null, dir = "", desktopIcon = true, at = 0;
+const STEPS = ["Introduction", "Licence", "Destination", "Installation", "Summary"];
+function steps(list, cur) { $("steps").replaceChildren(...list.map((s, i) => h("li", { cls: i < cur ? "done" : i === cur ? "on" : "" }, s))); }
+function page(n, body, acts) {
+  at = n; steps(I.uninstall ? ["Uninstall", "Summary"] : STEPS, n); $("err").textContent = "";
+  $("body").replaceChildren(...body); $("body").style.animation = "none"; void $("body").offsetWidth; $("body").style.animation = "";
+  $("acts").replaceChildren(...acts); const p = $("acts").querySelector(".primary"); if (p) p.focus({ preventScroll: true }); scrollTo(0, 0);
+}
+const back = (n) => btn("Go Back", () => { sfx("back"); go(n); });
+const next = (n, label = "Continue") => btn(label, () => { sfx("select"); go(n); }, "primary");
+function go(n) {
+  const name = I.name;
+  if (n === 0) page(0, [h("div", { cls: "hello" }, h("img", { src: "icon.png", alt: "" }), h("h2", null, `Welcome to the ${name} Installer`)),
+    h("p", null, I.tv ? "YomiGo TV is YomiGo for the big screen: full screen, made for a controller, with a menu of big tiles." : "YomiGo takes you from your first kana to the JLPT N3 level, one short class a day, with flashcards, exams, a dictionary, and a Text Reader for real Japanese."),
+    h("p", { cls: "dim small" }, `Version ${I.version}. It installs for you only, so it doesn't need an administrator.`)], [next(1)]);
+  if (n === 1) page(1, [h("h2", null, "Licence"),
+    h("div", { cls: "box" }, h("p", null, "YomiGo is free software. You may use, share and change it under the GNU General Public License, version 3 or any later version. The course content is under Creative Commons Attribution-ShareAlike 4.0."),
+      h("p", null, "It comes with no warranty. The dictionary is JMdict by the Electronic Dictionary Research and Development Group, CC BY-SA 4.0. Stroke order is from KanjiVG, CC BY-SA 3.0. Fonts are under the SIL Open Font License."),
+      h("p", null, "The full licences are on YomiGo's GitHub page and in its NOTICE file.")),
+    btn("Read the full licence", () => invoke("launch_url").catch(() => {}), "plain")], [back(0), next(2)]);
+  if (n === 2) {
+    const path = h("input", { cls: "path", value: dir, "aria-label": "Install folder", spellcheck: "false" });
+    path.addEventListener("input", () => { dir = path.value; });
+    const cb = h("input", { type: "checkbox", id: "dsk" }); cb.checked = desktopIcon; cb.addEventListener("change", () => { desktopIcon = cb.checked; sfx(cb.checked ? "on" : "off"); });
+    page(2, [h("h2", null, "Where to install"), h("p", null, `${name} will be installed in this folder, for you only. It needs about ${I.size_mb} MB. Your saves are kept in it too.`), path,
+      h("label", { cls: "check", for: "dsk" }, cb, "Put a shortcut on the desktop"),
+      h("p", { cls: "dim small" }, I.tv ? "Install YomiGo for the PC into the same folder, and the two share the same learners." : "Install YomiGo TV into the same folder, and the two share the same learners.")],
+      [back(1), btn("Install", installNow, "primary")]);
+  }
+}
+async function installNow() {
+  sfx("select");
+  const bar = h("div", { cls: "progress", style: "margin-top:24px" }, h("i")), note = h("p", { cls: "dim center" }, "Copying the program and its helpers…");
+  page(3, [h("h2", null, `Installing ${I.name}`), bar, note], []);
+  bar.firstChild.style.width = "8%"; requestAnimationFrame(() => { bar.firstChild.style.transition = "width 2.4s cubic-bezier(.2,.8,.2,1)"; bar.firstChild.style.width = "86%"; });
+  try { await invoke("install", { dir, desktopIcon }); }
+  catch (e) { sfx("error"); go(2); $("err").textContent = String(e); return; }
+  bar.firstChild.style.transition = "width 300ms"; bar.firstChild.style.width = "100%";
+  setTimeout(() => {
+    sfx("done");
+    page(4, [h("div", { cls: "done-mark" }, icon("check")), h("h2", { cls: "center" }, "The installation was completed successfully."),
+      h("p", { cls: "center dim" }, `${I.name} is in your Start menu${desktopIcon ? " and on your desktop" : ""}. It keeps itself up to date.`)],
+      [btn("Close", () => W.close()), btn(`Open ${I.name}`, async () => { await invoke("launch", { dir }).catch(() => {}); W.close(); }, "primary")]);
+  }, 450);
+}
+function uninstallPage() {
+  const cb = h("input", { type: "checkbox", id: "keep" }); cb.checked = true;
+  page(0, [h("div", { cls: "hello" }, h("img", { src: "icon.png", alt: "" }), h("h2", null, `Uninstall ${I.name}?`)),
+    h("p", null, `This removes ${I.name} from ${I.dir}, from the Start menu and the desktop, and from Settings > Apps.`),
+    h("label", { cls: "check", for: "keep" }, cb, "Keep my saves, so my progress is there if I install it again"),
+    h("p", { cls: "dim small" }, "Saves you don't keep go to the Recycle Bin.")],
+    [btn("Cancel", () => W.close()), btn("Uninstall", async () => {
+      try { await invoke("uninstall", { keepSaves: cb.checked }); } catch (e) { sfx("error"); $("err").textContent = String(e); return; }
+      sfx("done");
+      page(1, [h("div", { cls: "done-mark" }, icon("check")), h("h2", { cls: "center" }, `${I.name} has been uninstalled.`), h("p", { cls: "center dim" }, cb.checked ? "Your saves are still in its folder." : "Thanks for learning with YomiGo.")], [btn("Close", () => W.close(), "primary")]);
+    }, "primary danger")]);
+}
+const theme = (() => { try { return localStorage.getItem("yg.theme"); } catch { return null; } })(); if (theme && theme !== "system") document.documentElement.dataset.theme = theme;
+invoke("info").then((info) => { I = info; dir = info.dir; $("title").textContent = I.uninstall ? `Uninstall ${I.name}` : `${I.name} Setup`; document.title = $("title").textContent; I.uninstall ? uninstallPage() : go(0); });
+</script>
+</body>
+</html>

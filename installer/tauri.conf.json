@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "YomiGo Setup",
+  "version": "0.22.0",
+  "identifier": "io.github.knivesbatz.yomigo.setup",
+  "build": { "frontendDist": "../mobile/app/src/main/assets/www" },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      { "label": "setup", "title": "YomiGo Setup", "url": "installer.html", "width": 500, "height": 352, "resizable": false, "maximizable": false, "center": true, "decorations": false, "shadow": true, "focus": false, "visible": false }
+    ],
+    "security": { "csp": null }
+  },
+  "bundle": { "active": false, "icon": ["../desktop/icons/icon.ico", "../desktop/icons/icon.png"] }
+}

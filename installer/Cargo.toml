@@ -1,0 +1,20 @@
+[package]
+name = "yomigo-setup"
+version = "0.22.0"
+edition = "2021"
+description = "Installs YomiGo for Windows"
+license = "GPL-3.0-or-later"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"

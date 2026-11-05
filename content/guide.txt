@@ -65,6 +65,13 @@ Many reading programmes share a few rules: start below your level, don't look up
 Then move on to easy news written for learners and children, with furigana; then to manga and games you know well; then to novels.
 YomiGo's Reading steps are graded stories. The Text Reader turns anything you copy or screenshot into words you can look up.
 Read a little every day. Speed and confidence come from how much you read.
+@ Use it, don't just take it in
+Watching, listening and reading put Japanese in front of you. Using it is what makes it stay. Do both every day.
+Say it out loud. When you read, quietly say the words under your breath. When a video says a line, say it back. It trains your mouth and your ear at the same time as your eyes.
+Mix what you take in: shows, songs with the lyrics, news for learners, games, books, people. Every kind adds something the others don't, even the odd phrase you'd never use.
+Expect mistakes. Each one shows you something your brain hadn't worked out yet, and fixing it is how the rule sticks. Nobody learns a language, or a guitar chord, without getting it wrong first.
+Know a little about your own language's grammar. Words like subject, object, verb and particle make Japanese grammar much easier to compare and follow.
+Japanese takes years, and that's normal. Slow and steady, used every day, beats rushing.
 @ Using YomiGo with real Japanese
 Web pages: YomiGo Reader shows a word's meaning when you point at it, and saves it with its sentence.
 Games and visual novels: a text hooker copies the game's text to the clipboard, and the Text Reader picks it up so you can look up every word.

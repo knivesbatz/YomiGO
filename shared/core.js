@@ -333,7 +333,13 @@
     return out.slice(0, max);
   }
   // Always starts at romaji
+  // Sections: romaji, hiragana, katakana, words, grammar, kanji, then N4 and N3, each a mix of that stage's words, grammar and kanji
+  const PLACEMENT_SECTIONS = 8;
   function placementSection(i) {
+    if (i >= 6) {
+      const stage = C.stages.length - (PLACEMENT_SECTIONS - i);
+      return shuffle(C.cards.filter((c) => "wgj".includes(c.t) && c.day >= 0 && C.days[c.day] && C.days[c.day].stage === stage)).slice(0, 5).map((c) => makeQ(c, 0, false));
+    }
     const type = "whkwgj"[i];
     return shuffle(C.cards.filter((c) => c.t === type && c.day >= 0 && (i > 0 || romajiMode(c.day)))).slice(0, 5).map((c) => makeQ(c, 0, i === 0));
   }
@@ -406,6 +412,30 @@
     }
     return hits;
   }
+  // The dictionary words in some text that a learner doesn't know yet, most frequent first, each with the first line it
+  // appears in. Short hiragana runs are skipped: they're mostly endings and particles, which the grammar teaches.
+  function mineWords(lines, known, max = 40) {
+    const out = new Map();
+    for (const line of lines) for (let i = 0; i < line.length;) {
+      const h = dictLookup(line.slice(i));
+      if (!h.length) { i++; continue; }
+      // 今日は is today plus は unless the sentence stops there, so a phrase ending in a particle gives way to a shorter word
+      let hit = h[0];
+      if (/[はがを]$/.test(hit.form) && i + hit.form.length < line.length) hit = h.find((x) => x.form.length < hit.form.length) || hit;
+      const { card, form } = hit;
+      // Short hiragana that only matches a kanji word by its sound (いい as 胃) is a mis-split: try the next character
+      // and so is a short hiragana inflection of one (ました as 升, あって as 会う); わかりました is long enough to trust
+      if (!/[㐀-鿿]/.test(form) && /[㐀-鿿]/.test(card.f) && ([...form].length < 3 || (hiraOf(form) !== card.r && [...form].length < 4))) { i++; continue; }
+      const kana = !/[㐀-鿿]/.test(card.f), kata = /^[ァ-ヿー]+$/.test(card.f);
+      // a short hiragana ending (がた as がる) is passed one character at a time, so the word after it isn't swallowed
+      if (kana && !kata && [...card.f].length < 3) { i++; continue; }
+      i += form.length;
+      if (known(card)) continue;
+      const k = card.f + "|" + card.r, e = out.get(k);
+      if (e) e.n++; else out.set(k, { f: card.f, r: card.r, gloss: card.en, n: 1, sent: line });
+    }
+    return [...out.values()].sort((a, b) => b.n - a.n).slice(0, max);
+  }
   const hiraOf = (s) => [...s].map((c) => { const n = c.codePointAt(0); return n >= 0x30a1 && n <= 0x30f6 ? String.fromCodePoint(n - 0x60) : c; }).join("");
 
   // Dictionary lookup for the extension: longest word first, with polite-verb endings undone
@@ -427,5 +457,5 @@
     return hits.slice(0, 6);
   }
 
-  root.YG = { imeSlip, streakCheck, merge, normKana, kanaRomaji, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, catchUp, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, myAdd, myImport, myExport, makeQMy, quizListen, shadowLines, lookup, byId, PASS };
+  root.YG = { PLACEMENT_SECTIONS, mineWords, imeSlip, streakCheck, merge, normKana, kanaRomaji, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, catchUp, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, myAdd, myImport, myExport, makeQMy, quizListen, shadowLines, lookup, byId, PASS };
 })(globalThis);

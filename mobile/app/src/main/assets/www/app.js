@@ -185,16 +185,16 @@ function askGenki() {
 }
 function placeIntro() {
   setNav("");
-  show(head("Entrance Exam", "Find your starting point"), h("div", { cls: "card" }, "A short test finds your starting point. It begins with romaji, climbs through kana, words, grammar, and kanji, and stops when it gets too hard. You can press I don't know at any time."),
+  show(head("Entrance Exam", "Find your starting point"), h("div", { cls: "card" }, "A short test finds your starting point. It begins with romaji, climbs through kana, words, grammar, kanji, N4 and N3, and stops when it gets too hard. You can press I don't know at any time."),
     btn("Take the exam", () => placement(0, 0), "primary"),
     btn("I'm a total beginner. Start from day one.", () => { Y.place(P, 0, Y.today()); store.save(); home(); }));
 }
 function placement(section, passed) {
   runQuiz(Y.placementSection(section), "Entrance exam", (right) => {
-    // Sections passed: romaji, hiragana, katakana, words, grammar, kanji
-    const map = [0, 2, 3, 4, 4, 5, 6];
-    if (right >= 4 && section < 5) return placement(section + 1, section + 1);
-    Y.place(P, map[right >= 4 ? 6 : passed], Y.today()); store.save();
+    // Stage reached for each number of sections passed: romaji, hiragana, katakana, words, grammar, kanji, N4, N3
+    const map = [0, 2, 3, 4, 4, 5, 6, 7, 8], last = Y.PLACEMENT_SECTIONS - 1;
+    if (right >= 4 && section < last) return placement(section + 1, section + 1);
+    Y.place(P, map[right >= 4 ? last + 1 : passed], Y.today()); store.save();
     const st = C.stages[Y.stageOf(P)];
     setNav(""); sfx("done");
     show(head("Your starting point"), h("div", { cls: "card hero" }, h("div", { cls: "big acc", lang: "ja" }, st.ja), h("h3", null, st.name), h("p", { cls: "dim" }, `You'll begin at class ${P.day + 1}. Earlier material goes to your flashcards.`)), btn("Begin", home, "primary"));
@@ -606,7 +606,7 @@ const addLines = (text) => { const l = text.split(/\r?\n/).map((s) => s.trim()).
 globalThis.ygOcr = (text) => { const n = text ? addLines(text) : 0; textReader(); if (!text) toast("Couldn't read that picture.", "bad"); else if (!n) toast("No Japanese found in that picture."); };
 function textReader() {
   setNav(Host.desktop ? "reader" : "library"); if (!Host.desktop) back = library;
-  const area = h("textarea", { rows: 3, "aria-label": "Japanese text", placeholder: "Paste Japanese here", lang: "ja" }), out = h("div", { "aria-live": "polite" });
+  const area = h("textarea", { rows: 3, "aria-label": "Japanese text", placeholder: "Paste Japanese here", lang: "ja" }), out = h("div", { "aria-live": "polite" }), mined = h("div", { "aria-live": "polite" });
   const pick = (line, i, span) => ensureDict(() => {
     document.querySelectorAll(".reader-line span.on").forEach((s) => s.classList.remove("on")); span.classList.add("on");
     const hits = Y.dictLookup(line.slice(i)).slice(0, 4);
@@ -628,7 +628,25 @@ function textReader() {
     tools, area, h("div", { cls: "btn-row" }, btn("Add this text", () => { if (addLines(area.value)) textReader(); else toast("No Japanese in that text."); }, "primary"),
       Host.ocrPick ? btn("Read a photo", () => { toast("Reading…"); Host.ocrPick(); }) : null),
     out, lines.length ? lines : empty("reader", "Nothing to read yet", Host.desktop ? "With Watch on, text copied by a text hooker such as Textractor shows up by itself. Transcribe writes down what's said in a video." : "Add some Japanese above."),
-    readerLines.length ? btn("Clear", () => { readerLines = []; textReader(); }, "quiet") : null);
+    readerLines.length ? h("div", { cls: "btn-row" }, btn([icon("plus"), "Find new words"], () => ensureDict(() => showMined(mined)), "primary"), btn("Clear", () => { readerLines = []; textReader(); }, "quiet")) : null, mined);
+}
+// Every dictionary word in the Reader's lines that this learner doesn't know yet, most frequent first. Words the course
+// will teach later say which class; the rest can go straight into My words, with the line they came from.
+let courseWord = null;
+function showMined(box) {
+  courseWord = courseWord || new Map(C.cards.filter((c) => c.t === "w" || c.t === "j").flatMap((c) => [[c.f, c], [c.r, c]]));
+  const inMine = (c) => P.my.some((m) => m.word === c.f || (m.reading === c.r && m.word === c.r));
+  const known = (c) => { const k = courseWord.get(c.f) || (!/[㐀-鿿]/.test(c.f) && courseWord.get(c.r)); return inMine(c) || (k && !!P.cards[k.id]); };
+  const words = Y.mineWords(readerLines, known, 60);
+  sfx(words.length ? "done" : "off");
+  box.replaceChildren(...(words.length ? list(`${words.length} word${words.length === 1 ? "" : "s"} you don't know yet`, words.map((w) => {
+    const k0 = courseWord.get(w.f) || (!/[㐀-鿿]/.test(w.f) && courseWord.get(w.r)), cls = k0 ? C.days.findIndex((d) => d.new.includes(k0.id)) : -1, k = cls >= 0 ? k0 : null;
+    const add = btn("Add", () => { const r = Y.myAdd(P, w.f, w.r, w.gloss, w.sent, Y.today()); store.save(); toast(addedMsg(r), r > 0 ? "good" : ""); add.disabled = true; }, "sm", { "data-quiet": "1" });
+    return { label: w.f, lang: "ja", sub: `${w.f !== w.r ? w.r + " · " : ""}${Y.kanaRomaji(w.r)} · ${w.gloss || ""}`, value: `×${w.n}`,
+      control: k ? h("span", { cls: "badge acc", title: "The course teaches this one" }, `Class ${cls + 1}`) : add };
+  }), "Words with a class number come up in the course. Add the others to review them with your flashcards, with the line they came from.")
+    : [empty("check", "No new words here", "You know every dictionary word in these lines, or the course will teach them soon.")]));
+  box.scrollIntoView({ behavior: UI.calm.matches ? "auto" : "smooth", block: "start" });
 }
 function startWatch() {
   clearInterval(watchTimer); watchTimer = null;

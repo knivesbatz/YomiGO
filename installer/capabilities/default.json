@@ -1,0 +1,6 @@
+{
+  "identifier": "default",
+  "description": "What the installer window may use",
+  "windows": ["setup"],
+  "permissions": ["core:default", "core:window:allow-start-dragging", "core:window:allow-minimize", "core:window:allow-close"]
+}
