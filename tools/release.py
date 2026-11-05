@@ -15,7 +15,7 @@ def run(*a, **k):
 
 run("cmd", "/c", os.path.join(ROOT, "build.bat"))
 # The real program, started off screen: the home, a quiz and the TV home must all draw
-run(sys.executable, "tests/shots.py", os.path.join(DIST, "YomiGo.exe"), os.path.join(ROOT, "build", "shots"), "home", "quiz", "settings", "library-guide", "library-media", "tv-home")
+run(sys.executable, "tests/shots.py", os.path.join(DIST, "YomiGo.exe"), os.path.join(ROOT, "build", "shots"), "home", "quiz", "settings", "library-guide", "library-media", "mine", "tv-home")
 run("node", "--test", "tests/test_core.mjs")
 exes = ["YomiGo.exe", "YomiGoHTPC.exe", "YomiGoUpdate.exe", "YomiGoOCR.exe", "YomiGoListen.exe", "YomiGoTalk.exe"]
 run("node", "tools/release_keys.mjs", "sign", *[os.path.join("dist", e) for e in exes])

@@ -629,7 +629,7 @@ function textReader() {
 // will teach later say which class; the rest can go straight into My words, with the line they came from.
 let courseWord = null;
 function showMined(box) {
-  courseWord = courseWord || new Map(C.cards.filter((c) => c.t === "w" || c.t === "j").flatMap((c) => [[c.f, c], [c.r, c]]));
+  courseWord = courseWord || new Map(C.cards.filter((c) => c.t === "w" || c.t === "j").flatMap((c) => [...Y.wordForms(c.f), ...Y.wordForms(c.r)].map((w) => [w, c])));
   const inMine = (c) => P.my.some((m) => m.word === c.f || (m.reading === c.r && m.word === c.r));
   const known = (c) => { const k = courseWord.get(c.f) || (!/[㐀-鿿]/.test(c.f) && courseWord.get(c.r)); return inMine(c) || (k && !!P.cards[k.id]); };
   const words = Y.mineWords(readerLines, known, 60);

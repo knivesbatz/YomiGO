@@ -69,6 +69,13 @@ test("finding new words in pasted text", () => {
   const v = Y.mineWords(["散歩しました。ここにあって、わかりました。"], () => false).map((x) => x.r);
   assert.ok(!v.includes("ます") && !v.includes("あう") && v.includes("わかる"), "inflections: " + v);
 });
+test("a verb taught as ます is known in its dictionary form", () => {
+  assert.ok(Y.wordForms("帰ります").includes("帰る"));
+  assert.ok(Y.wordForms("かえります").includes("かえる"));
+  assert.ok(Y.wordForms("運転します").includes("運転") && Y.wordForms("運転します").includes("運転する"));
+  assert.deepEqual(Y.wordForms("猫"), ["猫"]);
+  assert.ok(!Y.wordForms("話します").includes("話"), "話す is not 話 + する");
+});
 test("the entrance exam reaches N4 and N3", () => {
   assert.equal(Y.PLACEMENT_SECTIONS, 8);
   for (const [i, stage] of [[6, C.stages.length - 2], [7, C.stages.length - 1]]) {

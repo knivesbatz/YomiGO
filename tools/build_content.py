@@ -182,7 +182,8 @@ def load_cards():
         got, want = romaji_to_kana(ro, table), to_hira(kana)
         if len(r) > 5 and r[5] == "p":
             want = want.replace("は", "わ").replace("を", "お").replace("へ", "え")
-        # Hepburn writes づ and ぢ as zu and ji, as they're said
+        # Hepburn writes づ and ぢ as zu and ji, as they're said, and ティ and ディ as ti and di
+        want = want.replace("てぃ", "ち").replace("でぃ", "ぢ")
         got, want = got.replace("づ", "ず").replace("ぢ", "じ"), want.replace("づ", "ず").replace("ぢ", "じ")
         if got != want: die(f"words.tsv {id_}: romaji {ro} gives {got}, kana says {want}")
         c = {"id": "v."+id_, "t": "w", "f": disp, "r": kana, "ro": ro, "en": en, "n": ""}

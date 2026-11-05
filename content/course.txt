@@ -217,7 +217,7 @@ immerse: Say 美味しい! at your next meal, with feeling.
 material: 5. Adjectives
 @day There is... | あります、います
 note: Use います for people and animals, あります for everything else. Plants and robots count as things to most speakers, though robots can go either way.
-new: !g.ga !g.nipos @exist @house @house3 @house4
+new: !g.ga !g.nipos @exist @house @house3 @house4 @house5
 read: morning
 homework: Say what's in your room with あります and います.
 immerse: Walk through your home naming what's there.
@@ -262,7 +262,7 @@ homework: Write today's date in kanji numbers.
 immerse: Find one kanji number on a Japanese web page.
 @day People and the body | 人と体
 note: Many kanji began as pictures. Notice 田 and 力 inside 男. Parts like these repeat, so learn them as building blocks.
-new: @k3 @body @body4 @body5 @k21
+new: @k3 @body @body4 @body5 @k21 @body6
 homework: Copy each kanji five times.
 immerse: Find 人 inside a Japanese web headline.
 material: 3. Body Parts
@@ -333,7 +333,7 @@ homework: Roleplay buying something, with a family member.
 immerse: Browse a Japanese shop website for ten minutes.
 material: Money and shopping
 @day At a restaurant | レストラン
-new: @food2 @food4 @food6 @food8 @k30 @food9
+new: @food2 @food4 @food6 @food8 @k30 @food9 @food10
 note: Say すみません to call staff. Tipping isn't customary. Don't stick chopsticks upright in rice or pass food chopstick to chopstick, because both recall funeral customs.
 chat: restaurant1
 homework: Read aloud a Japanese menu online.
@@ -374,7 +374,7 @@ homework: Write three rules for your home using 〜てはいけません.
 immerse: Look at photos of Japanese signs. Spot ください and 禁止.
 @day Must, and don't have to | 義務
 note: Don't mix these up. なければなりません means you must. なくてもいいです means you don't need to. They aren't opposites of permission either, because 〜てはいけません is what forbids.
-new: !g.nakereba !g.nakutemo @must @jobs @money @jobs2 @k34
+new: !g.nakereba !g.nakutemo @must @jobs @money @jobs2 @k34 @work8
 read: doctor
 homework: List two things you must do tomorrow, and two you don't have to.
 immerse: Say out loud what you have to do next, in Japanese.
@@ -393,7 +393,7 @@ immerse: Listen for と思います in an interview or YouTube video.
 material: 3. Grammar KARA-MADE
 @day What you can do | 可能
 note: When someone praises your Japanese, the usual reply is a modest denial: いいえ、まだまだです. Accepting with a plain thank you also works, particularly with friends.
-new: !g.koto !g.potential @can @tech @hobbies2 @hobbies3 @tech2 @hobbies4 @k37 @hobbies5
+new: !g.koto !g.potential @can @tech @hobbies2 @hobbies3 @tech2 @hobbies4 @k37 @hobbies5 @hobbies6
 chat: can1
 homework: Say five things you can and can't do.
 immerse: Look up the lyrics to a song you like, and find one word you know.
@@ -492,14 +492,14 @@ homework: Write three things that should happen tomorrow, with はずです.
 immerse: Listen for わけ in an interview, where people explain their reasons.
 @day Hearsay and looks | 伝聞と様子
 note: Japanese marks how you know something. そうです after a plain form means you heard it. らしい means you gathered it. みたい and よう mean it seems so, from what you see. News reports use these all the time.
-new: !g.souhear !g.mitai !g.ppoi !g.niyoruto @n3news @clothes3
+new: !g.souhear !g.mitai !g.ppoi !g.niyoruto @n3news @clothes3 @news2
 read: n3news
 homework: Pass on two pieces of news you read today, with そうです.
 immerse: Read the headlines of a Japanese news site, such as NHK News Web Easy.
 material: The press
 @day About, for, and as | 関係
 note: These work like prepositions and turn up all through written Japanese. Learn them as whole chunks: について, にとって, として, and に対して.
-new: !g.nitsuite !g.nitotte !g.toshite !g.nitaishite @n3society @world @countries2
+new: !g.nitsuite !g.nitotte !g.toshite !g.nitaishite @n3society @world @countries2 @world3
 homework: Write what Japanese means to you, with にとって.
 immerse: Find について in the title of a YouTube video or article.
 material: My culture
@@ -528,7 +528,7 @@ homework: Write three "the more ..., the more ..." sentences about learning Japa
 immerse: Compare prices on a Japanese shopping site, and describe them with ほど.
 @day Feelings and memories | 気持ちと思い出
 note: たがる is for other people's wishes, because Japanese doesn't state what's in someone else's head as fact. For yourself, keep using たい.
-new: !g.tagaru !g.kigasuru !g.furi !g.mono @n3feel @feel2 @feel4 @feel5 @feel6
+new: !g.tagaru !g.kigasuru !g.furi !g.mono @n3feel @feel2 @feel4 @feel5 @feel6 @people7
 homework: Write about a childhood memory with 〜たものです.
 immerse: Listen to a song about the past, and listen for 懐かしい.
 material: Positive feelings
@@ -541,7 +541,7 @@ immerse: Follow a Japanese recipe video, and listen for the steps.
 @day Ahead and after | 準備と結果
 note: ておく shows foresight, and てしまう often shows regret. Casual speech squeezes them: 〜とく and 〜ちゃう. Learning the short forms makes anime and dramas much easier to follow.
 note: させられる is how Japanese complains about being made to do things, such as homework, overtime, or practice.
-new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10 @verbs11
+new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10 @verbs11 @verbs12
 homework: Write three things you'll prepare before a trip, with ておきます.
 immerse: Listen for ちゃった in any anime episode.
 @day Work Japanese | 仕事の日本語

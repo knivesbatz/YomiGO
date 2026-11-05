@@ -1652,7 +1652,6 @@ kurage	クラゲ	クラゲ	kurage	jellyfish		夏の海はクラゲが多いで�
 ari	アリ	アリ	ari	ant		台所にアリがいます。	There are ants in the kitchen.
 hamusutaa	ハムスター	ハムスター	hamusutaa	hamster		妹はハムスターを飼っています。	My little sister keeps a hamster.
 kiri	霧	きり	kiri	fog, mist		朝は霧で何も見えなかった。	I couldn't see anything in the morning fog.
-kumoru	曇る	くもる	kumoru	to get cloudy		午後から曇るそうです。	They say it'll cloud over from the afternoon.
 sesshi	摂氏	せっし	sesshi	Celsius		今日は摂氏三十度です。	It's thirty degrees Celsius today.
 #school6
 shousetsu	小説	しょうせつ	shousetsu	novel		寝る前に小説を読みます。	I read a novel before bed.
@@ -1670,6 +1669,7 @@ rimokon	リモコン	リモコン	rimokon	remote control		リモコンがどこ�
 kiiboodo	キーボード	キーボード	kiiboodo	keyboard		新しいキーボードを買いました。	I bought a new keyboard.
 jogingu	ジョギング	ジョギング	jogingu	jogging		毎朝ジョギングをしています。	I go jogging every morning.
 geijutsuka	芸術家	げいじゅつか	geijutsuka	artist		祖父は有名な芸術家でした。	My grandfather was a famous artist.
+aatisuto	アーティスト	アーティスト	aatisuto	artist, musician		好きなアーティストのコンサートに行った。	I went to my favourite artist's concert.
 dezainaa	デザイナー	デザイナー	dezainaa	designer		姉は服のデザイナーです。	My older sister is a clothes designer.
 #health4
 itami	痛み	いたみ	itami	pain, ache		痛みがあったら、この薬を飲んでください。	If you're in pain, take this medicine.
@@ -1699,9 +1699,102 @@ ijiwaru	意地悪	いじわる	ijiwaru	mean, nasty		意地悪なことを言わ�
 ochitsuita	落ち着いた	おちついた	ochitsuita	calm, settled		落ち着いた声で話してください。	Please speak in a calm voice.
 matane	またね	またね	mata ne	see you, bye		じゃあ、またね。	Well, see you.
 #verbs11
-toru2	取る	とる	toru	to take, to pick up		その塩を取ってください。	Please pass me that salt.
 uketoru	受け取る	うけとる	uketoru	to receive		荷物を受け取りました。	I received the parcel.
 #work7
 juugyouin	従業員	じゅうぎょういん	juugyouin	employee, staff		この店は従業員が十人います。	This shop has ten staff.
 puran	プラン	プラン	puran	plan		旅行のプランを考えました。	I came up with a plan for the trip.
 sain	サイン	サイン	sain	signature, autograph		ここにサインをお願いします。	Please sign here.
+#people7
+boku	僕	ぼく	boku	I, me (casual, mostly men)		僕は東京に住んでいます。	I live in Tokyo.
+yatsu	奴	やつ	yatsu	guy, thing (rough)		あいつは面白い奴だ。	He's a fun guy.
+naze	なぜ	なぜ	naze	why		なぜ遅れたんですか。	Why were you late?
+nikui	憎い	にくい	nikui	hateful		あの人が憎いわけじゃない。	It's not that I hate that person.
+minikui	醜い	みにくい	minikui	ugly		醜いけんかはやめよう。	Let's stop this ugly fight.
+akiraka	明らか	あきらか	akiraka	clear, obvious		彼の間違いは明らかです。	His mistake is obvious.
+youi	容易	ようい	youi	easy, simple		この問題は容易ではない。	This problem isn't easy.
+giri	義理	ぎり	giri	duty, obligation		義理でパーティーに行った。	I went to the party out of obligation.
+#verbs12
+keru	蹴る	ける	keru	to kick		ボールを強く蹴った。	I kicked the ball hard.
+kareru	枯れる	かれる	kareru	to wither, to die (plants)		水をあげなかったので、花が枯れた。	The flowers died because I didn't water them.
+sugiru	過ぎる	すぎる	sugiru	to pass, to go past		もう十時を過ぎました。	It's already past ten.
+ou	追う	おう	ou	to chase		犬が猫を追っている。	The dog is chasing the cat.
+sosogu	注ぐ	そそぐ	sosogu	to pour		コップに水を注いでください。	Please pour water into the glass.
+sasu	指す	さす	sasu	to point at		地図のこの場所を指してください。	Point to this place on the map.
+niru	似る	にる	niru	to resemble		私は母に似ています。	I look like my mother.
+kamau	構う	かまう	kamau	to mind, to care		私は構いません。	I don't mind.
+bareru	ばれる	ばれる	bareru	to come out, to be found out		うそがばれた。	The lie came out.
+kosu	越す	こす	kosu	to cross, to get through		山を越すと海が見えます。	Once you cross the mountain you can see the sea.
+shiku	敷く	しく	shiku	to spread out, to lay		床に布団を敷きます。	I lay the futon out on the floor.
+mau	舞う	まう	mau	to dance, to flutter		桜の花びらが風に舞っている。	Cherry petals are dancing in the wind.
+moru	盛る	もる	moru	to dish up, to pile		ご飯をお茶碗に盛ります。	I dish rice into the bowl.
+#food10
+hourensou	ほうれん草	ほうれんそう	hourensou	spinach		ほうれん草は体にいいです。	Spinach is good for you.
+suupaamaaketto	スーパーマーケット	スーパーマーケット	suupaamaaketto	supermarket		スーパーマーケットで野菜を買った。	I bought vegetables at the supermarket.
+chouri	調理	ちょうり	chouri	cooking, preparing food		この魚は調理が簡単です。	This fish is easy to cook.
+abura	脂	あぶら	abura	fat, grease		この肉は脂が多い。	This meat is fatty.
+mitsu	蜜	みつ	mitsu	honey, nectar		蜂が花の蜜を集めている。	Bees are gathering nectar from the flowers.
+koori	氷	こおり	koori	ice		ジュースに氷を入れてください。	Please put ice in the juice.
+kona	粉	こな	kona	powder, flour		パンは粉から作ります。	Bread is made from flour.
+awa	泡	あわ	awa	bubble, foam		ビールの泡がおいしい。	The beer's foam tastes good.
+#house5
+todana	戸棚	とだな	todana	cupboard		お皿は戸棚の中にあります。	The plates are in the cupboard.
+totte	取っ手	とって	totte	handle		ドアの取っ手が壊れた。	The door handle broke.
+madori	間取り	まどり	madori	floor plan, layout		この部屋の間取りが好きです。	I like this flat's layout.
+juutaku	住宅	じゅうたく	juutaku	housing, house		この辺りは住宅が多い。	There are lots of houses around here.
+hari	針	はり	hari	needle		針と糸を貸してください。	Please lend me a needle and thread.
+ana	穴	あな	ana	hole		靴下に穴があいている。	There's a hole in my sock.
+#body6
+hige	ひげ	ひげ	hige	beard, moustache		父はひげをそっています。	My father is shaving his beard.
+ago	顎	あご	ago	chin, jaw		転んで顎を打った。	I fell and hit my chin.
+hitai	額	ひたい	hitai	forehead		額に汗をかいている。	There's sweat on my forehead.
+kinpatsu	金髪	きんぱつ	kinpatsu	blond hair		彼女は金髪です。	She has blond hair.
+youshi	容姿	ようし	youshi	looks, appearance		容姿より性格が大事です。	Personality matters more than looks.
+#hobbies6
+paatii	パーティー	パーティー	paatii	party		週末にパーティーをします。	We're having a party at the weekend.
+manga2	漫画	まんが	manga	manga, comics (kanji spelling)		毎晩漫画を読みます。	I read manga every night.
+chesu	チェス	チェス	chesu	chess		祖父とチェスをしました。	I played chess with my grandfather.
+oyogi	泳ぎ	およぎ	oyogi	swimming		兄は泳ぎが上手です。	My brother is a good swimmer.
+fasshon	ファッション	ファッション	fasshon	fashion		ファッションの雑誌を買った。	I bought a fashion magazine.
+sutairu	スタイル	スタイル	sutairu	style, figure		このスタイルが好きです。	I like this style.
+gaka	画家	がか	gaka	painter		有名な画家の絵を見ました。	I saw a famous painter's work.
+bara	ばら	ばら	bara	rose		庭にばらが咲いています。	Roses are blooming in the garden.
+takarakuji	宝くじ	たからくじ	takarakuji	lottery ticket		宝くじが当たったらどうする？	What would you do if you won the lottery?
+enjin	エンジン	エンジン	enjin	engine		車のエンジンがかからない。	The car's engine won't start.
+keitai	携帯	けいたい	keitai	mobile phone		携帯を家に忘れた。	I left my phone at home.
+#world3
+chuugokugo	中国語	ちゅうごくご	chuugokugo	Chinese (language)		中国語は発音が難しい。	Chinese pronunciation is hard.
+doitsugo	ドイツ語	ドイツご	doitsugo	German (language)		大学でドイツ語を勉強した。	I studied German at university.
+furansugo	フランス語	フランスご	furansugo	French (language)		フランス語が少し話せます。	I can speak a little French.
+supeingo	スペイン語	スペインご	supeingo	Spanish (language)		スペイン語の歌が好きです。	I like Spanish songs.
+hata	旗	はた	hata	flag		日本の旗は白と赤です。	Japan's flag is white and red.
+shinkou	信仰	しんこう	shinkou	faith, belief		信仰は人それぞれです。	Faith differs from person to person.
+shisou	思想	しそう	shisou	thought, ideology		この本は彼の思想をよく表している。	This book shows his thinking well.
+joukyou	上京	じょうきょう	joukyou	moving to Tokyo		十八歳で上京しました。	I moved to Tokyo at eighteen.
+shinrin	森林	しんりん	shinrin	forest, woods		日本は森林が多い国です。	Japan is a country with many forests.
+oki	沖	おき	oki	offshore, open sea		船が沖に出た。	The boat went out to sea.
+kishi	岸	きし	kishi	shore, bank		川の岸を歩きました。	I walked along the riverbank.
+#news2
+eikyou	影響	えいきょう	eikyou	influence, effect		台風の影響で電車が止まった。	The trains stopped because of the typhoon.
+shuchou	主張	しゅちょう	shuchou	claim, opinion		彼の主張は分かります。	I understand his point.
+touhyou	投票	とうひょう	touhyou	vote, voting		日曜日に投票に行きます。	I'm going to vote on Sunday.
+fukyou	不況	ふきょう	fukyou	recession		不況で仕事が減った。	Work dropped off in the recession.
+zaisei	財政	ざいせい	zaisei	finances (public)		市の財政は厳しい。	The city's finances are tight.
+tsumi	罪	つみ	tsumi	crime, sin		彼は罪を認めた。	He admitted his crime.
+saibankan	裁判官	さいばんかん	saibankan	judge		裁判官が判決を読んだ。	The judge read out the verdict.
+futou	不当	ふとう	futou	unfair, unjust		それは不当な扱いです。	That's unfair treatment.
+kakutoku	獲得	かくとく	kakutoku	winning, gaining		日本は金メダルを三つ獲得した。	Japan won three gold medals.
+kaiten	回転	かいてん	kaiten	turning, rotation		この寿司屋は回転寿司です。	This sushi shop has a conveyor belt.
+kanryou	完了	かんりょう	kanryou	completion		準備が完了しました。	Preparations are complete.
+jikoku	時刻	じこく	jikoku	time (of day)		電車の時刻を調べた。	I looked up the train times.
+kyoudou	共同	きょうどう	kyoudou	joint, shared		台所は共同です。	The kitchen is shared.
+#work8
+shoushin	昇進	しょうしん	shoushin	promotion		来月、課長に昇進します。	I'm being promoted to section chief next month.
+yakushoku	役職	やくしょく	yakushoku	post, position		彼の役職は何ですか。	What's his position?
+gyousha	業者	ぎょうしゃ	gyousha	contractor, trader		業者に修理を頼んだ。	I asked a contractor to fix it.
+dairiten	代理店	だいりてん	dairiten	agency		旅行代理店で切符を買った。	I bought tickets at a travel agency.
+maaketingu	マーケティング	マーケティング	maaketingu	marketing		姉はマーケティングの仕事をしています。	My sister works in marketing.
+jaanarisuto	ジャーナリスト	ジャーナリスト	jaanarisuto	journalist		将来ジャーナリストになりたい。	I want to be a journalist one day.
+roon	ローン	ローン	roon	loan		車のローンを払っています。	I'm paying off a car loan.
+shoyuu	所有	しょゆう	shoyuu	ownership		この土地は市の所有です。	This land is owned by the city.
+shikata	仕方	しかた	shikata	way, method		料理の仕方を教えてください。	Please show me how to cook it.
+youhin	用品	ようひん	youhin	goods, supplies		スポーツ用品の店に行った。	I went to a sporting goods shop.

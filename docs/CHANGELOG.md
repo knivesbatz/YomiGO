@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.25.0
+
+- **Fixed: Find new words listed verbs you already know.** A verb the course teaches as 帰ります was still offered as a new word when a text said 帰る, and 運転します didn't cover 運転. Every verb you've learned now counts in its dictionary form too
+- **86 more words** with example sentences, taking the course to 1,581 word cards, chosen from the most frequent words in real learning material that the course didn't teach yet: 僕, なぜ, 影響, 主張, 不況, 投票, 昇進, verbs such as 蹴る, 追う, 似る, 指す, 構う, and ばれる, the names of languages, and words for the house, the body, and hobbies
+- Words with ティ, such as パーティー and マーケティング, can now be taught, written ti in romaji as Hepburn does
+- 取る and 曇る, added in 0.24, are gone again: the course already taught them as 取ります and 曇ります
+
 ## 0.24.0
 
 - **The months, at last:** 一月 to 十二月 join the class on time and days

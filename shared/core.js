@@ -400,6 +400,13 @@
     for (const e of ["くない", "かった", "くて", "く"]) if (s.endsWith(e) && s.length > e.length) out.add(s.slice(0, -e.length) + "い");
     return [...out];
   }
+  // The forms a course word is also known by: 帰ります teaches 帰る, and 運転します teaches 運転 and 運転する
+  function wordForms(w) {
+    if (!w.endsWith("ます")) return [w];
+    const out = [w, ...deinflect(w)];
+    if (w.endsWith("します") && w.length > 4) out.push(w.slice(0, -3), w.slice(0, -3) + "する");
+    return out;
+  }
   function dictLookup(text) {
     if (!dictIndex) return [];
     const hits = [], seen = new Set();
@@ -457,5 +464,5 @@
     return hits.slice(0, 6);
   }
 
-  root.YG = { PLACEMENT_SECTIONS, mineWords, imeSlip, streakCheck, merge, normKana, kanaRomaji, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, catchUp, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, myAdd, myImport, myExport, makeQMy, quizListen, shadowLines, lookup, byId, PASS };
+  root.YG = { PLACEMENT_SECTIONS, mineWords, wordForms, imeSlip, streakCheck, merge, normKana, kanaRomaji, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, catchUp, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, myAdd, myImport, myExport, makeQMy, quizListen, shadowLines, lookup, byId, PASS };
 })(globalThis);
