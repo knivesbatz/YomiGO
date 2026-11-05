@@ -23,7 +23,7 @@ jobs:
         shell: cmd
         run: build.bat
       - name: The app draws its home, a quiz and the TV home
-        run: python tests/shots.py dist/YomiGo.exe build/shots home quiz tv-home
+        run: python tests/shots.py dist/YomiGo.exe build/shots home quiz settings library-guide library-media tv-home
       - name: JS core tests
         run: node --test tests/test_core.mjs
       - uses: actions/upload-artifact@v4

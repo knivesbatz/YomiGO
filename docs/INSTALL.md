@@ -8,7 +8,7 @@
    - **macOS 15 and later:** open YomiGo, close the warning, then go to **System Settings > Privacy & Security** and choose **Open Anyway** next to YomiGo.
    - If macOS says the app is damaged, open Terminal and run `xattr -cr /Applications/YomiGo.app`, then open it again. Nothing is wrong with it: that removes the download mark macOS adds.
 
-Saves are kept in `~/Library/Application Support/YomiGo/saves`. Your own study files can go in a folder named `YomiGO/Material` in your home folder; they show under **Library > Material**.
+Saves are kept in `~/Library/Application Support/YomiGo/saves`. Your own study files can go in a folder named `YomiGO/Material` in your home folder; an immersion task offers a matching one.
 
 **Keyboard:** ⌘1 to ⌘7 open each place, ⌘F the dictionary, ⌘, Settings, and Esc goes back.
 
@@ -28,7 +28,7 @@ Prefer no installer? `YomiGo-Windows.zip` still works: unzip it anywhere you can
 
 YomiGo for Windows needs Windows 10 or 11. It uses the Edge WebView2 runtime, which both already have.
 
-Saves go in a `saves` folder beside the program. Keep your own study files in a folder called `Material`, either beside the program or one level up, or at `C:\YomiGO\Material`. They're listed under **Library > Material**, and an immersion task offers a matching file.
+Saves go in a `saves` folder beside the program. Keep your own study files in a folder called `Material`, either beside the program or one level up, or at `C:\YomiGO\Material`. An immersion task offers a matching file from it.
 
 **Keyboard:** Ctrl+1 to Ctrl+8 open each place in the sidebar, Ctrl+F the dictionary, and Ctrl+, Settings. Esc goes back. In a quiz, 1 to 4 pick an answer and Enter goes on. Right-click a dictionary result, one of your words, or a Text Reader line for more. In the TV app, the arrows move, Enter chooses, Esc or Backspace goes back, and Page Up and Page Down flip between places.
 

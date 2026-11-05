@@ -385,9 +385,10 @@ function typing(words, i, rep, bad) {
   setNav("");
   show(topBar(L("Typing practice", "タイピング", 3), `Word ${i + 1} of ${words.length}`, progress(i * REPS + rep, words.length * REPS), home),
     h("div", { cls: "card prompt" }, h("div", { cls: "big acc", lang: "ja" }, rom ? c.ro : c.f), h("div", { cls: "dim", lang: "ja" }, rom ? c.r : c.f !== c.r ? c.r : "", !rom && Y.stageOf(P) < 4 ? "  " + c.ro : ""), h("div", null, c.en),
-      h("div", { cls: "chips", style: "justify-content:center;margin:12px 0 0" }, [0, 1, 2].map((k) => h("span", { cls: "badge " + (k < rep ? "good" : k === rep ? "acc" : "") }, k < rep ? "✓" : k + 1)))),
+      hear(c.r), h("div", { cls: "chips", style: "justify-content:center;margin:12px 0 0" }, [0, 1, 2].map((k) => h("span", { cls: "badge " + (k < rep ? "good" : k === rep ? "acc" : "") }, k < rep ? "✓" : k + 1)))),
     bad ? h("p", { cls: "bad", role: "alert", style: "text-align:center" }, "Not quite. Type " + c.ro + " or " + c.r) : "", inp, pre, btn("Enter", submit, "primary"), btn("Later", home, "quiet"));
   inp.focus();
+  if (rep === 0 && !bad) Host.speak(c.r); // each new word is heard once as it appears; Hear it plays it again
 }
 
 // The right answer after a miss, in Japanese and in romaji, so it can be read at any stage
@@ -577,24 +578,18 @@ const copy = (t) => navigator.clipboard.writeText(t).then(() => toast("Copied " 
 let libTab = 0;
 function library() {
   setNav("library");
-  const tabs = ["Dictionary", "Guide", "Media", ...(Host.desktop ? ["Material"] : [])], pane = h("div");
+  const tabs = ["Dictionary", "Guide", "Media"], pane = h("div");
   const panes = [() => {
     const q = field({ placeholder: "Japanese, romaji, or English", "aria-label": "Search the dictionary", lang: "ja", type: "search", enterkeyhint: "search" }), out = h("div");
     const search = () => { if (q.value.trim()) ensureDict(() => { const rows = Y.dictSearch(q.value, 20); out.replaceChildren(...(rows.length ? rows.map((r) => dictCard(r.word, r.reading, r.gloss)) : [empty("library", "Nothing found", "Try the plain form of the word.")])); }); };
     q.addEventListener("keydown", (e) => { if (e.key === "Enter") search(); });
     pane.replaceChildren(h("div", { cls: "field-row", style: "margin-top:12px" }, q, btn("Search", search, "primary")), out, h("p", { cls: "dim small" }, "About 22,000 common words from JMdict by EDRDG, CC BY-SA 4.0."));
     if (!Host.tv) q.focus();
-  }, () => pane.replaceChildren(h("div", { style: "margin-top:16px" }), C.guide.map((g) => { const d = h("details", { cls: "card" }, h("summary", { tabindex: "0" }, g.title)); g.body.split("\n").forEach((p) => d.append(h("p", null, p))); return d; })),
+  }, () => pane.replaceChildren(h("div", { style: "margin-top:16px" }), ...C.guide.map((g) => { const d = h("details", { cls: "card" }, h("summary", { tabindex: "0" }, g.title)); g.body.split("\n").forEach((p) => d.append(h("p", null, p))); return d; })),
   () => { const stage = Y.stageOf(P);
-    pane.replaceChildren(h("div", { style: "margin-top:16px" }), C.media.filter((m) => m.stage <= stage + 1).map((m) => h("div", { cls: "card tight" }, h("strong", { lang: "ja" }, m.ja), h("div", { cls: "dim small" }, `${m.type}: ${m.title}`), h("p", { cls: "small" }, m.task))),
-      h("p", { cls: "dim small" }, "Difficulty is YomiGo's own judgement. Check your local services for availability.")); },
-  () => Host.call("material").then((files) => {
-    const filt = field({ type: "search", placeholder: "Filter your files", "aria-label": "Filter" }), out = h("div");
-    const draw = () => { const f = filt.value.toLowerCase(), rows = files.filter(([rel]) => rel.toLowerCase().includes(f)).slice(0, 200);
-      out.replaceChildren(...(rows.length ? list(null, rows.map(([rel, full]) => ({ label: rel, icon: "folder", on: () => Host.open(full) }))) : [empty("folder", "No files", files.length ? "Nothing matches that." : "Put your books and audio in a folder named Material, beside YomiGo.")])); };
-    filt.addEventListener("input", draw); draw();
-    pane.replaceChildren(h("p", { cls: "dim" }, `${files.length} file(s). They open in your usual programs, and never leave this PC.`), filt, out);
-  })];
+    pane.replaceChildren(h("div", { style: "margin-top:16px" }), ...C.media.filter((m) => m.stage <= stage + 1).map((m) => h("div", { cls: "card tight" }, h("strong", { lang: "ja" }, m.ja), h("div", { cls: "dim small" }, `${m.type}: ${m.title}`), h("p", { cls: "small" }, m.task))),
+      h("p", { cls: "dim small" }, "Difficulty is YomiGo's own judgement. Check your local services for availability.")); }];
+  if (libTab >= tabs.length) libTab = 0;
   show(head(L("Library", "本だな", 5)), Host.desktop ? null : list(null, [{ label: L("Text Reader", "テキスト", 3), sub: "Paste text or read a photo, then tap to look words up", icon: "reader", on: () => textReader() }]),
     segmented(tabs, libTab, "Library section", (i) => { libTab = i; panes[i](); }), pane);
   panes[libTab]();

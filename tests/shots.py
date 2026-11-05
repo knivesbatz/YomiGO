@@ -49,7 +49,9 @@ def shot(name, js, size="1180x760", tv=False, wait=4.5, theme=None):
     io.open(os.path.join(root, "Hana.sav"), "w", newline="\n").write(save_text())
     pre = f"try{{localStorage.setItem('yg.theme','{theme or 'light'}');localStorage.setItem('yg.mute','1')}}catch(e){{}}; applyTheme();"
     if name.startswith("phone"): pre += "root.classList.remove('desk','no-side');"  # the phone layout, drawn by the same page
-    io.open(os.path.join(root, "go.js"), "w", encoding="utf-8").write(pre + js)
+    # Just before the capture, the page reports whether any "[object ...]" text leaked onto it, by saving a check file
+    check = "setTimeout(()=>__TAURI__.core.invoke('save',{name:'pagecheck',text:'YOMIGO-SAVE 1\\nobject='+(document.body.innerText.includes('[object ')?1:0)+'\\n'}),%d);" % int((wait - 2.2) * 1000)  # the script itself starts 1.5 s after launch
+    io.open(os.path.join(root, "go.js"), "w", encoding="utf-8").write(pre + js + check)
     # Its own web profile, so a test's settings (theme, sounds, look) never touch the learner's real app
     env = dict(os.environ, WEBVIEW2_USER_DATA_FOLDER=os.path.join(root, "webview"), WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS="--disable-features=CalculateNativeWinOcclusion --disable-backgrounding-occluded-windows")
     args = [EXE, "--root", root, "--eval", os.path.join(root, "go.js"), "--size", size] + (["--tv"] if tv else [])
@@ -62,6 +64,9 @@ def shot(name, js, size="1180x760", tv=False, wait=4.5, theme=None):
         # On a real PC the window must stay out of sight; CI machines have no one watching and place it at 0,0
         if not os.environ.get("CI"): assert r.right < 0 or r.left > u32.GetSystemMetrics(0), f"test window on screen at {r.left},{r.top}"
         grab(hs[0], os.path.join(OUT, name + ".png"))
+        pc = os.path.join(root, "pagecheck.sav")
+        if not os.path.exists(pc): raise SystemExit(f"{name}: the page never reported back")
+        if "object=1" in open(pc).read(): raise SystemExit(f"{name}: the page shows [object ...] text")
         print("shot", name)
     finally:
         p.kill(); p.wait(); shutil.rmtree(root, ignore_errors=True)
@@ -82,6 +87,9 @@ SHOTS = {
     "lost": "Host.store.write('Hana', Host.store.text('Hana').replace('last=0','last=' + (Y.today() - 3)));" + OPEN,
     "classic-quiz": "try{localStorage.setItem('yg.look','classic')}catch(e){};applyTheme();" + OPEN + "setTimeout(()=>{runStep()},300);setTimeout(()=>{const b=document.querySelector('.choices .btn');if(b)b.click();},900);",
     "mine": OPEN + "setTimeout(()=>{readerLines=['今日は天気がいいので、公園で散歩しました。','公園には桜の木がたくさんあって、とても綺麗でした。','散歩のあと、喫茶店でコーヒーを飲みました。'];textReader();setTimeout(()=>[...document.querySelectorAll('.btn.primary')].find(b=>b.textContent.includes('Find')).click(),400)},300);",
+    "typing": OPEN + "setTimeout(()=>typing([Y.byId['v.konnichiwa']],0,0,false),300);",
+    "library-guide": OPEN + "setTimeout(()=>{libTab=1;library()},300);",
+    "library-media": OPEN + "setTimeout(()=>{libTab=2;library()},300);",
     "teach": OPEN + "setTimeout(()=>teach(4),300);",
     "settings": OPEN + "setTimeout(()=>settings(),300);",
     "library": OPEN + "setTimeout(()=>library(),300);",

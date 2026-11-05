@@ -26,7 +26,7 @@ No app alone can make someone fluent. Fluency also takes thousands of hours of r
 
 ## Done
 
-- **0.23:** Find new words in any text, entrance exam up to N3, more words
+- **0.23:** Windows installers, Find new words in any text, entrance exam up to N3
 - **0.22:** YomiGo for Mac
 - **0.21:** YomiGo for Windows rebuilt in Rust, with the macOS Big Sur look on the PC and phone, and a console-style TV app
 - **0.20:** long classes split into parts of at most 25 new cards

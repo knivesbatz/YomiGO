@@ -2,8 +2,11 @@
 
 ## 0.23.0
 
+- **Fixed: the Library's Guide and Media tabs** showed lines of [object ...] instead of their pages since 0.21. Every release now checks its main screens for that kind of fault before it can go out
+- The Library no longer has a Material tab
 - **Installers for Windows,** in the style of the macOS Installer: `YomiGo-Setup.exe` for the PC and `YomiGo-TV-Setup.exe` for the TV. They install for you only, with no administrator, add YomiGo to the Start menu and Settings > Apps, and uninstall cleanly, keeping your saves unless you say otherwise. The zip is still there for anyone who prefers it
 - **Find new words, in anything you read or watch.** In the Text Reader, press Find new words. YomiGo lists every dictionary word in the lines you've pasted, screenshotted, photographed, or transcribed from a video, that you don't know yet, most frequent first. Words the course teaches later show their class; add the others to My words in one press, with the line they came from
+- **Typing practice speaks each word** as it appears, and has a Hear it button to play it again
 - **The entrance exam goes up to N3.** After kanji come an N4 section and an N3 section, so a learner who already knows them starts at N4 Road or N3 Bridge instead of N5 Street
 - **A new Study Guide page, Use it, don't just take it in:** saying things out loud, mixing what you read and watch, treating mistakes as progress, and knowing your own language's grammar
 
