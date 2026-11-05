@@ -224,7 +224,7 @@ immerse: Walk through your home naming what's there.
 material: There is_are
 @day Telling the time | 時間
 note: 4 o'clock is よじ, 7 is しちじ, and 9 is くじ. Minutes change sound: いっぷん, にふん, さんぷん.
-new: @time @days @time2 @time7
+new: @time @days @time2 @time7 @months
 chat: time1
 homework: Say the time out loud five times today.
 immerse: Set your phone's clock to Japanese.
@@ -283,7 +283,7 @@ homework: Write your daily schedule using these.
 immerse: Read a Japanese train timetable for one minute.
 @day School and country | 学校と国
 note: Kanji combine to make new words: 学 + 校 is school; 日 + 本 + 語 is Japanese.
-new: @k7 @school @school3 @school4 @school5
+new: @k7 @school @school3 @school4 @school5 @school6
 homework: Write 日本語の学生です and read it aloud.
 immerse: Find 語 on a language menu.
 @day Weather and colour | 天気
@@ -311,7 +311,7 @@ immerse: Listen for family words in any show you watch.
 material: 2. Family
 @day Weather talk | 天気
 note: Weather is the safest small talk there is. A sentence ending in ね invites the other person to agree, and it keeps a conversation going. よ tells them something new.
-new: !g.ne !g.yo @weather @outside @animals @animals2 @animals3 @weather3 @k27
+new: !g.ne !g.yo @weather @outside @animals @animals2 @animals3 @weather3 @k27 @animals4
 chat: weather1
 homework: Say today's weather three different ways.
 immerse: Check a Japanese weather forecast before you go out.
@@ -333,7 +333,7 @@ homework: Roleplay buying something, with a family member.
 immerse: Browse a Japanese shop website for ten minutes.
 material: Money and shopping
 @day At a restaurant | レストラン
-new: @food2 @food4 @food6 @food8 @k30
+new: @food2 @food4 @food6 @food8 @k30 @food9
 note: Say すみません to call staff. Tipping isn't customary. Don't stick chopsticks upright in rice or pass food chopstick to chopstick, because both recall funeral customs.
 chat: restaurant1
 homework: Read aloud a Japanese menu online.
@@ -393,7 +393,7 @@ immerse: Listen for と思います in an interview or YouTube video.
 material: 3. Grammar KARA-MADE
 @day What you can do | 可能
 note: When someone praises your Japanese, the usual reply is a modest denial: いいえ、まだまだです. Accepting with a plain thank you also works, particularly with friends.
-new: !g.koto !g.potential @can @tech @hobbies2 @hobbies3 @tech2 @hobbies4 @k37
+new: !g.koto !g.potential @can @tech @hobbies2 @hobbies3 @tech2 @hobbies4 @k37 @hobbies5
 chat: can1
 homework: Say five things you can and can't do.
 immerse: Look up the lyrics to a song you like, and find one word you know.
@@ -417,7 +417,7 @@ homework: Write three excuses using 〜ので.
 immerse: Notice when someone in a show stops mid-sentence and leaves the rest unsaid.
 @day If and when | 条件
 note: Four words for if, and learners worry too much about them. Start with たら, which works nearly everywhere. Pick up と, ば, and なら as you notice them.
-new: !g.tara !g.to !g.ba !g.nara @ifwhen @health @health2 @health3 @k39
+new: !g.tara !g.to !g.ba !g.nara @ifwhen @health @health2 @health3 @k39 @health4
 chat: doctor1
 homework: Write three sentences with たら about tomorrow.
 immerse: Listen for たら in a show.
@@ -430,7 +430,7 @@ homework: Say who gave what to whom, for three gifts you remember.
 immerse: In a show, notice くれる when someone's thanking a friend.
 @day Things that happen to you | 受け身
 note: The Japanese passive often means something happened to you that you didn't want. Use it for being scolded or robbed. Causative forms come up in work and school: making or letting someone do something.
-new: !g.passive !g.causative @passive @travel3 @travel5 @travel6 @k41
+new: !g.passive !g.causative @passive @travel3 @travel5 @travel6 @k41 @travel7
 homework: Describe something annoying that happened to you, with the passive.
 immerse: Listen for 〜られた when a character complains.
 material: Active and Passive (present)
@@ -474,7 +474,7 @@ exam: N4 | N4 Mastery Exam | 4
 @day Becoming and deciding | 変化と決定
 note: Welcome to N3. From here, the course is less about new forms and more about nuance: how sure you are, who decided, and how you feel about it. Expect longer sentences, and more words you'll first meet in real Japanese.
 note: ことにする is a decision you made. ことになる is one made for you, and Japanese often uses it even for your own choices, because it sounds less pushy.
-new: !g.younaru !g.younisuru !g.kotoninaru !g.kotonisuru @n3change @home2 @home5 @home6
+new: !g.younaru !g.younisuru !g.kotoninaru !g.kotonisuru @n3change @home2 @home5 @home6 @home7
 read: n3move
 homework: Write three habits you're working on with 〜ようにしています.
 immerse: In a show, listen for ことになった when a character shares news.
@@ -528,7 +528,7 @@ homework: Write three "the more ..., the more ..." sentences about learning Japa
 immerse: Compare prices on a Japanese shopping site, and describe them with ほど.
 @day Feelings and memories | 気持ちと思い出
 note: たがる is for other people's wishes, because Japanese doesn't state what's in someone else's head as fact. For yourself, keep using たい.
-new: !g.tagaru !g.kigasuru !g.furi !g.mono @n3feel @feel2 @feel4 @feel5
+new: !g.tagaru !g.kigasuru !g.furi !g.mono @n3feel @feel2 @feel4 @feel5 @feel6
 homework: Write about a childhood memory with 〜たものです.
 immerse: Listen to a song about the past, and listen for 懐かしい.
 material: Positive feelings
@@ -541,13 +541,13 @@ immerse: Follow a Japanese recipe video, and listen for the steps.
 @day Ahead and after | 準備と結果
 note: ておく shows foresight, and てしまう often shows regret. Casual speech squeezes them: 〜とく and 〜ちゃう. Learning the short forms makes anime and dramas much easier to follow.
 note: させられる is how Japanese complains about being made to do things, such as homework, overtime, or practice.
-new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10
+new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10 @verbs11
 homework: Write three things you'll prepare before a trip, with ておきます.
 immerse: Listen for ちゃった in any anime episode.
 @day Work Japanese | 仕事の日本語
 note: Offices run on set phrases. かしこまりました is a more formal 分かりました, and 申し訳ありません is a more formal すみません. You'll hear them in every shop, too.
 note: Business keigo takes years even for Japanese people, and new staff get training in it. Recognising it matters far more than producing it perfectly.
-new: @n3work @work3 @work4 @work5 @work6
+new: @n3work @work3 @work4 @work5 @work6 @work7
 chat: n3office
 homework: Introduce yourself as you would on a first day at work.
 immerse: Watch a scene from a drama set in an office.

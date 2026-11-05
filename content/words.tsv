@@ -1619,3 +1619,89 @@ teishutsu	提出	ていしゅつ	teishutsu	handing in, submitting		レポート�
 honyaku	翻訳	ほんやく	hon'yaku	translation		この書類の翻訳をお願いします。	Please translate this document.
 chekku	チェック	チェック	chekku	check, checking		メールをチェックしました。	I checked my email.
 gimon	疑問	ぎもん	gimon	question, doubt		何か疑問はありますか。	Do you have any questions?
+#months
+ichigatsu	一月	いちがつ	ichigatsu	January		一月はとても寒いです。	January is very cold.
+nigatsu	二月	にがつ	nigatsu	February		二月に雪が降りました。	It snowed in February.
+sangatsu	三月	さんがつ	sangatsu	March		三月に学校が終わります。	School ends in March.
+shigatsu	四月	しがつ	shigatsu	April		四月は桜がきれいです。	The cherry blossoms are pretty in April.
+gogatsu	五月	ごがつ	gogatsu	May		五月に旅行します。	I'm travelling in May.
+rokugatsu	六月	ろくがつ	rokugatsu	June		六月は雨が多いです。	It rains a lot in June.
+shichigatsu	七月	しちがつ	shichigatsu	July		七月から夏休みです。	Summer holidays start in July.
+hachigatsu	八月	はちがつ	hachigatsu	August		八月は一番暑いです。	August is the hottest.
+kugatsu	九月	くがつ	kugatsu	September		九月に新しい仕事を始めます。	I start a new job in September.
+juugatsu	十月	じゅうがつ	juugatsu	October		十月は涼しくなります。	It gets cool in October.
+juuichigatsu	十一月	じゅういちがつ	juuichigatsu	November		十一月に友達が来ます。	A friend is coming in November.
+juunigatsu	十二月	じゅうにがつ	juunigatsu	December		十二月はいつも忙しいです。	December is always busy.
+#food9
+budou	ぶどう	ぶどう	budou	grapes		このぶどうはとても甘いです。	These grapes are very sweet.
+suika	すいか	すいか	suika	watermelon		夏はすいかを食べます。	I eat watermelon in summer.
+kyuuri	きゅうり	きゅうり	kyuuri	cucumber		サラダにきゅうりを入れました。	I put cucumber in the salad.
+imo	芋	いも	imo	potato, tuber		秋は芋がおいしいです。	Potatoes taste great in autumn.
+satsumaimo	さつまいも	さつまいも	satsumaimo	sweet potato		焼いたさつまいもが好きです。	I like baked sweet potatoes.
+daizu	大豆	だいず	daizu	soybean		豆腐は大豆から作ります。	Tofu is made from soybeans.
+ame2	飴	あめ	ame	candy, sweet		子供に飴をあげました。	I gave the child a sweet.
+meron	メロン	メロン	meron	melon		メロンは少し高いです。	Melons are a bit expensive.
+painappuru	パイナップル	パイナップル	painappuru	pineapple		パイナップルを切ってください。	Please cut the pineapple.
+furuutsu	フルーツ	フルーツ	furuutsu	fruit		朝はフルーツだけ食べます。	I only eat fruit in the morning.
+hanbaagaa	ハンバーガー	ハンバーガー	hanbaagaa	hamburger		お昼にハンバーガーを食べた。	I had a burger for lunch.
+arukooru	アルコール	アルコール	arukooru	alcohol		アルコールは飲みません。	I don't drink alcohol.
+#animals4
+hitsuji	羊	ひつじ	hitsuji	sheep		山に羊がたくさんいます。	There are lots of sheep on the mountain.
+kujira	くじら	くじら	kujira	whale		海でくじらを見ました。	I saw a whale in the sea.
+kurage	クラゲ	クラゲ	kurage	jellyfish		夏の海はクラゲが多いです。	There are many jellyfish in the summer sea.
+ari	アリ	アリ	ari	ant		台所にアリがいます。	There are ants in the kitchen.
+hamusutaa	ハムスター	ハムスター	hamusutaa	hamster		妹はハムスターを飼っています。	My little sister keeps a hamster.
+kiri	霧	きり	kiri	fog, mist		朝は霧で何も見えなかった。	I couldn't see anything in the morning fog.
+kumoru	曇る	くもる	kumoru	to get cloudy		午後から曇るそうです。	They say it'll cloud over from the afternoon.
+sesshi	摂氏	せっし	sesshi	Celsius		今日は摂氏三十度です。	It's thirty degrees Celsius today.
+#school6
+shousetsu	小説	しょうせつ	shousetsu	novel		寝る前に小説を読みます。	I read a novel before bed.
+kagaku	科学	かがく	kagaku	science		科学の本が好きです。	I like science books.
+bakegaku	化学	かがく	kagaku	chemistry		化学のテストは難しかった。	The chemistry test was hard.
+butsurigaku	物理学	ぶつりがく	butsurigaku	physics		兄は大学で物理学を勉強しています。	My brother studies physics at university.
+seibutsugaku	生物学	せいぶつがく	seibutsugaku	biology		生物学で動物について学びます。	In biology we learn about animals.
+keizaigaku	経済学	けいざいがく	keizaigaku	economics		経済学の授業は月曜日です。	Economics class is on Monday.
+gengo	言語	げんご	gengo	language		日本語は面白い言語です。	Japanese is an interesting language.
+dentaku	電卓	でんたく	dentaku	calculator		電卓を貸してください。	Please lend me a calculator.
+#hobbies5
+terebigeemu	テレビゲーム	テレビゲーム	terebigeemu	video game		週末はテレビゲームをします。	I play video games at the weekend.
+terebibangumi	テレビ番組	テレビばんぐみ	terebi bangumi	TV programme		好きなテレビ番組は何ですか。	What's your favourite TV programme?
+rimokon	リモコン	リモコン	rimokon	remote control		リモコンがどこにもない。	The remote is nowhere to be found.
+kiiboodo	キーボード	キーボード	kiiboodo	keyboard		新しいキーボードを買いました。	I bought a new keyboard.
+jogingu	ジョギング	ジョギング	jogingu	jogging		毎朝ジョギングをしています。	I go jogging every morning.
+geijutsuka	芸術家	げいじゅつか	geijutsuka	artist		祖父は有名な芸術家でした。	My grandfather was a famous artist.
+dezainaa	デザイナー	デザイナー	dezainaa	designer		姉は服のデザイナーです。	My older sister is a clothes designer.
+#health4
+itami	痛み	いたみ	itami	pain, ache		痛みがあったら、この薬を飲んでください。	If you're in pain, take this medicine.
+migite	右手	みぎて	migite	right hand		右手でお箸を持ちます。	I hold chopsticks in my right hand.
+hidariashi	左足	ひだりあし	hidariashi	left foot, left leg		サッカーで左足をけがした。	I hurt my left leg playing football.
+katai	硬い	かたい	katai	hard, stiff		このパンは硬すぎます。	This bread is too hard.
+asai	浅い	あさい	asai	shallow		このプールは浅いから安全です。	This pool is shallow, so it's safe.
+#travel7
+basutei	バス停	バスてい	basutei	bus stop		バス停で三十分待ちました。	I waited thirty minutes at the bus stop.
+suizokukan	水族館	すいぞくかん	suizokukan	aquarium		水族館でイルカを見た。	I saw dolphins at the aquarium.
+kankoukyaku	観光客	かんこうきゃく	kankoukyaku	tourist		京都は観光客が多いです。	Kyoto has lots of tourists.
+hyoushiki	標識	ひょうしき	hyoushiki	sign, road sign		標識を見て、右に曲がってください。	Look at the sign and turn right.
+baiku	バイク	バイク	baiku	motorbike		バイクで会社に行きます。	I go to work by motorbike.
+sukuutaa	スクーター	スクーター	sukuutaa	scooter		スクーターを借りて島を回った。	I rented a scooter and went round the island.
+booto	ボート	ボート	booto	boat		湖でボートに乗りました。	I went out in a boat on the lake.
+kiromeetoru	キロメートル	キロメートル	kiromeetoru	kilometre		駅まで二キロメートルあります。	It's two kilometres to the station.
+#home7
+nagashi	流し	ながし	nagashi	kitchen sink		お皿を流しに置いてください。	Please put the plates in the sink.
+manaita	まな板	まないた	manaita	chopping board		まな板の上で野菜を切ります。	I cut vegetables on the chopping board.
+tenugui	手ぬぐい	てぬぐい	tenugui	thin cotton towel		お風呂に手ぬぐいを持って行きます。	I take a tenugui to the bath.
+guramu	グラム	グラム	guramu	gram		砂糖を百グラム入れてください。	Please add a hundred grams of sugar.
+kuupon	クーポン	クーポン	kuupon	coupon		このクーポンは使えますか。	Can I use this coupon?
+shiharai	支払い	しはらい	shiharai	payment		支払いはカードでお願いします。	I'd like to pay by card.
+#feel6
+fuman	不満	ふまん	fuman	dissatisfaction, complaint		今の仕事に不満はありません。	I have no complaints about my job.
+ijiwaru	意地悪	いじわる	ijiwaru	mean, nasty		意地悪なことを言わないで。	Don't say mean things.
+ochitsuita	落ち着いた	おちついた	ochitsuita	calm, settled		落ち着いた声で話してください。	Please speak in a calm voice.
+matane	またね	またね	mata ne	see you, bye		じゃあ、またね。	Well, see you.
+#verbs11
+toru2	取る	とる	toru	to take, to pick up		その塩を取ってください。	Please pass me that salt.
+uketoru	受け取る	うけとる	uketoru	to receive		荷物を受け取りました。	I received the parcel.
+#work7
+juugyouin	従業員	じゅうぎょういん	juugyouin	employee, staff		この店は従業員が十人います。	This shop has ten staff.
+puran	プラン	プラン	puran	plan		旅行のプランを考えました。	I came up with a plan for the trip.
+sain	サイン	サイン	sain	signature, autograph		ここにサインをお願いします。	Please sign here.

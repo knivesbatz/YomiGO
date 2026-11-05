@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.24.0
+
+- **The months, at last:** 一月 to 十二月 join the class on time and days
+- **75 more words** with example sentences, spread over the classes they fit: fruit and food, animals and weather, school subjects, hobbies and gadgets, aches and pains, getting around, the kitchen, feelings, and work
+- Screenshot tests give a slow first start more time before calling it a failure
+
 ## 0.23.0
 
 - **Fixed: the Library's Guide and Media tabs** showed lines of [object ...] instead of their pages since 0.21. Every release now checks its main screens for that kind of fault before it can go out
