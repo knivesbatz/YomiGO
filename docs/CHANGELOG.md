@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.41.0
+
+- **50 more words**, taking the course to 2,657 word cards:
+  - **N3 words that join ideas:** そこで, その上, そのうち, そのまま, それぞれ, それでも, それとも, そっくり, そっと, 相当, 多少, たっぷり, たとえ, 大半, 互い, 他人, 立場, 態度, 尊敬, and 損
+  - **N3 actions:** 備える, 揃える, 倒す, 炊く, 抱く, 確かめる, 戦う, 畳む, 立ち上がる, 想像, and 操作
+  - **N3 words about the world:** 騒音, 増加, 組織, 袖, ソファー, 体育, 体温, 代金, 大臣, 題名, and 大陸
+  - **From the vocabulary videos:** 凧, ネズミ, マウス, クラブ, グレー, and メイク
+- **The screenshot tests wait for the app to finish loading** before they start. On GitHub's slower Windows machines, they sometimes started before the app was ready, which is what made CI checks fail on and off
+
 ## 0.40.0
 
 - **50 more N3 words**, taking the course to 2,607 word cards:

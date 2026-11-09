@@ -53,7 +53,9 @@ def shot(name, js, size="1180x760", tv=False, wait=4.5, theme=None):
     # It's set up before the shot's own script, so an error there is reported by name instead of silencing the check
     check = "setTimeout(()=>__TAURI__.core.invoke('save',{name:'pagecheck',text:'YOMIGO-SAVE 1\\nobject='+(document.body.innerText.includes('[object ')?1:0)+'\\nerr='+encodeURIComponent(__errs.join(' | '))+'\\n'}),%d);" % int((wait - 2.2) * 1000)  # the script itself starts 1.5 s after launch
     errs = "window.__errs=[];addEventListener('error',(e)=>__errs.push(e.message));addEventListener('unhandledrejection',(e)=>__errs.push(String(e.reason)));"
-    io.open(os.path.join(root, "go.js"), "w", encoding="utf-8").write(errs + check + "try{" + pre + js + "}catch(e){__errs.push(String(e))}")
+    # On a slow machine the app's own scripts can still be loading when this runs, so it waits for them first
+    run = "const __go=()=>{if(typeof applyTheme!=='function'||!document.querySelector('.item'))return setTimeout(__go,100);" + check + "try{" + pre + js + "}catch(e){__errs.push(String(e))}};__go();"
+    io.open(os.path.join(root, "go.js"), "w", encoding="utf-8").write(errs + run)
     # Its own web profile, so a test's settings (theme, sounds, look) never touch the learner's real app
     env = dict(os.environ, WEBVIEW2_USER_DATA_FOLDER=os.path.join(root, "webview"), WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS="--disable-features=CalculateNativeWinOcclusion --disable-backgrounding-occluded-windows")
     args = [EXE, "--root", root, "--eval", os.path.join(root, "go.js"), "--size", size] + (["--tv"] if tv else [])
