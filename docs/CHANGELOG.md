@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.34.0
+
+- **100 N3 words**, chosen from the JLPT N3 list by how often they turn up in real learning material, taking the course to 2,218 word cards. They include 感謝, 気に入る, 自慢, 笑顔, 申し訳, 記憶, 解決, 特徴, 権利, 計算, 通勤, 家賃, 預ける, 申し込む, 成長, 減らす, 混ぜる, 訳す, 数える, 登山, 栄養, and 読書
+
 ## 0.33.0
 
 - **Every N4 word.** With 56 more, the course now teaches the whole JLPT N4 list apart from a few dated words such as ワープロ and 電報. That takes it to 2,118 word cards. They include 一生懸命, なかなか, 以外, 代わり, お陰, 役に立つ, 忘れ物, 床屋, 会場, 工場, 湖, 空気, 光, 真ん中, 再来週, 昼休み, and 申す
