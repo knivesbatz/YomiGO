@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.27.0
+
+- **61 more words** with example sentences, taking the course to 1,643 word cards. Everyday words it had somehow skipped, such as 交通, 郵便, 理解, 効果, 印象, and 匂い; N3 words from intermediate courses, such as 預金, 助言, 失業, 罰金, 監督, 演奏, 不可欠, 示す, 異なる, and 防ぐ; and jobs, nature, and money words, such as エンジニア, 惑星, 衛星, and うるう年
+
 ## 0.26.1
 
 - The main style is now called Modern in Settings, next to Classic. It looks the same, and your choice is kept

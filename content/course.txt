@@ -252,7 +252,7 @@ exam: S4 | Grammar Gate Trial | 3
 @day Nature and weekdays | 曜日の漢字
 note: Most kanji have an on reading (from Chinese) and a kun reading (native Japanese). Learn each kanji inside words, not alone. Today's seven are the seven days of the week, plus 山.
 note: Learn kanji through words you know, a few at a time. Writing kanji by hand is optional for many learners, so do it if you enjoy it. Reading them is the goal.
-new: @k1 @nature @nature2 @days3 @nature4
+new: @k1 @nature @nature2 @days3 @nature4 @nature5
 homework: Copy each kanji five times, following the stroke order shown on each card.
 immerse: Read today's day of the week from a Japanese calendar.
 @day Numbers | 数字の漢字
@@ -374,7 +374,7 @@ homework: Write three rules for your home using 〜てはいけません.
 immerse: Look at photos of Japanese signs. Spot ください and 禁止.
 @day Must, and don't have to | 義務
 note: Don't mix these up. なければなりません means you must. なくてもいいです means you don't need to. They aren't opposites of permission either, because 〜てはいけません is what forbids.
-new: !g.nakereba !g.nakutemo @must @jobs @money @jobs2 @k34 @work8
+new: !g.nakereba !g.nakutemo @must @jobs @money @jobs2 @k34 @work8 @money3
 read: doctor
 homework: List two things you must do tomorrow, and two you don't have to.
 immerse: Say out loud what you have to do next, in Japanese.
@@ -393,13 +393,13 @@ immerse: Listen for と思います in an interview or YouTube video.
 material: 3. Grammar KARA-MADE
 @day What you can do | 可能
 note: When someone praises your Japanese, the usual reply is a modest denial: いいえ、まだまだです. Accepting with a plain thank you also works, particularly with friends.
-new: !g.koto !g.potential @can @tech @hobbies2 @hobbies3 @tech2 @hobbies4 @k37 @hobbies5 @hobbies6
+new: !g.koto !g.potential @can @tech @hobbies2 @hobbies3 @tech2 @hobbies4 @k37 @hobbies5 @hobbies6 @hobbies7
 chat: can1
 homework: Say five things you can and can't do.
 immerse: Look up the lyrics to a song you like, and find one word you know.
 @day Plans | 予定
 note: Three levels of certainty: つもり is decided, 予定 is on the calendar, and 〜ようと思います is an idea still forming.
-new: !g.tsumori !g.you !g.yotei @plans @outings @trip2
+new: !g.tsumori !g.you !g.yotei @plans @outings @trip2 @town5
 read: plans
 homework: Describe your plans for next week.
 immerse: Use a Japanese calendar for a week.
@@ -492,7 +492,7 @@ homework: Write three things that should happen tomorrow, with はずです.
 immerse: Listen for わけ in an interview, where people explain their reasons.
 @day Hearsay and looks | 伝聞と様子
 note: Japanese marks how you know something. そうです after a plain form means you heard it. らしい means you gathered it. みたい and よう mean it seems so, from what you see. News reports use these all the time.
-new: !g.souhear !g.mitai !g.ppoi !g.niyoruto @n3news @clothes3 @news2
+new: !g.souhear !g.mitai !g.ppoi !g.niyoruto @n3news @clothes3 @news2 @news3
 read: n3news
 homework: Pass on two pieces of news you read today, with そうです.
 immerse: Read the headlines of a Japanese news site, such as NHK News Web Easy.
@@ -523,7 +523,7 @@ homework: Write how you'd turn down an invitation politely, with わけにはい
 immerse: Notice how often people in shows refuse without saying いいえ.
 @day More and less | 程度
 note: ほど and くらい overlap. With numbers, くらい sounds more casual. In "not as ... as" comparisons, ほど is the usual choice.
-new: !g.bahodo !g.hodo !g.kurai @n3degree @much
+new: !g.bahodo !g.hodo !g.kurai @n3degree @much @n3words1
 homework: Write three "the more ..., the more ..." sentences about learning Japanese.
 immerse: Compare prices on a Japanese shopping site, and describe them with ほど.
 @day Feelings and memories | 気持ちと思い出
@@ -541,7 +541,7 @@ immerse: Follow a Japanese recipe video, and listen for the steps.
 @day Ahead and after | 準備と結果
 note: ておく shows foresight, and てしまう often shows regret. Casual speech squeezes them: 〜とく and 〜ちゃう. Learning the short forms makes anime and dramas much easier to follow.
 note: させられる is how Japanese complains about being made to do things, such as homework, overtime, or practice.
-new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10 @verbs11 @verbs12
+new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10 @verbs11 @verbs12 @verbs13
 homework: Write three things you'll prepare before a trip, with ておきます.
 immerse: Listen for ちゃった in any anime episode.
 @day Work Japanese | 仕事の日本語

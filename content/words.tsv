@@ -1799,3 +1799,71 @@ roon	ローン	ローン	roon	loan		車のローンを払っています。	I'm 
 shoyuu	所有	しょゆう	shoyuu	ownership		この土地は市の所有です。	This land is owned by the city.
 shikata	仕方	しかた	shikata	way, method		料理の仕方を教えてください。	Please show me how to cook it.
 youhin	用品	ようひん	youhin	goods, supplies		スポーツ用品の店に行った。	I went to a sporting goods shop.
+#town5
+koutsuu	交通	こうつう	koutsuu	traffic, transport		東京は交通が便利です。	Getting around Tokyo is easy.
+yuubin	郵便	ゆうびん	yuubin	post, mail		郵便は午前中に来ます。	The post comes in the morning.
+sandou	参道	さんどう	sandou	approach to a shrine		参道にお店が並んでいる。	Shops line the path to the shrine.
+kenchikubutsu	建築物	けんちくぶつ	kenchikubutsu	building, structure		古い建築物を見るのが好きです。	I like looking at old buildings.
+hantou	半島	はんとう	hantou	peninsula		週末に伊豆半島へ行った。	I went to the Izu Peninsula at the weekend.
+isshuu	一周	いっしゅう	isshuu	once around, a lap		公園を一周走りました。	I ran a lap of the park.
+zenjitsu	前日	ぜんじつ	zenjitsu	the day before		旅行の前日に荷物を準備した。	I packed the day before the trip.
+karendaa	カレンダー	カレンダー	karendaa	calendar		カレンダーに予定を書きます。	I write my plans on the calendar.
+uruudoshi	うるう年	うるうどし	uruudoshi	leap year		今年はうるう年です。	This year is a leap year.
+posutaa	ポスター	ポスター	posutaa	poster		駅に映画のポスターがある。	There's a film poster at the station.
+#money3
+yokin	預金	よきん	yokin	savings, bank deposit		毎月少し預金しています。	I save a little every month.
+rishi	利子	りし	rishi	interest (on money)		この銀行は利子が低い。	This bank's interest is low.
+bakkin	罰金	ばっきん	bakkin	fine, penalty		駐車違反で罰金を払った。	I paid a parking fine.
+shitsugyou	失業	しつぎょう	shitsugyou	unemployment, losing your job		兄は去年失業しました。	My brother lost his job last year.
+maneejaa	マネージャー	マネージャー	maneejaa	manager		店のマネージャーと話しました。	I spoke to the shop manager.
+enjinia	エンジニア	エンジニア	enjinia	engineer		父はエンジニアです。	My father is an engineer.
+seerusuman	セールスマン	セールスマン	seerusuman	salesman		セールスマンが家に来た。	A salesman came to the house.
+kantoku	監督	かんとく	kantoku	director, coach		あの映画の監督は有名です。	That film's director is famous.
+shikai	司会	しかい	shikai	host, MC		彼はパーティーの司会をした。	He hosted the party.
+daihyou	代表	だいひょう	daihyou	representative		クラスの代表に選ばれた。	I was chosen to represent the class.
+kunren	訓練	くんれん	kunren	training, drill		火事の訓練がありました。	We had a fire drill.
+#n3words1
+rikai	理解	りかい	rikai	understanding		先生の説明で理解できました。	The teacher's explanation helped me understand.
+kouka	効果	こうか	kouka	effect, result		この薬は効果があった。	This medicine worked.
+inshou	印象	いんしょう	inshou	impression		日本の第一印象はどうでしたか。	What was your first impression of Japan?
+jogen	助言	じょげん	jogen	advice		先輩に助言をもらった。	I got advice from a senior colleague.
+doui	同意	どうい	doui	agreement, consent		その意見に同意します。	I agree with that opinion.
+tokushu	特殊	とくしゅ	tokushu	special, unusual		これは特殊な道具です。	This is a special tool.
+sougou	総合	そうごう	sougou	overall, combined		総合的に考えて決めました。	I decided after weighing everything.
+hendou	変動	へんどう	hendou	change, fluctuation		値段の変動が大きい。	Prices go up and down a lot.
+fukaketsu	不可欠	ふかけつ	fukaketsu	essential		水は生活に不可欠です。	Water is essential to life.
+kakushin	核心	かくしん	kakushin	heart, core (of a matter)		問題の核心はここです。	This is the heart of the problem.
+yuuki	勇気	ゆうき	yuuki	courage		勇気を出して話しかけた。	I worked up the courage to talk to them.
+osoraku	恐らく	おそらく	osoraku	probably		恐らく明日は雨でしょう。	It'll probably rain tomorrow.
+kaette	かえって	かえって	kaette	on the contrary, rather		急いだら、かえって遅くなった。	Hurrying actually made me later.
+taipu	タイプ	タイプ	taipu	type		彼は私の好きなタイプです。	He's my type.
+#verbs13
+shimesu	示す	しめす	shimesu	to show, to indicate		地図で道を示してください。	Please show me the way on the map.
+kotonaru	異なる	ことなる	kotonaru	to differ		国によって習慣が異なる。	Customs differ from country to country.
+nokosu	残す	のこす	nokosu	to leave (behind)		ご飯を残さないでください。	Please don't leave any food.
+fusegu	防ぐ	ふせぐ	fusegu	to prevent		手を洗って病気を防ぎましょう。	Let's wash our hands to prevent illness.
+kumu	汲む	くむ	kumu	to draw (water)		川で水を汲みました。	I drew water from the river.
+taisuru	対する	たいする	taisuru	to face, towards		質問に対する答えを書いた。	I wrote answers to the questions.
+#nature5
+eda	枝	えだ	eda	branch		木の枝に鳥がいます。	There's a bird on the branch.
+iwa	岩	いわ	iwa	rock		大きな岩の上に座った。	I sat on a big rock.
+kareha	枯れ葉	かれは	kareha	dead leaf		秋は枯れ葉がたくさん落ちる。	Lots of dead leaves fall in autumn.
+nettai	熱帯	ねったい	nettai	tropics		熱帯の魚はきれいです。	Tropical fish are beautiful.
+wakusei	惑星	わくせい	wakusei	planet		地球は惑星の一つです。	The earth is one of the planets.
+eisei	衛星	えいせい	eisei	satellite		月は地球の衛星です。	The moon is the earth's satellite.
+zetsumetsu	絶滅	ぜつめつ	zetsumetsu	extinction		その動物は絶滅しました。	That animal is extinct.
+nioi	匂い	におい	nioi	smell		いい匂いがしますね。	Something smells good.
+awai	淡い	あわい	awai	pale, light		淡いピンクの花が咲いた。	Pale pink flowers bloomed.
+shiizun	シーズン	シーズン	shiizun	season		スキーのシーズンが始まった。	Ski season has started.
+#hobbies7
+ensou	演奏	えんそう	ensou	musical performance		ピアノの演奏を聞きました。	I listened to a piano performance.
+myuujishan	ミュージシャン	ミュージシャン	myuujishan	musician		弟はミュージシャンになりたい。	My little brother wants to be a musician.
+jouba	乗馬	じょうば	jouba	horse riding		夏休みに乗馬を習った。	I learned to ride in the summer holidays.
+kigu	器具	きぐ	kigu	equipment, apparatus		ジムの器具を使います。	I use the gym equipment.
+shinboru	シンボル	シンボル	shinboru	symbol		富士山は日本のシンボルです。	Mount Fuji is a symbol of Japan.
+biifu	ビーフ	ビーフ	biifu	beef		ビーフカレーを注文した。	I ordered beef curry.
+juubyou	重病	じゅうびょう	juubyou	serious illness		祖父は重病で入院している。	My grandfather is in hospital, seriously ill.
+#news3
+yatou	野党	やとう	yatou	opposition party		野党が反対している。	The opposition is against it.
+hyou	票	ひょう	hyou	vote (counted)		彼は一番多くの票を集めた。	He won the most votes.
+okure	遅れ	おくれ	okure	delay		電車に十分の遅れがあります。	The train is ten minutes late.
