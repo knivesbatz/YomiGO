@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.32.0
+
+- **103 more N4 words the course had missed**, the second half of the JLPT N4 gaps, taking the course past 2,000 to 2,062 word cards:
+  - **People and favours:** 贈り物, お祝い, お礼, 近所, 留守, 世話, 挨拶, 紹介, 相談, 返事, 連絡, 用事, and 都合, in the class on giving and receiving
+  - **Little words that join sentences:** しっかり, とうとう, なるべく, しばらく, そろそろ, すっかり, 是非, 例えば, それに, または, けれども, この間, and この頃, with 珍しい, 寂しい, 丁寧, 真面目, 無理, and 邪魔
+  - **Actions:** 踏む, 触る, 揺れる, 迎える, 捕まえる, 決まる, 通う, 進む, 向かう, 倒れる, 比べる, 足りる, and 届ける
+  - **Society and work:** 貿易, 輸出, 輸入, 産業, 法律, 人口, 時代, 放送, 場合, 機会, 競争, 利用, 注意, and 故障
+
 ## 0.31.0
 
 - **77 N4 words the course had missed**, the first half of the JLPT N4 gaps, taking the course to 1,959 word cards:

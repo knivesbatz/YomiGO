@@ -424,7 +424,7 @@ immerse: Listen for たら in a show.
 @day Giving and receiving | やりもり
 note: Japanese always tracks which way a favour moves. Say くれる when it comes toward you and あげる when it goes outward. Saying 〜てあげる to a superior can sound patronising, so avoid it.
 note: Gift-giving has its own customs. Gifts are often accepted with a little polite reluctance, and may be opened later rather than in front of the giver.
-new: !g.ageru !g.morau !g.kureru !g.temorau @give @family3 @k40
+new: !g.ageru !g.morau !g.kureru !g.temorau @give @family3 @k40 @social
 read: gift
 homework: Say who gave what to whom, for three gifts you remember.
 immerse: In a show, notice くれる when someone's thanking a friend.
@@ -460,12 +460,12 @@ homework: Write the family words in kanji, without looking.
 immerse: Read place names on a Japanese map.
 @day Actions in kanji | 動きの漢字
 note: Pairs help: 入 and 出, 開 and 閉, 立 and 止. Learning opposites together makes both easier to remember.
-new: @k10 @k16 @body3
+new: @k10 @k16 @body3 @actions3
 homework: Label your door with 入 and 出, for fun.
 immerse: Find 入口 and 出口 in a photo of a Japanese station.
 @day Time and description in kanji | 時と形の漢字
 note: Seasons and colours are everywhere in Japanese writing. Look out for them in the names of shows, songs, and people.
-new: @k12 @k14 @k15 @adj5 @adj8 @adj10
+new: @k12 @k14 @k15 @adj5 @adj8 @adj10 @adverbs
 homework: Write today's season and weather in kanji.
 immerse: Find one of today's kanji in a song or show title.
 exam: N4 | N4 Mastery Exam | 4
@@ -499,7 +499,7 @@ immerse: Read the headlines of a Japanese news site, such as NHK News Web Easy.
 material: The press
 @day About, for, and as | 関係
 note: These work like prepositions and turn up all through written Japanese. Learn them as whole chunks: について, にとって, として, and に対して.
-new: !g.nitsuite !g.nitotte !g.toshite !g.nitaishite @n3society @world @countries2 @world3
+new: !g.nitsuite !g.nitotte !g.toshite !g.nitaishite @n3society @world @countries2 @world3 @society
 homework: Write what Japanese means to you, with にとって.
 immerse: Find について in the title of a YouTube video or article.
 material: My culture

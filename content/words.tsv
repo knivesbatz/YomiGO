@@ -2216,3 +2216,110 @@ kazaru	飾る	かざる	kazaru	to decorate		部屋に花を飾った。	I decora
 torikaeru	取り替える	とりかえる	torikaeru	to replace, to swap		電池を取り替えてください。	Please change the batteries.
 yakeru	焼ける	やける	yakeru	to be grilled; to burn		魚がおいしそうに焼けた。	The fish grilled nicely.
 nureru	濡れる	ぬれる	nureru	to get wet		雨で服が濡れた。	My clothes got wet in the rain.
+#social
+okurimono	贈り物	おくりもの	okurimono	gift		母への贈り物を選んだ。	I chose a gift for my mother.
+oiwai	お祝い	おいわい	oiwai	celebration; congratulatory gift		合格のお祝いをしよう。	Let's celebrate passing the exam.
+orei	お礼	おれい	orei	thanks; thank-you gift		手伝ってくれたお礼に食事をごちそうした。	I bought them dinner to thank them for helping.
+ningyou	人形	にんぎょう	ningyou	doll		妹は人形で遊んでいる。	My little sister is playing with her dolls.
+akanbou	赤ん坊	あかんぼう	akanbou	baby		赤ん坊が泣いている。	The baby is crying.
+okanemochi	お金持ち	おかねもち	okanemochi	rich person		彼の家はお金持ちだ。	His family is rich.
+kinjo	近所	きんじょ	kinjo	neighbourhood		近所にいいパン屋がある。	There's a good bakery nearby.
+rusu	留守	るす	rusu	being out, away from home		昨日電話したけど、留守だった。	I phoned yesterday, but you were out.
+sewa	世話	せわ	sewa	looking after, care		毎日犬の世話をします。	I look after the dog every day.
+aisatsu	挨拶	あいさつ	aisatsu	greeting		朝は近所の人に挨拶をする。	I say good morning to the neighbours.
+shoukai	紹介	しょうかい	shoukai	introduction		友達を家族に紹介した。	I introduced my friend to my family.
+soudan	相談	そうだん	soudan	talking over, asking advice		先生に進路を相談した。	I talked to my teacher about my future.
+henji	返事	へんじ	henji	reply		メールの返事を書いた。	I wrote a reply to the email.
+renraku	連絡	れんらく	renraku	contact, getting in touch		着いたら連絡してください。	Let me know when you arrive.
+youji	用事	ようじ	youji	errand, something to do		今日は用事があって行けません。	I've got things to do today, so I can't come.
+tsugou	都合	つごう	tsugou	convenience, what suits you		明日のご都合はどうですか。	Does tomorrow suit you?
+gochisou	ごちそう	ごちそう	gochisou	feast, treat		友達の家でごちそうになった。	My friend's family treated me to a meal.
+kenka	けんか	けんか	kenka	fight, quarrel		兄弟でよくけんかをする。	My brother and I often fight.
+odori	踊り	おどり	odori	dance		祭りで踊りを見た。	I watched the dancing at the festival.
+juudou	柔道	じゅうどう	juudou	judo		高校で柔道を習った。	I learned judo at high school.
+yume	夢	ゆめ	yume	dream		昨日、変な夢を見た。	I had a strange dream last night.
+#adverbs
+shikkari	しっかり	しっかり	shikkari	firmly, properly		しっかり勉強してください。	Study properly.
+toutou	とうとう	とうとう	toutou	at last, finally		とうとう夏休みが来た。	The summer holidays are finally here.
+chittomo	ちっとも	ちっとも	chittomo	not at all (with a negative)		この映画はちっともおもしろくない。	This film isn't funny at all.
+dekirudake	できるだけ	できるだけ	dekirudake	as much as possible		できるだけ早く来てください。	Please come as soon as you can.
+narubeku	なるべく	なるべく	narubeku	as far as possible		なるべく野菜を食べるようにしている。	I try to eat vegetables as much as I can.
+dondon	どんどん	どんどん	dondon	steadily, more and more		日本語がどんどん上手になる。	Your Japanese keeps getting better.
+shibaraku	しばらく	しばらく	shibaraku	for a while		しばらく待ってください。	Please wait a moment.
+sorosoro	そろそろ	そろそろ	sorosoro	about time, soon		そろそろ帰りましょう。	It's about time we went home.
+sukkari	すっかり	すっかり	sukkari	completely		約束をすっかり忘れていた。	I completely forgot the appointment.
+daibu	大分	だいぶ	daibu	a lot, considerably		風邪は大分よくなりました。	My cold is a lot better.
+tamani	たまに	たまに	tamani	now and then		たまに映画を見に行きます。	I go to the cinema now and then.
+mousugu	もうすぐ	もうすぐ	mousugu	soon		もうすぐ春ですね。	It'll soon be spring.
+zehi	是非	ぜひ	zehi	by all means		是非、遊びに来てください。	Do come and visit.
+tatoeba	例えば	たとえば	tatoeba	for example		例えば、すしやてんぷらが好きです。	I like sushi and tempura, for example.
+mazu	まず	まず	mazu	first of all		まず手を洗ってください。	First, wash your hands.
+soreni	それに	それに	soreni	besides, what's more		この店は安い。それに、おいしい。	This place is cheap. And it's good, too.
+matawa	または	または	matawa	or	p	ペンまたは鉛筆で書いてください。	Write in pen or pencil.
+keredomo	けれども	けれども	keredomo	however, but		雨だった。けれども、楽しかった。	It rained. But it was fun.
+suruto	すると	すると	suruto	and then, whereupon		ドアを開けた。すると、猫が入ってきた。	I opened the door, and a cat came in.
+konoaida	この間	このあいだ	konoaida	the other day		この間、駅で先生に会った。	I ran into my teacher at the station the other day.
+konogoro	この頃	このごろ	konogoro	these days		この頃、よく雨が降りますね。	It rains a lot these days.
+korekara	これから	これから	korekara	from now on; now		これから毎日走ります。	From now on I'll run every day.
+mezurashii	珍しい	めずらしい	mezurashii	rare, unusual		この花はとても珍しい。	This flower is very rare.
+sabishii	寂しい	さびしい	sabishii	lonely		一人で寂しいです。	I'm lonely on my own.
+komakai	細かい	こまかい	komakai	fine, detailed; small (change)		細かいお金がありません。	I don't have any change.
+teinei	丁寧	ていねい	teinei	polite; careful		彼女は丁寧に説明してくれた。	She explained it carefully.
+nesshin	熱心	ねっしん	nesshin	keen, eager		弟は熱心にピアノを練習している。	My little brother practises the piano keenly.
+majime	真面目	まじめ	majime	serious, hard-working		彼はとても真面目な学生です。	He's a very hard-working student.
+tekitou	適当	てきとう	tekitou	suitable; half-hearted		適当な答えを書かないで。	Don't just write any old answer.
+muri	無理	むり	muri	impossible, unreasonable		一日で全部読むのは無理です。	Reading it all in a day is impossible.
+jiyuu	自由	じゆう	jiyuu	freedom, free		日曜日は自由な時間が多い。	I have lots of free time on Sundays.
+sakan	盛ん	さかん	sakan	thriving, popular		この町は野球が盛んです。	Baseball is big in this town.
+okashii	おかしい	おかしい	okashii	strange; funny		このパソコンは何かおかしい。	Something's wrong with this computer.
+jama	邪魔	じゃま	jama	in the way, a nuisance		お邪魔します。	Excuse me for coming in.
+#actions3
+fumu	踏む	ふむ	fumu	to step on		電車で足を踏まれた。	Someone trod on my foot on the train.
+naru2	鳴る	なる	naru	to ring, to sound		電話が鳴っている。	The phone's ringing.
+sawaru	触る	さわる	sawaru	to touch		作品に触らないでください。	Please don't touch the exhibits.
+yureru	揺れる	ゆれる	yureru	to shake, to sway		地震で家が揺れた。	The house shook in the earthquake.
+okosu	起こす	おこす	okosu	to wake (someone)		七時に起こしてください。	Please wake me at seven.
+mukaeru	迎える	むかえる	mukaeru	to meet, to welcome		駅まで母を迎えに行った。	I went to the station to meet my mother.
+tsukamaeru	捕まえる	つかまえる	tsukamaeru	to catch		子供が虫を捕まえた。	The children caught a bug.
+kimaru	決まる	きまる	kimaru	to be decided		旅行の日が決まった。	The date of the trip has been set.
+hikaru	光る	ひかる	hikaru	to shine		夜空に星が光っている。	Stars are shining in the night sky.
+suberu	滑る	すべる	suberu	to slip, to slide		雪の日は道が滑ります。	The roads are slippery on snowy days.
+sawagu	騒ぐ	さわぐ	sawagu	to make a noise		図書館で騒がないでください。	Please don't make noise in the library.
+tazuneru	訪ねる	たずねる	tazuneru	to visit		週末に友達の家を訪ねた。	I visited a friend's house at the weekend.
+kayou	通う	かよう	kayou	to commute, to go regularly		毎日バスで学校に通います。	I go to school by bus every day.
+susumu	進む	すすむ	susumu	to go forward		この道をまっすぐ進んでください。	Go straight along this road.
+utsuru	移る	うつる	utsuru	to move (place)		新しい部屋に移りました。	I moved to a new room.
+mukau	向かう	むかう	mukau	to head for		今、駅に向かっています。	I'm on my way to the station.
+taoreru	倒れる	たおれる	taoreru	to fall down, to collapse		強い風で木が倒れた。	A tree came down in the strong wind.
+utsusu	写す	うつす	utsusu	to copy; to take (a photo)		黒板の字をノートに写した。	I copied what was on the board into my notebook.
+kuraberu	比べる	くらべる	kuraberu	to compare		去年と比べて、今年は暑い。	This year is hotter than last year.
+tariru	足りる	たりる	tariru	to be enough		お金が足りません。	I don't have enough money.
+todokeru	届ける	とどける	todokeru	to deliver, to hand in		財布を交番に届けた。	I handed the wallet in at the police box.
+shiraseru	知らせる	しらせる	shiraseru	to let know		結果を知らせてください。	Please let me know the results.
+ijimeru	いじめる	いじめる	ijimeru	to bully		弱い人をいじめてはいけない。	You mustn't pick on the weak.
+tsuru	釣る	つる	tsuru	to fish, to catch (a fish)		川で大きい魚を釣った。	I caught a big fish in the river.
+#society
+boueki	貿易	ぼうえき	boueki	trade		父は貿易の会社で働いている。	My father works for a trading company.
+yushutsu	輸出	ゆしゅつ	yushutsu	export		日本は車を輸出している。	Japan exports cars.
+yunyuu	輸入	ゆにゅう	yunyuu	import		この果物は輸入したものです。	This fruit is imported.
+sangyou	産業	さんぎょう	sangyou	industry		この町の主な産業は漁業です。	Fishing is this town's main industry.
+kougyou	工業	こうぎょう	kougyou	manufacturing industry		この辺りは工業が盛んだ。	There's a lot of manufacturing around here.
+seisan	生産	せいさん	seisan	production		この工場でパンを生産している。	This factory makes bread.
+houritsu	法律	ほうりつ	houritsu	law		法律を守らなければならない。	You have to obey the law.
+shimin	市民	しみん	shimin	citizen		市民のための図書館です。	It's a library for the people of the city.
+jinkou	人口	じんこう	jinkou	population		東京の人口は多い。	Tokyo has a large population.
+jidai	時代	じだい	jidai	era, period		江戸時代の町を見学した。	We visited an Edo-period town.
+seiyou	西洋	せいよう	seiyou	the West		西洋の音楽が好きです。	I like Western music.
+housou	放送	ほうそう	housou	broadcast		その試合はテレビで放送された。	The match was shown on TV.
+shinbunsha	新聞社	しんぶんしゃ	shinbunsha	newspaper company		兄は新聞社で働いています。	My brother works at a newspaper.
+kachou	課長	かちょう	kachou	section head		課長に報告した。	I reported to the section head.
+kaigishitsu	会議室	かいぎしつ	kaigishitsu	meeting room		会議室は三階です。	The meeting room is on the second floor.
+shinamono	品物	しなもの	shinamono	goods, item		この店の品物は質がいい。	This shop's goods are good quality.
+shokuryouhin	食料品	しょくりょうひん	shokuryouhin	groceries		食料品は地下で売っています。	Groceries are sold in the basement.
+baai	場合	ばあい	baai	case, situation		雨の場合は中止です。	If it rains, it's off.
+kikai	機会	きかい	kikai	chance, opportunity		日本語を話す機会がほしい。	I want a chance to speak Japanese.
+kyousou	競争	きょうそう	kyousou	competition		この仕事は競争が激しい。	Competition for this job is fierce.
+wariai	割合	わりあい	wariai	proportion, rate		女性の割合が増えた。	The proportion of women has risen.
+riyou	利用	りよう	riyou	use		図書館をよく利用します。	I use the library a lot.
+chuui	注意	ちゅうい	chuui	care, warning		車に注意してください。	Watch out for cars.
+koshou	故障	こしょう	koshou	breakdown, out of order		エレベーターが故障している。	The lift is out of order.
