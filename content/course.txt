@@ -534,20 +534,20 @@ immerse: Listen to a song about the past, and listen for 懐かしい.
 material: Positive feelings
 @day How and how often | 方法と頻度
 note: ずに means the same as ないで, but it sounds more written and a little more formal. You'll meet it in books and news far more than in chat.
-new: !g.zuni !g.tabini !g.toori !g.kadouka @n3ways @n3daily @n3things @n3joins @n3talk2
+new: !g.zuni !g.tabini !g.toori !g.kadouka @n3ways @n3daily @n3things @n3joins @n3talk2 @n3misc
 read: n3memory
 homework: Write the steps of a recipe you know, with とおりに or ずに.
 immerse: Follow a Japanese recipe video, and listen for the steps.
 @day Ahead and after | 準備と結果
 note: ておく shows foresight, and てしまう often shows regret. Casual speech squeezes them: 〜とく and 〜ちゃう. Learning the short forms makes anime and dramas much easier to follow.
 note: させられる is how Japanese complains about being made to do things, such as homework, overtime, or practice.
-new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10 @verbs11 @verbs12 @verbs13 @verbs14 @verbs @n3hands @n3verbs @n3hands2 @n3hands3 @n3verbs3 @n3hands4
+new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10 @verbs11 @verbs12 @verbs13 @verbs14 @verbs @n3hands @n3verbs @n3hands2 @n3hands3 @n3verbs3 @n3hands4 @n3verbs4
 homework: Write three things you'll prepare before a trip, with ておきます.
 immerse: Listen for ちゃった in any anime episode.
 @day Work Japanese | 仕事の日本語
 note: Offices run on set phrases. かしこまりました is a more formal 分かりました, and 申し訳ありません is a more formal すみません. You'll hear them in every shop, too.
 note: Business keigo takes years even for Japanese people, and new staff get training in it. Recognising it matters far more than producing it perfectly.
-new: @n3work @work3 @work4 @work5 @work6 @work7 @work9 @work @n3work2 @n3work3
+new: @n3work @work3 @work4 @work5 @work6 @work7 @work9 @work @n3work2 @n3work3 @n3basics
 chat: n3office
 homework: Introduce yourself as you would on a first day at work.
 immerse: Watch a scene from a drama set in an office.

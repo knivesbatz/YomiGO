@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.45.0
+
+- **70 more N3 words**, taking the course to 2,942 word cards:
+  - **Basics the course had missed:** 給料, 教科書, 急に, きちんと, きつい, 記念, 気の毒, 基本, 決まり, 義務, 逆, 器用, 行儀, 共通, 可能, and 必ずしも
+  - **Doing things:** 歓迎, 観察, 管理, 関連, 関する, 応じる, 刈る, 活動, 活躍, 解釈, 援助, 演説, お目にかかる, and うがい
+  - **Ideas and the world:** 案, 維持, いずれ, 偉大, 一瞬, 一層, いわゆる, 生まれ, 左右, しきりに, 資源, 次第, したがって, 実に, 失望, 修正, 消費, and 商売
+
 ## 0.44.0
 
 - **71 more N3 words**, taking the course to 2,872 word cards:
