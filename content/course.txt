@@ -252,7 +252,7 @@ exam: S4 | Grammar Gate Trial | 3
 @day Nature and weekdays | 曜日の漢字
 note: Most kanji have an on reading (from Chinese) and a kun reading (native Japanese). Learn each kanji inside words, not alone. Today's seven are the seven days of the week, plus 山.
 note: Learn kanji through words you know, a few at a time. Writing kanji by hand is optional for many learners, so do it if you enjoy it. Reading them is the goal.
-new: @k1 @nature @nature2 @days3 @nature4 @nature5
+new: @k1 @nature @nature2 @days3 @nature4 @nature5 @world2
 homework: Copy each kanji five times, following the stroke order shown on each card.
 immerse: Read today's day of the week from a Japanese calendar.
 @day Numbers | 数字の漢字
@@ -278,7 +278,7 @@ homework: Rewrite five of your verb sentences with kanji.
 immerse: Read 食 on a restaurant web page.
 @day Time | 時間の漢字
 note: Time words let you read schedules: 今, 時, 分, 半, 毎.
-new: @k6 @time3 @time4 @k23 @time9
+new: @k6 @time3 @time4 @k23 @time9 @time10
 homework: Write your daily schedule using these.
 immerse: Read a Japanese train timetable for one minute.
 @day School and country | 学校と国
@@ -442,20 +442,20 @@ homework: Look out of a window, and say what the weather seems to be doing.
 immerse: Watch a Japanese weather forecast for two minutes.
 @day Doing and finishing | 動作
 note: These patterns attach to the ます stem, the part before ます. Once you know that, 食べ gives you 食べながら, 食べすぎる, 食べやすい, and 食べ始める all at once.
-new: !g.nagara !g.sugiru !g.yasui !g.hajimeru @actions @chores @cooking @actions2 @food5 @food7 @verbs9 @k42 @food11 @food @home
+new: !g.nagara !g.sugiru !g.yasui !g.hajimeru @actions @chores @cooking @actions2 @food5 @food7 @verbs9 @k42 @food11 @food @home @things2
 read: routine
 homework: Describe your morning routine in five sentences.
 immerse: Shadow a short line from a show ten times.
 @day Polite Japanese | 敬語
 note: Keigo has two directions. Respectful language raises the other person, and humble language lowers yourself. Don't use either about yourself the wrong way round. At this level, aim to recognise it, and keep using です and ます yourself, which is fine.
 note: You'll hear this all the time in shops and on trains: いらっしゃいませ, お客様, and 少々お待ちください. You don't need to copy it.
-new: !g.keigo !g.kenjou @keigo @hotel @keigo2 @hotel3 @k43 @keigo3
+new: !g.keigo !g.kenjou @keigo @hotel @keigo2 @hotel3 @k43 @keigo3 @keigo4
 chat: office1
 homework: Listen for one keigo word, and write down where you heard it.
 immerse: Watch one scene set in a shop or office, and listen for 〜ます and お〜.
 @day People and places in kanji | 人と場所の漢字
 note: You've met many of these words already. Now you can read them. Spot the parts inside a kanji, since they often repeat.
-new: @k9 @k11 @k13 @people3 @k45
+new: @k9 @k11 @k13 @people3 @k45 @places3
 homework: Write the family words in kanji, without looking.
 immerse: Read place names on a Japanese map.
 @day Actions in kanji | 動きの漢字

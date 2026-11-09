@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Screenshots of the Windows app, taken off screen without taking the focus.
 usage: python tests/shots.py [exe] [outdir]   Each shot starts the app with a test save and a script, waits, and captures the window."""
-import ctypes, ctypes.wintypes as wt, io, os, subprocess, sys, tempfile, time, shutil
+import ctypes, ctypes.wintypes as wt, io, os, subprocess, sys, tempfile, time, shutil, urllib.parse
 from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -50,8 +50,10 @@ def shot(name, js, size="1180x760", tv=False, wait=4.5, theme=None):
     pre = f"try{{localStorage.setItem('yg.theme','{theme or 'light'}');localStorage.setItem('yg.mute','1')}}catch(e){{}}; applyTheme();"
     if name.startswith("phone"): pre += "root.classList.remove('desk','no-side');"  # the phone layout, drawn by the same page
     # Just before the capture, the page reports whether any "[object ...]" text leaked onto it, by saving a check file
-    check = "setTimeout(()=>__TAURI__.core.invoke('save',{name:'pagecheck',text:'YOMIGO-SAVE 1\\nobject='+(document.body.innerText.includes('[object ')?1:0)+'\\n'}),%d);" % int((wait - 2.2) * 1000)  # the script itself starts 1.5 s after launch
-    io.open(os.path.join(root, "go.js"), "w", encoding="utf-8").write(pre + js + check)
+    # It's set up before the shot's own script, so an error there is reported by name instead of silencing the check
+    check = "setTimeout(()=>__TAURI__.core.invoke('save',{name:'pagecheck',text:'YOMIGO-SAVE 1\\nobject='+(document.body.innerText.includes('[object ')?1:0)+'\\nerr='+encodeURIComponent(__errs.join(' | '))+'\\n'}),%d);" % int((wait - 2.2) * 1000)  # the script itself starts 1.5 s after launch
+    errs = "window.__errs=[];addEventListener('error',(e)=>__errs.push(e.message));addEventListener('unhandledrejection',(e)=>__errs.push(String(e.reason)));"
+    io.open(os.path.join(root, "go.js"), "w", encoding="utf-8").write(errs + check + "try{" + pre + js + "}catch(e){__errs.push(String(e))}")
     # Its own web profile, so a test's settings (theme, sounds, look) never touch the learner's real app
     env = dict(os.environ, WEBVIEW2_USER_DATA_FOLDER=os.path.join(root, "webview"), WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS="--disable-features=CalculateNativeWinOcclusion --disable-backgrounding-occluded-windows")
     args = [EXE, "--root", root, "--eval", os.path.join(root, "go.js"), "--size", size] + (["--tv"] if tv else [])
@@ -59,7 +61,7 @@ def shot(name, js, size="1180x760", tv=False, wait=4.5, theme=None):
     try:
         time.sleep(wait)
         pc = os.path.join(root, "pagecheck.sav")
-        for _ in range(60):  # a cold first start on a busy PC or a CI machine can run late; give it up to 30 s more before calling it a failure
+        for _ in range(30):  # a cold first start on a busy PC can run late; give it up to 15 s more before trying again
             if os.path.exists(pc): time.sleep(0.7); break
             time.sleep(0.5)
         hs = windows_of(p.pid)
@@ -68,9 +70,13 @@ def shot(name, js, size="1180x760", tv=False, wait=4.5, theme=None):
         # On a real PC the window must stay out of sight; CI machines have no one watching and place it at 0,0
         if not os.environ.get("CI"): assert r.right < 0 or r.left > u32.GetSystemMetrics(0), f"test window on screen at {r.left},{r.top}"
         grab(hs[0], os.path.join(OUT, name + ".png"))
-        if not os.path.exists(pc): raise SystemExit(f"{name}: the page never reported back")
-        if "object=1" in open(pc).read(): raise SystemExit(f"{name}: the page shows [object ...] text")
+        if not os.path.exists(pc): return False
+        report = open(pc).read()
+        if "object=1" in report: raise SystemExit(f"{name}: the page shows [object ...] text")
+        err = report.split("err=")[1].split("\n")[0] if "err=" in report else ""
+        if err: raise SystemExit(f"{name}: the page hit an error: {urllib.parse.unquote(err)}")
         print("shot", name)
+        return True
     finally:
         p.kill(); p.wait(); shutil.rmtree(root, ignore_errors=True)
 
@@ -111,4 +117,6 @@ SHOTS = {
 }
 want = sys.argv[3:] if len(sys.argv) > 3 else list(SHOTS)
 for n in want:
-    shot(n, SHOTS[n], size="420x860" if n.startswith("phone") else "1280x720" if n.startswith("tv") else "1180x760", tv=n.startswith("tv"), theme="dark" if n.endswith("dark") else None)
+    args = dict(size="420x860" if n.startswith("phone") else "1280x720" if n.startswith("tv") else "1180x760", tv=n.startswith("tv"), theme="dark" if n.endswith("dark") else None)
+    # A shared CI machine sometimes starts the page late; one more try tells that apart from a page that's really broken
+    if not shot(n, SHOTS[n], **args) and not shot(n, SHOTS[n], wait=9, **args): raise SystemExit(f"{n}: the page never reported back, twice")

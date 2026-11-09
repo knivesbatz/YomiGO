@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.33.0
+
+- **Every N4 word.** With 56 more, the course now teaches the whole JLPT N4 list apart from a few dated words such as ワープロ and 電報. That takes it to 2,118 word cards. They include 一生懸命, なかなか, 以外, 代わり, お陰, 役に立つ, 忘れ物, 床屋, 会場, 工場, 湖, 空気, 光, 真ん中, 再来週, 昼休み, and 申す
+- The screenshot tests now name any error the page hits, and try a screen once more before failing, after slow starts on GitHub's Windows machines failed three CI checks this week
+
 ## 0.32.0
 
 - **103 more N4 words the course had missed**, the second half of the JLPT N4 gaps, taking the course past 2,000 to 2,062 word cards:
