@@ -506,12 +506,12 @@ material: My culture
 @day Purpose and cause | 目的と原因
 note: Use ために with actions you choose to do: 留学するために. Use ように with results you can't simply decide, such as abilities and states: 話せるように, 忘れないように.
 note: おかげで thanks something for a good result. せいで blames something for a bad one. Using the wrong one changes the whole tone.
-new: !g.youni !g.tameni !g.okagede !g.seide @n3cause @school2 @k44
+new: !g.youni !g.tameni !g.okagede !g.seide @n3cause @school2 @k44 @n3cause2
 homework: Write one thing you're grateful for with おかげで, and one complaint with せいで.
 immerse: Listen for おかげさまで, a polite reply to "how have you been?"
 @day Even and not only | 強調
 note: さえ is stronger than も. It marks the case you'd least expect: 子供でさえ知っている, even a child knows.
-new: !g.temo !g.sae !g.dakedenaku !g.bakari @n3even @n3adv
+new: !g.temo !g.sae !g.dakedenaku !g.bakari @n3even @n3adv @n3life2
 homework: Write three sentences about your week with ばかり.
 immerse: Listen for ばかり when a parent complains in a show.
 @day Should and can't really | 義務と遠慮
@@ -523,7 +523,7 @@ homework: Write how you'd turn down an invitation politely, with わけにはい
 immerse: Notice how often people in shows refuse without saying いいえ.
 @day More and less | 程度
 note: ほど and くらい overlap. With numbers, くらい sounds more casual. In "not as ... as" comparisons, ほど is the usual choice.
-new: !g.bahodo !g.hodo !g.kurai @n3degree @much @n3words1 @n3words
+new: !g.bahodo !g.hodo !g.kurai @n3degree @much @n3words1 @n3words @n3arts
 homework: Write three "the more ..., the more ..." sentences about learning Japanese.
 immerse: Compare prices on a Japanese shopping site, and describe them with ほど.
 @day Feelings and memories | 気持ちと思い出

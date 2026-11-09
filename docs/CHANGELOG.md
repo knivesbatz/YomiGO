@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.37.0
+
+- **62 more N3 words**, taking the course to 2,404 word cards:
+  - **How things turn out:** 偶然, 結局, 決心, 決定, 結論, 苦労, 困難, 混乱, 誤解, 目標, 役割, 様子, 要するに, 幸い, さて, and まるで
+  - **Daily life:** 癖, ぐっすり, 暮らし, 現金, 小銭, 小包, 毛布, 免許, 面倒, もったいない, 節約, 余裕, 混雑, 列, 予報, and 蒸し暑い
+  - **Arts and feelings:** 芸術, 劇, 作品, 作家, 物語, 文字, 才能, 魅力, 見事, 優秀, 恋, 友情, 別れ, 喜び, 驚き, 怒り, 後悔, 悔しい, 性格, and 機嫌
+
 ## 0.36.0
 
 - **66 more N3 words**, taking the course to 2,342 word cards:
