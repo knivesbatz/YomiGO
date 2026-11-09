@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.35.0
+
+- **58 more N3 words**, taking the course to 2,276 word cards:
+  - **Getting better:** 上達, 回復, 完成, 成績, 順調, 徐々に, 実力, 集中, and 我慢
+  - **Time:** 時期, 至急, 正午, 瞬間, 期間, 期限, 延期, 外出, 以来, 今にも, and 少々
+  - **Opinions:** 参考, 賛成, 事情, 実際, 常識, 正直, 正確, 価値, 関心, 思い付く, 思わず, and 主に
+  - **The news:** 首相, 首都, 手術, 症状, 渋滞, 違反, 汚染, 税, 制度, 就職, 収入, 借金, 引退, 営業, 出版, and 女優
+
 ## 0.34.0
 
 - **100 N3 words**, chosen from the JLPT N3 list by how often they turn up in real learning material, taking the course to 2,218 word cards. They include 感謝, 気に入る, 自慢, 笑顔, 申し訳, 記憶, 解決, 特徴, 権利, 計算, 通勤, 家賃, 預ける, 申し込む, 成長, 減らす, 混ぜる, 訳す, 数える, 登山, 栄養, and 読書

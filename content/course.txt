@@ -474,25 +474,25 @@ exam: N4 | N4 Mastery Exam | 4
 @day Becoming and deciding | 変化と決定
 note: Welcome to N3. From here, the course is less about new forms and more about nuance: how sure you are, who decided, and how you feel about it. Expect longer sentences, and more words you'll first meet in real Japanese.
 note: ことにする is a decision you made. ことになる is one made for you, and Japanese often uses it even for your own choices, because it sounds less pushy.
-new: !g.younaru !g.younisuru !g.kotoninaru !g.kotonisuru @n3change @home2 @home5 @home6 @home7 @n3change2
+new: !g.younaru !g.younisuru !g.kotoninaru !g.kotonisuru @n3change @home2 @home5 @home6 @home7 @n3change2 @n3progress
 read: n3move
 homework: Write three habits you're working on with 〜ようにしています.
 immerse: In a show, listen for ことになった when a character shares news.
 @day Timing | タイミング
 note: ところ pins down exactly where you are in an action. Use it on the phone: 今出るところ, I'm just leaving, is what people say when they're running late.
-new: !g.tokoro !g.tabakari !g.uchini !g.aidani @n3time @places2 @time5 @time8 @n3life
+new: !g.tokoro !g.tabakari !g.uchini !g.aidani @n3time @places2 @time5 @time8 @n3life @n3when
 chat: n3late
 homework: Describe three things you're about to do, are doing, and just did, with ところ.
 immerse: Watch a scene where someone is late, and listen for ところ or ばかり.
 @day Expectations | 予想
 note: はず is based on facts, so 来るはずです means the schedule says so. わけ draws a conclusion: そういうわけです, that's the reason.
 note: わけではありません is a polite way to disagree. It softens a no by denying only part of it.
-new: !g.hazu !g.wake !g.wakedewanai !g.rashii @n3guess @n3ideas
+new: !g.hazu !g.wake !g.wakedewanai !g.rashii @n3guess @n3ideas @n3views
 homework: Write three things that should happen tomorrow, with はずです.
 immerse: Listen for わけ in an interview, where people explain their reasons.
 @day Hearsay and looks | 伝聞と様子
 note: Japanese marks how you know something. そうです after a plain form means you heard it. らしい means you gathered it. みたい and よう mean it seems so, from what you see. News reports use these all the time.
-new: !g.souhear !g.mitai !g.ppoi !g.niyoruto @n3news @clothes3 @news2 @news3 @n3people
+new: !g.souhear !g.mitai !g.ppoi !g.niyoruto @n3news @clothes3 @news2 @news3 @n3people @n3news2
 read: n3news
 homework: Pass on two pieces of news you read today, with そうです.
 immerse: Read the headlines of a Japanese news site, such as NHK News Web Easy.
