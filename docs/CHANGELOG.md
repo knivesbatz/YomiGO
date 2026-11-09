@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.29.0
+
+- **Dates of the month**, from ついたち to にじゅうよっか, with a note on the irregular ones, in the class on telling the time
+- **Counting things from four to ten:** よっつ, いつつ, むっつ, ななつ, やっつ, ここのつ, and とお. The course taught only one to three
+- **82 more words** with example sentences, taking the course to 1,799 word cards, such as 人気, 両方, 全員, 今まで, 誰も, 無駄, 曇り, 反対, 研究, 担当, 手続き, 選手, 時刻表, 乗客, 過ごす, 転ぶ, 奢る, 下がる, 近づく, and 腐る
+
 ## 0.28.0
 
 - **The entrance exam can start you halfway through N4 or N3.** It now tests each half of N4 Road and N3 Bridge separately. It also fixes a mistake: passing the N4 section used to start you at the beginning of N4 Road, not past it

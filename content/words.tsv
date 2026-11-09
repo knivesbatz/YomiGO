@@ -1927,3 +1927,116 @@ seibutsu	生物	せいぶつ	seibutsu	living thing; biology		海にはたくさ�
 #time8
 isshuukan	一週間	いっしゅうかん	isshuukan	one week		一週間ずっと雨だった。	It rained all week.
 ichinen	一年	いちねん	ichinen	one year		日本に一年住んでいました。	I lived in Japan for a year.
+#dates
+tsuitachi	一日	ついたち	tsuitachi	the 1st (of the month)		四月一日から新しい学校です。	I start at a new school on 1 April.
+futsuka	二日	ふつか	futsuka	the 2nd; two days		二日間、京都にいました。	I was in Kyoto for two days.
+mikka	三日	みっか	mikka	the 3rd; three days		三月三日はひな祭りです。	3 March is the Doll Festival.
+yokka	四日	よっか	yokka	the 4th; four days		七月四日に帰ります。	I'm going home on 4 July.
+itsuka	五日	いつか	itsuka	the 5th; five days		五月五日は子供の日です。	5 May is Children's Day.
+muika	六日	むいか	muika	the 6th; six days		試験は六日です。	The exam is on the 6th.
+nanoka	七日	なのか	nanoka	the 7th; seven days		七月七日は七夕です。	7 July is Tanabata.
+youka	八日	ようか	youka	the 8th; eight days		八日の金曜日に会いましょう。	Let's meet on Friday the 8th.
+kokonoka	九日	ここのか	kokonoka	the 9th; nine days		九日まで休みです。	I'm off until the 9th.
+tooka	十日	とおか	tooka	the 10th; ten days		十日に給料が出ます。	I get paid on the 10th.
+juuyokka	十四日	じゅうよっか	juuyokka	the 14th		二月十四日はバレンタインデーです。	14 February is Valentine's Day.
+hatsuka	二十日	はつか	hatsuka	the 20th; twenty days		誕生日は五月二十日です。	My birthday is 20 May.
+nijuuyokka	二十四日	にじゅうよっか	nijuuyokka	the 24th		十二月二十四日はクリスマスイブです。	24 December is Christmas Eve.
+nannichi	何日	なんにち	nannichi	what date; how many days		今日は何日ですか。	What's the date today?
+nannen	何年	なんねん	nannen	what year; how many years		日本に何年住んでいますか。	How many years have you lived in Japan?
+#counters4
+yottsu	四つ	よっつ	yottsu	four (things)		りんごを四つください。	Four apples, please.
+itsutsu	五つ	いつつ	itsutsu	five (things)		五つの国を旅行しました。	I've travelled to five countries.
+muttsu	六つ	むっつ	muttsu	six (things)		卵を六つ買った。	I bought six eggs.
+nanatsu	七つ	ななつ	nanatsu	seven (things)		箱が七つあります。	There are seven boxes.
+yattsu	八つ	やっつ	yattsu	eight (things); eight years old		息子は八つになった。	My son turned eight.
+kokonotsu	九つ	ここのつ	kokonotsu	nine (things)		部屋が九つある古い家です。	It's an old house with nine rooms.
+too	十	とお	too	ten (things); ten years old		娘は今年十になります。	My daughter turns ten this year.
+#food
+furaipan	フライパン	フライパン	furaipan	frying pan		フライパンで卵を焼く。	I fry eggs in a frying pan.
+oobun	オーブン	オーブン	oobun	oven		オーブンでパンを焼きました。	I baked bread in the oven.
+kyabetsu	キャベツ	キャベツ	kyabetsu	cabbage		キャベツを細く切ってください。	Please shred the cabbage.
+sooseeji	ソーセージ	ソーセージ	sooseeji	sausage		朝ご飯にソーセージを食べた。	I had sausages for breakfast.
+kuriimu	クリーム	クリーム	kuriimu	cream		ケーキにクリームをのせる。	Put cream on the cake.
+yooguruto	ヨーグルト	ヨーグルト	yooguruto	yogurt		毎朝ヨーグルトを食べます。	I eat yogurt every morning.
+karorii	カロリー	カロリー	karorii	calorie		このお菓子はカロリーが高い。	These sweets are high in calories.
+baabekyuu	バーベキュー	バーベキュー	baabekyuu	barbecue		週末に庭でバーベキューをした。	We had a barbecue in the garden at the weekend.
+jaguchi	蛇口	じゃぐち	jaguchi	tap, faucet		蛇口から水が出ない。	No water comes out of the tap.
+nyuuseihin	乳製品	にゅうせいひん	nyuuseihin	dairy products		乳製品が食べられません。	I can't eat dairy.
+tsuri	釣り	つり	tsuri	fishing		週末は川で釣りをします。	At weekends I go fishing in the river.
+#travel2
+kaigairyokou	海外旅行	かいがいりょこう	kaigairyokou	trip abroad		海外旅行は初めてです。	It's my first trip abroad.
+pairotto	パイロット	パイロット	pairotto	pilot		パイロットになるのが夢です。	My dream is to become a pilot.
+joumuin	乗務員	じょうむいん	joumuin	crew (of a plane or train)		乗務員に毛布を頼んだ。	I asked the cabin crew for a blanket.
+kinai	機内	きない	kinai	on board (a plane)		機内で映画を見ました。	I watched a film on the plane.
+rizooto	リゾート	リゾート	rizooto	resort		夏はリゾートでのんびりしたい。	In summer I want to relax at a resort.
+ekonomii	エコノミー	エコノミー	ekonomii	economy (class)		エコノミーの席を予約した。	I booked an economy seat.
+sekaijuu	世界中	せかいじゅう	sekaijuu	all over the world		世界中から人が来ます。	People come from all over the world.
+jikokuhyou	時刻表	じこくひょう	jikokuhyou	timetable		時刻表でバスの時間を調べた。	I checked the bus times on the timetable.
+joukyaku	乗客	じょうきゃく	joukyaku	passenger		乗客は全員無事でした。	All the passengers were safe.
+tebukuro	手袋	てぶくろ	tebukuro	gloves		冬は手袋が必要です。	You need gloves in winter.
+tsunami	津波	つなみ	tsunami	tsunami		地震の後、津波が来た。	A tsunami came after the earthquake.
+sukaafu	スカーフ	スカーフ	sukaafu	scarf (thin)		赤いスカーフの人が姉です。	The one in the red scarf is my sister.
+#work
+kenkyuu	研究	けんきゅう	kenkyuu	research		大学で日本語の研究をしています。	I research Japanese at university.
+tantou	担当	たんとう	tantou	in charge (of)		私がこの仕事の担当です。	I'm in charge of this job.
+koumuin	公務員	こうむいん	koumuin	civil servant		姉は公務員です。	My older sister is a civil servant.
+taishoku	退職	たいしょく	taishoku	retirement, leaving a job		父は来年退職します。	My father retires next year.
+koyou	雇用	こよう	koyou	employment		雇用が増えている。	Employment is rising.
+tetsuzuki	手続き	てつづき	tetsuzuki	procedure, paperwork		手続きに時間がかかった。	The paperwork took a long time.
+seika	成果	せいか	seika	result, fruits (of effort)		努力の成果が出た。	The effort paid off.
+keikou	傾向	けいこう	keikou	tendency		若い人は本を読まない傾向がある。	Young people tend not to read books.
+seifuku	制服	せいふく	seifuku	uniform		学校の制服を着ています。	I'm wearing my school uniform.
+#hobbies9
+senshu	選手	せんしゅ	senshu	player, athlete		彼はサッカーの選手です。	He's a football player.
+ragubii	ラグビー	ラグビー	ragubii	rugby		ラグビーの試合を見に行った。	I went to see a rugby match.
+raketto	ラケット	ラケット	raketto	racket		新しいラケットを買いました。	I bought a new racket.
+sutajiamu	スタジアム	スタジアム	sutajiamu	stadium		スタジアムは人でいっぱいだった。	The stadium was packed.
+baiorin	バイオリン	バイオリン	baiorin	violin		娘はバイオリンを習っています。	My daughter is learning the violin.
+amu	編む	あむ	amu	to knit		母がセーターを編んでくれた。	My mother knitted me a jumper.
+#verbs
+sugosu	過ごす	すごす	sugosu	to spend (time)		夏休みを家族と過ごした。	I spent the summer holidays with my family.
+korobu	転ぶ	ころぶ	korobu	to fall over		雪の道で転んだ。	I slipped over on the snowy road.
+moyasu	燃やす	もやす	moyasu	to burn (something)		古い紙を燃やした。	I burned the old papers.
+tokasu	溶かす	とかす	tokasu	to melt (something)		チョコレートを溶かしてケーキを作る。	I melt chocolate to make a cake.
+ogoru	奢る	おごる	ogoru	to treat (someone to food)		今日は私が奢ります。	Today's on me.
+maku	巻く	まく	maku	to wrap, to wind		首にマフラーを巻いた。	I wrapped a scarf around my neck.
+toosu	通す	とおす	toosu	to let through		すみません、通してください。	Excuse me, let me through.
+noseru	乗せる	のせる	noseru	to give a ride, to put on		駅まで車に乗せてもらった。	They gave me a lift to the station.
+umeru	埋める	うめる	umeru	to bury, to fill in		犬が骨を庭に埋めた。	The dog buried a bone in the garden.
+sagaru	下がる	さがる	sagaru	to go down, to fall		熱が下がりました。	My fever has gone down.
+sorou	揃う	そろう	sorou	to be all together, to match		家族が全員揃った。	The whole family is here.
+chikazuku	近づく	ちかづく	chikazuku	to approach		台風が近づいている。	A typhoon is approaching.
+kusaru	腐る	くさる	kusaru	to go bad, to rot		牛乳が腐っている。	The milk has gone off.
+motomeru	求める	もとめる	motomeru	to ask for, to seek		彼は助けを求めた。	He asked for help.
+tamotsu	保つ	たもつ	tamotsu	to keep, to maintain		健康を保つのは大切です。	Staying healthy is important.
+muku	向く	むく	muku	to face, to turn towards		右を向いてください。	Please look to the right.
+#n3words
+ninki	人気	にんき	ninki	popularity		この店は若い人に人気がある。	This shop is popular with young people.
+ryouhou	両方	りょうほう	ryouhou	both		両方ともほしいです。	I want both.
+zenin	全員	ぜんいん	zen'in	everyone, all members		クラスの全員が来た。	The whole class came.
+imamade	今まで	いままで	imamade	until now		今まで一度も日本に行ったことがない。	I've never been to Japan before.
+daremo	誰も	だれも	daremo	nobody (with a negative)		部屋には誰もいなかった。	There was nobody in the room.
+muda	無駄	むだ	muda	waste, pointless		時間を無駄にしないで。	Don't waste time.
+kumori	曇り	くもり	kumori	cloudy weather		明日は曇りでしょう。	It'll probably be cloudy tomorrow.
+hantai	反対	はんたい	hantai	opposition; opposite		父は私の計画に反対した。	My father was against my plan.
+sensou	戦争	せんそう	sensou	war		祖父は戦争の話をしてくれた。	My grandfather told me about the war.
+kanzen	完全	かんぜん	kanzen	complete, perfect		完全に忘れていました。	I completely forgot.
+tsuneni	常に	つねに	tsuneni	always		彼は常に笑顔です。	He's always smiling.
+binbou	貧乏	びんぼう	binbou	poor, poverty		学生のころは貧乏だった。	I was poor as a student.
+kouun	幸運	こううん	kouun	good luck		幸運を祈ります。	Good luck.
+hangaku	半額	はんがく	hangaku	half price		夜はお弁当が半額になる。	Bento boxes are half price in the evening.
+gutaiteki	具体的	ぐたいてき	gutaiteki	specific, concrete		もっと具体的に説明してください。	Please explain more specifically.
+kenkouteki	健康的	けんこうてき	kenkouteki	healthy		健康的な食事を心がけている。	I try to eat healthily.
+giron	議論	ぎろん	giron	discussion, debate		会議で長い議論があった。	There was a long discussion at the meeting.
+taiho	逮捕	たいほ	taiho	arrest		犯人が逮捕された。	The culprit was arrested.
+houseki	宝石	ほうせき	houseki	jewel, gem		母は宝石が好きです。	My mother likes jewellery.
+kurushii	苦しい	くるしい	kurushii	painful, hard to bear		走りすぎて息が苦しい。	I ran too much and I'm out of breath.
+kusai	臭い	くさい	kusai	smelly		この部屋はちょっと臭い。	This room smells a bit.
+tenshi	天使	てんし	tenshi	angel		赤ちゃんの寝顔は天使みたいだ。	A sleeping baby looks like an angel.
+#people8
+fuufu	夫婦	ふうふ	fuufu	married couple		隣に若い夫婦が住んでいる。	A young couple lives next door.
+chichioya	父親	ちちおや	chichioya	father		彼は二人の子供の父親です。	He's the father of two children.
+kappuru	カップル	カップル	kappuru	couple (dating)		公園にカップルがたくさんいる。	There are lots of couples in the park.
+shiraga	白髪	しらが	shiraga	grey hair		最近白髪が増えた。	I've been getting more grey hairs lately.
+kanzou	肝臓	かんぞう	kanzou	liver		お酒を飲みすぎると肝臓に悪い。	Drinking too much is bad for your liver.
+chuugokujin	中国人	ちゅうごくじん	chuugokujin	Chinese person		隣の人は中国人です。	The person next to me is Chinese.
