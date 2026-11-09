@@ -487,7 +487,7 @@ immerse: Watch a scene where someone is late, and listen for ところ or ばか
 @day Expectations | 予想
 note: はず is based on facts, so 来るはずです means the schedule says so. わけ draws a conclusion: そういうわけです, that's the reason.
 note: わけではありません is a polite way to disagree. It softens a no by denying only part of it.
-new: !g.hazu !g.wake !g.wakedewanai !g.rashii @n3guess @n3ideas @n3views
+new: !g.hazu !g.wake !g.wakedewanai !g.rashii @n3guess @n3ideas @n3views @n3ideas2
 homework: Write three things that should happen tomorrow, with はずです.
 immerse: Listen for わけ in an interview, where people explain their reasons.
 @day Hearsay and looks | 伝聞と様子
@@ -528,7 +528,7 @@ homework: Write three "the more ..., the more ..." sentences about learning Japa
 immerse: Compare prices on a Japanese shopping site, and describe them with ほど.
 @day Feelings and memories | 気持ちと思い出
 note: たがる is for other people's wishes, because Japanese doesn't state what's in someone else's head as fact. For yourself, keep using たい.
-new: !g.tagaru !g.kigasuru !g.furi !g.mono @n3feel @feel2 @feel4 @feel5 @feel6 @people7 @people8 @n3heart @n3people2
+new: !g.tagaru !g.kigasuru !g.furi !g.mono @n3feel @feel2 @feel4 @feel5 @feel6 @people7 @people8 @n3heart @n3people2 @n3feel3
 homework: Write about a childhood memory with 〜たものです.
 immerse: Listen to a song about the past, and listen for 懐かしい.
 material: Positive feelings
@@ -541,7 +541,7 @@ immerse: Follow a Japanese recipe video, and listen for the steps.
 @day Ahead and after | 準備と結果
 note: ておく shows foresight, and てしまう often shows regret. Casual speech squeezes them: 〜とく and 〜ちゃう. Learning the short forms makes anime and dramas much easier to follow.
 note: させられる is how Japanese complains about being made to do things, such as homework, overtime, or practice.
-new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10 @verbs11 @verbs12 @verbs13 @verbs14 @verbs @n3hands @n3verbs
+new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10 @verbs11 @verbs12 @verbs13 @verbs14 @verbs @n3hands @n3verbs @n3hands2
 homework: Write three things you'll prepare before a trip, with ておきます.
 immerse: Listen for ちゃった in any anime episode.
 @day Work Japanese | 仕事の日本語
