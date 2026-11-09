@@ -1,6 +1,6 @@
 [package]
 name = "yomigo-setup"
-version = "0.35.0"
+version = "0.36.0"
 edition = "2021"
 description = "Installs YomiGo for Windows"
 license = "GPL-3.0-or-later"

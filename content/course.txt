@@ -528,20 +528,20 @@ homework: Write three "the more ..., the more ..." sentences about learning Japa
 immerse: Compare prices on a Japanese shopping site, and describe them with ほど.
 @day Feelings and memories | 気持ちと思い出
 note: たがる is for other people's wishes, because Japanese doesn't state what's in someone else's head as fact. For yourself, keep using たい.
-new: !g.tagaru !g.kigasuru !g.furi !g.mono @n3feel @feel2 @feel4 @feel5 @feel6 @people7 @people8 @n3heart
+new: !g.tagaru !g.kigasuru !g.furi !g.mono @n3feel @feel2 @feel4 @feel5 @feel6 @people7 @people8 @n3heart @n3people2
 homework: Write about a childhood memory with 〜たものです.
 immerse: Listen to a song about the past, and listen for 懐かしい.
 material: Positive feelings
 @day How and how often | 方法と頻度
 note: ずに means the same as ないで, but it sounds more written and a little more formal. You'll meet it in books and news far more than in chat.
-new: !g.zuni !g.tabini !g.toori !g.kadouka @n3ways @n3daily
+new: !g.zuni !g.tabini !g.toori !g.kadouka @n3ways @n3daily @n3things
 read: n3memory
 homework: Write the steps of a recipe you know, with とおりに or ずに.
 immerse: Follow a Japanese recipe video, and listen for the steps.
 @day Ahead and after | 準備と結果
 note: ておく shows foresight, and てしまう often shows regret. Casual speech squeezes them: 〜とく and 〜ちゃう. Learning the short forms makes anime and dramas much easier to follow.
 note: させられる is how Japanese complains about being made to do things, such as homework, overtime, or practice.
-new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10 @verbs11 @verbs12 @verbs13 @verbs14 @verbs @n3hands
+new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10 @verbs11 @verbs12 @verbs13 @verbs14 @verbs @n3hands @n3verbs
 homework: Write three things you'll prepare before a trip, with ておきます.
 immerse: Listen for ちゃった in any anime episode.
 @day Work Japanese | 仕事の日本語

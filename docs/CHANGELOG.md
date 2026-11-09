@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.36.0
+
+- **66 more N3 words**, taking the course to 2,342 word cards:
+  - **People and feelings:** 親しい, 親友, 信頼, 人生, 真剣, 地味, 贅沢, 清潔, 穏やか, 恐ろしい, 賢い, 幼い, お互い, かゆい, すっぱい, and かわいそう
+  - **Actions:** 沈む, 従う, 支払う, しゃべる, 救う, 動かす, 失う, 訴える, 売れる, 祝う, 応援, 隠す, 隠れる, 囲む, 稼ぐ, 語る, 溺れる, and 輝く
+  - **Everyday things:** 芝生, 湿気, 実験, 食欲, 身長, スイッチ, スピーチ, 賞, 奨学金, 順番, 温度, 気温, 気候, 香り, 影, 髪の毛, 科目, 王様, 大家, お辞儀, and 鬼, plus 感想
+
 ## 0.35.0
 
 - **58 more N3 words**, taking the course to 2,276 word cards:

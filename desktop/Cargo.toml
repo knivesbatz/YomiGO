@@ -1,6 +1,6 @@
 [package]
 name = "yomigo"
-version = "0.35.0"
+version = "0.36.0"
 edition = "2021"
 description = "YomiGo: learn Japanese, one class a day"
 license = "GPL-3.0-or-later"
