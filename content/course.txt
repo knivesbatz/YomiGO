@@ -492,7 +492,7 @@ homework: Write three things that should happen tomorrow, with はずです.
 immerse: Listen for わけ in an interview, where people explain their reasons.
 @day Hearsay and looks | 伝聞と様子
 note: Japanese marks how you know something. そうです after a plain form means you heard it. らしい means you gathered it. みたい and よう mean it seems so, from what you see. News reports use these all the time.
-new: !g.souhear !g.mitai !g.ppoi !g.niyoruto @n3news @clothes3 @news2 @news3 @n3people @n3news2
+new: !g.souhear !g.mitai !g.ppoi !g.niyoruto @n3news @clothes3 @news2 @news3 @n3people @n3news2 @n3news3
 read: n3news
 homework: Pass on two pieces of news you read today, with そうです.
 immerse: Read the headlines of a Japanese news site, such as NHK News Web Easy.
@@ -511,7 +511,7 @@ homework: Write one thing you're grateful for with おかげで, and one complai
 immerse: Listen for おかげさまで, a polite reply to "how have you been?"
 @day Even and not only | 強調
 note: さえ is stronger than も. It marks the case you'd least expect: 子供でさえ知っている, even a child knows.
-new: !g.temo !g.sae !g.dakedenaku !g.bakari @n3even @n3adv @n3life2 @n3talk
+new: !g.temo !g.sae !g.dakedenaku !g.bakari @n3even @n3adv @n3life2 @n3talk @n3life3
 homework: Write three sentences about your week with ばかり.
 immerse: Listen for ばかり when a parent complains in a show.
 @day Should and can't really | 義務と遠慮
@@ -547,7 +547,7 @@ immerse: Listen for ちゃった in any anime episode.
 @day Work Japanese | 仕事の日本語
 note: Offices run on set phrases. かしこまりました is a more formal 分かりました, and 申し訳ありません is a more formal すみません. You'll hear them in every shop, too.
 note: Business keigo takes years even for Japanese people, and new staff get training in it. Recognising it matters far more than producing it perfectly.
-new: @n3work @work3 @work4 @work5 @work6 @work7 @work9 @work @n3work2
+new: @n3work @work3 @work4 @work5 @work6 @work7 @work9 @work @n3work2 @n3work3
 chat: n3office
 homework: Introduce yourself as you would on a first day at work.
 immerse: Watch a scene from a drama set in an office.

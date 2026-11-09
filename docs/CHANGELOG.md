@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.42.0
+
+- **55 more N3 words**, taking the course to 2,712 word cards:
+  - **Work:** 協力, 許可, 記録, 金額, 経営, 景気, 作業, メンバー, 命令, 目上, 有利, 要求, 要点, 予測, 労働, 論文, 課題, and 減少
+  - **The news:** 警告, 血液, 限界, 現場, 航空, 高速, 強盗, 裁判, 差別, 禁煙, 陸, 金属, and 容器
+  - **Everyday life:** 嫌う, 好む, こんなに, 作曲, 見送り, 味方, ミス, 明後日, 向ける, 持ち上げる, 物音, 模様, 破れる, 唯一, 友人, 愉快, 譲る, 用心, 余分, 我々, 片付け, 築く, 光景, and 交際
+
 ## 0.41.0
 
 - **50 more words**, taking the course to 2,657 word cards:
