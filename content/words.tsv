@@ -2134,3 +2134,85 @@ dake	だけ	だけ	dake	only, just		一つだけください。	Just one, please
 nado	など	など	nado	and so on, such as		本や雑誌などを買った。	I bought books, magazines and so on.
 zutsu	ずつ	ずつ	zutsu	each, at a time		一人二つずつ取ってください。	Please take two each.
 tachi	たち	たち	tachi	(more than one person)		子供たちが公園で遊んでいる。	The children are playing in the park.
+#keigo3
+ukagau	伺う	うかがう	ukagau	to visit; to ask (humble)		明日、お宅に伺います。	I'll call on you tomorrow.
+itasu	致す	いたす	itasu	to do (humble)		私がご案内致します。	I'll show you the way.
+moushiageru	申し上げる	もうしあげる	moushiageru	to say (humble)		心からお礼を申し上げます。	I thank you from the bottom of my heart.
+sashiageru	差し上げる	さしあげる	sashiageru	to give (humble)		先生に花を差し上げました。	I gave my teacher some flowers.
+nasaru	なさる	なさる	nasaru	to do (respectful)		社長はゴルフをなさいます。	The company president plays golf.
+kudasaru	くださる	くださる	kudasaru	to give me (respectful)		先生が本をくださいました。	My teacher gave me a book.
+goran	ご覧になる	ごらんになる	goran ni naru	to see (respectful)		この写真をご覧になりましたか。	Have you seen this photo?
+gozonji	ご存じ	ごぞんじ	gozonji	knowing (respectful)		この店をご存じですか。	Do you know this shop?
+haiken	拝見	はいけん	haiken	seeing (humble)		お手紙を拝見しました。	I've read your letter.
+shouchi	承知	しょうち	shouchi	understanding, agreeing (humble)		はい、承知しました。	Certainly, I understand.
+otaku	お宅	おたく	otaku	your home (polite)		お宅はどちらですか。	Where do you live?
+goshujin	ご主人	ごしゅじん	goshujin	your husband (polite)		ご主人はお元気ですか。	How is your husband?
+ojousan	お嬢さん	おじょうさん	ojousan	your daughter (polite); young lady		お嬢さんはおいくつですか。	How old is your daughter?
+okosan	お子さん	おこさん	okosan	your child (polite)		お子さんは何人いますか。	How many children do you have?
+yoroshii	よろしい	よろしい	yoroshii	all right, good (polite)		窓を開けてもよろしいですか。	May I open the window?
+#school7
+yoshuu	予習	よしゅう	yoshuu	preparing for a lesson		授業の前に予習をします。	I prepare before class.
+fukushuu	復習	ふくしゅう	fukushuu	revision, review		寝る前に今日の復習をした。	I went over today's lesson before bed.
+hatsuon	発音	はつおん	hatsuon	pronunciation		日本語の発音はやさしいです。	Japanese pronunciation is easy.
+bunpou	文法	ぶんぽう	bunpou	grammar		この文法がよく分かりません。	I don't really understand this grammar.
+jiten	辞典	じてん	jiten	dictionary		分からない言葉は辞典で調べる。	I look up words I don't know in a dictionary.
+kougi	講義	こうぎ	kougi	lecture		午後は経済の講義があります。	I have an economics lecture in the afternoon.
+sotsugyou	卒業	そつぎょう	sotsugyou	graduation		来年、高校を卒業します。	I finish high school next year.
+senmon	専門	せんもん	senmon	speciality, major		大学での専門は歴史です。	I'm majoring in history at university.
+shougakkou	小学校	しょうがっこう	shougakkou	primary school		弟は小学校に通っています。	My little brother goes to primary school.
+chuugakkou	中学校	ちゅうがっこう	chuugakkou	middle school		中学校でテニスを始めた。	I started tennis at middle school.
+koukou	高校	こうこう	koukou	high school		高校は家から近いです。	My high school is near home.
+daigakusei	大学生	だいがくせい	daigakusei	university student		兄は大学生です。	My older brother is a university student.
+kouchou	校長	こうちょう	kouchou	head teacher		校長先生の話は長かった。	The head teacher's talk was long.
+kyouiku	教育	きょういく	kyouiku	education		子供の教育は大切です。	Children's education is important.
+bungaku	文学	ぶんがく	bungaku	literature		日本の文学が好きです。	I like Japanese literature.
+chiri	地理	ちり	chiri	geography		地理の授業で地図を見た。	We looked at maps in geography.
+igaku	医学	いがく	igaku	medicine (the study)		姉は大学で医学を勉強している。	My sister studies medicine at university.
+gijutsu	技術	ぎじゅつ	gijutsu	technology, skill		日本の技術はすごいです。	Japanese technology is amazing.
+tekisuto	テキスト	テキスト	tekisuto	textbook		テキストの二十ページを見てください。	Look at page twenty of the textbook.
+keshigomu	消しゴム	けしゴム	keshigomu	eraser, rubber		消しゴムを貸してくれる？	Can I borrow your rubber?
+nikki	日記	にっき	nikki	diary		毎晩、日本語で日記を書きます。	I write a diary in Japanese every night.
+shusseki	出席	しゅっせき	shusseki	attendance		明日の会議に出席します。	I'll attend tomorrow's meeting.
+#travel4
+hikoujou	飛行場	ひこうじょう	hikoujou	airfield, airport		飛行場まで友達を迎えに行った。	I went to the airport to pick up a friend.
+tokkyuu	特急	とっきゅう	tokkyuu	limited express (train)		特急なら一時間で着きます。	The limited express gets there in an hour.
+kyuukou	急行	きゅうこう	kyuukou	express (train)		次の急行に乗りましょう。	Let's take the next express.
+kisha	汽車	きしゃ	kisha	steam train		昔は汽車で旅行した。	People used to travel by steam train.
+norimono	乗り物	のりもの	norimono	vehicle, ride		子供は乗り物が好きです。	Children love things that go.
+norikaeru	乗り換える	のりかえる	norikaeru	to change (trains)		新宿で電車を乗り換えます。	I change trains at Shinjuku.
+ootobai	オートバイ	オートバイ	ootobai	motorbike		オートバイで会社に行きます。	I go to work by motorbike.
+esukareetaa	エスカレーター	エスカレーター	esukareetaa	escalator		エスカレーターで二階に上がった。	I took the escalator to the first floor.
+ryokan	旅館	りょかん	ryokan	Japanese inn		温泉のある旅館に泊まった。	I stayed at an inn with a hot spring.
+kenbutsu	見物	けんぶつ	kenbutsu	sightseeing		京都でお寺を見物した。	I went round the temples in Kyoto.
+hanami	花見	はなみ	hanami	cherry blossom viewing		週末に公園で花見をします。	We're having a cherry blossom picnic in the park at the weekend.
+kougai	郊外	こうがい	kougai	suburbs		郊外に家を買った。	We bought a house in the suburbs.
+okujou	屋上	おくじょう	okujou	rooftop		屋上から富士山が見える。	You can see Mount Fuji from the roof.
+jinja	神社	じんじゃ	jinja	shrine		お正月に神社へ行きます。	I go to a shrine at New Year.
+shougatsu	正月	しょうがつ	shougatsu	New Year		正月は家族と過ごします。	I spend New Year with my family.
+#health6
+nyuuin	入院	にゅういん	nyuuin	going into hospital		祖母が一週間入院した。	My grandmother was in hospital for a week.
+taiin	退院	たいいん	taiin	leaving hospital		父は明日退院します。	My father leaves hospital tomorrow.
+omimai	お見舞い	おみまい	omimai	visiting someone sick		友達のお見舞いに行った。	I went to visit my friend in hospital.
+nebou	寝坊	ねぼう	nebou	oversleeping		寝坊して学校に遅れた。	I overslept and was late for school.
+nemuru	眠る	ねむる	nemuru	to sleep		赤ちゃんがよく眠っている。	The baby is sound asleep.
+hieru	冷える	ひえる	hieru	to get cold		夜はかなり冷えますね。	It gets quite cold at night.
+#home
+futon	布団	ふとん	futon	futon, bedding		天気がいいので布団を干した。	It was sunny, so I aired the futon.
+tatami	畳	たたみ	tatami	tatami mat		畳の部屋で寝ます。	I sleep in a tatami room.
+oshiire	押し入れ	おしいれ	oshiire	(Japanese) closet		布団は押し入れにしまう。	The futon goes in the closet.
+kaaten	カーテン	カーテン	kaaten	curtain		朝、カーテンを開けた。	I opened the curtains in the morning.
+kagami	鏡	かがみ	kagami	mirror		鏡で顔を見た。	I looked at my face in the mirror.
+suidou	水道	すいどう	suidou	water supply, tap water		水道の水を飲んでも大丈夫です。	The tap water is safe to drink.
+gasu	ガス	ガス	gasu	gas		ガスを止めるのを忘れないで。	Don't forget to turn off the gas.
+reibou	冷房	れいぼう	reibou	air conditioning (cooling)		暑いので冷房をつけた。	It was hot, so I put the air conditioning on.
+danbou	暖房	だんぼう	danbou	heating		この部屋は暖房がよく効く。	The heating works well in this room.
+waku	沸く	わく	waku	to boil		お湯が沸きました。	The water has boiled.
+wakasu	沸かす	わかす	wakasu	to boil (something)		お茶のためにお湯を沸かす。	I boil water for tea.
+tsutsumu	包む	つつむ	tsutsumu	to wrap		プレゼントをきれいな紙で包んだ。	I wrapped the present in pretty paper.
+nuru	塗る	ぬる	nuru	to paint, to spread		壁を白く塗った。	I painted the wall white.
+kawaku	乾く	かわく	kawaku	to dry		洗濯物がもう乾いた。	The washing is already dry.
+ueru	植える	うえる	ueru	to plant		庭に木を植えました。	I planted a tree in the garden.
+kazaru	飾る	かざる	kazaru	to decorate		部屋に花を飾った。	I decorated the room with flowers.
+torikaeru	取り替える	とりかえる	torikaeru	to replace, to swap		電池を取り替えてください。	Please change the batteries.
+yakeru	焼ける	やける	yakeru	to be grilled; to burn		魚がおいしそうに焼けた。	The fish grilled nicely.
+nureru	濡れる	ぬれる	nureru	to get wet		雨で服が濡れた。	My clothes got wet in the rain.

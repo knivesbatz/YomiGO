@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.31.0
+
+- **77 N4 words the course had missed**, the first half of the JLPT N4 gaps, taking the course to 1,959 word cards:
+  - **Polite Japanese:** 伺う, 致す, 申し上げる, 差し上げる, なさる, くださる, ご覧になる, ご存じ, 拝見, 承知, お宅, ご主人, お嬢さん, and お子さん, in the class on keigo
+  - **School:** 予習, 復習, 発音, 文法, 卒業, 専門, 小学校, 中学校, 高校, 教育, 文学, 技術, 日記, and 消しゴム
+  - **Getting around:** 特急, 急行, 乗り換える, 乗り物, 旅館, 見物, 花見, 郊外, 屋上, 神社, and 正月
+  - **Home and health:** 布団, 畳, 押し入れ, 鏡, 冷房, 暖房, 沸かす, 包む, 乾く, 植える, 飾る, 濡れる, 入院, 退院, お見舞い, 寝坊, and 眠る
+
 ## 0.30.0
 
 - **Every N5 word.** The course now teaches the rest of the JLPT N5 list it had missed, 83 words in all. Only a few dated ones, such as テープレコーダー, are left out

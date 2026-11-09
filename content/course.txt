@@ -411,13 +411,13 @@ homework: Compare three pairs of things in your home.
 immerse: Read reviews on a Japanese shop page. Look for より.
 @day Reasons | 理由
 note: 〜ので sounds softer than 〜から. Japanese often gives the reason and leaves the conclusion unsaid: 今日はちょっと…, and the listener understands.
-new: !g.node !g.noni !g.toki @because @reasons2 @feel3
+new: !g.node !g.noni !g.toki @because @reasons2 @feel3 @school7
 read: sick
 homework: Write three excuses using 〜ので.
 immerse: Notice when someone in a show stops mid-sentence and leaves the rest unsaid.
 @day If and when | 条件
 note: Four words for if, and learners worry too much about them. Start with たら, which works nearly everywhere. Pick up と, ば, and なら as you notice them.
-new: !g.tara !g.to !g.ba !g.nara @ifwhen @health @health2 @health3 @k39 @health4 @health5
+new: !g.tara !g.to !g.ba !g.nara @ifwhen @health @health2 @health3 @k39 @health4 @health5 @health6
 chat: doctor1
 homework: Write three sentences with たら about tomorrow.
 immerse: Listen for たら in a show.
@@ -430,7 +430,7 @@ homework: Say who gave what to whom, for three gifts you remember.
 immerse: In a show, notice くれる when someone's thanking a friend.
 @day Things that happen to you | 受け身
 note: The Japanese passive often means something happened to you that you didn't want. Use it for being scolded or robbed. Causative forms come up in work and school: making or letting someone do something.
-new: !g.passive !g.causative @passive @travel3 @travel5 @travel6 @k41 @travel7 @travel2
+new: !g.passive !g.causative @passive @travel3 @travel5 @travel6 @k41 @travel7 @travel2 @travel4
 homework: Describe something annoying that happened to you, with the passive.
 immerse: Listen for 〜られた when a character complains.
 material: Active and Passive (present)
@@ -442,14 +442,14 @@ homework: Look out of a window, and say what the weather seems to be doing.
 immerse: Watch a Japanese weather forecast for two minutes.
 @day Doing and finishing | 動作
 note: These patterns attach to the ます stem, the part before ます. Once you know that, 食べ gives you 食べながら, 食べすぎる, 食べやすい, and 食べ始める all at once.
-new: !g.nagara !g.sugiru !g.yasui !g.hajimeru @actions @chores @cooking @actions2 @food5 @food7 @verbs9 @k42 @food11 @food
+new: !g.nagara !g.sugiru !g.yasui !g.hajimeru @actions @chores @cooking @actions2 @food5 @food7 @verbs9 @k42 @food11 @food @home
 read: routine
 homework: Describe your morning routine in five sentences.
 immerse: Shadow a short line from a show ten times.
 @day Polite Japanese | 敬語
 note: Keigo has two directions. Respectful language raises the other person, and humble language lowers yourself. Don't use either about yourself the wrong way round. At this level, aim to recognise it, and keep using です and ます yourself, which is fine.
 note: You'll hear this all the time in shops and on trains: いらっしゃいませ, お客様, and 少々お待ちください. You don't need to copy it.
-new: !g.keigo !g.kenjou @keigo @hotel @keigo2 @hotel3 @k43
+new: !g.keigo !g.kenjou @keigo @hotel @keigo2 @hotel3 @k43 @keigo3
 chat: office1
 homework: Listen for one keigo word, and write down where you heard it.
 immerse: Watch one scene set in a shop or office, and listen for 〜ます and お〜.
