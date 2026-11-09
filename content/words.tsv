@@ -2040,3 +2040,97 @@ kappuru	カップル	カップル	kappuru	couple (dating)		公園にカップル
 shiraga	白髪	しらが	shiraga	grey hair		最近白髪が増えた。	I've been getting more grey hairs lately.
 kanzou	肝臓	かんぞう	kanzou	liver		お酒を飲みすぎると肝臓に悪い。	Drinking too much is bad for your liver.
 chuugokujin	中国人	ちゅうごくじん	chuugokujin	Chinese person		隣の人は中国人です。	The person next to me is Chinese.
+#kosoado
+kono	この	この	kono	this (+ noun)		この本はおもしろいです。	This book is interesting.
+sono	その	その	sono	that (+ noun, near you)		その傘はだれのですか。	Whose is that umbrella?
+ano	あの	あの	ano	that (+ noun, over there)		あの店は安いです。	That shop over there is cheap.
+dono	どの	どの	dono	which (+ noun)		どの電車に乗りますか。	Which train are you taking?
+sochira	そちら	そちら	sochira	that way; your side (polite)		そちらの天気はどうですか。	How's the weather where you are?
+achira	あちら	あちら	achira	over there (polite)		出口はあちらです。	The exit is over there.
+dochira	どちら	どちら	dochira	which one; where (polite)		コーヒーと紅茶、どちらがいいですか。	Coffee or tea, which would you like?
+kocchi	こっち	こっち	kocchi	this way, here (casual)		こっちに来て。	Come over here.
+socchi	そっち	そっち	socchi	that way, there (casual)		そっちは危ないよ。	It's dangerous over there.
+acchi	あっち	あっち	acchi	over there (casual)		トイレはあっちだよ。	The toilet's over there.
+docchi	どっち	どっち	docchi	which one (casual)		どっちが好き？	Which one do you like?
+konna	こんな	こんな	konna	this kind of, like this		こんな服がほしかった。	I wanted clothes like this.
+anna	あんな	あんな	anna	that kind of, like that		あんな大きい家に住みたい。	I'd like to live in a big house like that.
+anata	あなた	あなた	anata	you (people usually use names instead)		あなたの名前は何ですか。	What's your name?
+itsu	いつ	いつ	itsu	when		誕生日はいつですか。	When's your birthday?
+#people9
+minasan	皆さん	みなさん	minasan	everyone (speaking to a group)		皆さん、こんにちは。	Hello, everyone.
+oozei	大勢	おおぜい	oozei	crowds, a lot of people		駅に大勢の人がいた。	There were crowds at the station.
+ojisan	おじさん	おじさん	ojisan	uncle; middle-aged man		おじさんは大阪に住んでいます。	My uncle lives in Osaka.
+obasan	おばさん	おばさん	obasan	aunt; middle-aged woman		おばさんがケーキを作ってくれた。	My aunt made me a cake.
+hatachi	二十歳	はたち	hatachi	twenty years old		姉は二十歳です。	My sister is twenty.
+katei	家庭	かてい	katei	home, household		温かい家庭で育ちました。	I grew up in a warm home.
+kurasu	クラス	クラス	kurasu	class (of students)		私のクラスは三十人です。	There are thirty people in my class.
+#verbs5
+naru	なる	なる	naru	to become		春になりました。	Spring has come.
+yaru	やる	やる	yaru	to do (casual); to give (to pets, plants)		花に水をやる。	I water the flowers.
+watasu	渡す	わたす	watasu	to hand over		この手紙を先生に渡してください。	Please give this letter to the teacher.
+kieru	消える	きえる	kieru	to go out, to disappear		急に電気が消えた。	The lights suddenly went out.
+tsutomeru	勤める	つとめる	tsutomeru	to work for (a company)		父は銀行に勤めています。	My father works at a bank.
+kopii	コピー	コピー	kopii	copy		この紙をコピーしてください。	Please copy this sheet.
+#house2
+kabin	花瓶	かびん	kabin	vase		花瓶に花を入れた。	I put the flowers in a vase.
+sekken	石鹸	せっけん	sekken	soap		石鹸で手を洗いましょう。	Let's wash our hands with soap.
+haizara	灰皿	はいざら	haizara	ashtray		灰皿はありますか。	Is there an ashtray?
+sutoobu	ストーブ	ストーブ	sutoobu	heater		寒いからストーブをつけた。	It was cold, so I put the heater on.
+otearai	お手洗い	おてあらい	otearai	toilet (polite)		お手洗いはどこですか。	Where's the toilet?
+botan	ボタン	ボタン	botan	button		このボタンを押してください。	Please press this button.
+peeji	ページ	ページ	peeji	page		教科書の十ページを開いてください。	Open your textbook at page ten.
+e	絵	え	e	picture, painting		壁に絵がかかっています。	There's a picture on the wall.
+uchi	うち	うち	uchi	home, my house		うちに猫が二匹います。	We have two cats at home.
+mannenhitsu	万年筆	まんねんひつ	mannenhitsu	fountain pen		祖父の万年筆を使っています。	I use my grandfather's fountain pen.
+#time9
+konban	今晩	こんばん	konban	tonight, this evening		今晩、電話します。	I'll call you tonight.
+ototoshi	おととし	おととし	ototoshi	the year before last		おととし日本に行きました。	I went to Japan the year before last.
+sarainen	さ来年	さらいねん	sarainen	the year after next		さ来年、大学を卒業します。	I graduate the year after next.
+maitoshi	毎年	まいとし	maitoshi	every year		毎年夏に海へ行きます。	I go to the sea every summer.
+choudo	丁度	ちょうど	choudo	exactly, just		今、丁度十二時です。	It's exactly twelve o'clock.
+hajime	初め	はじめ	hajime	the beginning, at first		初めは日本語が全然分からなかった。	At first I didn't understand any Japanese.
+yuuhan	夕飯	ゆうはん	yuuhan	dinner, evening meal		夕飯は七時です。	Dinner is at seven.
+zero	ゼロ	ゼロ	zero	zero		電話番号はゼロから始まります。	The phone number starts with zero.
+rei	零	れい	rei	zero, nought		気温は零度です。	It's zero degrees.
+#clothes6
+sebiro	背広	せびろ	sebiro	(man's) suit		父は毎日背広を着ます。	My father wears a suit every day.
+waishatsu	ワイシャツ	ワイシャツ	waishatsu	dress shirt		白いワイシャツを買った。	I bought a white dress shirt.
+hankachi	ハンカチ	ハンカチ	hankachi	handkerchief		ハンカチを忘れました。	I forgot my handkerchief.
+#town4
+kouban	交番	こうばん	kouban	police box		道が分からなかったので交番で聞いた。	I didn't know the way, so I asked at the police box.
+keikan	警官	けいかん	keikan	police officer		警官が道を教えてくれた。	A police officer showed me the way.
+omawarisan	おまわりさん	おまわりさん	omawarisan	police officer (friendly)		おまわりさん、駅はどこですか。	Excuse me, officer, where's the station?
+depaato	デパート	デパート	depaato	department store		デパートで母のプレゼントを買った。	I bought my mother's present at the department store.
+posuto	ポスト	ポスト	posuto	postbox		手紙をポストに入れました。	I put the letter in the postbox.
+mukou	向こう	むこう	mukou	over there, the other side		川の向こうに山が見えます。	You can see mountains across the river.
+meetoru	メートル	メートル	meetoru	metre		駅まで五百メートルです。	It's five hundred metres to the station.
+#food12
+osake	お酒	おさけ	osake	alcohol; sake		お酒はあまり飲みません。	I don't drink much.
+obentou	お弁当	おべんとう	obentou	packed lunch		毎日お弁当を作ります。	I make a packed lunch every day.
+bataa	バター	バター	bataa	butter		パンにバターをぬる。	I spread butter on bread.
+nurui	ぬるい	ぬるい	nurui	lukewarm		このお茶はぬるいです。	This tea is lukewarm.
+#reactions2
+kekkou	結構	けっこう	kekkou	fine; no thank you; quite		もう結構です。	I'm fine, thank you. (No more.)
+doumo	どうも	どうも	doumo	thanks; somehow		どうも、ありがとうございます。	Thank you very much.
+saa	さあ	さあ	saa	right, come on; hmm, I wonder		さあ、始めましょう。	Right, let's begin.
+jaa	じゃあ	じゃあ	jaa	well then		じゃあ、また明日。	Well then, see you tomorrow.
+soredewa	それでは	それでは	soredewa	well then (polite)	p	それでは、会議を始めます。	Well then, let's start the meeting.
+rippa	立派	りっぱ	rippa	splendid, fine		立派な家ですね。	What a fine house.
+chiisana	小さな	ちいさな	chiisana	small, little (+ noun)		小さな村に住んでいます。	I live in a small village.
+bunshou	文章	ぶんしょう	bunshou	writing, text		この文章を日本語に訳してください。	Please translate this text into Japanese.
+#counters5
+issatsu	一冊	いっさつ	issatsu	one (book)		この本を一冊ください。	One copy of this book, please.
+nansatsu	何冊	なんさつ	nansatsu	how many (books)		本を何冊持っていますか。	How many books do you have?
+ippai	一杯	いっぱい	ippai	one cup or glass; full		水を一杯ください。	A glass of water, please.
+ichidai	一台	いちだい	ichidai	one (car or machine)		車が一台あります。	We have one car.
+ikkai	一回	いっかい	ikkai	once		一週間に一回プールに行きます。	I go to the pool once a week.
+nankai	何回	なんかい	nankai	how many times		日本に何回行きましたか。	How many times have you been to Japan?
+ikkai2	一階	いっかい	ikkai	ground floor (first floor in Japan)		受付は一階です。	Reception is on the ground floor.
+nangai	何階	なんがい	nangai	which floor		トイレは何階ですか。	Which floor is the toilet on?
+ikko	一個	いっこ	ikko	one (small thing)		りんごを一個食べた。	I ate an apple.
+nansai	何歳	なんさい	nansai	how old		お子さんは何歳ですか。	How old is your child?
+#little
+dake	だけ	だけ	dake	only, just		一つだけください。	Just one, please.
+nado	など	など	nado	and so on, such as		本や雑誌などを買った。	I bought books, magazines and so on.
+zutsu	ずつ	ずつ	zutsu	each, at a time		一人二つずつ取ってください。	Please take two each.
+tachi	たち	たち	tachi	(more than one person)		子供たちが公園で遊んでいる。	The children are playing in the park.

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.30.0
+
+- **Every N5 word.** The course now teaches the rest of the JLPT N5 list it had missed, 83 words in all. Only a few dated ones, such as テープレコーダー, are left out
+- **この, その, あの, and どの**, with こちら, こっち, こんな, and the rest of their family, in the class on の and も, with a note on when to use each
+- **More counters:** books, cups, machines, times, floors, small things, and ages, such as 一冊, 一杯, 一回, 一階, and 何歳, with だけ, など, and ずつ
+- Everyday basics such as あなた, いつ, なる, 渡す, 消える, 今晩, 交番, お手洗い, お弁当, 結構, and じゃあ, taking the course to 1,882 word cards
+- The screenshot tests wait longer for a slow first start, which made a CI check fail on 0.28.0
+
 ## 0.29.0
 
 - **Dates of the month**, from ついたち to にじゅうよっか, with a note on the irregular ones, in the class on telling the time

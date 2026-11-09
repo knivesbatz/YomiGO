@@ -59,7 +59,7 @@ def shot(name, js, size="1180x760", tv=False, wait=4.5, theme=None):
     try:
         time.sleep(wait)
         pc = os.path.join(root, "pagecheck.sav")
-        for _ in range(20):  # a cold first start on a busy PC can run late; give it up to 10 s more before calling it a failure
+        for _ in range(60):  # a cold first start on a busy PC or a CI machine can run late; give it up to 30 s more before calling it a failure
             if os.path.exists(pc): time.sleep(0.7); break
             time.sleep(0.5)
         hs = windows_of(p.pid)

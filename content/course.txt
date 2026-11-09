@@ -177,21 +177,21 @@ exam: S3 | Katakana Castle Trial | 3
 @day AはBです | です
 note: A Japanese sentence ends with its most important word. Listen to the end. People usually drop 私 once the topic is clear; repeating it sounds odd.
 note: Read grammar to understand it, not to memorise it. It's normal for it not to stick the first time, because you'll keep meeting it. If an explanation confuses you, try Sakubi or Tae Kim's Guide from the Library.
-new: !g.desu !g.ka @things @people2
+new: !g.desu !g.ka @things @people2 @people9
 chat: student1
 homework: Write three sentences about yourself with です.
 immerse: Listen for です at the ends of sentences in any show.
 material: 6. Food, This, That
 @day の and も | の、も
-note: The describing word always comes first: 私の本, "my book", is literally "I's book".
-new: !g.no !g.mo !g.kore !g.janai
+note: The describing word always comes first: 私の本, "my book", is literally "I's book". この, その, あの and どの go before a noun, as in この本, "this book". こちら and こっち mean this way or this side, and こんな means this kind of. The polite こちら forms also stand for people: こちらは田中さんです.
+new: !g.no !g.mo !g.kore !g.janai @kosoado
 homework: Write the names of two things you own using の.
 immerse: Point at things at home and say これ, それ, あれ.
 material: 1. Particles
 @day Verbs | 動詞
 note: Verbs come last. People often leave out the subject when it's clear from context. ます keeps things polite for people you don't know well.
 note: Don't wait until you feel ready to use real Japanese. Guides warn that it's easy to stay on beginner material too long. Try a little of something real every day, however hard it seems.
-new: !g.masu !g.masen !g.wo @verbs1 @verbs3
+new: !g.masu !g.masen !g.wo @verbs1 @verbs3 @verbs5
 chat: eat1
 homework: Say five things you will do today using ます.
 immerse: Narrate your breakfast in Japanese: パンを食べます.
@@ -217,7 +217,7 @@ immerse: Say 美味しい! at your next meal, with feeling.
 material: 5. Adjectives
 @day There is... | あります、います
 note: Use います for people and animals, あります for everything else. Plants and robots count as things to most speakers, though robots can go either way.
-new: !g.ga !g.nipos @exist @house @house3 @house4 @house5
+new: !g.ga !g.nipos @exist @house @house3 @house4 @house5 @house2
 read: morning
 homework: Say what's in your room with あります and います.
 immerse: Walk through your home naming what's there.
@@ -232,7 +232,7 @@ material: 7. Telling the Time
 @day Counting things | 数え方
 note: Japanese counts with counters that depend on shape: 枚 for flat things, 本 for long things, 匹 for small animals, 人 for people. つ is the safe general counter for things up to ten. People use 一人 and 二人, but 三人 and up are regular.
 note: Sounds shift: いっぽん, にほん, さんぼん. Practise saying them as a set.
-new: @counters @counters2 @counters3 @counters4
+new: @counters @counters2 @counters3 @counters4 @counters5
 chat: shop1
 read: cat
 homework: Count things on your table with the right counter.
@@ -241,7 +241,7 @@ material: Numbers II
 @day Requests, ranges, wishes | お願いと希望
 note: 〜てください is polite but still a request from your side. Softer forms come later.
 note: Guides disagree on when to start speaking. Some say wait, and others warn against waiting. YomiGo has you speak from the start, and the worst that can happen is a small mistake.
-new: !g.kudasai !g.tekudasai !g.kara !g.made !g.tai @express @wants
+new: !g.kudasai !g.tekudasai !g.kara !g.made !g.tai @express @wants @little
 chat: wish1
 homework: Write one thing you want to do in Japan.
 immerse: Use ええと when you need to think, instead of "um".
@@ -278,7 +278,7 @@ homework: Rewrite five of your verb sentences with kanji.
 immerse: Read 食 on a restaurant web page.
 @day Time | 時間の漢字
 note: Time words let you read schedules: 今, 時, 分, 半, 毎.
-new: @k6 @time3 @time4 @k23
+new: @k6 @time3 @time4 @k23 @time9
 homework: Write your daily schedule using these.
 immerse: Read a Japanese train timetable for one minute.
 @day School and country | 学校と国
@@ -298,7 +298,7 @@ exam: S5 | Kanji Keep Trial | 3
 @day Colours | 色
 note: Some colours are い adjectives, like 赤い. Others are nouns that need の before another noun: 緑の車. Use them as you've seen them, and the pattern will come with practice.
 note: You're ready to start mining. When a word in something you enjoy keeps coming back, save it with its sentence using YomiGo Reader. Words from things you care about stick best.
-new: @colors @clothes @clothes4 @clothes5 @k25
+new: @colors @clothes @clothes4 @clothes5 @k25 @clothes6
 homework: Name the colours of five things around you.
 immerse: Look at a Japanese shop page, and find a colour word.
 material: 9. Colors
@@ -333,14 +333,14 @@ homework: Roleplay buying something, with a family member.
 immerse: Browse a Japanese shop website for ten minutes.
 material: Money and shopping
 @day At a restaurant | レストラン
-new: @food2 @food4 @food6 @food8 @k30 @food9 @food10
+new: @food2 @food4 @food6 @food8 @k30 @food9 @food10 @food12
 note: Say すみません to call staff. Tipping isn't customary. Don't stick chopsticks upright in rice or pass food chopstick to chopstick, because both recall funeral customs.
 chat: restaurant1
 homework: Read aloud a Japanese menu online.
 immerse: Order in Japanese next time you eat at a Japanese restaurant, even just one word.
 material: At the restaurant
 @day Directions | 道案内
-new: @places @town2 @town3 @post2 @k31
+new: @places @town2 @town3 @post2 @k31 @town4
 note: People often gesture with the whole open hand rather than one pointing finger. Use さん-level politeness with strangers.
 note: Time to talk to real people. iTalki and HelloTalk, in the Library, connect you with native speakers. Your first chat will feel hard, and it's the fastest way to improve.
 chat: directions1
@@ -354,7 +354,7 @@ exam: N5 | N5 Mastery Exam | 5
 @day Plain forms | 普通形
 note: Everything so far has been polite. Friends and family talk in plain forms, and most N4 grammar is built on them. You can keep using です and ます with people you don't know well. Using plain forms with a stranger can sound rude.
 note: Verbs come in two main groups. Verbs like 食べる just drop る. Verbs like 飲む change their last sound: のむ, のまない, のみます. する and 来る are the two irregular ones.
-new: !g.plain !g.nai !g.ta !g.nakatta @plain1 @reactions @words2
+new: !g.plain !g.nai !g.ta !g.nakatta @plain1 @reactions @words2 @reactions2
 chat: casual1
 read: friends
 homework: Rewrite five of your ます sentences in plain form.
