@@ -499,7 +499,7 @@ immerse: Read the headlines of a Japanese news site, such as NHK News Web Easy.
 material: The press
 @day About, for, and as | 関係
 note: These work like prepositions and turn up all through written Japanese. Learn them as whole chunks: について, にとって, として, and に対して.
-new: !g.nitsuite !g.nitotte !g.toshite !g.nitaishite @n3society @world @countries2 @world3 @society @n3society2 @n3world2 @n3world3 @n3places @n3world4
+new: !g.nitsuite !g.nitotte !g.toshite !g.nitaishite @n3society @world @countries2 @world3 @society @n3society2 @n3world2 @n3world3 @n3places @n3world4 @n3society3
 homework: Write what Japanese means to you, with にとって.
 immerse: Find について in the title of a YouTube video or article.
 material: My culture

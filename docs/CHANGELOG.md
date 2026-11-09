@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.46.0
+
+- **39 more N3 words**, taking the course to 2,981 word cards, mostly for reading the news: 経由, 見当, 検討, 憲法, 貢献, 近代, 供給, 強調, 処理, 神経, 人物, 心理, 請求, 性質, 成人, 製造, 障害, 衝突, 省略, 集団, 出場, 需要, 資本, 支出, 刺激, 実施, 支配, and 重視
+
 ## 0.45.0
 
 - **70 more N3 words**, taking the course to 2,942 word cards:
