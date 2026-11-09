@@ -4228,7 +4228,7 @@ dependencies = [
 
 [[package]]
 name = "yomigo-setup"
-version = "0.43.0"
+version = "0.44.0"
 dependencies = [
  "serde",
  "tauri",

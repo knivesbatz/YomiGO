@@ -499,7 +499,7 @@ immerse: Read the headlines of a Japanese news site, such as NHK News Web Easy.
 material: The press
 @day About, for, and as | 関係
 note: These work like prepositions and turn up all through written Japanese. Learn them as whole chunks: について, にとって, として, and に対して.
-new: !g.nitsuite !g.nitotte !g.toshite !g.nitaishite @n3society @world @countries2 @world3 @society @n3society2 @n3world2 @n3world3 @n3places
+new: !g.nitsuite !g.nitotte !g.toshite !g.nitaishite @n3society @world @countries2 @world3 @society @n3society2 @n3world2 @n3world3 @n3places @n3world4
 homework: Write what Japanese means to you, with にとって.
 immerse: Find について in the title of a YouTube video or article.
 material: My culture
@@ -528,7 +528,7 @@ homework: Write three "the more ..., the more ..." sentences about learning Japa
 immerse: Compare prices on a Japanese shopping site, and describe them with ほど.
 @day Feelings and memories | 気持ちと思い出
 note: たがる is for other people's wishes, because Japanese doesn't state what's in someone else's head as fact. For yourself, keep using たい.
-new: !g.tagaru !g.kigasuru !g.furi !g.mono @n3feel @feel2 @feel4 @feel5 @feel6 @people7 @people8 @n3heart @n3people2 @n3feel3
+new: !g.tagaru !g.kigasuru !g.furi !g.mono @n3feel @feel2 @feel4 @feel5 @feel6 @people7 @people8 @n3heart @n3people2 @n3feel3 @n3heart2
 homework: Write about a childhood memory with 〜たものです.
 immerse: Listen to a song about the past, and listen for 懐かしい.
 material: Positive feelings
@@ -541,7 +541,7 @@ immerse: Follow a Japanese recipe video, and listen for the steps.
 @day Ahead and after | 準備と結果
 note: ておく shows foresight, and てしまう often shows regret. Casual speech squeezes them: 〜とく and 〜ちゃう. Learning the short forms makes anime and dramas much easier to follow.
 note: させられる is how Japanese complains about being made to do things, such as homework, overtime, or practice.
-new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10 @verbs11 @verbs12 @verbs13 @verbs14 @verbs @n3hands @n3verbs @n3hands2 @n3hands3 @n3verbs3
+new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10 @verbs11 @verbs12 @verbs13 @verbs14 @verbs @n3hands @n3verbs @n3hands2 @n3hands3 @n3verbs3 @n3hands4
 homework: Write three things you'll prepare before a trip, with ておきます.
 immerse: Listen for ちゃった in any anime episode.
 @day Work Japanese | 仕事の日本語
