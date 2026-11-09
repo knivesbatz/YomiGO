@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.40.0
+
+- **50 more N3 words**, taking the course to 2,607 word cards:
+  - **Work and study:** 参加, 実現, 実行, 指導, 手段, 主要, 使用, 職業, 助手, 署名, 進学, 進歩, 信用, 推薦, 正式, 製品, 政府, 整理, 設計, and 積極的
+  - **The world around you:** 冷ます, 覚める, 更に, 騒ぎ, 酸素, じっと, 湿度, 自動, 芝居, しばしば, 周囲, 収穫, 重大, 食料, 印, 深刻, 人類, 姿, 少なくとも, 優れる, 鋭い, すれ違う, 済ませる, 精神, 青年, 生年月日, 生命, 石油, 世間, and 少女
+
 ## 0.39.0
 
 - **75 more N3 words**, taking the course to 2,557 word cards:
