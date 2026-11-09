@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.28.0
+
+- **The entrance exam can start you halfway through N4 or N3.** It now tests each half of N4 Road and N3 Bridge separately. It also fixes a mistake: passing the N4 section used to start you at the beginning of N4 Road, not past it
+- **52 more words** with example sentences, taking the course to 1,695 word cards, such as 筋肉, 火傷, 消防士, 刑務所, 記念日, 能力, 経済, 地位, 担う, 意図, 巨大, 派手, 満足, 部分, 干す, 割る, 折れる, and 一週間
+
 ## 0.27.0
 
 - **61 more words** with example sentences, taking the course to 1,643 word cards. Everyday words it had somehow skipped, such as 交通, 郵便, 理解, 効果, 印象, and 匂い; N3 words from intermediate courses, such as 預金, 助言, 失業, 罰金, 監督, 演奏, 不可欠, 示す, 異なる, and 防ぐ; and jobs, nature, and money words, such as エンジニア, 惑星, 衛星, and うるう年

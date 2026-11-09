@@ -1867,3 +1867,63 @@ juubyou	重病	じゅうびょう	juubyou	serious illness		祖父は重病で入
 yatou	野党	やとう	yatou	opposition party		野党が反対している。	The opposition is against it.
 hyou	票	ひょう	hyou	vote (counted)		彼は一番多くの票を集めた。	He won the most votes.
 okure	遅れ	おくれ	okure	delay		電車に十分の遅れがあります。	The train is ten minutes late.
+#health5
+kinniku	筋肉	きんにく	kinniku	muscle		毎日運動して筋肉をつけた。	I built muscle by exercising every day.
+yakedo	火傷	やけど	yakedo	burn (injury)		熱いお茶で手を火傷した。	I burned my hand on hot tea.
+hara	腹	はら	hara	belly, stomach (casual)		腹が減った。	I'm starving.
+nikkouyoku	日光浴	にっこうよく	nikkouyoku	sunbathing		猫が窓のそばで日光浴をしている。	The cat is sunbathing by the window.
+#town6
+shouboushi	消防士	しょうぼうし	shouboushi	firefighter		消防士が火を消した。	The firefighters put out the fire.
+shoubou	消防	しょうぼう	shoubou	fire fighting, fire service		消防の車が三台来た。	Three fire engines came.
+keimusho	刑務所	けいむしょ	keimusho	prison		彼は三年刑務所にいた。	He spent three years in prison.
+tawaa	タワー	タワー	tawaa	tower		東京タワーに上ったことがありますか。	Have you been up Tokyo Tower?
+benchi	ベンチ	ベンチ	benchi	bench		公園のベンチで休みましょう。	Let's rest on a park bench.
+jimen	地面	じめん	jimen	the ground		雪で地面が白くなった。	The ground turned white with snow.
+kinenbi	記念日	きねんび	kinenbi	anniversary		今日は結婚記念日です。	Today is our wedding anniversary.
+#work9
+nouryoku	能力	のうりょく	nouryoku	ability		彼女は話す能力が高い。	She's a very good speaker.
+keizai	経済	けいざい	keizai	economy		大学で経済を勉強しています。	I'm studying economics at university.
+ryourinin	料理人	りょうりにん	ryourinin	cook, chef		あの店の料理人は有名です。	The cook at that restaurant is famous.
+untenshi	運転士	うんてんし	untenshi	(train) driver		電車の運転士になりたい。	I want to be a train driver.
+tousha	当社	とうしゃ	tousha	our company		当社の新しい商品です。	This is our company's new product.
+teate	手当	てあて	teate	allowance; first aid		交通費の手当が出ます。	They pay a travel allowance.
+chii	地位	ちい	chii	position, status		彼は会社で高い地位にいる。	He has a senior position at the company.
+ittei	一定	いってい	ittei	fixed, steady		部屋の温度を一定にしてください。	Please keep the room at a steady temperature.
+ninau	担う	になう	ninau	to bear, to take on		若い人が未来を担う。	Young people will carry the future.
+ito	意図	いと	ito	intention, aim		質問の意図が分かりません。	I don't see what the question is getting at.
+kauntaa	カウンター	カウンター	kauntaa	counter		カウンターで注文してください。	Please order at the counter.
+monitaa	モニター	モニター	monitaa	monitor, screen		モニターが二つあると便利だ。	Two monitors are handy.
+#adj10
+kyodai	巨大	きょだい	kyodai	huge, giant		海で巨大な魚を見た。	I saw a huge fish in the sea.
+hade	派手	はで	hade	flashy, loud		その服はちょっと派手ですね。	Those clothes are a bit loud.
+manzoku	満足	まんぞく	manzoku	satisfaction, satisfied		この結果に満足しています。	I'm happy with this result.
+bubun	部分	ぶぶん	bubun	part, section		この部分をもう一度読んでください。	Please read this part again.
+nagasa	長さ	ながさ	nagasa	length		この川の長さは何キロですか。	How many kilometres long is this river?
+shinkon	新婚	しんこん	shinkon	newly married		二人は新婚です。	The two of them are newlyweds.
+guchi	愚痴	ぐち	guchi	grumbling, complaint		父は仕事の愚痴を言う。	My father grumbles about work.
+shirase	知らせ	しらせ	shirase	news, notice		いい知らせがあります。	I have good news.
+#food11
+mineraru	ミネラル	ミネラル	mineraru	mineral		ミネラルウォーターを一本ください。	A bottle of mineral water, please.
+bisuketto	ビスケット	ビスケット	bisuketto	biscuit		お茶とビスケットを出した。	I served tea and biscuits.
+koora	コーラ	コーラ	koora	cola		冷たいコーラが飲みたい。	I want a cold cola.
+kappu	カップ	カップ	kappu	cup		カップにお湯を入れてください。	Pour hot water into the cup.
+poteto	ポテト	ポテト	poteto	potato, fries		ハンバーガーとポテトをください。	A burger and fries, please.
+#verbs14
+hosu	干す	ほす	hosu	to dry, to hang out (washing)		天気がいいから洗濯物を干そう。	It's sunny, so let's hang the washing out.
+hayasu	生やす	はやす	hayasu	to grow (a beard)		兄はひげを生やしている。	My brother has a beard.
+waru	割る	わる	waru	to break, to split		皿を割ってしまった。	I broke a plate.
+oreru	折れる	おれる	oreru	to break, to snap		風で木の枝が折れた。	The wind snapped a branch.
+utsu	打つ	うつ	utsu	to hit, to strike		ボールを強く打った。	I hit the ball hard.
+teru	照る	てる	teru	to shine		今日は日が照って暑い。	The sun's out and it's hot today.
+kuu	食う	くう	kuu	to eat (rough)		飯を食おうぜ。	Let's grab some food.
+#hobbies8
+sutaa	スター	スター	sutaa	star (famous person)		彼は映画のスターです。	He's a film star.
+koosu	コース	コース	koosu	course, route		初心者のコースを選んだ。	I chose the beginners' course.
+rokku	ロック	ロック	rokku	rock (music)		ロックのコンサートに行った。	I went to a rock concert.
+buruu	ブルー	ブルー	buruu	blue		ブルーのシャツを買いました。	I bought a blue shirt.
+burakku	ブラック	ブラック	burakku	black; black coffee		コーヒーはブラックで飲みます。	I take my coffee black.
+bokusaa	ボクサー	ボクサー	bokusaa	boxer		あのボクサーはとても強い。	That boxer is very strong.
+seibutsu	生物	せいぶつ	seibutsu	living thing; biology		海にはたくさんの生物がいる。	Lots of creatures live in the sea.
+#time8
+isshuukan	一週間	いっしゅうかん	isshuukan	one week		一週間ずっと雨だった。	It rained all week.
+ichinen	一年	いちねん	ichinen	one year		日本に一年住んでいました。	I lived in Japan for a year.

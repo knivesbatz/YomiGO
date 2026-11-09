@@ -393,13 +393,13 @@ immerse: Listen for と思います in an interview or YouTube video.
 material: 3. Grammar KARA-MADE
 @day What you can do | 可能
 note: When someone praises your Japanese, the usual reply is a modest denial: いいえ、まだまだです. Accepting with a plain thank you also works, particularly with friends.
-new: !g.koto !g.potential @can @tech @hobbies2 @hobbies3 @tech2 @hobbies4 @k37 @hobbies5 @hobbies6 @hobbies7
+new: !g.koto !g.potential @can @tech @hobbies2 @hobbies3 @tech2 @hobbies4 @k37 @hobbies5 @hobbies6 @hobbies7 @hobbies8
 chat: can1
 homework: Say five things you can and can't do.
 immerse: Look up the lyrics to a song you like, and find one word you know.
 @day Plans | 予定
 note: Three levels of certainty: つもり is decided, 予定 is on the calendar, and 〜ようと思います is an idea still forming.
-new: !g.tsumori !g.you !g.yotei @plans @outings @trip2 @town5
+new: !g.tsumori !g.you !g.yotei @plans @outings @trip2 @town5 @town6
 read: plans
 homework: Describe your plans for next week.
 immerse: Use a Japanese calendar for a week.
@@ -417,7 +417,7 @@ homework: Write three excuses using 〜ので.
 immerse: Notice when someone in a show stops mid-sentence and leaves the rest unsaid.
 @day If and when | 条件
 note: Four words for if, and learners worry too much about them. Start with たら, which works nearly everywhere. Pick up と, ば, and なら as you notice them.
-new: !g.tara !g.to !g.ba !g.nara @ifwhen @health @health2 @health3 @k39 @health4
+new: !g.tara !g.to !g.ba !g.nara @ifwhen @health @health2 @health3 @k39 @health4 @health5
 chat: doctor1
 homework: Write three sentences with たら about tomorrow.
 immerse: Listen for たら in a show.
@@ -442,7 +442,7 @@ homework: Look out of a window, and say what the weather seems to be doing.
 immerse: Watch a Japanese weather forecast for two minutes.
 @day Doing and finishing | 動作
 note: These patterns attach to the ます stem, the part before ます. Once you know that, 食べ gives you 食べながら, 食べすぎる, 食べやすい, and 食べ始める all at once.
-new: !g.nagara !g.sugiru !g.yasui !g.hajimeru @actions @chores @cooking @actions2 @food5 @food7 @verbs9 @k42
+new: !g.nagara !g.sugiru !g.yasui !g.hajimeru @actions @chores @cooking @actions2 @food5 @food7 @verbs9 @k42 @food11
 read: routine
 homework: Describe your morning routine in five sentences.
 immerse: Shadow a short line from a show ten times.
@@ -465,7 +465,7 @@ homework: Label your door with 入 and 出, for fun.
 immerse: Find 入口 and 出口 in a photo of a Japanese station.
 @day Time and description in kanji | 時と形の漢字
 note: Seasons and colours are everywhere in Japanese writing. Look out for them in the names of shows, songs, and people.
-new: @k12 @k14 @k15 @adj5 @adj8
+new: @k12 @k14 @k15 @adj5 @adj8 @adj10
 homework: Write today's season and weather in kanji.
 immerse: Find one of today's kanji in a song or show title.
 exam: N4 | N4 Mastery Exam | 4
@@ -480,7 +480,7 @@ homework: Write three habits you're working on with 〜ようにしています.
 immerse: In a show, listen for ことになった when a character shares news.
 @day Timing | タイミング
 note: ところ pins down exactly where you are in an action. Use it on the phone: 今出るところ, I'm just leaving, is what people say when they're running late.
-new: !g.tokoro !g.tabakari !g.uchini !g.aidani @n3time @places2 @time5
+new: !g.tokoro !g.tabakari !g.uchini !g.aidani @n3time @places2 @time5 @time8
 chat: n3late
 homework: Describe three things you're about to do, are doing, and just did, with ところ.
 immerse: Watch a scene where someone is late, and listen for ところ or ばかり.
@@ -541,13 +541,13 @@ immerse: Follow a Japanese recipe video, and listen for the steps.
 @day Ahead and after | 準備と結果
 note: ておく shows foresight, and てしまう often shows regret. Casual speech squeezes them: 〜とく and 〜ちゃう. Learning the short forms makes anime and dramas much easier to follow.
 note: させられる is how Japanese complains about being made to do things, such as homework, overtime, or practice.
-new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10 @verbs11 @verbs12 @verbs13
+new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10 @verbs11 @verbs12 @verbs13 @verbs14
 homework: Write three things you'll prepare before a trip, with ておきます.
 immerse: Listen for ちゃった in any anime episode.
 @day Work Japanese | 仕事の日本語
 note: Offices run on set phrases. かしこまりました is a more formal 分かりました, and 申し訳ありません is a more formal すみません. You'll hear them in every shop, too.
 note: Business keigo takes years even for Japanese people, and new staff get training in it. Recognising it matters far more than producing it perfectly.
-new: @n3work @work3 @work4 @work5 @work6 @work7
+new: @n3work @work3 @work4 @work5 @work6 @work7 @work9
 chat: n3office
 homework: Introduce yourself as you would on a first day at work.
 immerse: Watch a scene from a drama set in an office.

@@ -191,10 +191,9 @@ function placeIntro() {
 }
 function placement(section, passed) {
   runQuiz(Y.placementSection(section, Host.canSpeak()), "Entrance exam", (right) => {
-    // Stage reached for each number of sections passed: romaji, hiragana, katakana, words, grammar, kanji, N4, N3
-    const map = [0, 2, 3, 4, 4, 5, 6, 7, 8], last = Y.PLACEMENT_SECTIONS - 1;
+    const last = Y.PLACEMENT_SECTIONS - 1;
     if (right >= 4 && section < last) return placement(section + 1, section + 1);
-    Y.place(P, map[right >= 4 ? last + 1 : passed], Y.today()); store.save();
+    Y.place(P, Y.placementDay(right >= 4 ? last + 1 : passed), Y.today()); store.save();
     const st = C.stages[Y.stageOf(P)];
     setNav(""); sfx("done");
     show(head("Your starting point"), h("div", { cls: "card hero" }, h("div", { cls: "big acc", lang: "ja" }, st.ja), h("h3", null, st.name), h("p", { cls: "dim" }, `You'll begin at class ${P.day + 1}. Earlier material goes to your flashcards.`)), btn("Begin", home, "primary"));

@@ -225,8 +225,8 @@
     for (let d = 0; d < p.day && d < C.days.length; d++) for (const id of C.days[d].new) if (!p.cards[id]) { p.cards[id] = { ...srsNew(t), due: t + Math.floor(n / 10) }; n++; }
     return n;
   }
-  function place(p, stage, t) {
-    p.day = C.stages[Math.min(stage, C.stages.length - 1)].first; p.step = 0; p.placed = 1;
+  function place(p, day, t) {
+    p.day = day; p.step = 0; p.placed = 1;
     for (let d = 0; d < p.day; d++) C.days[d].new.forEach((id, j) => { p.cards[id] = { ...srsNew(t), reps: 2, ivl: 3, due: t + 1 + (j % 5) }; });
     C.exams.forEach((e) => { if (e.day < p.day) p.exams[e.id] = PASS; });
   }
@@ -334,11 +334,20 @@
   }
   // Always starts at romaji
   // Sections: romaji, hiragana, katakana, words, grammar, kanji, then N4 and N3, each a mix of that stage's words, grammar and kanji
-  const PLACEMENT_SECTIONS = 8;
+  // Sections: romaji, hiragana, katakana, words, grammar, kanji, then each half of N4 Road and of N3 Bridge
+  const PLACEMENT_SECTIONS = 10;
+  // A stage's first class, its middle class, and the class after it ends
+  function stageSpan(s) { const a = C.stages[s].first, b = s + 1 < C.stages.length ? C.stages[s + 1].first : C.days.length; return [a, a + ((b - a) >> 1), b]; }
+  // The class the entrance exam starts you at, by the number of sections passed in a row
+  function placementDay(passed) {
+    if (passed < 7) return C.stages[[0, 2, 3, 4, 4, 5, 6][passed]].first;
+    const n4 = stageSpan(C.stages.length - 2), n3 = stageSpan(C.stages.length - 1);
+    return [n4[1], n3[0], n3[1], n3[2] - 1][passed - 7];
+  }
   // listen: with a Japanese voice, two word questions in each section after the kana are heard, not read
   function placementSection(i, listen) {
-    const stage = C.stages.length - (PLACEMENT_SECTIONS - i), type = "whkwgj"[i];
-    const pick = i >= 6 ? (c) => "wgj".includes(c.t) && c.day >= 0 && C.days[c.day] && C.days[c.day].stage === stage
+    const type = "whkwgj"[i], [a, m, b] = i >= 6 ? stageSpan(C.stages.length - 2 + ((i - 6) >> 1)) : [];
+    const pick = i >= 6 ? (c) => "wgj".includes(c.t) && c.day >= (i % 2 ? m : a) && c.day < (i % 2 ? b : m)
       : (c) => c.t === type && c.day >= 0 && (i > 0 || romajiMode(c.day));
     let heard = 0;
     return shuffle(C.cards.filter(pick)).slice(0, 5).map((c) => {
@@ -470,5 +479,5 @@
     return hits.slice(0, 6);
   }
 
-  root.YG = { PLACEMENT_SECTIONS, mineWords, wordForms, imeSlip, streakCheck, merge, normKana, kanaRomaji, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, catchUp, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, dictLoad, dictSearch, dictLookup, deinflect, myAdd, myImport, myExport, makeQMy, quizListen, shadowLines, lookup, byId, PASS };
+  root.YG = { PLACEMENT_SECTIONS, mineWords, wordForms, imeSlip, streakCheck, merge, normKana, kanaRomaji, answerOk, chatOk, srsNew, srsGrade, newProfile, saveText, loadText, today, stageOf, romajiMode, examGate, rankOf, dueCount, learnDay, completeDay, examResult, place, catchUp, makeQ, shuffle, quizWarmup, quizDay, quizExam, quizReview, quizGenki, placementSection, placementDay, dictLoad, dictSearch, dictLookup, deinflect, myAdd, myImport, myExport, makeQMy, quizListen, shadowLines, lookup, byId, PASS };
 })(globalThis);

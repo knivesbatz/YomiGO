@@ -83,13 +83,20 @@ test("the entrance exam listens only when there's a voice, and never in the kana
   for (const i of [0, 1, 2]) assert.equal(Y.placementSection(i, true).filter((q) => q.say).length, 0);
   for (const q of Y.placementSection(6, true).filter((q) => q.say)) assert.equal(q.say, q.card.r);
 });
-test("the entrance exam reaches N4 and N3", () => {
-  assert.equal(Y.PLACEMENT_SECTIONS, 8);
-  for (const [i, stage] of [[6, C.stages.length - 2], [7, C.stages.length - 1]]) {
+test("the entrance exam tests each half of N4 and N3, and can start you partway through", () => {
+  assert.equal(Y.PLACEMENT_SECTIONS, 10);
+  const n4 = C.stages[C.stages.length - 2].first, n3 = C.stages[C.stages.length - 1].first;
+  const n4mid = Y.placementDay(7), n3mid = Y.placementDay(9);
+  assert.ok(n4 < n4mid && n4mid < n3 && n3 < n3mid && n3mid < Y.placementDay(10) && Y.placementDay(10) < C.days.length);
+  assert.equal(Y.placementDay(8), n3, "passing all of N4 starts you at N3, not back at N4");
+  for (const [i, lo, hi] of [[6, n4, n4mid], [7, n4mid, n3], [8, n3, n3mid], [9, n3mid, C.days.length]]) {
     const q = Y.placementSection(i);
     assert.equal(q.length, 5);
-    for (const x of q) assert.equal(C.days[x.card.day].stage, stage, x.card.id);
+    for (const x of q) assert.ok(x.card.day >= lo && x.card.day < hi, x.card.id);
   }
+  for (let n = 1; n <= 10; n++) assert.ok(Y.placementDay(n) >= Y.placementDay(n - 1));
+  const p = Y.newProfile("T"); Y.place(p, n4mid, 100);
+  assert.equal(p.day, n4mid); assert.equal(Y.stageOf(p), C.stages.length - 2);
 });
 test("chat replies are all reachable", () => {
   for (const c of Object.values(C.chats)) for (const t of c.turns) for (const w of t.want) assert.ok(Y.chatOk(w, t), w);

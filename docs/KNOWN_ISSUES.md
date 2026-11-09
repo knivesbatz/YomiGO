@@ -29,7 +29,7 @@
 - Transcription runs on the processor only, at a little under twice the speed the file plays on the build PC. Over music or silence, Whisper sometimes writes lines no one said, such as a thank-you for watching. Check a line by ear before you learn from it.
 - Transcription is on the PC app only. The TV app shows text you copy, but has no file picker, and the phone app doesn't transcribe.
 
-- The course ends at N3. Later levels are on the [roadmap](ROADMAP.md). The entrance exam can place a learner at N4 Road or N3 Bridge, but not past the start of either: someone halfway through N3 still starts at its first class.
+- The course ends at N3. Later levels are on the [roadmap](ROADMAP.md). The entrance exam can place a learner at the start or the middle of N4 Road or N3 Bridge, but no finer than that.
 - The entrance exam tests reading, and listening when the device has a Japanese voice. It doesn't test typing or speaking.
 - Sakura, in Talk, is a small model running on your PC. Her Japanese is usually natural, but her checks miss some mistakes, sometimes flag a right sentence, and can explain a fix wrongly. That's why they say Maybe better. Trust the class notes over her when they disagree.
 - Talk opens at the Grammar Gate, because the model writes poor beginner-only Japanese. It isn't on the phone, and the TV shows only her newest reply.
