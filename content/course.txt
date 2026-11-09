@@ -499,7 +499,7 @@ immerse: Read the headlines of a Japanese news site, such as NHK News Web Easy.
 material: The press
 @day About, for, and as | 関係
 note: These work like prepositions and turn up all through written Japanese. Learn them as whole chunks: について, にとって, として, and に対して.
-new: !g.nitsuite !g.nitotte !g.toshite !g.nitaishite @n3society @world @countries2 @world3 @society
+new: !g.nitsuite !g.nitotte !g.toshite !g.nitaishite @n3society @world @countries2 @world3 @society @n3society2
 homework: Write what Japanese means to you, with にとって.
 immerse: Find について in the title of a YouTube video or article.
 material: My culture
@@ -511,13 +511,13 @@ homework: Write one thing you're grateful for with おかげで, and one complai
 immerse: Listen for おかげさまで, a polite reply to "how have you been?"
 @day Even and not only | 強調
 note: さえ is stronger than も. It marks the case you'd least expect: 子供でさえ知っている, even a child knows.
-new: !g.temo !g.sae !g.dakedenaku !g.bakari @n3even @n3adv @n3life2
+new: !g.temo !g.sae !g.dakedenaku !g.bakari @n3even @n3adv @n3life2 @n3talk
 homework: Write three sentences about your week with ばかり.
 immerse: Listen for ばかり when a parent complains in a show.
 @day Should and can't really | 義務と遠慮
 note: Japanese tends to avoid saying no outright. わけにはいきません says your situation won't allow it, which softens a refusal far more than できません.
 note: べき is strong. With friends, 〜たほうがいい is gentler advice.
-new: !g.beki !g.kotowanai !g.wakeniwaikanai !g.sasete @n3should
+new: !g.beki !g.kotowanai !g.wakeniwaikanai !g.sasete @n3should @n3verbs2
 chat: n3favor
 homework: Write how you'd turn down an invitation politely, with わけにはいきません.
 immerse: Notice how often people in shows refuse without saying いいえ.

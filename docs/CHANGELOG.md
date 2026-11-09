@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.38.0
+
+- **78 more N3 words**, taking the course to 2,482 word cards:
+  - **Verbs:** 下る, 繰り返す, 苦しむ, 加える, 加わる, 越える, 凍る, 避ける, 支える, 結ぶ, 燃える, 戻す, 破る, 許す, 汚す, 分ける, and 炒める
+  - **Talking about things:** 区別, 詳しい, 欠席, 欠点, 現実, 現代, 幸福, 公平, 好み, 今回, 今後, 最中, 最終, むしろ, 滅多に, もしかすると, 文句, やがて, わざと, 話題, 礼儀, and 冷静
+  - **The world around you:** 煙, 建築, 交換, 合計, 候補, 呼吸, 故郷, 骨折, 材料, 砂漠, 豊か, 夜明け, 予算, 世の中, 予防, 流行, 老人, 全国, 先日, 宣伝, 専攻, and アンケート
+
 ## 0.37.0
 
 - **62 more N3 words**, taking the course to 2,404 word cards:
