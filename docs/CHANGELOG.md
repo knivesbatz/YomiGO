@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.47.0
+
+- **86 more words**, taking the course past 3,000 to 3,067 word cards:
+  - **Basics:** 男の人, 女の人, and いらっしゃい, which the course had only taught inside longer phrases
+  - **N3 words for reading the news:** 貴重, 企業, 救助, 国民, 国会, 国境, 見解, 現状, 考慮, 克服, 設備, 損害, 対象, 規制, 知事, 長期, 通行, 通信, 抵抗, and 天然
+  - **N3 words for everyday talk:** 感覚, 可愛らしい, 活気, 一家, 一種, ずれる, 精々, 逆らう, ざっと, 万一, 妙, 明確, もしも, 基づく, 厄介, やや, 有効, 横切る, 責める, 尊重, 平ら, たまらない, 便り, 適度, and 問い
+  - **From the vocabulary videos:** サメ, イルカ, and マンゴー
+
 ## 0.46.0
 
 - **39 more N3 words**, taking the course to 2,981 word cards, mostly for reading the news: 経由, 見当, 検討, 憲法, 貢献, 近代, 供給, 強調, 処理, 神経, 人物, 心理, 請求, 性質, 成人, 製造, 障害, 衝突, 省略, 集団, 出場, 需要, 資本, 支出, 刺激, 実施, 支配, and 重視

@@ -177,7 +177,7 @@ exam: S3 | Katakana Castle Trial | 3
 @day AはBです | です
 note: A Japanese sentence ends with its most important word. Listen to the end. People usually drop 私 once the topic is clear; repeating it sounds odd.
 note: Read grammar to understand it, not to memorise it. It's normal for it not to stick the first time, because you'll keep meeting it. If an explanation confuses you, try Sakubi or Tae Kim's Guide from the Library.
-new: !g.desu !g.ka @things @people2 @people9
+new: !g.desu !g.ka @things @people2 @people9 @n3people3
 chat: student1
 homework: Write three sentences about yourself with です.
 immerse: Listen for です at the ends of sentences in any show.
@@ -311,7 +311,7 @@ immerse: Listen for family words in any show you watch.
 material: 2. Family
 @day Weather talk | 天気
 note: Weather is the safest small talk there is. A sentence ending in ね invites the other person to agree, and it keeps a conversation going. よ tells them something new.
-new: !g.ne !g.yo @weather @outside @animals @animals2 @animals3 @weather3 @k27 @animals4 @video12
+new: !g.ne !g.yo @weather @outside @animals @animals2 @animals3 @weather3 @k27 @animals4 @video12 @video11
 chat: weather1
 homework: Say today's weather three different ways.
 immerse: Check a Japanese weather forecast before you go out.
@@ -499,7 +499,7 @@ immerse: Read the headlines of a Japanese news site, such as NHK News Web Easy.
 material: The press
 @day About, for, and as | 関係
 note: These work like prepositions and turn up all through written Japanese. Learn them as whole chunks: について, にとって, として, and に対して.
-new: !g.nitsuite !g.nitotte !g.toshite !g.nitaishite @n3society @world @countries2 @world3 @society @n3society2 @n3world2 @n3world3 @n3places @n3world4 @n3society3
+new: !g.nitsuite !g.nitotte !g.toshite !g.nitaishite @n3society @world @countries2 @world3 @society @n3society2 @n3world2 @n3world3 @n3places @n3world4 @n3society3 @n3world5
 homework: Write what Japanese means to you, with にとって.
 immerse: Find について in the title of a YouTube video or article.
 material: My culture
@@ -534,7 +534,7 @@ immerse: Listen to a song about the past, and listen for 懐かしい.
 material: Positive feelings
 @day How and how often | 方法と頻度
 note: ずに means the same as ないで, but it sounds more written and a little more formal. You'll meet it in books and news far more than in chat.
-new: !g.zuni !g.tabini !g.toori !g.kadouka @n3ways @n3daily @n3things @n3joins @n3talk2 @n3misc
+new: !g.zuni !g.tabini !g.toori !g.kadouka @n3ways @n3daily @n3things @n3joins @n3talk2 @n3misc @n3words4
 read: n3memory
 homework: Write the steps of a recipe you know, with とおりに or ずに.
 immerse: Follow a Japanese recipe video, and listen for the steps.
