@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.48.0
+
+- **127 more N3 words**, taking the course to 3,194 word cards:
+  - **Everyday words:** 平和, 不思議, 普段, 表情, 評判, 費用, 間違い, まとめる, 招く, 任せる, まさか, ますます, ほぼ, ふと, 雰囲気, 迷子, 当然, 前もって, 見掛ける, 願い, and 眺め
+  - **Words for reading the news:** 評価, 表現, 批判, 否定, 平等, 物価, 分析, 治療, 挑戦, 選挙, 議会, 議員, 金融, 急激, 前者, and 後者
+  - **Verbs and descriptions:** 冷やす, 広がる, 広げる, 微笑む, 貧しい, ぶつける, 吠える, 濡らす, 途端, 取り上げる, 通り過ぎる, 適する, 単なる, 用いる, 命じる, and 土産
+
 ## 0.47.0
 
 - **86 more words**, taking the course past 3,000 to 3,067 word cards:
