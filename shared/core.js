@@ -462,18 +462,20 @@
 
   // Dictionary lookup for the extension: longest word first, with polite-verb endings undone
   const ENDINGS = ["ませんでした", "ましょう", "ました", "ません", "たいです", "たい", "ます", "ない", "て", "た"];
+  let lookupCards = null; // word and kanji cards with their readings normalized once, not per prefix and ending
   function lookup(text) {
     const hits = [], seen = new Set();
     const add = (c, form) => { if (!seen.has(c.id)) { seen.add(c.id); hits.push({ card: c, form }); } };
+    if (!lookupCards || lookupCards.src !== C.cards) {
+      lookupCards = C.cards.filter((c) => "wj".includes(c.t)).map((c) => [c, normKana(c.r)]);
+      lookupCards.src = C.cards;
+    }
     for (let len = Math.min(text.length, 12); len > 0; len--) {
       const s = text.slice(0, len), n = normKana(s);
-      for (const c of C.cards) {
-        if (!"wj".includes(c.t)) continue;
-        if (c.f === s || normKana(c.r) === n) add(c, s);
-      }
+      for (const [c, r] of lookupCards) if (c.f === s || r === n) add(c, s);
       for (const e of ENDINGS) if (s.endsWith(e) && s.length > e.length) {
         const stem = s.slice(0, -e.length), ns = normKana(stem);
-        for (const c of C.cards) if (c.t === "w" && (c.f === stem + "ます" || normKana(c.r) === ns + "ます")) add(c, s);
+        for (const [c, r] of lookupCards) if (c.t === "w" && (c.f === stem + "ます" || r === ns + "ます")) add(c, s);
       }
     }
     return hits.slice(0, 6);

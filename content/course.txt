@@ -465,7 +465,7 @@ homework: Label your door with 入 and 出, for fun.
 immerse: Find 入口 and 出口 in a photo of a Japanese station.
 @day Time and description in kanji | 時と形の漢字
 note: Seasons and colours are everywhere in Japanese writing. Look out for them in the names of shows, songs, and people.
-new: @k12 @k14 @k15 @adj5 @adj8 @adj10 @adverbs
+new: @k12 @k14 @k15 @adj5 @adj8 @adj10 @adverbs @adverbsp2
 homework: Write today's season and weather in kanji.
 immerse: Find one of today's kanji in a song or show title.
 exam: N4 | N4 Mastery Exam | 4
@@ -487,7 +487,7 @@ immerse: Watch a scene where someone is late, and listen for ところ or ばか
 @day Expectations | 予想
 note: はず is based on facts, so 来るはずです means the schedule says so. わけ draws a conclusion: そういうわけです, that's the reason.
 note: わけではありません is a polite way to disagree. It softens a no by denying only part of it.
-new: !g.hazu !g.wake !g.wakedewanai !g.rashii @n3guess @n3ideas @n3views @n3ideas2
+new: !g.hazu !g.wake !g.wakedewanai !g.rashii @n3guess @n3ideas @n3views @n3ideas2 @n3ideas2p2
 homework: Write three things that should happen tomorrow, with はずです.
 immerse: Listen for わけ in an interview, where people explain their reasons.
 @day Hearsay and looks | 伝聞と様子
@@ -499,7 +499,7 @@ immerse: Read the headlines of a Japanese news site, such as NHK News Web Easy.
 material: The press
 @day About, for, and as | 関係
 note: These work like prepositions and turn up all through written Japanese. Learn them as whole chunks: について, にとって, として, and に対して.
-new: !g.nitsuite !g.nitotte !g.toshite !g.nitaishite @n3society @world @countries2 @world3 @society @n3society2 @n3world2 @n3world3 @n3places @n3world4 @n3society3 @n3world5 @n3world6
+new: !g.nitsuite !g.nitotte !g.toshite !g.nitaishite @n3society @world @countries2 @world3 @society @n3society2 @n3society2p2 @n3world2 @n3world2p2 @n3world3 @n3places @n3placesp2 @n3world4 @n3world4p2 @n3society3 @n3society3p2 @n3world5 @n3world5p2 @n3world6 @n3world6p2 @n3world6p3 @n3world7 @n3world7p2 @n3world7p3 @n3world7p4 @n3world7p5
 homework: Write what Japanese means to you, with にとって.
 immerse: Find について in the title of a YouTube video or article.
 material: My culture
@@ -511,7 +511,7 @@ homework: Write one thing you're grateful for with おかげで, and one complai
 immerse: Listen for おかげさまで, a polite reply to "how have you been?"
 @day Even and not only | 強調
 note: さえ is stronger than も. It marks the case you'd least expect: 子供でさえ知っている, even a child knows.
-new: !g.temo !g.sae !g.dakedenaku !g.bakari @n3even @n3adv @n3life2 @n3talk @n3life3
+new: !g.temo !g.sae !g.dakedenaku !g.bakari @n3even @n3adv @n3life2 @n3talk @n3talkp2 @n3life3 @loanwords3 @loanwords3p2
 homework: Write three sentences about your week with ばかり.
 immerse: Listen for ばかり when a parent complains in a show.
 @day Should and can't really | 義務と遠慮
@@ -523,7 +523,7 @@ homework: Write how you'd turn down an invitation politely, with わけにはい
 immerse: Notice how often people in shows refuse without saying いいえ.
 @day More and less | 程度
 note: ほど and くらい overlap. With numbers, くらい sounds more casual. In "not as ... as" comparisons, ほど is the usual choice.
-new: !g.bahodo !g.hodo !g.kurai @n3degree @much @n3words1 @n3words @n3arts
+new: !g.bahodo !g.hodo !g.kurai @n3degree @much @n3words1 @n3words @n3arts @n3artsp2
 homework: Write three "the more ..., the more ..." sentences about learning Japanese.
 immerse: Compare prices on a Japanese shopping site, and describe them with ほど.
 @day Feelings and memories | 気持ちと思い出
@@ -534,14 +534,14 @@ immerse: Listen to a song about the past, and listen for 懐かしい.
 material: Positive feelings
 @day How and how often | 方法と頻度
 note: ずに means the same as ないで, but it sounds more written and a little more formal. You'll meet it in books and news far more than in chat.
-new: !g.zuni !g.tabini !g.toori !g.kadouka @n3ways @n3daily @n3things @n3joins @n3talk2 @n3misc @n3words4 @n3words5
+new: !g.zuni !g.tabini !g.toori !g.kadouka @n3ways @n3daily @n3things @n3thingsp2 @n3joins @n3talk2 @n3misc @n3miscp2 @n3words4 @n3words4p2 @n3words4p3 @n3words5 @n3words5p2
 read: n3memory
 homework: Write the steps of a recipe you know, with とおりに or ずに.
 immerse: Follow a Japanese recipe video, and listen for the steps.
 @day Ahead and after | 準備と結果
 note: ておく shows foresight, and てしまう often shows regret. Casual speech squeezes them: 〜とく and 〜ちゃう. Learning the short forms makes anime and dramas much easier to follow.
 note: させられる is how Japanese complains about being made to do things, such as homework, overtime, or practice.
-new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10 @verbs11 @verbs12 @verbs13 @verbs14 @verbs @n3hands @n3verbs @n3hands2 @n3hands3 @n3verbs3 @n3hands4 @n3verbs4 @n3daily6
+new: !g.teoku !g.teshimau !g.chau !g.causpass @n3done @verbs10 @verbs11 @verbs12 @verbs13 @verbs14 @verbs @n3hands @n3verbs @n3hands2 @n3hands3 @n3verbs3 @n3hands4 @n3verbs4 @n3daily6 @n3daily6p2 @n3daily6p3 @n3daily7 @n3daily7p2 @n3daily7p3
 homework: Write three things you'll prepare before a trip, with ておきます.
 immerse: Listen for ちゃった in any anime episode.
 @day Work Japanese | 仕事の日本語

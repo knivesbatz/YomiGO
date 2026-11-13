@@ -2256,6 +2256,7 @@ tatoeba	例えば	たとえば	tatoeba	for example		例えば、すしやてん�
 mazu	まず	まず	mazu	first of all		まず手を洗ってください。	First, wash your hands.
 soreni	それに	それに	soreni	besides, what's more		この店は安い。それに、おいしい。	This place is cheap. And it's good, too.
 matawa	または	または	matawa	or	p	ペンまたは鉛筆で書いてください。	Write in pen or pencil.
+#adverbsp2
 keredomo	けれども	けれども	keredomo	however, but		雨だった。けれども、楽しかった。	It rained. But it was fun.
 suruto	すると	すると	suruto	and then, whereupon		ドアを開けた。すると、猫が入ってきた。	I opened the door, and a cat came in.
 konoaida	この間	このあいだ	konoaida	the other day		この間、駅で先生に会った。	I ran into my teacher at the station the other day.
@@ -2609,6 +2610,7 @@ supiichi	スピーチ	スピーチ	supiichi	speech		結婚式でスピーチを�
 shou	賞	しょう	shou	prize		彼の絵が賞をもらった。	His painting won a prize.
 shougakukin	奨学金	しょうがくきん	shougakukin	scholarship		奨学金で大学に行った。	I went to university on a scholarship.
 junban	順番	じゅんばん	junban	turn, order		順番に並んでください。	Please queue in order.
+#n3thingsp2
 ondo	温度	おんど	ondo	temperature		部屋の温度を上げた。	I turned up the room temperature.
 kion	気温	きおん	kion	air temperature		今日の気温は三十度だ。	It's thirty degrees today.
 kikou	気候	きこう	kikou	climate		この町は気候がいい。	This town has a nice climate.
@@ -2675,6 +2677,7 @@ yuumoa	ユーモア	ユーモア	yuumoa	humour		彼はユーモアがある。	H
 sainou	才能	さいのう	sainou	talent		彼女は音楽の才能がある。	She has a talent for music.
 miryoku	魅力	みりょく	miryoku	charm, appeal		この町の魅力は古い建物です。	This town's charm is its old buildings.
 migoto	見事	みごと	migoto	splendid		見事な桜ですね。	What splendid cherry blossoms.
+#n3artsp2
 yuushuu	優秀	ゆうしゅう	yuushuu	excellent		彼はクラスで一番優秀だ。	He's the best in the class.
 gouka	豪華	ごうか	gouka	luxurious		豪華なホテルに泊まった。	We stayed at a luxurious hotel.
 koi	濃い	こい	koi	strong, thick, dark		このコーヒーは濃い。	This coffee is strong.
@@ -2723,6 +2726,7 @@ konkai	今回	こんかい	konkai	this time		今回は私が払います。	I'll
 kongo	今後	こんご	kongo	from now on		今後ともよろしくお願いします。	I look forward to working with you.
 saichuu	最中	さいちゅう	saichuu	in the middle of		食事の最中に電話が鳴った。	The phone rang in the middle of the meal.
 saishuu	最終	さいしゅう	saishuu	last, final		最終の電車に間に合った。	I made the last train.
+#n3talkp2
 sappari	さっぱり	さっぱり	sappari	refreshed; not at all		シャワーを浴びてさっぱりした。	I feel refreshed after a shower.
 mushiro	むしろ	むしろ	mushiro	rather		夏より、むしろ冬が好きだ。	I actually prefer winter to summer.
 mettani	滅多に	めったに	mettani	rarely (with a negative)		父は滅多に怒らない。	My father rarely gets angry.
@@ -2754,6 +2758,7 @@ zaisan	財産	ざいさん	zaisan	property, fortune		祖父は財産を全部寄
 zairyou	材料	ざいりょう	zairyou	ingredients, materials		カレーの材料を買った。	I bought the ingredients for curry.
 sabaku	砂漠	さばく	sabaku	desert		砂漠は昼は暑く夜は寒い。	Deserts are hot by day and cold at night.
 yutaka	豊か	ゆたか	yutaka	rich, plentiful		この国は自然が豊かだ。	This country is rich in nature.
+#n3society2p2
 yoake	夜明け	よあけ	yoake	dawn		夜明けに家を出た。	I left home at dawn.
 yosan	予算	よさん	yosan	budget		旅行の予算は十万円です。	The budget for the trip is 100,000 yen.
 yononaka	世の中	よのなか	yononaka	the world, society		世の中にはいろいろな人がいる。	It takes all sorts to make a world.
@@ -2830,6 +2835,7 @@ ippou	一方	いっぽう	ippou	on the other hand		兄は背が高い。一方�
 idou	移動	いどう	idou	moving, travel		バスで移動します。	We'll get around by bus.
 inemuri	居眠り	いねむり	inemuri	dozing off		授業中に居眠りしてしまった。	I nodded off in class.
 imani	今に	いまに	imani	soon, one of these days		今に上手になるよ。	You'll get good at it soon.
+#n3ideas2p2
 iryou	医療	いりょう	iryou	medical care		この国は医療が進んでいる。	This country has advanced medical care.
 engi	演技	えんぎ	engi	acting, performance		その俳優の演技はすばらしかった。	That actor's performance was wonderful.
 ouji	王子	おうじ	ouji	prince		王子と姫の物語を読んだ。	I read a story about a prince and princess.
@@ -2884,6 +2890,7 @@ shuukaku	収穫	しゅうかく	shuukaku	harvest		秋は米の収穫の時期だ
 juudai	重大	じゅうだい	juudai	serious, important		重大なニュースが入った。	Some serious news has come in.
 shokuryou	食料	しょくりょう	shokuryou	food, provisions		一週間分の食料を買った。	I bought a week's worth of food.
 shirushi	印	しるし	shirushi	mark		大事なところに印をつけた。	I marked the important parts.
+#n3world2p2
 shinkoku	深刻	しんこく	shinkoku	serious, grave		水不足は深刻な問題だ。	The water shortage is a serious problem.
 jinrui	人類	じんるい	jinrui	humankind		人類は月に行った。	Humankind has been to the moon.
 sugata	姿	すがた	sugata	figure, appearance		駅で彼の姿を見た。	I caught sight of him at the station.
@@ -3083,6 +3090,7 @@ tsuugaku	通学	つうがく	tsuugaku	going to school		電車で通学してい�
 tsuzuki	続き	つづき	tsuzuki	continuation, next part		ドラマの続きが気になる。	I can't wait to see what happens next in the drama.
 tsuyu	梅雨	つゆ	tsuyu	the rainy season		六月は梅雨で雨が多い。	June is the rainy season, so it rains a lot.
 deai	出会い	であい	deai	meeting, encounter		いい出会いがありますように。	I hope you meet someone nice.
+#n3placesp2
 teiden	停電	ていでん	teiden	power cut		台風で停電した。	The typhoon caused a power cut.
 teiryuujo	停留所	ていりゅうじょ	teiryuujo	(bus) stop		次の停留所で降ります。	I'm getting off at the next stop.
 teki	敵	てき	teki	enemy, rival		彼はライバルだが敵ではない。	He's a rival, not an enemy.
@@ -3161,6 +3169,7 @@ baggu	バッグ	バッグ	baggu	bag		新しいバッグを買った。	I bought 
 hakken	発見	はっけん	hakken	discovery		新しい星が発見された。	A new star was discovered.
 hassha	発車	はっしゃ	hassha	departure (of a train, bus)		電車がまもなく発車します。	The train will be leaving shortly.
 hattatsu	発達	はったつ	hattatsu	development		子供の言葉の発達は早い。	Children's language develops quickly.
+#n3world4p2
 battari	ばったり	ばったり	battari	(meet) by chance		駅で友達にばったり会った。	I bumped into a friend at the station.
 hatten	発展	はってん	hatten	development, growth		この町は大きく発展した。	This town has grown a lot.
 happyou	発表	はっぴょう	happyou	announcement, presentation		授業で発表をした。	I gave a presentation in class.
@@ -3235,6 +3244,7 @@ ine	稲	いね	ine	rice plant		田んぼの稲が黄色くなった。	The rice 
 iwai	祝い	いわい	iwai	celebration, gift		入学の祝いに時計をもらった。	I got a watch for starting school.
 iwayuru	いわゆる	いわゆる	iwayuru	so-called		彼はいわゆる天才だ。	He's what you'd call a genius.
 inku	インク	インク	inku	ink		プリンターのインクがなくなった。	The printer's out of ink.
+#n3miscp2
 umare	生まれ	うまれ	umare	birth, where you were born		私は大阪の生まれです。	I was born in Osaka.
 obi	帯	おび	obi	sash (for a kimono)		着物の帯を結んでもらった。	Someone tied my kimono sash for me.
 sayuu	左右	さゆう	sayuu	left and right		道を渡る前に左右を見てください。	Look left and right before crossing.
@@ -3271,6 +3281,7 @@ shori	処理	しょり	shori	handling, processing		ごみの処理は大切な�
 shinkei	神経	しんけい	shinkei	nerves		試験の前は神経が疲れる。	Exams wear my nerves out.
 jinbutsu	人物	じんぶつ	jinbutsu	person, character		歴史の人物で誰が好きですか。	Which historical figure do you like?
 shinri	心理	しんり	shinri	psychology, state of mind		人の心理を勉強している。	I'm studying how people think.
+#n3society3p2
 suji	筋	すじ	suji	plot; muscle; line		この映画の筋は分かりやすい。	This film's plot is easy to follow.
 seikyuu	請求	せいきゅう	seikyuu	bill, claim		電気代の請求が来た。	The electricity bill came.
 seishitsu	性質	せいしつ	seishitsu	nature, character		この犬はおとなしい性質だ。	This dog has a gentle nature.
@@ -3315,6 +3326,7 @@ kokufuku	克服	こくふく	kokufuku	overcoming		苦手な科目を克服した
 setsubi	設備	せつび	setsubi	facilities, equipment		このホテルは設備がいい。	This hotel has good facilities.
 souchi	装置	そうち	souchi	device		安全装置がついている。	It has a safety device.
 songai	損害	そんがい	songai	damage, loss		台風で大きな損害が出た。	The typhoon caused major damage.
+#n3world5p2
 taishou	対象	たいしょう	taishou	target, intended for		この本は子供が対象です。	This book is for children.
 kisei	規制	きせい	kisei	regulation		車の規制が厳しくなった。	Rules on cars have got stricter.
 gakureki	学歴	がくれき	gakureki	education (background)		学歴より経験を重視する。	Experience matters more than qualifications.
@@ -3348,6 +3360,7 @@ seizei	精々	せいぜい	seizei	at most		待っても精々十分だ。	It's t
 shoujiru	生じる	しょうじる	shoujiru	to arise		問題が生じた。	A problem has arisen.
 sakarau	逆らう	さからう	sakarau	to go against		親に逆らってはいけない。	You shouldn't defy your parents.
 sasaru	刺さる	ささる	sasaru	to stick in		指にとげが刺さった。	I got a splinter in my finger.
+#n3words4p2
 zatto	ざっと	ざっと	zatto	roughly, briefly		資料にざっと目を通した。	I skimmed through the papers.
 manichi	万一	まんいち	man'ichi	just in case, if by any chance		万一のために保険に入った。	I took out insurance just in case.
 michiru	満ちる	みちる	michiru	to be full of		彼の顔は自信に満ちていた。	His face was full of confidence.
@@ -3364,6 +3377,7 @@ yokogiru	横切る	よこぎる	yokogiru	to cross		猫が道を横切った。	A
 yoseru	寄せる	よせる	yoseru	to bring closer		車を左に寄せて止めた。	I pulled over to the left and stopped.
 rensou	連想	れんそう	rensou	association (of ideas)		夏と言えば海を連想する。	Summer makes me think of the sea.
 ronsou	論争	ろんそう	ronsou	dispute, debate		その問題で論争が起きた。	The issue sparked a debate.
+#n3words4p3
 waki	脇	わき	waki	side		道の脇に花が咲いている。	Flowers are blooming by the side of the road.
 semeru	責める	せめる	semeru	to blame		自分を責めないでください。	Don't blame yourself.
 somatsu	粗末	そまつ	somatsu	poor, careless		食べ物を粗末にしてはいけない。	Don't waste food.
@@ -3397,6 +3411,7 @@ honnin	本人	ほんにん	honnin	the person themselves		本人に直接聞い�
 honmono	本物	ほんもの	honmono	the real thing		これは本物のダイヤですか。	Is this a real diamond?
 machigai	間違い	まちがい	machigai	mistake		答えに間違いがある。	There's a mistake in the answer.
 matomeru	まとめる	まとめる	matomeru	to put together, to sum up		荷物を一つにまとめた。	I packed everything into one bag.
+#n3daily6p2
 matomaru	まとまる	まとまる	matomaru	to come together, to be settled		話がやっとまとまった。	We finally reached an agreement.
 maneku	招く	まねく	maneku	to invite		友達を家に招いた。	I invited friends over.
 mane	真似	まね	mane	imitation		子供は親の真似をする。	Children copy their parents.
@@ -3413,6 +3428,7 @@ fureru	触れる	ふれる	fureru	to touch		作品に触れないでください
 funiki	雰囲気	ふんいき	fun'iki	atmosphere, mood		このカフェは雰囲気がいい。	This café has a nice atmosphere.
 butai	舞台	ぶたい	butai	stage		初めて舞台に立った。	I stood on stage for the first time.
 fusoku	不足	ふそく	fusoku	shortage		最近、睡眠が不足している。	I haven't been getting enough sleep.
+#n3daily6p3
 fukusou	服装	ふくそう	fukusou	clothes, dress		面接にふさわしい服装で来てください。	Please dress suitably for the interview.
 fuukei	風景	ふうけい	fuukei	scenery		窓から美しい風景が見える。	There's a beautiful view from the window.
 makka	真っ赤	まっか	makka	bright red		恥ずかしくて顔が真っ赤になった。	I turned bright red with embarrassment.
@@ -3445,6 +3461,7 @@ butsuri	物理	ぶつり	butsuri	physics		大学で物理を勉強している�
 bunseki	分析	ぶんせき	bunseki	analysis		データを分析した。	I analysed the data.
 bunmei	文明	ぶんめい	bunmei	civilisation		古代の文明について学んだ。	We learned about ancient civilisations.
 houfu	豊富	ほうふ	houfu	plentiful		この店は種類が豊富だ。	This shop has a wide range.
+#n3world6p2
 hakkou	発行	はっこう	hakkou	issue, publishing		この雑誌は毎月発行される。	This magazine comes out every month.
 hogo	保護	ほご	hogo	protection		野生の動物を保護している。	They protect wild animals.
 chiryou	治療	ちりょう	chiryou	medical treatment		歯の治療に通っている。	I'm going for dental treatment.
@@ -3460,6 +3477,7 @@ chuugaku	中学	ちゅうがく	chuugaku	junior high school		弟は中学二年�
 zensha	前者	ぜんしゃ	zensha	the former		前者の案に賛成です。	I agree with the first plan.
 kousha	後者	こうしゃ	kousha	the latter		二つの中では後者がいい。	Of the two, I prefer the second.
 sakumotsu	作物	さくもつ	sakumotsu	crops		雨が少なくて作物が育たない。	Without rain, the crops won't grow.
+#n3world6p3
 kokumotsu	穀物	こくもつ	kokumotsu	grain		米は大切な穀物だ。	Rice is an important grain.
 nouka	農家	のうか	nouka	farmer, farming family		祖父母は農家だ。	My grandparents are farmers.
 kougeki	攻撃	こうげき	kougeki	attack		相手チームが攻撃してきた。	The other team went on the attack.
@@ -3492,6 +3510,7 @@ nikkori	にっこり	にっこり	nikkori	with a smile		店員がにっこり笑
 nurasu	濡らす	ぬらす	nurasu	to wet		タオルを水で濡らした。	I wet the towel.
 nenjuu	年中	ねんじゅう	nenjuu	all year round		この島は年中暖かい。	This island is warm all year.
 nendai	年代	ねんだい	nendai	era, generation		八十年代の音楽が好きだ。	I like eighties music.
+#n3words5p2
 nakaba	半ば	なかば	nakaba	middle, halfway		三月の半ばに引っ越す。	I'm moving in mid-March.
 totan	途端	とたん	totan	the moment (that)		外に出た途端、雨が降ってきた。	The moment I went out, it started raining.
 toriageru	取り上げる	とりあげる	toriageru	to take up; to take away		先生に携帯を取り上げられた。	My teacher took my phone away.
@@ -3510,3 +3529,172 @@ miyage	土産	みやげ	miyage	souvenir		京都で土産を買った。	I bought
 mimai	見舞い	みまい	mimai	visiting someone ill		入院中の友達の見舞いに行った。	I visited a friend in hospital.
 miyako	都	みやこ	miyako	capital city		京都は昔の都だった。	Kyoto was once the capital.
 nezumi2	鼠	ねずみ	nezumi	mouse, rat		台所に鼠が出た。	There was a mouse in the kitchen.
+#loanwords3
+jettoki	ジェット機	ジェットき	jettoki	jet plane		ジェット機が空を飛んでいる。	A jet is flying overhead.
+sutando	スタンド	スタンド	sutando	stand; desk lamp		机の上にスタンドを置いた。	I put a lamp on the desk.
+auto	アウト	アウト	auto	out (in sport)		ボールが線の外に出てアウトになった。	The ball went over the line and was out.
+uisukii	ウイスキー	ウイスキー	uisukii	whisky		父は夜にウイスキーを飲む。	My dad drinks whisky at night.
+keesu	ケース	ケース	keesu	case		眼鏡をケースに入れた。	I put my glasses in their case.
+koodo	コード	コード	koodo	cord; code		コードが短くて届かない。	The cord is too short to reach.
+yotto	ヨット	ヨット	yotto	yacht, sailboat		海にヨットが浮かんでいる。	There's a sailboat out on the sea.
+raitaa	ライター	ライター	raitaa	lighter; writer		姉はフリーのライターだ。	My sister is a freelance writer.
+roketto	ロケット	ロケット	roketto	rocket		ロケットが打ち上げられた。	A rocket was launched.
+appu	アップ	アップ	appu	going up, raise		来月から給料がアップする。	My pay goes up from next month.
+kontesuto	コンテスト	コンテスト	kontesuto	contest		歌のコンテストに出た。	I entered a singing contest.
+toppu	トップ	トップ	toppu	top		彼はクラスでトップの成績だ。	He's top of the class.
+ton	トン	トン	ton	ton		この船は千トンある。	This ship weighs a thousand tons.
+nokku	ノック	ノック	nokku	knock		ドアをノックしてから入って。	Knock before you come in.
+paipu	パイプ	パイプ	paipu	pipe		台所のパイプが詰まった。	The kitchen pipe is blocked.
+pin	ピン	ピン	pin	pin		地図にピンを刺した。	I stuck a pin in the map.
+purasu	プラス	プラス	purasu	plus		この経験はきっとプラスになる。	This experience is sure to help you.
+#loanwords3p2
+purasuchikku	プラスチック	プラスチック	purasuchikku	plastic		プラスチックのごみを分けて出す。	We put plastic rubbish out separately.
+bureeki	ブレーキ	ブレーキ	bureeki	brake		急にブレーキをかけた。	I braked suddenly.
+penki	ペンキ	ペンキ	penki	paint		壁を白いペンキで塗った。	We painted the wall white.
+hoomu	ホーム	ホーム	hoomu	platform		三番ホームで待っています。	I'm waiting on platform three.
+maaketto	マーケット	マーケット	maaketto	market		週末にフリーマーケットへ行った。	I went to a flea market at the weekend.
+maiku	マイク	マイク	maiku	microphone		マイクの音が小さい。	The mic is too quiet.
+mainasu	マイナス	マイナス	mainasu	minus		今朝の気温はマイナス五度だった。	It was minus five this morning.
+shokku	ショック	ショック	shokku	shock		そのニュースはショックだった。	That news was a shock.
+taitoru	タイトル	タイトル	taitoru	title		この曲のタイトルを知っていますか。	Do you know the title of this song?
+daun	ダウン	ダウン	daun	going down; feeling down		風邪でダウンしてしまった。	I was laid up with a cold.
+chaimu	チャイム	チャイム	chaimu	chime, bell		授業のチャイムが鳴った。	The school bell rang.
+deeta	データ	データ	deeta	data		データをパソコンに保存した。	I saved the data on my computer.
+masukomi	マスコミ	マスコミ	masukomi	the media		その事件はマスコミで大きく取り上げられた。	The case got a lot of media coverage.
+massaaji	マッサージ	マッサージ	massaaji	massage		肩のマッサージをしてもらった。	I had a shoulder massage.
+raberu	ラベル	ラベル	raberu	label		瓶のラベルをはがした。	I peeled the label off the bottle.
+ruuru	ルール	ルール	ruuru	rule		ゲームのルールを説明します。	I'll explain the rules of the game.
+#n3daily7
+sahou	作法	さほう	sahou	manners, etiquette		食事の作法を母に教わった。	My mother taught me table manners.
+jikani	直に	じかに	jika ni	directly		地面に直に座らないで。	Don't sit right on the ground.
+joshi	女子	じょし	joshi	girl, women's		女子のチームが優勝した。	The girls' team won.
+shiri	尻	しり	shiri	bottom, backside		長く座っていてお尻が痛い。	My bum hurts from sitting so long.
+sue	末	すえ	sue	the end (of)		今月の末に引っ越す。	I'm moving at the end of this month.
+aware	哀れ	あわれ	aware	pitiful		雨に濡れた子犬が哀れだった。	The puppy soaked in the rain was a sorry sight.
+unaru	うなる	うなる	unaru	to groan; to growl		犬が低くうなった。	The dog growled low.
+oi	老い	おい	oi	old age		老いを感じるようになった。	I've started to feel my age.
+gara	柄	がら	gara	pattern		花柄のシャツを買った。	I bought a flowery shirt.
+kire	切れ	きれ	kire	piece, slice		ケーキを一切れください。	A slice of cake, please.
+korera	これら	これら	korera	these		これらの本は全部図書館のです。	These books all belong to the library.
+sai	際	さい	sai	when, on the occasion of		お越しの際はご連絡ください。	Please let us know when you come.
+sakai	境	さかい	sakai	boundary		川が二つの町の境になっている。	The river is the boundary between the two towns.
+wata	綿	わた	wata	cotton (wadding)		布団に綿を詰めた。	We stuffed the futon with cotton.
+yosu	止す	よす	yosu	to stop, to quit		けんかはよしなさい。	Stop fighting.
+#n3daily7p2
+yomi	読み	よみ	yomi	reading		この漢字の読みが分からない。	I don't know how to read this kanji.
+yome	嫁	よめ	yome	bride; daughter-in-law		兄の嫁はとても優しい。	My brother's wife is very kind.
+uzu	渦	うず	uzu	whirlpool, swirl		川に小さな渦ができている。	There's a little whirlpool in the river.
+umaru	埋まる	うまる	umaru	to be filled; to be buried		予定がもう埋まっている。	My schedule is already full.
+oshie	教え	おしえ	oshie	teaching		祖父の教えを今も守っている。	I still follow my grandfather's teachings.
+kari	借り	かり	kari	debt, favour owed		彼には借りがある。	I owe him one.
+kotoniyoruto	ことによると	ことによると	koto ni yoru to	possibly, perhaps		ことによると明日は雪かもしれない。	It might possibly snow tomorrow.
+soreto	それと	それと	soreto	and also		コーヒーを一つ、それと水もください。	A coffee, and some water too, please.
+choudai	ちょうだい	ちょうだい	choudai	please (give me)		そのお菓子、一つちょうだい。	Give me one of those sweets, please.
+chirasu	散らす	ちらす	chirasu	to scatter		風が花びらを散らした。	The wind scattered the petals.
+tsutome	勤め	つとめ	tsutome	job, work		父は銀行勤めだ。	My dad works at a bank.
+desukara	ですから	ですから	desukara	therefore, so		雨です。ですから、試合は中止です。	It's raining, so the match is off.
+toshiyori	年寄り	としより	toshiyori	old person		お年寄りに席を譲った。	I gave my seat to an elderly person.
+nashi	無し	なし	nashi	without, none		砂糖無しのコーヒーが好きだ。	I like my coffee without sugar.
+noki	軒	のき	noki	eaves		軒の下で雨宿りをした。	We sheltered from the rain under the eaves.
+#n3daily7p3
+hitoshii	等しい	ひとしい	hitoshii	equal		二つの線の長さは等しい。	The two lines are the same length.
+hitorihitori	一人一人	ひとりひとり	hitorihitori	each person		一人一人に名前を聞いた。	I asked each person their name.
+fue	笛	ふえ	fue	whistle, flute		祭りで笛の音が聞こえた。	We heard flutes at the festival.
+fuchi	縁	ふち	fuchi	edge, rim		コップの縁が欠けている。	The rim of the glass is chipped.
+fude	筆	ふで	fude	writing brush		筆で名前を書いた。	I wrote my name with a brush.
+hei	塀	へい	hei	wall, fence		猫が塀の上で寝ている。	A cat is sleeping on the wall.
+bou	棒	ぼう	bou	stick, pole		長い棒で木の実を落とした。	We knocked the nuts down with a long stick.
+bonyari	ぼんやり	ぼんやり	bon'yari	absent-mindedly; vaguely		ぼんやりして駅を乗り過ごした。	I was daydreaming and missed my stop.
+masani	まさに	まさに	masani	exactly, just		これはまさに私が欲しかった物だ。	This is exactly what I wanted.
+mazaru	混ざる	まざる	mazaru	to get mixed		水と油は混ざらない。	Water and oil don't mix.
+majiru	混じる	まじる	majiru	to be mixed in		髪に白髪が混じってきた。	I'm getting some grey hairs.
+mekuru	捲る	めくる	mekuru	to turn (a page)		本のページをめくった。	I turned the page.
+tate	盾	たて	tate	shield		兵士は盾で身を守った。	The soldier protected himself with a shield.
+jou	情	じょう	jou	feeling, affection		長く飼った犬に情が移った。	I grew attached to the dog after so long.
+#n3world7
+shugi	主義	しゅぎ	shugi	principle, -ism		朝ご飯は抜かない主義だ。	I make a point of never skipping breakfast.
+shounin	商人	しょうにん	shounin	merchant		昔、この町は商人で栄えた。	Long ago, this town thrived on trade.
+shounin2	承認	しょうにん	shounin	approval		計画が会議で承認された。	The plan was approved at the meeting.
+shokumotsu	食物	しょくもつ	shokumotsu	food		食物アレルギーはありますか。	Do you have any food allergies?
+shomotsu	書物	しょもつ	shomotsu	books (old, formal)		古い書物を調べた。	I looked through old books.
+jinshu	人種	じんしゅ	jinshu	race (of people)		人種による差別をなくそう。	Let's end racial discrimination.
+shintai	身体	しんたい	shintai	the body		身体の健康に気をつける。	I look after my physical health.
+sunawachi	すなわち	すなわち	sunawachi	namely, that is		日本の首都、すなわち東京に住んでいる。	I live in Japan's capital, that is, Tokyo.
+sekitan	石炭	せきたん	sekitan	coal		昔は石炭で汽車を動かした。	Trains used to run on coal.
+akuma	悪魔	あくま	akuma	devil		その映画には悪魔が出てくる。	There's a devil in that film.
+araware	現れ	あらわれ	araware	sign, expression		これは感謝の気持ちの現れです。	This is a sign of our gratitude.
+iwaba	言わば	いわば	iwaba	so to speak		彼は言わば家族のような存在だ。	He's family, so to speak.
+eru	得る	える	eru	to gain		この仕事から多くを得た。	I gained a lot from this job.
+osameru	納める	おさめる	osameru	to pay (tax, fees)		期限までに税金を納めた。	I paid my taxes by the deadline.
+osameru2	治める	おさめる	osameru	to govern		昔、この国は王が治めていた。	Long ago, a king ruled this country.
+oyobosu	及ぼす	およぼす	oyobosu	to have (an effect)		たばこは体に悪い影響を及ぼす。	Smoking harms your health.
+ondan	温暖	おんだん	ondan	mild, warm		この地方は気候が温暖だ。	This region has a mild climate.
+#n3world7p2
+kaigou	会合	かいごう	kaigou	meeting, gathering		町の会合に参加した。	I went to a town meeting.
+katsuyou	活用	かつよう	katsuyou	making use of; conjugation		空いた時間を活用して勉強する。	I use my free time to study.
+gishi	技師	ぎし	gishi	engineer		叔父は電気の技師だ。	My uncle is an electrical engineer.
+gichou	議長	ぎちょう	gichou	chairperson		議長が会議を始めた。	The chair opened the meeting.
+kyoku	局	きょく	kyoku	office; (TV) station		郵便局で切手を買った。	I bought stamps at the post office.
+kinsen	金銭	きんせん	kinsen	money		金銭のトラブルは避けたい。	I want to avoid money trouble.
+kuda	管	くだ	kuda	tube, pipe		細い管で水を流す。	Water runs through a thin tube.
+gutai	具体	ぐたい	gutai	concrete, specific		具体的な例を挙げてください。	Please give a concrete example.
+guntai	軍隊	ぐんたい	guntai	army		祖父は若い頃、軍隊にいた。	My grandfather was in the army when young.
+kekkan	欠陥	けっかん	kekkan	defect		この車にはブレーキの欠陥があった。	This car had a brake defect.
+kekkan2	血管	けっかん	kekkan	blood vessel		寒いと血管が縮む。	Blood vessels narrow in the cold.
+kousei	公正	こうせい	kousei	fair		審判は公正でなければならない。	A referee must be fair.
+kousei2	構成	こうせい	kousei	structure, composition		作文の構成を考えた。	I worked out the structure of my essay.
+goku	極	ごく	goku	extremely		ごく普通の家庭で育った。	I grew up in a very ordinary family.
+kokugo	国語	こくご	kokugo	Japanese (school subject)		国語の授業で詩を読んだ。	We read poems in Japanese class.
+ronjiru	論じる	ろんじる	ronjiru	to discuss, to argue		環境問題について論じた。	We discussed environmental issues.
+kin	菌	きん	kin	germ, bacteria		手を洗って菌を落とそう。	Wash your hands to get rid of germs.
+#n3world7p3
+goku2	語句	ごく	goku	words and phrases		分からない語句に線を引いた。	I underlined the words I didn't know.
+souzoku	相続	そうぞく	souzoku	inheritance		父の家を相続した。	I inherited my father's house.
+taiki	大気	たいき	taiki	the atmosphere		大気の汚染が問題になっている。	Air pollution has become a problem.
+dairi	代理	だいり	dairi	proxy, substitute		部長の代理で会議に出た。	I went to the meeting in my manager's place.
+tsugu	次ぐ	つぐ	tsugu	to come after, to rank next		大阪は東京に次ぐ大きな町だ。	Osaka is the biggest city after Tokyo.
+tsugu2	継ぐ	つぐ	tsugu	to take over, to inherit		兄が父の店を継いだ。	My brother took over Dad's shop.
+tsutome2	務め	つとめ	tsutome	duty		子供を守るのは親の務めだ。	Protecting children is a parent's duty.
+tekiyou	適用	てきよう	tekiyou	applying (a rule)		この割引は学生に適用される。	This discount applies to students.
+tou	党	とう	tou	(political) party		新しい党ができた。	A new party has formed.
+tou2	塔	とう	tou	tower		丘の上に古い塔が立っている。	An old tower stands on the hill.
+touan	答案	とうあん	touan	exam paper		答案を先生に出した。	I handed my exam paper to the teacher.
+douitsu	同一	どういつ	douitsu	the same, identical		二つの事件は同一人物の犯行だ。	Both crimes were done by the same person.
+tosho	図書	としょ	tosho	books		図書カードで本を買った。	I bought a book with a book voucher.
+nenkan	年間	ねんかん	nenkan	(for) a year, annual		年間の予定を立てた。	I planned out the year.
+noumin	農民	のうみん	noumin	farmers, peasants		昔の農民の暮らしを学んだ。	We learned how farmers used to live.
+bakudai	莫大	ばくだい	bakudai	enormous		莫大な費用がかかった。	It cost an enormous amount.
+hasan	破産	はさん	hasan	bankruptcy		その会社は去年破産した。	That company went bankrupt last year.
+#n3world7p4
+tousan	倒産	とうさん	tousan	(company) going under		不景気で多くの店が倒産した。	Many shops went under in the recession.
+bassuru	罰する	ばっする	bassuru	to punish		ルールを破った人は罰せられる。	People who break the rules are punished.
+hankou	反抗	はんこう	hankou	rebellion, defiance		息子が親に反抗するようになった。	My son has started talking back.
+hikou	飛行	ひこう	hikou	flight		飛行時間は二時間です。	The flight time is two hours.
+hijou	非常	ひじょう	hijou	emergency; extreme		非常口はあちらです。	The emergency exit is over there.
+hihyou	批評	ひひょう	hihyou	review, critique		新しい映画の批評を読んだ。	I read a review of the new film.
+fuka	不可	ふか	fuka	not allowed		この部屋は飲食不可です。	No food or drink in this room.
+fukamaru	深まる	ふかまる	fukamaru	to deepen		秋が深まってきた。	Autumn is deepening.
+fukameru	深める	ふかめる	fukameru	to deepen (something)		留学して理解を深めたい。	I want to deepen my understanding by studying abroad.
+buki	武器	ぶき	buki	weapon		笑顔は最高の武器だ。	A smile is the best weapon.
+fukumeru	含める	ふくめる	fukumeru	to include		私を含めて五人います。	There are five of us, including me.
+fukou	不幸	ふこう	fukou	misfortune		彼女は不幸な子供時代を送った。	She had an unhappy childhood.
+fujiyuu	不自由	ふじゆう	fujiyuu	inconvenience; disability		お金に不自由はしていない。	I'm not short of money.
+fujin	夫人	ふじん	fujin	wife, Mrs		社長夫人がパーティーに来た。	The president's wife came to the party.
+fusei	不正	ふせい	fusei	cheating, wrongdoing		試験で不正をしてはいけない。	You mustn't cheat in exams.
+fuhei	不平	ふへい	fuhei	complaint		彼はいつも不平を言っている。	He's always complaining.
+henkou	変更	へんこう	henkou	change		予定に変更があります。	There's a change of plan.
+#n3world7p5
+hoshou	保証	ほしょう	hoshou	guarantee, warranty		このテレビは一年間の保証付きだ。	This TV comes with a one-year warranty.
+hoshou2	補償	ほしょう	hoshou	compensation		事故の補償を受けた。	I received compensation for the accident.
+shibou	脂肪	しぼう	shibou	fat		脂肪の少ない肉を選ぶ。	I pick lean meat.
+shibou2	志望	しぼう	shibou	aspiration, choice		第一志望の大学に合格した。	I got into my first-choice university.
+joshi2	助詞	じょし	joshi	particle (grammar)		「は」と「が」は助詞です。	Wa and ga are particles.
+soujuu	操縦	そうじゅう	soujuu	piloting, steering		飛行機を操縦してみたい。	I'd like to try flying a plane.
+taigaku	退学	たいがく	taigaku	leaving school		彼は高校を退学した。	He dropped out of high school.
+takamaru	高まる	たかまる	takamaru	to rise		試合前に気持ちが高まった。	My excitement rose before the match.
+tsuyomaru	強まる	つよまる	tsuyomaru	to get stronger		夜になって風が強まった。	The wind picked up at night.
+tsuyomeru	強める	つよめる	tsuyomeru	to strengthen		火を強めてください。	Turn the heat up, please.
+yowamaru	弱まる	よわまる	yowamaru	to weaken		雨が少し弱まった。	The rain has eased a little.
+yowameru	弱める	よわめる	yowameru	to weaken (something)		火を弱めて十分煮る。	Lower the heat and simmer for ten minutes.
+hiromaru	広まる	ひろまる	hiromaru	to spread		その言葉は若者の間で広まった。	That word caught on among young people.
+tou3	問う	とう	tou	to ask, to question		年齢は問いません。	Age doesn't matter.
