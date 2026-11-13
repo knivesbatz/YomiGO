@@ -2,8 +2,8 @@
 
 ## 0.49.0
 
-- **159 more N3 words**, taking the course to 3,353 word cards and leaving about 60 of the 2,140 N3 words untaught:
-  - **Everyday words:** 作法, 直に, 末, 柄, 一切れ, これら, 際, 借り, ちょうだい, ですから, お年寄り, 無し, 一人一人, ぼんやり, まさに, 混ざる, and めくる
+- **159 more N3 words**, taking the course to 3,353 word cards and leaving 49 of the 2,140 N3 words untaught:
+  - **Everyday words:** 作法, 直に, 末, 柄, 切れ, これら, 際, 借り, ちょうだい, ですから, お年寄り, 無し, 一人一人, ぼんやり, まさに, 混ざる, and めくる
   - **Words for reading the news:** 主義, 承認, 金銭, 欠陥, 公正, 構成, 相続, 大気, 代理, 党, 破産, 倒産, 批評, 不正, 変更, 保証, 補償, 志望, and 退学
   - **Words that rise and fall:** 高まる, 強まる, 強める, 弱まる, 弱める, 深まる, 深める, and 広まる
   - **Loanwords:** ジェット機, スタンド, ブレーキ, ホーム, マイク, マイナス, データ, マスコミ, ラベル, ルール, and more
